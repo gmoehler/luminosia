@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { simpleAction } from './actions/simpleActions'
+import { simpleAction, addTodo } from './actions/simpleActions'
 
 import logo from './logo.svg';
 import './App.css';
@@ -10,6 +10,11 @@ class App extends Component {
   simpleAction = (event) => {
     this.props.simpleAction();
   }
+
+  addTodoAction = (event) => {
+    this.props.onAddTodo({title: "a todo", userId: "myself"});
+  }
+
 
   render() {
     return (
@@ -28,6 +33,7 @@ class App extends Component {
             Learn React
           </a>
           <button onClick={this.simpleAction}>Test redux action</button>
+          <button onClick={this.addTodoAction}>Test redux action</button>
           <pre>{JSON.stringify(this.props)}</pre>
         </header>
       </div>
@@ -40,7 +46,8 @@ const mapStateToProps = state => ({
  });
 
  const mapDispatchToProps = dispatch => ({
-  simpleAction: () => dispatch(simpleAction())
+  simpleAction: () => dispatch(simpleAction()),
+  onAddTodo: todo => dispatch(addTodo(todo))
  })
 
 
