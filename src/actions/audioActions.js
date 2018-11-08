@@ -1,9 +1,11 @@
+import extractPeaks from 'webaudio-peaks';
+import LoaderFactory from '../loader/LoaderFactory'
+
 import {LOAD_AUDIO_STARTED, 
         LOAD_AUDIO_FAILURE, 
         LOAD_AUDIO_SUCCESS} from './types';
-import extractPeaks from 'webaudio-peaks';
 
-import LoaderFactory from '../loader/LoaderFactory'
+// load audio async action
 
 const loadAudioStarted = () => ({
     type: LOAD_AUDIO_STARTED
@@ -35,7 +37,7 @@ export const loadAudio = ({audioSource, audioContext}) => {
 
         loadAudioFromFile(audioSource, audioContext)
         .then(audioBuffer => {
-                const peaks = extractPeaks(audioBuffer)
+                const peaks = extractPeaks(audioBuffer, 1000, true, 0, audioBuffer.length, 16);
                 dispatch(loadAudioSuccess({audioBuffer, peaks}));
         })
         .catch(err => {
@@ -43,7 +45,3 @@ export const loadAudio = ({audioSource, audioContext}) => {
         });
     };
 };
-
-
-
-

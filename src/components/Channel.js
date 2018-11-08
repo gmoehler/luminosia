@@ -47,7 +47,7 @@ class Channel extends Component {
   }
 
   draw() {
-    const { data, bits, length, waveHeight, theme, scale } = this.props;
+    const { peaks, bits, length, waveHeight, theme, scale } = this.props;
 
     let offset = 0;
     for (let i = 0; i < this.canvases.length; i++) {
@@ -62,8 +62,8 @@ class Channel extends Component {
 
       const peakSegmentLength = canvas.width / scale;
       for (let i = 0; i < peakSegmentLength; i += 1) {
-        const minPeak = data[(i + offset) * 2] / maxValue;
-        const maxPeak = data[((i + offset) * 2) + 1] / maxValue;
+        const minPeak = peaks[(i + offset) * 2] / maxValue;
+        const maxPeak = peaks[((i + offset) * 2) + 1] / maxValue;
         
         const min = Math.abs(minPeak * h2);
         const max = Math.abs(maxPeak * h2);
