@@ -1,6 +1,8 @@
 import { combineReducers } from 'redux';
 import simpleReducer from './simpleReducer';
+import loadAudioReducer from './loadAudioReducer';
 
 export default combineReducers({
- simpleReducer
+    audio: loadAudioReducer,
+    simpleReducer
 });

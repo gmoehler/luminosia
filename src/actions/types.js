@@ -1,3 +1,14 @@
+// action type constants
+
+export const LOAD_AUDIO_STARTED = "LOAD_AUDIO_STARTED";
+export const LOAD_AUDIO_SUCCESS = "LOAD_AUDIO_SUCCESS";
+export const LOAD_AUDIO_FAILURE = "LOAD_AUDIO_FAILURE";
+
+export const LOAD_IMAGE_STARTED = "LOAD_IMAGE_STARTED";
+export const LOAD_IMAGE_SUCCESS = "LOAD_IMAGE_SUCCESS";
+export const LOAD_IMAGE_FAILURE = "LOAD_IMAGE_FAILURE";
+
+// simple sample actions
 export const ADD_TODO_SUCCESS = "ADD_TODO_SUCCESS";
 export const ADD_TODO_FAILURE = "ADD_TODO_FAILURE";
 export const ADD_TODO_STARTED = "ADD_TODO_STARTED";
