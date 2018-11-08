@@ -1,9 +1,14 @@
 import extractPeaks from 'webaudio-peaks';
 import LoaderFactory from '../loader/LoaderFactory'
 
-import {LOAD_AUDIO_STARTED, 
-        LOAD_AUDIO_FAILURE, 
-        LOAD_AUDIO_SUCCESS} from './types';
+import {
+    LOAD_AUDIO_STARTED, 
+    LOAD_AUDIO_FAILURE, 
+    LOAD_AUDIO_SUCCESS,
+    PLAY_AUDIO_STARTED,
+    PLAY_AUDIO_STOPPED,
+    SET_PLAY_TIME
+    } from './types';
 
 // load audio async action
 
@@ -43,5 +48,28 @@ export const loadAudio = ({audioSource, audioContext}) => {
         .catch(err => {
             dispatch(loadAudioFailure(err));
         });
+    };
+};
+
+
+// play audio async action
+
+const playAudioStarted = () => ({
+    type: PLAY_AUDIO_STARTED
+});
+
+const playAudioStopped = () => ({
+    type: PLAY_AUDIO_STARTED
+});
+
+
+export const playAudio = spec => {
+    return (dispatch, getState) => {
+        dispatch(playAudioStarted());
+
+        const asource = spec.audioContext.createBufferSource();
+        asource.buffer = getState().audio.audioBuffer;
+        asource.connect(spec.audioContext.destination);
+        asource.start(0, 0, 2);
     };
 };

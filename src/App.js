@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { loadAudio } from './actions/audioActions'
+import { loadAudio, playAudio } from './actions/audioActions'
 
 import Channel from './components/Channel';
 
@@ -14,13 +14,18 @@ const audioContext = new window.AudioContext();
 
 class App extends Component {
 
-  loadAudioAction = (event) => {
+  doLoadAudio = (event) => {
     this.props.loadAudioAction({
       audioSource: "media/audio/Vocals30.mp3", 
       audioContext
     });
   }
 
+  doPlayAudio = (event) => {
+    this.props.playAudioAction({
+      audioContext
+    });
+  }
 
   render() {
 
@@ -39,7 +44,8 @@ class App extends Component {
            Waveform demo
           </p>
 
-          <button onClick={this.loadAudioAction}>Load audio</button>
+          <button onClick={this.doLoadAudio}>Load audio</button>
+          <button onClick={this.doPlayAudio}>Play audio</button>
           <Channel peaks={channelData} length={length} bits={bits} scale={scale}></Channel>
 
         </header>
@@ -53,7 +59,8 @@ const mapStateToProps = state => ({
  });
 
  const mapDispatchToProps = dispatch => ({
-    loadAudioAction: spec => dispatch(loadAudio(spec))
+    loadAudioAction: spec => dispatch(loadAudio(spec)),
+    playAudioAction: spec => dispatch(playAudio(spec))
  })
 
 
