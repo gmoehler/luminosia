@@ -5,7 +5,7 @@ import { action } from '@storybook/addon-actions';
 import Channel from '../src/components/Channel';
 import TimeScale from '../src/components/TimeScale';
 import TrackControls from '../src/components/TrackControls';
-import BBCWaveformData from '../media/json/vocals.json';
+import BBCWaveformData from '../public/media/json/vocals.json';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
