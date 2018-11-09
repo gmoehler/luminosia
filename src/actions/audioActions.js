@@ -54,22 +54,11 @@ export const loadAudio = ({audioSource, audioContext}) => {
 
 // play audio async action
 
-const playAudioStarted = () => ({
+export const startPlaying = () => ({
     type: PLAY_AUDIO_STARTED
 });
 
-const playAudioStopped = () => ({
-    type: PLAY_AUDIO_STARTED
+export const stopPlaying = () => ({
+    type: PLAY_AUDIO_STOPPED
 });
 
-
-export const playAudio = spec => {
-    return (dispatch, getState) => {
-        dispatch(playAudioStarted());
-
-        const asource = spec.audioContext.createBufferSource();
-        asource.buffer = getState().audio.audioBuffer;
-        asource.connect(spec.audioContext.destination);
-        asource.start(0, 0, 2);
-    };
-};

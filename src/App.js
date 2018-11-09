@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { loadAudio, playAudio } from './actions/audioActions'
+import { loadAudio, startPlaying, stopPlaying } from './actions/audioActions'
 
 import Channel from './components/Channel';
+import PlayoutHandler from './components/PlayoutHandler'
 
 import logo from './logo.svg';
 import './App.css';
@@ -17,12 +18,6 @@ class App extends Component {
   doLoadAudio = (event) => {
     this.props.loadAudioAction({
       audioSource: "media/audio/Vocals30.mp3", 
-      audioContext
-    });
-  }
-
-  doPlayAudio = (event) => {
-    this.props.playAudioAction({
       audioContext
     });
   }
@@ -45,8 +40,14 @@ class App extends Component {
           </p>
 
           <button onClick={this.doLoadAudio}>Load audio</button>
-          <button onClick={this.doPlayAudio}>Play audio</button>
-          <Channel peaks={channelData} length={length} bits={bits} scale={scale}></Channel>
+          <button onClick={this.props.playAudioAction}>Play audio</button>
+          <button onClick={this.props.stopAudioAction}>Stop audio</button>
+          <Channel peaks={channelData} length={length} bits={bits} scale={scale}/>
+          <PlayoutHandler 
+            audioContext= {audioContext} 
+            audioBuffer={this.props.audio.audioBuffer} 
+            playing={this.props.audio.playing}
+          />
 
         </header>
       </div>
@@ -60,7 +61,8 @@ const mapStateToProps = state => ({
 
  const mapDispatchToProps = dispatch => ({
     loadAudioAction: spec => dispatch(loadAudio(spec)),
-    playAudioAction: spec => dispatch(playAudio(spec))
+    playAudioAction: () => dispatch(startPlaying()),
+    stopAudioAction: () => dispatch(stopPlaying())
  })
 
 
