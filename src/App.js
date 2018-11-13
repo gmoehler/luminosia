@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { loadAudio, startPlaying, stopPlaying } from './actions/audioActions'
-
-import Channel from './components/Channel';
-import PlayoutHandler from './components/PlayoutHandler'
+import { loadAudio } from './actions/audioActions'
+import { AudioGroupWithContext } from './components/AudioGroup';
 
 import logo from './logo.svg';
 import './App.css';
@@ -24,13 +22,6 @@ class App extends Component {
 
   render() {
 
-    const {
-      bits,
-      length,
-      data
-    } = {...this.props.audio.peaks};
-    const channelData = Array.isArray(data) ? data[0] : [];
-
     return (
       <div className="App">
         <header className="App-header">
@@ -39,14 +30,12 @@ class App extends Component {
            Waveform demo
           </p>
 
-          <button onClick={this.doLoadAudio}>Load audio</button>
-          <button onClick={this.props.playAudioAction}>Play audio</button>
-          <button onClick={this.props.stopAudioAction}>Stop audio</button>
-          <Channel peaks={channelData} length={length} bits={bits} scale={scale}/>
-          <PlayoutHandler 
-            audioContext= {audioContext} 
-            audioBuffer={this.props.audio.audioBuffer} 
-            playing={this.props.audio.playing}
+          <AudioGroupWithContext 
+            audioContext={audioContext}
+            peaks={this.props.audio.peaks} 
+            scale={scale} 
+            doLoadAudio={this.doLoadAudio}  
+            audioBuffer={this.props.audio.audioBuffer}
           />
 
         </header>
@@ -60,10 +49,8 @@ const mapStateToProps = state => ({
  });
 
  const mapDispatchToProps = dispatch => ({
-    loadAudioAction: spec => dispatch(loadAudio(spec)),
-    playAudioAction: () => dispatch(startPlaying()),
-    stopAudioAction: () => dispatch(stopPlaying())
+    loadAudioAction: spec => dispatch(loadAudio(spec))
  })
 
-
+ 
  export default connect(mapStateToProps, mapDispatchToProps)(App);
