@@ -33,8 +33,7 @@ class AudioGroup extends Component {
         </AudioControlWrapper>
         <Channel 
           peaks={channelData} 
-          length={length}
-          cssWidth={300}
+          length={500}
           bits={bits} 
           scale={this.props.scale}/>
       </AudioWrapper>
