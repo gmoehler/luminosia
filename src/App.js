@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { loadAudio } from './actions/audioActions'
-import { AudioGroupWithContext } from './components/AudioGroup';
+import { AudioGroupWithPlay } from './components/AudioGroup';
 
 import logo from './logo.svg';
 import './App.css';
@@ -30,12 +30,11 @@ class App extends Component {
            Waveform demo
           </p>
 
-          <AudioGroupWithContext 
+          <AudioGroupWithPlay 
             audioContext={audioContext}
-            peaks={this.props.audio.peaks} 
+            audio={this.props.audio}
             scale={scale} 
             doLoadAudio={this.doLoadAudio}  
-            audioBuffer={this.props.audio.audioBuffer}
           />
 
         </header>

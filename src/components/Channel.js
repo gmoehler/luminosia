@@ -20,7 +20,6 @@ const Waveform = styled.canvas`
 `;
 
 const ChannelWrapper = styled.div`
-  position: absolute;
   margin: 0;
   padding: 0;
   background: ${props => props.theme.waveFillColor};

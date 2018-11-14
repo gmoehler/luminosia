@@ -5,9 +5,6 @@ import {
     LOAD_AUDIO_STARTED, 
     LOAD_AUDIO_FAILURE, 
     LOAD_AUDIO_SUCCESS,
-    PLAY_AUDIO_STARTED,
-    PLAY_AUDIO_STOPPED,
-    SET_PLAY_TIME
     } from './types';
 
 // load audio async action
@@ -17,10 +14,10 @@ const loadAudioStarted = () => ({
 });
 
 
-const loadAudioSuccess = audioBuffer => ({
+const loadAudioSuccess = audioInfo => ({
     type: LOAD_AUDIO_SUCCESS,
     payload: {
-        audioBuffer
+        audioInfo
     }
 });
 
@@ -43,22 +40,11 @@ export const loadAudio = ({audioSource, audioContext}) => {
         loadAudioFromFile(audioSource, audioContext)
         .then(audioBuffer => {
                 const peaks = extractPeaks(audioBuffer, 1000, true, 0, audioBuffer.length, 16);
-                dispatch(loadAudioSuccess({audioBuffer, peaks}));
+                dispatch(loadAudioSuccess({audioSource, audioBuffer, peaks}));
         })
         .catch(err => {
             dispatch(loadAudioFailure(err));
         });
     };
 };
-
-
-// play audio async action
-
-export const startPlaying = () => ({
-    type: PLAY_AUDIO_STARTED
-});
-
-export const stopPlaying = () => ({
-    type: PLAY_AUDIO_STOPPED
-});
 
