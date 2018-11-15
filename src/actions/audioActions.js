@@ -5,6 +5,8 @@ import {
     LOAD_AUDIO_STARTED, 
     LOAD_AUDIO_FAILURE, 
     LOAD_AUDIO_SUCCESS,
+    PLAY_AUDIO,
+    STOP_AUDIO,
     } from './types';
 
 // load audio async action
@@ -48,3 +50,10 @@ export const loadAudio = ({audioSource, audioContext}) => {
     };
 };
 
+export const playAudio = () => ({
+    type: PLAY_AUDIO
+});
+
+export const stopAudio = () => ({
+    type: STOP_AUDIO
+});

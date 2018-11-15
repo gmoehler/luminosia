@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Channel from './Channel';
 import { withPlayContext } from './withPlayContext'
-import styled, { withTheme } from 'styled-components';
+import styled /*, { withTheme } */ from 'styled-components';
 import { secondsToPixels } from '../utils/conversions';
 
 const AudioWrapper = styled.div`
@@ -19,7 +19,9 @@ const AudioControlWrapper = styled.div`
   padding: 20px;
 `;
 
-class AudioGroup extends Component {
+const ChannelWithPlay = withPlayContext(Channel);
+
+export class AudioGroup extends Component {
 
   render() {
 
@@ -31,20 +33,23 @@ class AudioGroup extends Component {
     return (
       <AudioWrapper >
         <AudioControlWrapper>
-          <button onClick={this.props.doLoadAudio}>Load audio</button>
+          <button onClick={this.props.loadAudio}>Load audio</button>
           <button onClick={this.props.playAudio}>Play audio</button>
           <button onClick={this.props.stopAudio}>Stop audio</button>
         </AudioControlWrapper>
-        <Channel 
+        <ChannelWithPlay 
           peaks={channelData} 
           length={500}
           progress={progressPx}
           bits={bits} 
-          scale={this.props.scale}/>
+          scale={this.props.scale}
+          audio={this.props.audio}
+          audioContext={this.props.audioContext}/>
       </AudioWrapper>
     );
   }
 };
 
-export const AudioGroupWithPlay = withTheme(withPlayContext(AudioGroup));
+// export const AudioGroupWithPlay = withTheme(withPlayContext(AudioGroup));
+// export const AudioGroupWithTheme = withTheme(AudioGroup);
 

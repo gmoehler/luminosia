@@ -1,15 +1,16 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import Playout from '../player/Playout'
 
 export function withPlayContext(WrappedComponent) {
-  class WithPlayContext extends Component {
+  class WithPlayContext extends PureComponent {
 
     constructor(props) {
       super(props);
       this.playout = null;
       this.startTime = 0;
       this.state = {
-        progress: 0
+        progress: 0,
+        pause: false
       };
       this.stopAnimateProgress = this.stopAnimateProgress.bind(this);
       this.animateProgress = this.animateProgress.bind(this);
@@ -17,8 +18,14 @@ export function withPlayContext(WrappedComponent) {
       this.stopAudio = this.stopAudio.bind(this);
     }
 
-    componentDidMount() {
-      // nothing to be done for now
+    componentDidUpdate(prevProps, prevState){
+      if (prevProps.audio.playState !== this.props.audio.playState) {
+        if (this.props.audio.playState === "playing") {
+          this.playAudio();
+        } else {
+          this.stopAudio();
+        }
+      }
     }
 
     componentWillUnmount() {

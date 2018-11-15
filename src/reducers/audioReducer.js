@@ -1,10 +1,11 @@
-import {LOAD_AUDIO_STARTED, LOAD_AUDIO_SUCCESS, LOAD_AUDIO_FAILURE} from '../actions/types';
+import {LOAD_AUDIO_STARTED, LOAD_AUDIO_SUCCESS, LOAD_AUDIO_FAILURE, PLAY_AUDIO, STOP_AUDIO} from '../actions/types';
 
 const initialState = {
   loading: false,
   audioBuffer: null,
   peaks: null,
-  error: null
+  error: null,
+  playState: "stopped"
 };
 
 export default(state = initialState, action) => {
@@ -28,6 +29,18 @@ export default(state = initialState, action) => {
         ...state,
         loading: false,
         error: action.payload.error
+      };
+
+    case PLAY_AUDIO:
+      return {
+        ...state,
+        playState: "playing"
+      };
+
+    case STOP_AUDIO:
+      return {
+        ...state,
+        playState: "stopped"
       };
 
     default:
