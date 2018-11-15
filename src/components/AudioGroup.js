@@ -2,10 +2,12 @@ import React, { Component } from 'react';
 import Channel from './Channel';
 import { withPlayContext } from './withPlayContext'
 import styled, { withTheme } from 'styled-components';
+import { secondsToPixels } from '../utils/conversions';
 
 const AudioWrapper = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: left;
   margin: 0;
   padding: 20px;
 `;
@@ -23,6 +25,8 @@ class AudioGroup extends Component {
 
     const {data, length, bits} = {...this.props.audio.peaks};
     const channelData = Array.isArray(data) ? data[0] : [];
+    const progressPx = this.props.audio.buffer ? 
+      secondsToPixels(this.props.progress, 1000, this.props.audio.buffer.sampleRate) : 0;
 
     return (
       <AudioWrapper >
@@ -34,6 +38,7 @@ class AudioGroup extends Component {
         <Channel 
           peaks={channelData} 
           length={500}
+          progress={progressPx}
           bits={bits} 
           scale={this.props.scale}/>
       </AudioWrapper>

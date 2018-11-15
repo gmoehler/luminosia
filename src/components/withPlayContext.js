@@ -7,6 +7,10 @@ export function withPlayContext(WrappedComponent) {
     constructor(props) {
       super(props);
       this.playout = null;
+      this.startTime = 0;
+      this.state = {
+        progress: 0
+      };
     }
 
     componentDidMount() {
@@ -24,9 +28,23 @@ export function withPlayContext(WrappedComponent) {
         this.playout = new Playout(this.props.audioContext, this.props.audio.buffer);
       }
       if (!this.playout.isPlaying()) {
-        this.playout.setUpSource();
-        this.playout.play(0, 17, 3);
+        this.playout.setUpSource()
+          .then(this.stopAnimateProgress.bind(this));
+        this.playout.play(0, 0, 10);
       }
+      this.startTime = this.props.audioContext.currentTime;
+      this.animationRequest = window.requestAnimationFrame(this.animateProgress.bind(this));
+    }
+
+    animateProgress() {
+      this.setState({
+        progress: this.props.audioContext.currentTime - this.startTime
+      })
+      this.animationRequest = window.requestAnimationFrame(this.animateProgress.bind(this));
+    }
+
+    stopAnimateProgress() {
+      window.cancelAnimationFrame(this.animationRequest);
     }
 
     isPlaying() {
@@ -35,6 +53,7 @@ export function withPlayContext(WrappedComponent) {
 
     stopAudio() {
       this.playout && this.playout.stop();
+      this.stopAnimateProgress.bind(this);
     }
 
     render() {
@@ -43,6 +62,7 @@ export function withPlayContext(WrappedComponent) {
       return <WrappedComponent
         playAudio={this.playAudio.bind(this)}
         stopAudio={this.stopAudio.bind(this)}
+        progress={this.state.progress}
         {...passthruProps}/>;
     }
   };

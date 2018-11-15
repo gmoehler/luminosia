@@ -42,7 +42,7 @@ class Channel extends Component {
   }
 
   draw() {
-    const { peaks, bits, length, waveHeight, theme, scale } = this.props;
+    const { peaks, bits, /* length,*/ waveHeight, theme, scale } = this.props;
 
     let offset = 0;
     for (let i = 0; i < this.canvases.length; i++) {
@@ -96,7 +96,7 @@ class Channel extends Component {
         cssWidth={currentWidth}
         width={currentWidth * scale}
         height={waveHeight * scale}
-        waveHeight={waveHeight}
+        waveHeight={waveHeight} 
         ref={this.createCanvasRef(waveformCount)} />
 
       waveforms.push(waveform);
