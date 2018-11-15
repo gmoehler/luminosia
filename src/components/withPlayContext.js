@@ -11,6 +11,10 @@ export function withPlayContext(WrappedComponent) {
       this.state = {
         progress: 0
       };
+      this.stopAnimateProgress = this.stopAnimateProgress.bind(this);
+      this.animateProgress = this.animateProgress.bind(this);
+      this.playAudio = this.playAudio.bind(this);
+      this.stopAudio = this.stopAudio.bind(this);
     }
 
     componentDidMount() {
@@ -27,20 +31,21 @@ export function withPlayContext(WrappedComponent) {
       if (!this.playout) {
         this.playout = new Playout(this.props.audioContext, this.props.audio.buffer);
       }
-      if (!this.playout.isPlaying()) {
+      if (!this.isPlaying()) {
         this.playout.setUpSource()
-          .then(this.stopAnimateProgress.bind(this));
+          .then(this.stopAnimateProgress); // TODO: more checking, might be started again
         this.playout.play(0, 0, 10);
+      
+        this.startTime = this.props.audioContext.currentTime;
+        this.animationRequest = window.requestAnimationFrame(this.animateProgress);
       }
-      this.startTime = this.props.audioContext.currentTime;
-      this.animationRequest = window.requestAnimationFrame(this.animateProgress.bind(this));
     }
 
     animateProgress() {
       this.setState({
         progress: this.props.audioContext.currentTime - this.startTime
       })
-      this.animationRequest = window.requestAnimationFrame(this.animateProgress.bind(this));
+      this.animationRequest = window.requestAnimationFrame(this.animateProgress);
     }
 
     stopAnimateProgress() {
@@ -53,15 +58,15 @@ export function withPlayContext(WrappedComponent) {
 
     stopAudio() {
       this.playout && this.playout.stop();
-      this.stopAnimateProgress.bind(this);
+      this.stopAnimateProgress();
     }
 
     render() {
       const {audioBuffer, ...passthruProps} = this.props;
       // pass through any additional props
       return <WrappedComponent
-        playAudio={this.playAudio.bind(this)}
-        stopAudio={this.stopAudio.bind(this)}
+        playAudio={this.playAudio}
+        stopAudio={this.stopAudio}
         progress={this.state.progress}
         {...passthruProps}/>;
     }
