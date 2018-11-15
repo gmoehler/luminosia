@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import Playout from '../player/Playout'
 
 export function withPlayContext(WrappedComponent) {
@@ -35,7 +35,7 @@ export function withPlayContext(WrappedComponent) {
         this.playout.setUpSource()
           .then(this.stopAnimateProgress); // TODO: more checking, might be started again
         this.playout.play(0, 0, 10);
-      
+
         this.startTime = this.props.audioContext.currentTime;
         this.animationRequest = window.requestAnimationFrame(this.animateProgress);
       }
@@ -62,15 +62,16 @@ export function withPlayContext(WrappedComponent) {
     }
 
     render() {
-      const {audioBuffer, ...passthruProps} = this.props;
+      const { audioBuffer, ...passthruProps } = this.props;
       // pass through any additional props
       return <WrappedComponent
         playAudio={this.playAudio}
         stopAudio={this.stopAudio}
         progress={this.state.progress}
-        {...passthruProps}/>;
+        {...passthruProps} />;
     }
-  };
+  }
+  ;
 
   withPlayContext.displayName = `WithSubscription(${getDisplayName(WrappedComponent)})`;
   return WithPlayContext;
