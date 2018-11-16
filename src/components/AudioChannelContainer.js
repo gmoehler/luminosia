@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import Channel from './Channel';
-import { withPlayContext } from './withPlayContext'
+import { withAudioPlay } from './withAudioPlay'
 
 // add a player HOC
-const ChannelWithPlay = withPlayContext(Channel);
+const AudioChannelWithPlay = withAudioPlay(Channel);
 
 class AudioChannelContainer extends Component {
 
@@ -17,14 +17,13 @@ class AudioChannelContainer extends Component {
 
     const channelData = Array.isArray(data) ? data[0] : [];
 
-    window.AudioContext = window.AudioContext || window.webkitAudioContext;
-    const audioContext = new window.AudioContext();
     const scale = window.devicePixelRatio;
 
     return (
-      <ChannelWithPlay 
-        audioContext={ audioContext } 
-        audio={ this.props.audio }
+      <AudioChannelWithPlay 
+        // for withAudioPlay
+        audioData={ this.props.audio }
+        // for Channel
         peaks={ channelData } 
         length={ 500 } 
         bits={ bits } 

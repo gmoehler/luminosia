@@ -2,7 +2,8 @@ import React, { PureComponent } from 'react';
 import Playout from '../player/Playout'
 import { secondsToPixels } from '../utils/conversions';
 
-export function withPlayContext(WrappedComponent) {
+// HOC to support audio playing if one Channel
+export function withAudioPlay(WrappedComponent) {
   class WithPlayContext extends PureComponent {
 
     constructor(props) {
@@ -17,11 +18,14 @@ export function withPlayContext(WrappedComponent) {
       this.animateProgress = this.animateProgress.bind(this);
       this.playAudio = this.playAudio.bind(this);
       this.stopAudio = this.stopAudio.bind(this);
+
+      window.AudioContext = window.AudioContext || window.webkitAudioContext;
+      this.audioContext = new window.AudioContext();
     }
 
-    componentDidUpdate(prevProps, prevState){
-      if (prevProps.audio.playState !== this.props.audio.playState) {
-        if (this.props.audio.playState === "playing") {
+    componentDidUpdate(prevProps, prevState) {
+      if (prevProps.audioData.playState !== this.props.audioData.playState) {
+        if (this.props.audioData.playState === "playing") {
           this.playAudio();
         } else {
           this.stopAudio();
@@ -37,21 +41,21 @@ export function withPlayContext(WrappedComponent) {
     playAudio() {
       //TODO: react on changing audiobuffers
       if (!this.playout) {
-        this.playout = new Playout(this.props.audioContext, this.props.audio.buffer);
+        this.playout = new Playout(this.audioContext, this.props.audioData.buffer);
       }
       if (!this.isPlaying()) {
         this.playout.setUpSource()
-          .then(this.stopAnimateProgress); // TODO: more checking, might be started again
+          .then(this.stopAnimateProgress); // TODO: more checking, might be started again in meantime
         this.playout.play(0, 0, 10);
 
-        this.startTime = this.props.audioContext.currentTime;
+        this.startTime = this.audioContext.currentTime;
         this.animationRequest = window.requestAnimationFrame(this.animateProgress);
       }
     }
 
     animateProgress() {
       this.setState({
-        progress: this.props.audioContext.currentTime - this.startTime
+        progress: this.audioContext.currentTime - this.startTime
       })
       this.animationRequest = window.requestAnimationFrame(this.animateProgress);
     }
@@ -70,20 +74,19 @@ export function withPlayContext(WrappedComponent) {
     }
 
     render() {
-      // stop passing audio
-      const { audio, ...passthruProps } = this.props;
-      const progressPx = audio.buffer ?
-        secondsToPixels(this.state.progress, 1000, audio.buffer.sampleRate) : 0;
+      // stop passing audioData props down to Channel
+      const {audioData, ...passthruProps} = this.props;
 
-      // pass through props and progress
-      return <WrappedComponent
-        {...passthruProps} 
-         progress={progressPx} />;
+      const progressPx = audioData.buffer ?
+        secondsToPixels(this.state.progress, 1000, audioData.buffer.sampleRate) : 0;
+
+      // pass down props and progress
+      return <WrappedComponent {...passthruProps} progress={ progressPx } />;
     }
   }
   ;
 
-  withPlayContext.displayName = `WithSubscription(${getDisplayName(WrappedComponent)})`;
+  withAudioPlay.displayName = `WithSubscription(${getDisplayName(WrappedComponent)})`;
   return WithPlayContext;
 }
 
