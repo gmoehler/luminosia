@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import styled /*, { withTheme } */ from 'styled-components';
 
 import AudioControlContainer from './components/AudioControlContainer';
-import AudioChannelContainer from './components/AudioChannelContainer';
+import AudioGroup from './components/AudioGroup';
 
 import logo from './logo.svg';
 import './App.css';
@@ -30,11 +30,11 @@ export default class App extends Component {
           </p>
           <AudioWrapper >
             <AudioControlContainer />
-            <AudioChannelContainer />
+            <AudioGroup />
           </AudioWrapper>
         </header>
       </div>
       );
-      
+
   }
 }

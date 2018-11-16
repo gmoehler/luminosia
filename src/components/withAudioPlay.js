@@ -11,8 +11,7 @@ export function withAudioPlay(WrappedComponent) {
       this.playout = null;
       this.startTime = 0;
       this.state = {
-        progress: 0,
-        pause: false
+        progress: 0
       };
       this.stopAnimateProgress = this.stopAnimateProgress.bind(this);
       this.animateProgress = this.animateProgress.bind(this);

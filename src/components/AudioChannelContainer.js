@@ -16,7 +16,6 @@ class AudioChannelContainer extends Component {
     };
 
     const channelData = Array.isArray(data) ? data[0] : [];
-
     const scale = window.devicePixelRatio;
 
     return (
