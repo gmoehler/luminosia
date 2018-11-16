@@ -70,16 +70,15 @@ export function withPlayContext(WrappedComponent) {
     }
 
     render() {
+      // stop passing audio
       const { audio, ...passthruProps } = this.props;
       const progressPx = audio.buffer ?
         secondsToPixels(this.state.progress, 1000, audio.buffer.sampleRate) : 0;
 
-      // pass through any additional props
+      // pass through props and progress
       return <WrappedComponent
-        playAudio={this.playAudio}
-        stopAudio={this.stopAudio}
-        progress={progressPx}
-        {...passthruProps} />;
+        {...passthruProps} 
+         progress={progressPx} />;
     }
   }
   ;
