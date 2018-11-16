@@ -1,25 +1,11 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { loadAudio, playAudio, stopAudio } from './actions/audioActions'
-import { AudioGroup } from './components/AudioGroup';
+import AudioContentProvider from './components/AudioContentProvider';
 
 import logo from './logo.svg';
 import './App.css';
 
-const scale = window.devicePixelRatio;
 
-window.AudioContext = window.AudioContext || window.webkitAudioContext;
-const audioContext = new window.AudioContext();
-
-class App extends Component {
-
-  doLoadAudio = (event) => {
-    this.props.loadAudioAction({
-      audioSource: "media/audio/Vocals30.mp3",
-      audioContext
-    });
-  }
-
+export default class App extends Component {
 
   render() {
 
@@ -30,23 +16,9 @@ class App extends Component {
           <p>
             Waveform demo
           </p>
-          <AudioGroup audioContext={ audioContext } audio={ this.props.audio } scale={ scale } loadAudio={ this.doLoadAudio } playAudio={ this.props.playAudioAction }
-            stopAudio={ this.props.stopAudioAction } />
+          <AudioContentProvider />
         </header>
       </div>
       );
   }
 }
-
-const mapStateToProps = state => ({
-  ...state
-});
-
-const mapDispatchToProps = dispatch => ({
-  loadAudioAction: spec => dispatch(loadAudio(spec)),
-  playAudioAction: () => dispatch(playAudio()),
-  stopAudioAction: () => dispatch(stopAudio())
-})
-
-
-export default connect(mapStateToProps, mapDispatchToProps)(App);

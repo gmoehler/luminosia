@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import Playout from '../player/Playout'
+import { secondsToPixels } from '../utils/conversions';
 
 export function withPlayContext(WrappedComponent) {
   class WithPlayContext extends PureComponent {
@@ -69,12 +70,15 @@ export function withPlayContext(WrappedComponent) {
     }
 
     render() {
-      const { audioBuffer, ...passthruProps } = this.props;
+      const { audio, ...passthruProps } = this.props;
+      const progressPx = audio.buffer ?
+        secondsToPixels(this.state.progress, 1000, audio.buffer.sampleRate) : 0;
+
       // pass through any additional props
       return <WrappedComponent
         playAudio={this.playAudio}
         stopAudio={this.stopAudio}
-        progress={this.state.progress}
+        progress={progressPx}
         {...passthruProps} />;
     }
   }
