@@ -1,9 +1,21 @@
 import React, { Component } from 'react';
-import AudioContentProvider from './components/AudioContentProvider';
+import styled /*, { withTheme } */ from 'styled-components';
+
+import AudioControlContainer from './components/AudioControlContainer';
+import AudioChannelContainer from './components/AudioChannelContainer';
 
 import logo from './logo.svg';
 import './App.css';
 
+const AudioWrapper = styled.div`
+  displayName: 'AudioWrapper'
+  name: AudioWrapper
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  margin: 0;
+  padding: 20px;
+`;
 
 export default class App extends Component {
 
@@ -16,9 +28,13 @@ export default class App extends Component {
           <p>
             Waveform demo
           </p>
-          <AudioContentProvider />
+          <AudioWrapper >
+            <AudioControlContainer />
+            <AudioChannelContainer />
+          </AudioWrapper>
         </header>
       </div>
       );
+      
   }
 }

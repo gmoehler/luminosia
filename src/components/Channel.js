@@ -114,9 +114,9 @@ class Channel extends Component {
 Channel.defaultProps = {
   theme: {
     // color of the waveform outline
-    waveOutlineColor: 'black',
-    waveFillColor: 'grey',
-    waveProgressColor: 'orange',
+    waveOutlineColor: '#282c34',
+    waveFillColor: '#05a0cd',
+    waveProgressColor: 'rgb(255,120,0)',
   },
   // checking `window.devicePixelRatio` when drawing to canvas.
   scale: 1,

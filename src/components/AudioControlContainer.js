@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { loadAudio, playAudio, stopAudio } from '../actions/audioActions'
-import AudioContent from '././AudioContent';
+import AudioControl from './AudioControl';
 
 const scale = window.devicePixelRatio;
 
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
 const audioContext = new window.AudioContext();
 
-class AudioContentProvider extends Component {
+class AudioControlContainer extends Component {
 
   doLoadAudio = (event) => {
     this.props.loadAudioAction({
@@ -20,10 +20,7 @@ class AudioContentProvider extends Component {
   render() {
 
     return (
-      <AudioContent 
-        audioContext={ audioContext } 
-        audio={ this.props.audio } 
-        scale={ scale } 
+      <AudioControl
         loadAudio={ this.doLoadAudio } 
         playAudio={ this.props.playAudioAction }
         stopAudio={ this.props.stopAudioAction } />
@@ -32,7 +29,7 @@ class AudioContentProvider extends Component {
 }
 
 const mapStateToProps = state => ({
-  ...state
+  // no props for now
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -42,4 +39,4 @@ const mapDispatchToProps = dispatch => ({
 })
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(AudioContentProvider);
+export default connect(mapStateToProps, mapDispatchToProps)(AudioControlContainer);
