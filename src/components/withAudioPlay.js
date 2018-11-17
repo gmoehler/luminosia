@@ -23,8 +23,8 @@ export function withAudioPlay(WrappedComponent) {
     }
 
     componentDidUpdate(prevProps, prevState) {
-      if (prevProps.audioData.playState !== this.props.audioData.playState) {
-        if (this.props.audioData.playState === "playing") {
+      if (prevProps.playState !== this.props.playState) {
+        if (this.props.playState === "playing") {
           this.playAudio();
         } else {
           this.stopAudio();
@@ -76,7 +76,7 @@ export function withAudioPlay(WrappedComponent) {
       // stop passing audioData props down to Channel
       const {audioData, ...passthruProps} = this.props;
 
-      const progressPx = audioData.buffer ?
+      const progressPx = audioData && audioData.buffer ?
         secondsToPixels(this.state.progress, 1000, audioData.buffer.sampleRate) : 0;
 
       // pass down props and progress

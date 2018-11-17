@@ -1,11 +1,7 @@
-import {LOAD_AUDIO_STARTED, LOAD_AUDIO_SUCCESS, LOAD_AUDIO_FAILURE, PLAY_AUDIO, STOP_AUDIO} from '../actions/types';
+import {LOAD_AUDIO_STARTED, LOAD_AUDIO_SUCCESS, LOAD_AUDIO_FAILURE} from '../actions/types';
 
 const initialState = {
-  loading: false,
-  audioBuffer: null,
-  peaks: null,
-  error: null,
-  playState: "stopped"
+  byIds: {}
 };
 
 export default(state = initialState, action) => {
@@ -13,37 +9,41 @@ export default(state = initialState, action) => {
     case LOAD_AUDIO_STARTED:
       return {
         ...state,
-        loading: true
+        byIds: {
+          [action.payload.audioSource]: {
+            loading: true
+          }
+        }
       };
     case LOAD_AUDIO_SUCCESS:
       return {
         ...state,
-        loading: false,
-        error: null,
-        buffer: action.payload.audioInfo.audioBuffer,
-        peaks: action.payload.audioInfo.peaks,
-        source: action.payload.audioInfo.audioSource
-      };
-    case LOAD_AUDIO_FAILURE:
+        byIds: {
+          [action.payload.audioSource]: {
+            loading: false,
+            error: null,
+            buffer: action.payload.audioBuffer,
+            peaks: action.payload.peaks,
+            source: action.payload.audioSource
+          }
+        }
+      }
+      case LOAD_AUDIO_FAILURE:
       return {
         ...state,
-        loading: false,
-        error: action.payload.error
-      };
-
-    case PLAY_AUDIO:
-      return {
-        ...state,
-        playState: "playing"
-      };
-
-    case STOP_AUDIO:
-      return {
-        ...state,
-        playState: "stopped"
+        byIds: {
+          [action.payload.audioSource]: {
+            loading: false,
+            error: action.payload
+          }
+        }
       };
 
     default:
       return state
   }
+}
+
+export const getChannelData = (state, source) => {
+  return state.audio && state.audio.byIds && state.audio.byIds[source];
 }

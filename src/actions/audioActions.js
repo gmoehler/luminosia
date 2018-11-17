@@ -11,23 +11,20 @@ import {
 
 // load audio async action
 
-const loadAudioStarted = () => ({
-    type: LOAD_AUDIO_STARTED
+const loadAudioStarted = startInfo => ({
+    type: LOAD_AUDIO_STARTED,
+    payload: startInfo
 });
 
 
 const loadAudioSuccess = audioInfo => ({
     type: LOAD_AUDIO_SUCCESS,
-    payload: {
-        audioInfo
-    }
+    payload: audioInfo
 });
 
-const loadAudioFailure = error => ({
+const loadAudioFailure = errorInfo => ({
     type: LOAD_AUDIO_FAILURE, 
-    payload: {
-        error
-    }
+    payload: errorInfo
 });
 
 function loadAudioFromFile(audioSource, audioContext) {
@@ -37,7 +34,7 @@ function loadAudioFromFile(audioSource, audioContext) {
 
 export const loadAudio = ({audioSource, audioContext}) => {
     return dispatch => {
-        dispatch(loadAudioStarted());
+        dispatch(loadAudioStarted({audioSource}));
 
         loadAudioFromFile(audioSource, audioContext)
         .then(audioBuffer => {
@@ -45,7 +42,7 @@ export const loadAudio = ({audioSource, audioContext}) => {
                 dispatch(loadAudioSuccess({audioSource, audioBuffer, peaks}));
         })
         .catch(err => {
-            dispatch(loadAudioFailure(err));
+            dispatch(loadAudioFailure({audioSource, err}));
         });
     };
 };

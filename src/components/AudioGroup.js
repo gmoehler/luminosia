@@ -9,8 +9,7 @@ export default class AudioGroup extends Component {
 
     return (
       <Fragment>
-        <AudioChannelContainer/>
-        <AudioChannelContainer/>
+        <AudioChannelContainer channelSource="media/audio/BassDrums30.mp3"/>
       </Fragment>);
   }
 }
