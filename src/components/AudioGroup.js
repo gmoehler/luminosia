@@ -8,9 +8,23 @@ export default class AudioGroup extends Component {
   render() {
 
     return (
-      <Fragment>
-        <AudioChannelContainer channelSource="media/audio/BassDrums30.mp3"/>
-      </Fragment>);
+      <div>
+        {this.props.channelData.byIds.map((source) => {
+        	
+        	const {data, /* length, */ bits} = {
+      		...this.props.audioData
+    		};
+
+     	   const channelData = Array.isArray(data) ? data[0] : [];
+    		const scale = window.devicePixelRatio;
+        
+        	<AudioChannelContainer 
+				channelSource=source 
+				audioData={ this.props.audioData }
+                playState={this.props.playState}
+	 		/>
+		})
+      </div>);
   }
 }
 
