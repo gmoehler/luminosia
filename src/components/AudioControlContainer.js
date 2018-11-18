@@ -3,8 +3,6 @@ import { connect } from 'react-redux';
 import { loadAudio, playAudio, stopAudio } from '../actions/audioActions'
 import AudioControl from './AudioControl';
 
-const scale = window.devicePixelRatio;
-
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
 const audioContext = new window.AudioContext();
 

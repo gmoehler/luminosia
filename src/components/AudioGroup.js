@@ -1,30 +1,44 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 
-import AudioChannelContainer from './AudioChannelContainer'
+import Channel from './Channel';
+import { withAudioPlay } from './withAudioPlay'
 
-// contains multiple AudioControlContainers
+const AudioChannelWithPlay = withAudioPlay(Channel);
+
+// contains multiple AudioChannels
 export default class AudioGroup extends Component {
 
   render() {
 
-    return (
-      <div>
-        {this.props.channelData.byIds.map((source) => {
-        	
-        	const {data, /* length, */ bits} = {
-      		...this.props.audioData
-    		};
+		const scale = window.devicePixelRatio;
 
-     	   const channelData = Array.isArray(data) ? data[0] : [];
-    		const scale = window.devicePixelRatio;
-        
-        	<AudioChannelContainer 
-				channelSource=source 
-				audioData={ this.props.audioData }
-                playState={this.props.playState}
-	 		/>
-		})
-      </div>);
-  }
-}
+		if (!Object.keys(this.props.audioData).length) {
+			return null;
+		}
+
+		const channelComponents = Object.keys(this.props.audioData).map((source) => {
+			const channelAudioData = this.props.audioData[source];
+			const {data, /* length, */ bits} = { ...channelAudioData.peaks };
+			const channelData = Array.isArray(data) ? data[0] : [];
+
+			return <AudioChannelWithPlay 
+				key={ source }
+				channelSource={ source }
+				// for withAudioPlay
+				audioData={ channelAudioData }
+				playState={ this.props.playState }
+				// for Channel
+				peaks={ channelData } 
+				length={ 500 } 
+				bits={ bits } 
+				scale={ scale }
+			/>
+		});
+
+    return (
+			<div>
+				{channelComponents}
+      </div>
+		)}
+	}
 

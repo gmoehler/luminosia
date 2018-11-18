@@ -8,8 +8,8 @@ App
   AudioControlContainer
     AudioControl
 
-  AudioGroup
-    AudioChannelContainer
-    withAudioPlay
+  AudioGroupContainer
+    AudioGroup
+     withAudioPlay
       Channel
 ```

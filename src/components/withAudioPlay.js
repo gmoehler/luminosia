@@ -34,7 +34,7 @@ export function withAudioPlay(WrappedComponent) {
 
     componentWillUnmount() {
       // clean up playout and animation
-      stopAudio();
+      this.stopAudio();
     }
 
     playAudio() {

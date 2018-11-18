@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { getChannelData } from '../reducers/audioReducer'
+import AudioGroup from './AudioGroup'
+import { getAllChannelData } from '../reducers/audioReducer'
 import { getPlayState } from '../reducers/playReducer'
 
 class AudioGroupContainer extends Component {
@@ -11,14 +12,14 @@ class AudioGroupContainer extends Component {
     return (
       <AudioGroup
         audioData={ this.props.audioData }
-        playState={this.props.playState}
+        playState={ this.props.playState }
       />);
   }
 }
 
 const mapStateToProps = (state, props) => {
   // map complete redux state (all on audio key) for now
-  const audioData = getChannelData(state, props.channelSource);
+  const audioData = getAllChannelData(state);
   const playState = getPlayState(state);
   
   return {
