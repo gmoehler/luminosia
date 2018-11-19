@@ -1,8 +1,12 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import Channel from './Channel';
 import { withAudioPlay } from './withAudioPlay'
 
+const windowPixelRatio = window.devicePixelRatio;
+
+// add play functionality to audio channels
 const AudioChannelWithPlay = withAudioPlay(Channel);
 
 // contains multiple AudioChannels
@@ -10,28 +14,31 @@ export default class AudioGroup extends Component {
 
   render() {
 
-		const scale = window.devicePixelRatio;
-
-		if (!Object.keys(this.props.audioData).length) {
+		// no data: nothing to do
+		if (!Object.keys(this.props.allAudioData).length) {
 			return null;
 		}
 
-		const channelComponents = Object.keys(this.props.audioData).map((source) => {
-			const channelAudioData = this.props.audioData[source];
+		// we have data: draw the channels
+		const channelComponents = Object.keys(this.props.allAudioData).map((id) => {
+
+			// get channel data
+			const channelAudioData = this.props.allAudioData[id];
 			const {data, /* length, */ bits} = { ...channelAudioData.peaks };
-			const channelData = Array.isArray(data) ? data[0] : [];
+			const peaksDataMono = Array.isArray(data) ? data[0] : []; // only one channel for now
 
 			return <AudioChannelWithPlay 
-				key={ source }
-				channelSource={ source }
+				key={ id } // list items need a key
+
 				// for withAudioPlay
 				audioData={ channelAudioData }
 				playState={ this.props.playState }
+
 				// for Channel
-				peaks={ channelData } 
+				peaks={ peaksDataMono } 
 				length={ 500 } 
 				bits={ bits } 
-				scale={ scale }
+				scale={ windowPixelRatio }
 			/>
 		});
 
@@ -42,3 +49,7 @@ export default class AudioGroup extends Component {
 		)}
 	}
 
+  AudioChannelWithPlay.propTypes = {
+    allAudioData: PropTypes.array, 		// data of all channels
+    playState: PropTypes.oneOf(['stopped', 'playing'])
+  }

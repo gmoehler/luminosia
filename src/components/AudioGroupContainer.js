@@ -11,20 +11,16 @@ class AudioGroupContainer extends Component {
 
     return (
       <AudioGroup
-        audioData={ this.props.audioData }
-        playState={ this.props.playState }
+        {...this.props}
       />);
   }
 }
 
 const mapStateToProps = (state, props) => {
-  // map complete redux state (all on audio key) for now
-  const audioData = getAllChannelData(state);
-  const playState = getPlayState(state);
-  
+  // get audio data and play state from redux
   return {
-    audioData,
-    playState
+    allAudioData: getAllChannelData(state),
+    playState: getPlayState(state)
   }
 };
 

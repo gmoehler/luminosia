@@ -18,6 +18,7 @@ export default(state = initialState, action) => {
     case LOAD_AUDIO_SUCCESS:
       return {
         ...state,
+        // TODO: improve this using a sub-reducer
         byIds: {
           [action.payload.audioSource]: {
             loading: false,

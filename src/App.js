@@ -13,7 +13,6 @@ const AudioWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: left;
-  margin: 0;
   padding: 20px;
 `;
 

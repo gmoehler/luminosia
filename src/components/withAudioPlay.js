@@ -1,10 +1,12 @@
 import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
+
 import Playout from '../player/Playout'
 import { secondsToPixels } from '../utils/conversions';
 
-// HOC to support audio playing if one Channel
+// HOC to support audio playing for one channel
 export function withAudioPlay(WrappedComponent) {
-  class WithPlayContext extends PureComponent {
+  class WithAudioPlay extends PureComponent {
 
     constructor(props) {
       super(props);
@@ -74,7 +76,7 @@ export function withAudioPlay(WrappedComponent) {
 
     render() {
       // stop passing audioData props down to Channel
-      const {audioData, ...passthruProps} = this.props;
+      const {audioData, playState, ...passthruProps} = this.props;
 
       const progressPx = audioData && audioData.buffer ?
         secondsToPixels(this.state.progress, 1000, audioData.buffer.sampleRate) : 0;
@@ -82,12 +84,17 @@ export function withAudioPlay(WrappedComponent) {
       // pass down props and progress
       return <WrappedComponent {...passthruProps} progress={ progressPx } />;
     }
+  };
+
+  WithAudioPlay.propTypes = {
+    audioData: PropTypes.array,
+    playState: PropTypes.oneOf(['stopped', 'playing'])
   }
-  ;
 
   withAudioPlay.displayName = `WithSubscription(${getDisplayName(WrappedComponent)})`;
-  return WithPlayContext;
+  return WithAudioPlay;
 }
+
 
 function getDisplayName(WrappedComponent) {
   return WrappedComponent.displayName || WrappedComponent.name || 'Component';
