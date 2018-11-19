@@ -32,6 +32,9 @@ function loadAudioFromFile(audioSource, audioContext) {
     return loader.load();
 };
 
+export const loadMultipleAudio = (({audioSources, audioContext}) =>
+    audioSources.map((audioSource) => loadAudio(audioSource, audioContext)));
+
 export const loadAudio = ({audioSource, audioContext}) => {
     return dispatch => {
         dispatch(loadAudioStarted({audioSource}));
