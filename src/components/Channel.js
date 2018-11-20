@@ -20,7 +20,6 @@ const Waveform = styled.canvas`
 `;
 
 const ChannelWrapper = styled.div`
-  position: absolute;
   margin: 0;
   padding: 0;
   background: ${props => props.theme.waveFillColor};
@@ -43,7 +42,7 @@ class Channel extends Component {
   }
 
   draw() {
-    const { peaks, bits, length, waveHeight, theme, scale } = this.props;
+    const { peaks, bits, /* length,*/ waveHeight, theme, scale } = this.props;
 
     let offset = 0;
     for (let i = 0; i < this.canvases.length; i++) {
@@ -97,7 +96,7 @@ class Channel extends Component {
         cssWidth={currentWidth}
         width={currentWidth * scale}
         height={waveHeight * scale}
-        waveHeight={waveHeight}
+        waveHeight={waveHeight} 
         ref={this.createCanvasRef(waveformCount)} />
 
       waveforms.push(waveform);
@@ -115,9 +114,9 @@ class Channel extends Component {
 Channel.defaultProps = {
   theme: {
     // color of the waveform outline
-    waveOutlineColor: 'black',
-    waveFillColor: 'grey',
-    waveProgressColor: 'orange',
+    waveOutlineColor: '#282c34',
+    waveFillColor: '#05a0cd',
+    waveProgressColor: 'rgb(255,120,0)',
   },
   // checking `window.devicePixelRatio` when drawing to canvas.
   scale: 1,

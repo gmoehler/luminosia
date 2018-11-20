@@ -20,7 +20,7 @@ export default class {
   }
 
   fileProgress(e) {
-    let percentComplete = 0;
+    /* let percentComplete = 0;
 
     if (this.audioRequestState === STATE_UNINITIALIZED) {
       this.setStateChange(STATE_LOADING);
@@ -28,7 +28,7 @@ export default class {
 
     if (e.lengthComputable) {
       percentComplete = (e.loaded / e.total) * 100;
-    }
+    } */
 
     // this.ee.emit('loadprogress', percentComplete, this.src);
   }
@@ -37,7 +37,6 @@ export default class {
     const audioData = e.target.response || e.target.result;
 
     this.setStateChange(STATE_DECODING);
-    const that = this;
 
     return new Promise((resolve, reject) => {
       if (e.target.responseURL.endsWith('png')) {

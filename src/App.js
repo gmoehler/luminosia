@@ -1,60 +1,39 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { loadAudio } from './actions/audioActions'
+import styled /*, { withTheme } */ from 'styled-components';
 
-import Channel from './components/Channel';
+import AudioControlContainer from './components/AudioControlContainer';
+import AudioGroupContainer from './components/AudioGroupContainer';
 
 import logo from './logo.svg';
 import './App.css';
 
-const scale = window.devicePixelRatio;
+const AudioWrapper = styled.div`
+  displayName: 'AudioWrapper'
+  name: AudioWrapper
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  padding: 20px;
+`;
 
-window.AudioContext = window.AudioContext || window.webkitAudioContext;
-const audioContext = new window.AudioContext();
-
-class App extends Component {
-
-  loadAudioAction = (event) => {
-    this.props.loadAudioAction({
-      audioSource: "media/audio/Vocals30.mp3", 
-      audioContext
-    });
-  }
-
+export default class App extends Component {
 
   render() {
-
-    const {
-      bits,
-      length,
-      data
-    } = {...this.props.audio.peaks};
-    const channelData = Array.isArray(data) ? data[0] : [];
 
     return (
       <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
+          <img src={ logo } className="App-logo" alt="logo" />
           <p>
-           Waveform demo
+            Waveform demo
           </p>
-
-          <button onClick={this.loadAudioAction}>Load audio</button>
-          <Channel peaks={channelData} length={length} bits={bits} scale={scale}></Channel>
-
+          <AudioWrapper >
+            <AudioControlContainer />
+            <AudioGroupContainer />
+          </AudioWrapper>
         </header>
       </div>
-    );
+      );
+
   }
 }
-
-const mapStateToProps = state => ({
-  ...state
- });
-
- const mapDispatchToProps = dispatch => ({
-    loadAudioAction: spec => dispatch(loadAudio(spec))
- })
-
-
- export default connect(mapStateToProps, mapDispatchToProps)(App);
