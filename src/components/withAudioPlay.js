@@ -82,7 +82,9 @@ export function withAudioPlay(WrappedComponent) {
         secondsToPixels(this.state.progress, 1000, audioData.buffer.sampleRate) : 0;
 
       // pass down props and progress
-      return <WrappedComponent {...passthruProps} progress={ progressPx } />;
+      return <WrappedComponent {...passthruProps} 
+        progress={ progressPx } 
+        cursorPos={ progressPx } />;
     }
   };
 

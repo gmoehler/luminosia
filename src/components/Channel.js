@@ -10,6 +10,15 @@ const Progress = styled.div`
   height: ${props => props.waveHeight}px;
 `;
 
+const Cursor = styled.div`
+  position: relative;
+  background: ${props => props.theme.cursorColor};
+  width: 1px;
+  left: ${props => props.cursorPos}px;
+  height: ${props => props.waveHeight}px;
+`;
+
+
 const Waveform = styled.canvas`
   float: left;
   position: relative;
@@ -83,6 +92,7 @@ class Channel extends Component {
       waveHeight,
       scale,
       progress,
+      cursorPos,
       theme,
     } = this.props;
 
@@ -107,6 +117,7 @@ class Channel extends Component {
     return <ChannelWrapper cssWidth={length} theme={theme} waveHeight={waveHeight}>
       <Progress progress={progress} theme={theme} waveHeight={waveHeight} />
       {waveforms}
+      <Cursor cursorPos={cursorPos} theme={theme} waveHeight={waveHeight} />
     </ChannelWrapper>;
   }
 }
@@ -117,6 +128,7 @@ Channel.defaultProps = {
     waveOutlineColor: '#282c34',
     waveFillColor: '#05a0cd',
     waveProgressColor: 'rgb(255,120,0)',
+    cursorColor: 'red'
   },
   // checking `window.devicePixelRatio` when drawing to canvas.
   scale: 1,
@@ -127,6 +139,8 @@ Channel.defaultProps = {
   waveHeight: 80,
   // width in CSS pixels of the progress on the channel.
   progress: 0,
+  // position of the cursor in CSS pixels from the left of channel
+  cursorPos: 0,
 };
 
 export default withTheme(Channel);
