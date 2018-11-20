@@ -10,7 +10,8 @@ export default(state = initialState, action) => {
     case PLAY_AUDIO:
       return {
         ...state,
-        playState: "playing"
+        playState: "playing",
+        startAt: (action.payload && action.payload.startAt) ? action.payload.startAt : 0
       };
     case STOP_AUDIO:
       return {
@@ -25,4 +26,8 @@ export default(state = initialState, action) => {
 
 export const getPlayState = (state, source) => {
   return state.play && state.play.playState
+}
+
+export const getPlayStartAt = (state, source) => {
+  return state.play && state.play.startAt
 }

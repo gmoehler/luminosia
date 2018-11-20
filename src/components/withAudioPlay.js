@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 
 import Playout from '../player/Playout'
-import { secondsToPixels } from '../utils/conversions';
+import { secondsToPixels, pixelsToSamples, pixelsToSeconds } from '../utils/conversions';
 
 // HOC to support audio playing for one channel
 export function withAudioPlay(WrappedComponent) {
@@ -24,10 +24,25 @@ export function withAudioPlay(WrappedComponent) {
       this.audioContext = new window.AudioContext();
     }
 
+    static getDerivedStateFromProps(props, state){
+      const {audioData, playState} = props;
+      return ({
+        ...state, 
+        sampleRate: (audioData && audioData.buffer) ? audioData.buffer.sampleRate : 0,
+        buffer: audioData && audioData.buffer, 
+        playState
+      });
+    }
+
     componentDidUpdate(prevProps, prevState) {
       if (prevProps.playState !== this.props.playState) {
         if (this.props.playState === "playing") {
-          this.playAudio();
+          const startTime = this.props.startAt ? this.props.startAt : 0;
+          this.setState({
+            ...this.state,
+            startAt: startTime
+          })
+          this.playAudio(startTime);
         } else {
           this.stopAudio();
         }
@@ -39,15 +54,17 @@ export function withAudioPlay(WrappedComponent) {
       this.stopAudio();
     }
 
-    playAudio() {
-      //TODO: react on changing audiobuffers
+    playAudio(startAt) {
       if (!this.playout) {
-        this.playout = new Playout(this.audioContext, this.props.audioData.buffer);
+        this.playout = new Playout(this.audioContext, this.state.buffer);
       }
+      //TODO: think about jump to when playing
       if (!this.isPlaying()) {
-        this.playout.setUpSource()
+        this.playoutPromise = this.playout.setUpSource();
+        this.playoutPromise
           .then(this.stopAnimateProgress); // TODO: more checking, might be started again in meantime
-        this.playout.play(0, 0, 10);
+        console.log(`start playing at ${startAt}s`);
+        this.playout.play(0, startAt, 10);
 
         this.startTime = this.audioContext.currentTime;
         this.animationRequest = window.requestAnimationFrame(this.animateProgress);
@@ -56,7 +73,8 @@ export function withAudioPlay(WrappedComponent) {
 
     animateProgress() {
       this.setState({
-        progress: this.audioContext.currentTime - this.startTime
+        ...this.state,
+        progress: this.audioContext.currentTime - this.startTime + this.state.startAt
       })
       this.animationRequest = window.requestAnimationFrame(this.animateProgress);
     }
@@ -74,15 +92,24 @@ export function withAudioPlay(WrappedComponent) {
       this.stopAnimateProgress();
     }
 
+    handleClick = (e) => {
+      var bounds = e.target.getBoundingClientRect();
+      var x = e.clientX - bounds.left;
+      var y = e.clientY - bounds.top;
+      console.log('clicked at: ', x, y);
+      this.props.playAudio(pixelsToSeconds(x, 1000, this.state.sampleRate));
+    }
+
     render() {
       // stop passing audioData props down to Channel
       const {audioData, playState, ...passthruProps} = this.props;
 
-      const progressPx = audioData && audioData.buffer ?
-        secondsToPixels(this.state.progress, 1000, audioData.buffer.sampleRate) : 0;
+      const progressPx = this.state.sampleRate > 0 ? 
+        secondsToPixels(this.state.progress, 1000, this.state.sampleRate) : 0;
 
       // pass down props and progress
-      return <WrappedComponent {...passthruProps} 
+      return <WrappedComponent {...passthruProps}
+        handleClick={this.handleClick} 
         progress={ progressPx } 
         cursorPos={ progressPx } />;
     }
@@ -90,7 +117,9 @@ export function withAudioPlay(WrappedComponent) {
 
   WithAudioPlay.propTypes = {
     audioData: PropTypes.array,
-    playState: PropTypes.oneOf(['stopped', 'playing'])
+    playState: PropTypes.oneOf(['stopped', 'playing']),
+    startAt: PropTypes.number,
+    playAudio: PropTypes.func.isRequired,
   }
 
   withAudioPlay.displayName = `WithSubscription(${getDisplayName(WrappedComponent)})`;

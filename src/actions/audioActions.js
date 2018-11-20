@@ -51,8 +51,9 @@ export const loadAudio = (({audioSources, audioContext}) => {
     }
 });
 
-export const playAudio = () => ({
-    type: PLAY_AUDIO
+export const playAudio = (playInfo) => ({
+    type: PLAY_AUDIO,
+    payload: playInfo
 });
 
 export const stopAudio = () => ({

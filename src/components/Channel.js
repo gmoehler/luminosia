@@ -94,6 +94,7 @@ class Channel extends Component {
       progress,
       cursorPos,
       theme,
+      handleClick,
     } = this.props;
 
     let totalWidth = length;
@@ -114,7 +115,7 @@ class Channel extends Component {
       waveformCount += 1;
     }
 
-    return <ChannelWrapper cssWidth={length} theme={theme} waveHeight={waveHeight}>
+    return <ChannelWrapper onClick={handleClick} cssWidth={length} theme={theme} waveHeight={waveHeight}>
       <Progress progress={progress} theme={theme} waveHeight={waveHeight} />
       {waveforms}
       <Cursor cursorPos={cursorPos} theme={theme} waveHeight={waveHeight} />

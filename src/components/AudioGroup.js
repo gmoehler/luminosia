@@ -33,9 +33,10 @@ export default class AudioGroup extends Component {
 				// for withAudioPlay
 				audioData={ channelAudioData }
 				playState={ this.props.playState }
+				startAt={this.props.startAt}
+				playAudio={this.props.playAudio}
 
 				// for Channel
-				cursorPos={200}
 				peaks={ peaksDataMono } 
 				length={ 500 } 
 				bits={ bits } 
