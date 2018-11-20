@@ -20,6 +20,7 @@ export default(state = initialState, action) => {
         ...state,
         // TODO: improve this using a sub-reducer
         byIds: {
+          ...state.byIds,
           [action.payload.audioSource]: {
             loading: false,
             error: null,

@@ -10,8 +10,7 @@ class AudioControlContainer extends Component {
 
   doLoadAudio = (event) => {
     this.props.loadAudioAction({
-      audioSources: ["media/audio/BassDrums30.mp3"],
-      audioSource: "media/audio/Vocals30.mp3",
+      audioSources: ["media/audio/BassDrums30.mp3", "media/audio/Vocals30.mp3"],
       audioContext
     });
   }

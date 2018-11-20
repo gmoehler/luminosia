@@ -32,12 +32,8 @@ function loadAudioFromFile(audioSource, audioContext) {
     return loader.load();
 };
 
-export const loadMultipleAudio = (({audioSources, audioContext}) =>
-    audioSources.map((audioSource) => loadAudio(audioSource, audioContext)));
-
-export const loadAudio = ({audioSource, audioContext}) => {
-    return dispatch => {
-        dispatch(loadAudioStarted({audioSource}));
+function doLoad(dispatch, audioSource, audioContext) {
+    dispatch(loadAudioStarted({audioSource}));
 
         loadAudioFromFile(audioSource, audioContext)
         .then(audioBuffer => {
@@ -47,8 +43,13 @@ export const loadAudio = ({audioSource, audioContext}) => {
         .catch(err => {
             dispatch(loadAudioFailure({audioSource, err}));
         });
-    };
-};
+}
+
+export const loadAudio = (({audioSources, audioContext}) => {
+    return dispatch => {
+        audioSources.map((audioSource) => doLoad(dispatch, audioSource, audioContext))
+    }
+});
 
 export const playAudio = () => ({
     type: PLAY_AUDIO
