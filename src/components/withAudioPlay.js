@@ -13,13 +13,15 @@ export function withAudioPlay(WrappedComponent) {
       this.playout = null;
       this.startTime = 0;
       this.state = {
-        progress: 0,
-        sampleRate: 0,
-        buffer: {},
-        playState: "stopped"
+        progress: 0,            // play progress in secs
+        sampleRate: 0,          // sample rate of audio
+        buffer: {},             // audio buffer
+        playState: "stopped",   // play state: stopped / playing
+        shouldRestart: false,   // trigger for restart after stop to enable jumps
       };
-      this.stopAnimateProgress = this.stopAnimateProgress.bind(this);
+      // class functions
       this.animateProgress = this.animateProgress.bind(this);
+      this.stopAnimateProgress = this.stopAnimateProgress.bind(this);
       this.playAudio = this.playAudio.bind(this);
       this.stopAudio = this.stopAudio.bind(this);
 
@@ -38,15 +40,18 @@ export function withAudioPlay(WrappedComponent) {
     }
 
     componentDidUpdate(prevProps, prevState) {
+      // start or stop playing
       if (prevProps.playState !== this.props.playState) {
         if (this.props.playState === "playing") {
           const startTime = this.props.selection.from;
           this.playAudio(startTime);
         } else {
           this.stopAudio();
-        }
-      } else if (this.props.playState === "playing" && this.props.selection.from !== prevProps.selection.from) {
-        // jumpt to new position
+        } 
+      }
+      // jump to new play position
+      else if (this.props.playState === "playing" 
+        && this.props.selection.from !== prevProps.selection.from) {
         this.playAudio(this.props.selection.from);
       } 
     }
@@ -74,7 +79,7 @@ export function withAudioPlay(WrappedComponent) {
       }
       else {
         // remember wake-up for restart after audio has stopped
-        this.setState({...this.state, restart: true, restartAt: startAt});
+        this.setState({...this.state, shouldRestart: true});
         this.stopAudio();
       }
     }
@@ -98,12 +103,11 @@ export function withAudioPlay(WrappedComponent) {
     stopAudio() {
       this.playout && this.playout.stop();
       this.stopAnimateProgress();
-      if (this.state.restart) {
-        const startAt = this.state.restartAt;
-        // reset state
-        this.setState({...this.state, restart: false, restartAt: 0});
-        // and restart
-        this.playAudio(startAt, 0.05);
+      if (this.state.shouldRestart) {
+        // reset shouldRestart state
+        this.setState({...this.state, shouldRestart: false});
+        // and restart playing
+        this.playAudio(this.props.selection.from, 0.05);
       }
     }
 
@@ -121,14 +125,14 @@ export function withAudioPlay(WrappedComponent) {
       // stop passing audioData props down to Channel
       const {audioData, playState, ...passthruProps} = this.props;
 
-      const progressPx = this.state.sampleRate > 0 ? 
-        secondsToPixels(this.state.progress, 1000, this.state.sampleRate) : 0;
+      const progressPx = secondsToPixels(this.state.progress, 1000, this.state.sampleRate);
+      const cursorPx = secondsToPixels(this.props.selection.from, 1000, this.state.sampleRate);
 
       // pass down props and progress
       return <WrappedComponent {...passthruProps}
         handleClick={this.handleClick} 
         progress={ progressPx } 
-        cursorPos={ this.props.selection.from } />;
+        cursorPos={ cursorPx } />;
     }
   };
 
