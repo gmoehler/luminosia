@@ -27,14 +27,17 @@ export default class AudioGroup extends Component {
 			const channelAudioData = allAudioData[id];
 			const {data, /* length, */ bits} = { ...channelAudioData.peaks };
 			const peaksDataMono = Array.isArray(data) ? data[0] : []; // only one channel for now
+			const sampleRate = channelAudioData && channelAudioData.buffer && channelAudioData.buffer.sampleRate;
+			const buffer = channelAudioData && channelAudioData.buffer; 
 
 			return <AudioChannelWithPlay 
 				key={ id } // list items need a key
 				{...passthruProps}
 
 				// for withAudioPlay
-				audioData={ channelAudioData }
-
+				sampleRate={ sampleRate }
+				buffer={buffer}
+				
 				// for Channel
 				peaks={ peaksDataMono } 
 				length={ 500 } 

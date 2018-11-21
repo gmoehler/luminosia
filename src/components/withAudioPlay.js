@@ -14,8 +14,6 @@ export function withAudioPlay(WrappedComponent) {
       this.startTime = 0;
       this.state = {
         progress: 0,            // play progress in secs
-        sampleRate: 0,          // sample rate of audio
-        buffer: {},             // audio buffer
         playState: "stopped",   // play state: stopped / playing
         shouldRestart: false,   // trigger for restart after stop to enable jumps
       };
@@ -33,8 +31,6 @@ export function withAudioPlay(WrappedComponent) {
       const {audioData, playState} = props;
       return ({
         ...state, 
-        sampleRate: (audioData && audioData.buffer) ? audioData.buffer.sampleRate : 0,
-        buffer: audioData && audioData.buffer, 
         playState
       });
     }
@@ -63,7 +59,7 @@ export function withAudioPlay(WrappedComponent) {
 
     playAudio(startAt, delay=0) {
       if (!this.playout) {
-        this.playout = new Playout(this.audioContext, this.state.buffer);
+        this.playout = new Playout(this.audioContext, this.props.buffer);
       }
       
       // regular start at startAt
@@ -117,7 +113,7 @@ export function withAudioPlay(WrappedComponent) {
       var y = e.clientY - bounds.top;
       console.log('clicked at: ', x, y);
       // position cursor at click
-      const clickTime = pixelsToSeconds(x, 1000, this.state.sampleRate);
+      const clickTime = pixelsToSeconds(x, 1000, this.props.sampleRate);
       this.props.select(clickTime, clickTime);
     }
 
@@ -125,8 +121,8 @@ export function withAudioPlay(WrappedComponent) {
       // stop passing audioData props down to Channel
       const {audioData, playState, ...passthruProps} = this.props;
 
-      const progressPx = secondsToPixels(this.state.progress, 1000, this.state.sampleRate);
-      const cursorPx = secondsToPixels(this.props.selection.from, 1000, this.state.sampleRate);
+      const progressPx = secondsToPixels(this.state.progress, 1000, this.props.sampleRate);
+      const cursorPx = secondsToPixels(this.props.selection.from, 1000, this.props.sampleRate);
 
       // pass down props and progress
       return <WrappedComponent {...passthruProps}
@@ -137,7 +133,8 @@ export function withAudioPlay(WrappedComponent) {
   };
 
   WithAudioPlay.propTypes = {
-    audioData: PropTypes.array,
+    sampleRate: PropTypes.number,
+    buffer: PropTypes.object,
     playState: PropTypes.oneOf(['stopped', 'playing']),
     selection: PropTypes.object.isRequired,
     select: PropTypes.func.isRequired,
