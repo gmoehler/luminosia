@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import AudioGroup from './AudioGroup'
-import { playAudio, select } from '../actions/audioActions'
+import { select } from '../actions/audioActions'
 import { getAllChannelData } from '../reducers/audioReducer'
 import { getPlayState } from '../reducers/playReducer'
 import { getSelectionRange } from '../reducers/selectionReducer'

@@ -28,7 +28,7 @@ export function withAudioPlay(WrappedComponent) {
     }
 
     static getDerivedStateFromProps(props, state){
-      const {audioData, playState} = props;
+      const {playState} = props;
       return ({
         ...state, 
         playState
@@ -110,8 +110,8 @@ export function withAudioPlay(WrappedComponent) {
     handleClick = (e) => {
       var bounds = e.target.getBoundingClientRect();
       var x = e.clientX - bounds.left;
-      var y = e.clientY - bounds.top;
-      console.log('clicked at: ', x, y);
+      // var y = e.clientY - bounds.top;
+      // console.log('clicked at: ', x, y);
       // position cursor at click
       const clickTime = pixelsToSeconds(x, 1000, this.props.sampleRate);
       this.props.select(clickTime, clickTime);
