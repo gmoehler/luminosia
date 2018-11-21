@@ -13,7 +13,10 @@ export function withAudioPlay(WrappedComponent) {
       this.playout = null;
       this.startTime = 0;
       this.state = {
-        progress: 0
+        progress: 0,
+        sampleRate: 0,
+        buffer: {},
+        playState: "stopped"
       };
       this.stopAnimateProgress = this.stopAnimateProgress.bind(this);
       this.animateProgress = this.animateProgress.bind(this);
@@ -37,14 +40,14 @@ export function withAudioPlay(WrappedComponent) {
     componentDidUpdate(prevProps, prevState) {
       if (prevProps.playState !== this.props.playState) {
         if (this.props.playState === "playing") {
-          const startTime = this.props.startAt ? this.props.startAt : 0;
+          const startTime = this.props.selection.from;
           this.playAudio(startTime);
         } else {
           this.stopAudio();
         }
-      } else if (this.props.playState === "playing" && this.props.startAt !== prevProps.startAt) {
+      } else if (this.props.playState === "playing" && this.props.selection.from !== prevProps.selection.from) {
         // jumpt to new position
-        this.playAudio(this.props.startAt);
+        this.playAudio(this.props.selection.from);
       } 
     }
 
@@ -109,8 +112,9 @@ export function withAudioPlay(WrappedComponent) {
       var x = e.clientX - bounds.left;
       var y = e.clientY - bounds.top;
       console.log('clicked at: ', x, y);
-      // start playing audio at click point
-      this.props.playAudio(pixelsToSeconds(x, 1000, this.state.sampleRate));
+      // position cursor at click
+      const clickTime = pixelsToSeconds(x, 1000, this.state.sampleRate);
+      this.props.select(clickTime, clickTime);
     }
 
     render() {
@@ -124,15 +128,15 @@ export function withAudioPlay(WrappedComponent) {
       return <WrappedComponent {...passthruProps}
         handleClick={this.handleClick} 
         progress={ progressPx } 
-        cursorPos={ progressPx } />;
+        cursorPos={ this.props.selection.from } />;
     }
   };
 
   WithAudioPlay.propTypes = {
     audioData: PropTypes.array,
     playState: PropTypes.oneOf(['stopped', 'playing']),
-    startAt: PropTypes.number,
-    playAudio: PropTypes.func.isRequired,
+    selection: PropTypes.object.isRequired,
+    select: PropTypes.func.isRequired,
   }
 
   withAudioPlay.displayName = `WithSubscription(${getDisplayName(WrappedComponent)})`;

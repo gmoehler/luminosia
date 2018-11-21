@@ -23,18 +23,17 @@ export default class AudioGroup extends Component {
 		const channelComponents = Object.keys(this.props.allAudioData).map((id) => {
 
 			// get channel data
-			const channelAudioData = this.props.allAudioData[id];
+			const {allAudioData, ...passthruProps} = this.props;
+			const channelAudioData = allAudioData[id];
 			const {data, /* length, */ bits} = { ...channelAudioData.peaks };
 			const peaksDataMono = Array.isArray(data) ? data[0] : []; // only one channel for now
 
 			return <AudioChannelWithPlay 
 				key={ id } // list items need a key
+				{...passthruProps}
 
 				// for withAudioPlay
 				audioData={ channelAudioData }
-				playState={ this.props.playState }
-				startAt={this.props.startAt}
-				playAudio={this.props.playAudio}
 
 				// for Channel
 				peaks={ peaksDataMono } 
