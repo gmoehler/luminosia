@@ -1,7 +1,8 @@
-import {PLAY_AUDIO, STOP_AUDIO} from '../actions/types';
+import {PLAY_AUDIO, STOP_AUDIO, SET_CHANNEL_PLAY_STATE} from '../actions/types';
 
 const initialState = {
-  playState: "stopped"
+  playState: "stopped",
+  byIds: {},
 };
 
 export default(state = initialState, action) => {
@@ -18,16 +19,35 @@ export default(state = initialState, action) => {
         ...state,
         playState: "stopped"
       };
+    
+    case SET_CHANNEL_PLAY_STATE:
+      return {
+        ...state,
+        byIds: {
+          ...state.byIds,
+          [action.payload.channelId] : {
+            playState: action.payload.playState
+          }
+        }
+      }
 
     default:
       return state
   }
 }
 
-export const getPlayState = (state, source) => {
-  return state.play && state.play.playState
+export const getPlayState = (state) => {
+  return state.play.playState;
 }
 
-export const getPlayStartAt = (state, source) => {
-  return state.play && state.play.startAt
+export const getChannelPlayStates = (state) => {
+  return state.play.byIds;
+}
+
+export const getChannelPlayState = (state, channelId) => {
+  return state.play.byIds[channelId] && state.play.byIds[channelId].playState
+}
+
+export const getPlayStartAt = (state) => {
+  return state.play.startAt;
 }

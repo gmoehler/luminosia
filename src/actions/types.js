@@ -6,3 +6,4 @@ export const LOAD_AUDIO_FAILURE = "LOAD_AUDIO_FAILURE";
 export const PLAY_AUDIO = "PLAY_AUDIO";
 export const STOP_AUDIO = "STOP_AUDIO";
 export const SELECT = "SELECT";
+export const SET_CHANNEL_PLAY_STATE = "SET_CHANNEL_PLAY_STATE";

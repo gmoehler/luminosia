@@ -47,10 +47,10 @@ export default(state = initialState, action) => {
 }
 
 export const getAllChannelData = (state) => {
-  return state.audio && state.audio.byIds;
+  return state.audio.byIds;
 }
 
 
 export const getChannelData = (state, source) => {
-  return state.audio && state.audio.byIds && state.audio.byIds[source];
+  return state.audio.byIds[source];
 }

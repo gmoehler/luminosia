@@ -46,13 +46,13 @@ export function withAudioPlay(WrappedComponent) {
         else if (this.state.playState !== "stopped") {
           this.stopAudio();
         } 
+        this.setState({...this.state, playState: this.props.playState});
       }
       // jump to new play position
-      else if (this.props.playState === "playing" 
+      else if (this.state.playState === "playing" 
         && this.props.selection.from !== prevProps.selection.from) {
         this.playAudio(this.props.selection.from, this.props.selection.to);
       } 
-      this.setState({...this.state, playState: this.props.playState});
     }
 
     componentWillUnmount() {
@@ -103,6 +103,7 @@ export function withAudioPlay(WrappedComponent) {
     stopAudio() {
       this.playout && this.playout.stop();
       this.stopAnimateProgress();
+      this.props.setChannelAudioState("stopped");
       this.setState({...this.state, playState: "stopped"});
       if (this.state.shouldRestart) {
         // reset shouldRestart state
@@ -160,6 +161,7 @@ export function withAudioPlay(WrappedComponent) {
     playState: PropTypes.oneOf(['stopped', 'playing']),
     selection: PropTypes.object.isRequired,
     select: PropTypes.func.isRequired,
+    setChannelPlayState: PropTypes.func.isRequired,
   }
 
   withAudioPlay.displayName = `WithSubscription(${getDisplayName(WrappedComponent)})`;
