@@ -11,13 +11,20 @@ const Progress = styled.div`
 `;
 
 const Cursor = styled.div`
-  position: relative;
+  position: absolute;
   background: ${props => props.theme.cursorColor};
   width: 1px;
   left: ${props => props.cursorPos}px;
   height: ${props => props.waveHeight}px;
 `;
 
+const Selection = styled.div`
+  position: absolute;
+  left: ${props => props.selection.from}px;
+  background: ${props => props.theme.selectionColor};
+  width: ${props => props.selection.to - props.selection.from}px;
+  height: ${props => props.waveHeight}px;
+`;
 
 const Waveform = styled.canvas`
   float: left;
@@ -28,7 +35,9 @@ const Waveform = styled.canvas`
   height: ${props => props.waveHeight}px;
 `;
 
+// need position:relative so children will respect parent margin/padding
 const ChannelWrapper = styled.div`
+  position: relative; 
   margin: 0;
   padding: 0;
   background: ${props => props.theme.waveFillColor};
@@ -93,8 +102,10 @@ class Channel extends Component {
       scale,
       progress,
       cursorPos,
+      selection,
       theme,
-      handleClick,
+      handleMouseDown,
+      handleMouseUp,
     } = this.props;
 
     let totalWidth = length;
@@ -115,10 +126,13 @@ class Channel extends Component {
       waveformCount += 1;
     }
 
-    return <ChannelWrapper onClick={handleClick} cssWidth={length} theme={theme} waveHeight={waveHeight}>
+    return <ChannelWrapper 
+      onMouseDown={handleMouseDown} onMouseUp={handleMouseUp}
+      cssWidth={length} theme={theme} waveHeight={waveHeight}>
       <Progress progress={progress} theme={theme} waveHeight={waveHeight} />
+      <Selection selection={selection} theme={theme} waveHeight={waveHeight} />
       {waveforms}
-      <Cursor cursorPos={cursorPos} theme={theme} waveHeight={waveHeight} />
+      <Cursor cursorPos={cursorPos} theme={theme} waveHeight={waveHeight} /> 
     </ChannelWrapper>;
   }
 }
@@ -129,7 +143,8 @@ Channel.defaultProps = {
     waveOutlineColor: '#282c34',
     waveFillColor: '#05a0cd',
     waveProgressColor: 'rgb(255,120,0)',
-    cursorColor: 'red'
+    cursorColor: 'red',
+    selectionColor: 'rgba(0,0,255,0.5)'
   },
   // checking `window.devicePixelRatio` when drawing to canvas.
   scale: 1,
@@ -142,6 +157,7 @@ Channel.defaultProps = {
   progress: 0,
   // position of the cursor in CSS pixels from the left of channel
   cursorPos: 0,
+  selection: {from: 0, to:0}
 };
 
 export default withTheme(Channel);
