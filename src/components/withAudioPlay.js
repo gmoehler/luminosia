@@ -15,7 +15,6 @@ export function withAudioPlay(WrappedComponent) {
       this.mouseDownX = 0;      // x of mouse down event
       this.state = {
         progress: 0,            // play progress in secs
-        playState: "stopped",   // play state: stopped / playing
         shouldRestart: false,   // trigger for restart after stop to enable jumps
       };
       // class functions
@@ -37,21 +36,23 @@ export function withAudioPlay(WrappedComponent) {
     } */
 
     componentDidUpdate(prevProps, prevState) {
+    	
+      const { playState, selection } = this.props;
+    
       // start or stop playing
-      if (prevProps.playState !== this.props.playState) {
-        if (this.props.playState === "playing") {
-          this.playAudio(this.props.selection.from, this.props.selection.to);
+      if (prevProps.playState !== playState) {
+        if (playState === "playing") {
+          this.playAudio(selection.from, selection.to);
         } 
         // only stopped if not already (auto)stopped
-        else if (this.state.playState !== "stopped") {
+        else if (playState !== "stopped") {
           this.stopAudio();
         } 
-        this.setState({...this.state, playState: this.props.playState});
       }
       // jump to new play position
-      else if (this.state.playState === "playing" 
-        && this.props.selection.from !== prevProps.selection.from) {
-        this.playAudio(this.props.selection.from, this.props.selection.to);
+      else if (playState === "playing" 
+        && prevProps.selection.from !== selection.from) {
+        this.playAudio(selection.from, selection.to);
       } 
     }
 
@@ -104,7 +105,6 @@ export function withAudioPlay(WrappedComponent) {
       this.playout && this.playout.stop();
       this.stopAnimateProgress();
       this.props.setChannelAudioState("stopped");
-      this.setState({...this.state, playState: "stopped"});
       if (this.state.shouldRestart) {
         // reset shouldRestart state
         this.setState({...this.state, shouldRestart: false});
@@ -137,13 +137,15 @@ export function withAudioPlay(WrappedComponent) {
     }
 
     render() {
-      // stop passing audioData props down to Channel
-      const {audioData, playState, ...passthruProps} = this.props;
+      // stop some props from bring passed down to Channel
+      const {sampleRate, buffer, playState, 
+		selection, select, setChannelPlayState,
+		...passthruProps} = this.props;
 
-      const progressPx = secondsToPixels(this.state.progress, 1000, this.props.sampleRate);
-      const cursorPx = secondsToPixels(this.props.selection.from, 1000, this.props.sampleRate);
-      const selection = {from: cursorPx, 
-        to: secondsToPixels(this.props.selection.to, 1000, this.props.sampleRate)};
+      const progressPx = secondsToPixels(this.state.progress, 1000, sampleRate);
+      const cursorPx = secondsToPixels(selection.from, 1000, sampleRate);
+      const selectionPx = {from: cursorPx, 
+        to: secondsToPixels(selection.to, 1000, sampleRate)};
 
       // pass down props and progress
       return <WrappedComponent {...passthruProps}
@@ -151,7 +153,7 @@ export function withAudioPlay(WrappedComponent) {
         handleMouseUp={this.handleMouseUp}
         progress={ progressPx } 
         cursorPos={ cursorPx } 
-        selection={ selection } />;
+        selection={ selectionPx} />;
     }
   };
 
