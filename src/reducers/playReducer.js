@@ -21,8 +21,18 @@ export default(state = initialState, action) => {
       };
     
     case SET_CHANNEL_PLAY_STATE:
+      // aggregated state is playing when at least
+      // one channel is playing
+      let aggrPlayState = state.playState;
+      if (action.payload.playState == "playing") {
+      	aggrPlayState = "playing";
+      } else if (action.payload.playState == "stopped"
+			&& allChannelsStopped(state)) {
+			aggrPlayState = "stopped";
+		}
       return {
         ...state,
+        playState: aggrPlayState,
         byIds: {
           ...state.byIds,
           [action.payload.channelId] : {
@@ -34,6 +44,13 @@ export default(state = initialState, action) => {
     default:
       return state
   }
+}
+
+function allChannelsStopped(playState) {
+	return Object.keys(playState.byIds)
+		.reduce((result, key) => 
+			result && playState.byIds[key] === "stopped",
+			true)
 }
 
 export const getPlayState = (state) => {
