@@ -30,12 +30,14 @@ export default class AudioGroup extends Component {
 			const peaksDataMono = Array.isArray(data) ? data[0] : []; // only one channel for now
 			const sampleRate = channelAudioData && channelAudioData.buffer && channelAudioData.buffer.sampleRate;
 			const buffer = channelAudioData && channelAudioData.buffer; 
+			const playState = channelAudioData.playState;
 
 			return <AudioChannelWithPlay 
 				key={ channelId } // list items need a key
 				{...passthruProps}
 
 				// for withAudioPlay
+				playState={ playState }
 				sampleRate={ sampleRate }
 				buffer={buffer}
 				setChannelAudioState={ playState => 
@@ -58,6 +60,5 @@ export default class AudioGroup extends Component {
 
   AudioChannelWithPlay.propTypes = {
     allAudioData: PropTypes.array, 		// data of all channels
-		playState: PropTypes.oneOf(['stopped', 'playing']),
 		setChannelPlayState: PropTypes.func.isRequired,
   }

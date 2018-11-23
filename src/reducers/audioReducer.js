@@ -47,9 +47,14 @@ export default(state = initialState, action) => {
       };
 
     case PLAY_AUDIO:
-      return {
+      if ( allChannelsStopped(state)){
+        return {
         ...state,
-        byIds: mergePlayStateIntoToChannels(state, "playing")
+        byIds: allChannelsStopped(state) && mergePlayStateIntoToChannels(state, "playing")
+        }
+      }
+      return {
+        ...state
       }
 
     case STOP_AUDIO:
@@ -91,7 +96,13 @@ export const getAllChannelData = (state) => {
   return state.audio.byIds;
 }
 
-
 export const getChannelData = (state, source) => {
   return state.audio.byIds[source];
+}
+
+function allChannelsStopped(audioState) {
+	return Object.keys(audioState.byIds)
+		.reduce((result, key) => 
+			result && (audioState.byIds[key].playState === "stopped"),
+			true)
 }

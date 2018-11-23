@@ -24,7 +24,6 @@ const mapStateToProps = (state, props) => {
     allAudioData: getAllChannelData(state),
     playState: getPlayState(state),
     selection: getSelectionRange(state),
-    channelPlayStates: getChannelPlayStates(state),
   }
 };
 

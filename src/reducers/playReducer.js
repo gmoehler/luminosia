@@ -41,6 +41,7 @@ export default(state = initialState, action) => {
       };
     
     case SET_CHANNEL_PLAY_STATE:
+    
       // aggregated state is playing when at least
       // one channel is playing
       let aggrPlayState = state.playState;
