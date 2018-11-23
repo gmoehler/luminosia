@@ -45,7 +45,7 @@ export function withAudioPlay(WrappedComponent) {
           this.playAudio(selection.from, selection.to);
         } 
         // only stopped if not already (auto)stopped
-        else if (playState !== "stopped") {
+        else /* if (playState !== "stopped") */ {
           this.stopAudio();
         } 
       }

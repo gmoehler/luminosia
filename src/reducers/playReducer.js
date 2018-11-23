@@ -7,7 +7,7 @@ const initialState = {
 
 export default(state = initialState, action) => {
   switch (action.type) {
-    
+    /* 
     case LOAD_AUDIO_SUCCESS:
     return {
       ...state,
@@ -19,25 +19,25 @@ export default(state = initialState, action) => {
           playState: "stopped"
         }
       }
-    }
+    }*/
 
     case PLAY_AUDIO:
       return {
         ...state,
         playState: "playing",
          // move all channel playStates to playing
-        byIds: Object.keys(state.byIds).map((key) => {
+        /* byIds: Object.keys(state.byIds).map((key) => {
           return { [key]: {audioState: "playing" } }})
-          .reduce((a,b) => Object.assign({}, a, b))
+          .reduce((a,b) => Object.assign({}, a, b)) */
       };
     case STOP_AUDIO:
       return {
         ...state,
         playState: "stopped",
          // move all channel playStates to stopped
-        byIds: Object.keys(state.byIds).map((key) => {
+        /* byIds: Object.keys(state.byIds).map((key) => {
           return { [key]: { audioState: "stopped" } }})
-          .reduce((a,b) => Object.assign({}, a, b))
+          .reduce((a,b) => Object.assign({}, a, b)) */
       };
     
     case SET_CHANNEL_PLAY_STATE:
@@ -74,14 +74,14 @@ function allChannelsStopped(playState) {
 }
 
 export const getPlayState = (state) => {
-  // return state.play.playState;
-  if (state.play.byIds.length === 0) {
+  return state.play.playState;
+  /* if (state.play.byIds.length === 0) {
     return "stopped";
   }
   return Object.keys(state.play.byIds)
 		.reduce((result, key) => 
 			result && state.play.byIds[key] === "stopped",
-			true) ? "stopped" : "playing";
+			true) ? "stopped" : "playing"; */
 }
 
 export const getChannelPlayStates = (state) => {
