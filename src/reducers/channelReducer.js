@@ -99,11 +99,11 @@ function mergePlayStateIntoToChannels(state, playState) {
 }
 
 export const getAllChannelData = (state) => {
-  return state.channels.byIds;
+  return state.channel.byIds;
 }
 
 export const getChannelData = (state, source) => {
-  return state.channels.byIds[source];
+  return state.channel.byIds[source];
 }
 
 function allChannelsStopped(audioState) {

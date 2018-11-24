@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import AudioGroup from './AudioGroup'
 import { select, setChannelPlayState } from '../actions/audioActions'
-import { getAllChannelData } from '../reducers/audioReducer'
+import { getAllChannelData } from '../reducers/channelReducer'
 import { getSelectionRange } from '../reducers/selectionReducer'
 
 class AudioGroupContainer extends Component {
@@ -11,9 +11,7 @@ class AudioGroupContainer extends Component {
   render() {
 
     return (
-      <AudioGroup
-        {...this.props}
-      />);
+      <AudioGroup {...this.props} />);
   }
 }
 
@@ -26,9 +24,14 @@ const mapStateToProps = (state, props) => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  select: (from, to) => dispatch(select({from, to})),
-  setChannelPlayState: (channelId, playState) => 
-    dispatch(setChannelPlayState({channelId, playState})),
+  select: (from, to) => dispatch(select({
+    from,
+    to
+  })),
+  setChannelPlayState: (channelId, playState) => dispatch(setChannelPlayState({
+    channelId,
+    playState
+  })),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(AudioGroupContainer);
