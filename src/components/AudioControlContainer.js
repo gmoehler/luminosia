@@ -31,7 +31,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  loadAudioAction: spec => dispatch(loadAudio(spec)),
+  loadAudioAction: (spec) => dispatch(loadAudio(spec)),
   playAudioAction: () => dispatch(playAudio()),
   stopAudioAction: () => dispatch(stopAudio())
 })

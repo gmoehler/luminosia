@@ -1,4 +1,7 @@
-import {LOAD_AUDIO_STARTED, LOAD_AUDIO_SUCCESS, LOAD_AUDIO_FAILURE} from '../actions/types';
+import {merge} from 'lodash';
+
+import {LOAD_AUDIO_STARTED, LOAD_AUDIO_SUCCESS, LOAD_AUDIO_FAILURE, 
+    PLAY_AUDIO, STOP_AUDIO, SET_CHANNEL_PLAY_STATE} from '../actions/types';
 
 const initialState = {
   byIds: {}
@@ -23,6 +26,7 @@ export default(state = initialState, action) => {
           ...state.byIds,
           [action.payload.audioSource]: {
             loading: false,
+            playState: "stopped",
             error: null,
             buffer: action.payload.audioBuffer,
             peaks: action.payload.peaks,
@@ -36,21 +40,69 @@ export default(state = initialState, action) => {
         byIds: {
           [action.payload.audioSource]: {
             loading: false,
+            playState: "stopped",
             error: action.payload
           }
         }
       };
+
+    case PLAY_AUDIO:
+      if ( allChannelsStopped(state)){
+        return {
+        ...state,
+        byIds: allChannelsStopped(state) && mergePlayStateIntoToChannels(state, "playing")
+        }
+      }
+      return {
+        ...state
+      }
+
+    case STOP_AUDIO:
+      return {
+        ...state,
+        byIds: mergePlayStateIntoToChannels(state, "stopped")
+      }
+
+    case SET_CHANNEL_PLAY_STATE:
+
+      const mergedChannelState = merge({}, 
+        state.byIds[action.payload.channelId], 
+        {playState: action.payload.playState}
+        );
+
+      return {
+        ...state,
+        byIds: {
+          ...state.byIds,
+          [action.payload.channelId] : mergedChannelState
+        }
+      }
 
     default:
       return state
   }
 }
 
-export const getAllChannelData = (state) => {
-  return state.audio && state.audio.byIds;
+function mergePlayStateIntoToChannels (state, playState) {
+  const channelPlayStatesStopped = Object.keys(state.byIds)
+        .map((key) => {
+          return { [key]: {playState: playState } }}) 
+        .reduce((a,b) => Object.assign({}, a, b));
+  const mergedState = merge({}, state.byIds, channelPlayStatesStopped);
+  return mergedState;
 }
 
+export const getAllChannelData = (state) => {
+  return state.audio.byIds;
+}
 
 export const getChannelData = (state, source) => {
-  return state.audio && state.audio.byIds && state.audio.byIds[source];
+  return state.audio.byIds[source];
+}
+
+function allChannelsStopped(audioState) {
+	return Object.keys(audioState.byIds)
+		.reduce((result, key) => 
+			result && (audioState.byIds[key].playState === "stopped"),
+			true)
 }

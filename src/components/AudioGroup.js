@@ -20,20 +20,29 @@ export default class AudioGroup extends Component {
 		}
 
 		// we have data: draw the channels
-		const channelComponents = Object.keys(this.props.allAudioData).map((id) => {
+		const channelComponents = Object.keys(this.props.allAudioData)
+			.map((channelId) => {
 
 			// get channel data
-			const channelAudioData = this.props.allAudioData[id];
+			const {allAudioData, ...passthruProps} = this.props;
+			const channelAudioData = allAudioData[channelId];
 			const {data, /* length, */ bits} = { ...channelAudioData.peaks };
 			const peaksDataMono = Array.isArray(data) ? data[0] : []; // only one channel for now
+			const sampleRate = channelAudioData && channelAudioData.buffer && channelAudioData.buffer.sampleRate;
+			const buffer = channelAudioData && channelAudioData.buffer; 
+			const playState = channelAudioData.playState;
 
 			return <AudioChannelWithPlay 
-				key={ id } // list items need a key
+				key={ channelId } // list items need a key
+				{...passthruProps}
 
 				// for withAudioPlay
-				audioData={ channelAudioData }
-				playState={ this.props.playState }
-
+				playState={ playState }
+				sampleRate={ sampleRate }
+				buffer={buffer}
+				setChannelAudioState={ playState => 
+						this.props.setChannelPlayState(channelId, playState) }
+				
 				// for Channel
 				peaks={ peaksDataMono } 
 				length={ 500 } 
@@ -51,5 +60,5 @@ export default class AudioGroup extends Component {
 
   AudioChannelWithPlay.propTypes = {
     allAudioData: PropTypes.array, 		// data of all channels
-    playState: PropTypes.oneOf(['stopped', 'playing'])
+		setChannelPlayState: PropTypes.func.isRequired,
   }

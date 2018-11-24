@@ -7,6 +7,8 @@ import {
     LOAD_AUDIO_SUCCESS,
     PLAY_AUDIO,
     STOP_AUDIO,
+    SELECT,
+    SET_CHANNEL_PLAY_STATE,
     } from './types';
 
 // load audio async action
@@ -57,4 +59,14 @@ export const playAudio = () => ({
 
 export const stopAudio = () => ({
     type: STOP_AUDIO
+});
+
+export const select = (selectInfo) => ({
+    type: SELECT,
+    payload: selectInfo
+});
+
+export const setChannelPlayState = (stateInfo) => ({
+    type: SET_CHANNEL_PLAY_STATE,
+    payload: stateInfo
 });
