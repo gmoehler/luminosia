@@ -56,7 +56,7 @@ export function withAudioPlay(WrappedComponent) {
       
       // regular start at startAt
       if (!this.isPlaying()) {
-        const actStartAt = Math.min(0, startAt);
+        const actStartAt = Math.max(0, startAt);
         console.log(`playing from ${actStartAt}s to ${endAt} with delay ${delay}`);
         this.playout.setUpSource()
           .then(this.stopAudio);  // stop when end has reached

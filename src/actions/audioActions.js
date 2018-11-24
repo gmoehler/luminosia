@@ -39,7 +39,8 @@ function doLoad(dispatch, audioSource, audioContext) {
 
         loadAudioFromFile(audioSource, audioContext)
         .then(audioBuffer => {
-                const peaks = extractPeaks(audioBuffer, 1000, true, 0, audioBuffer.length, 16);
+                const peaks = audioSource.endsWith(".png") ? null :
+                    extractPeaks(audioBuffer, 1000, true, 0, audioBuffer.length, 16);
                 dispatch(loadAudioSuccess({audioSource, audioBuffer, peaks}));
         })
         .catch(err => {

@@ -3,6 +3,6 @@ import audioReducer from './audioReducer';
 import selectionReducer from './selectionReducer';
 
 export default combineReducers({
-    audio: audioReducer,
+    channels: audioReducer,
     selection: selectionReducer
 });
