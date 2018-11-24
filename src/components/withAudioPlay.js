@@ -56,14 +56,15 @@ export function withAudioPlay(WrappedComponent) {
       
       // regular start at startAt
       if (!this.isPlaying()) {
-        console.log(`playing from ${startAt}s to ${endAt} with delay ${delay}`);
+        const actStartAt = Math.min(0, startAt);
+        console.log(`playing from ${actStartAt}s to ${endAt} with delay ${delay}`);
         this.playout.setUpSource()
           .then(this.stopAudio);  // stop when end has reached
-        const duration = endAt && Math.abs(endAt - startAt) > 0.1 ? endAt - startAt : 10;
-        this.playout.play(delay, startAt, duration);
+        const duration = endAt && Math.abs(endAt - actStartAt) > 0.1 ? endAt - actStartAt : 10;
+        this.playout.play(delay, actStartAt, duration);
 
         // remember time when audio would have started at 0
-        this.startTime = this.audioContext.currentTime - startAt;
+        this.startTime = this.audioContext.currentTime - actStartAt;
         this.animationRequest = window.requestAnimationFrame(this.animateProgress);
       }
     }
