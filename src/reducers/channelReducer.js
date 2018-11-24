@@ -1,6 +1,7 @@
 import { merge } from 'lodash';
 
-import { LOAD_AUDIO_STARTED, LOAD_AUDIO_SUCCESS, LOAD_AUDIO_FAILURE, PLAY_AUDIO, STOP_AUDIO, SET_CHANNEL_PLAY_STATE } from '../actions/types';
+import { LOAD_AUDIO_STARTED, LOAD_AUDIO_SUCCESS, LOAD_AUDIO_FAILURE, 
+  PLAY_AUDIO, STOP_AUDIO, SET_CHANNEL_PLAY_STATE } from '../actions/types';
 
 const initialState = {
   byIds: {}
@@ -25,6 +26,7 @@ export default (state = initialState, action) => {
           ...state.byIds,
           [action.payload.audioSource]: {
             loading: false,
+            type: action.payload.audioSource.endsWith(".png") ? "image" : "audio",
             playState: "stopped",
             error: null,
             buffer: action.payload.audioBuffer,

@@ -50,6 +50,9 @@ export function withAudioPlay(WrappedComponent) {
     }
 
     playAudio(startAt, endAt, delay=0) {
+      if (this.props.type !== "audio") {
+        return;
+      }
       if (!this.playout) {
         this.playout = new Playout(this.audioContext, this.props.buffer);
       }

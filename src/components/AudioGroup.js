@@ -31,12 +31,14 @@ export default class AudioGroup extends Component {
 			const sampleRate = channelAudioData && channelAudioData.buffer && channelAudioData.buffer.sampleRate;
 			const buffer = channelAudioData && channelAudioData.buffer; 
 			const playState = channelAudioData.playState;
+			const type = channelAudioData.type;
 
 			return <AudioChannelWithPlay 
 				key={ channelId } // list items need a key
 				{...passthruProps}
 
 				// for withAudioPlay
+				type={type}
 				playState={ playState }
 				sampleRate={ sampleRate }
 				buffer={buffer}
