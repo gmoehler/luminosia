@@ -106,6 +106,8 @@ class Channel extends Component {
       theme,
       handleMouseDown,
       handleMouseUp,
+      handleMouseMove,
+      handleMouseLeave,
     } = this.props;
 
     let totalWidth = length;
@@ -127,7 +129,7 @@ class Channel extends Component {
     }
 
     return <ChannelWrapper 
-      onMouseDown={handleMouseDown} onMouseUp={handleMouseUp}
+      onMouseDown={handleMouseDown} onMouseUp={handleMouseUp} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}
       cssWidth={length} theme={theme} waveHeight={waveHeight}>
       <Progress progress={progress} theme={theme} waveHeight={waveHeight} />
       <Selection selection={selection} theme={theme} waveHeight={waveHeight} />
