@@ -118,7 +118,7 @@ class Channel extends Component {
     const canvasImages = [];
     while (totalWidth > 0) {
       const currentWidth = Math.min(totalWidth, MAX_CANVAS_WIDTH);
-      const canvasImage = <div key= {`div-${waveformCount}`}>
+      const canvasImage = <div key= {`div-${imageCount}`}>
       <ImageCanvas
         key={`${length}-${imageCount}`}
         cssWidth={currentWidth}
