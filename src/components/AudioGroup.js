@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import Channel from './Channel';
 import { withAudioPlay } from './withAudioPlay'
+import ImageChannel from './ImageChannel';
 
 const windowPixelRatio = window.devicePixelRatio;
 
@@ -33,7 +34,8 @@ export default class AudioGroup extends Component {
 			const playState = channelAudioData.playState;
 			const type = channelAudioData.type;
 
-			return <AudioChannelWithPlay 
+			const channelElement = type === "audio" ?
+			<AudioChannelWithPlay 
 				key={ channelId } // list items need a key
 				{...passthruProps}
 
@@ -50,7 +52,18 @@ export default class AudioGroup extends Component {
 				length={ 500 } 
 				bits={ bits } 
 				scale={ windowPixelRatio }
-			/>
+			/> :
+
+			<ImageChannel
+				key={ channelId } // list items need a key
+				length={ 500 } 
+				bits={ bits } 
+				scale={ windowPixelRatio }
+				source={ channelAudioData.source }
+			/>;
+
+			return channelElement;
+
 		});
 
     return (
