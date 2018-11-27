@@ -62,30 +62,24 @@ class Channel extends Component {
     this.draw();
   }
 
-  drawImage(ctx, img, sourceOffset, sourceWidth, targetWidth, targetHeight) {
-    ctx.drawImage(img, sourceOffset, 0, sourceWidth, img.height, 0, 0, targetWidth, targetHeight);
-    //ctx.drawImage(img, this.currentSourceCue, 0, this.sourceWidth, img.height,
-    //     0, 0, this.targetWidth, canvas.height)
-  }
-
   draw() {
-    const { bits, length, imageHeight, theme, scale } = this.props;
+    const { imageHeight, scale } = this.props;
 
+    const factor = 5.0;
 
-    let sourceOffset = 0;
+    let targetOffset = 0;
     for (let i = 0; i < this.canvases.length; i++) {
       const canvas = this.canvases[i];
       const img = this.images[i];
       const cc = canvas.getContext('2d');
-      const sourceWidth = img.width;
-      const targetWidth = length;
+      const sourceOffset = targetOffset / factor;
+      const targetWidth = MAX_CANVAS_WIDTH;
+      const sourceWidth = targetWidth / factor;
 
-      cc.clearRect(0, 0, canvas.width, canvas.height);
       cc.scale(scale, scale);
+      img.onload = cc.drawImage(img, sourceOffset, 0, sourceWidth, img.height, 0, 0, targetWidth, imageHeight)
 
-      img.onload = this.drawImage(cc, img, sourceOffset, sourceWidth, targetWidth, imageHeight)
-
-      sourceOffset += MAX_CANVAS_WIDTH;
+      targetOffset += MAX_CANVAS_WIDTH;
     }  
   }
 
@@ -118,19 +112,21 @@ class Channel extends Component {
     const canvasImages = [];
     while (totalWidth > 0) {
       const currentWidth = Math.min(totalWidth, MAX_CANVAS_WIDTH);
-      const canvasImage = <div key= {`div-${imageCount}`}>
-      <ImageCanvas
-        key={`${length}-${imageCount}`}
-        cssWidth={currentWidth}
-        width={currentWidth * scale}
-        height={imageHeight * scale}
-        imageHeight={imageHeight} 
-        ref={this.createCanvasRef(imageCount)} />
-        <CanvasImage 
-          src={source} 
-          className="hidden" 
-          ref={this.createImageRef(imageCount)}/>
-      </div>
+      const canvasImage = (
+        <div key= {`div-${imageCount}`}>
+          <ImageCanvas
+            key={`${length}-${imageCount}`}
+            cssWidth={currentWidth}
+            width={currentWidth * scale}
+            height={imageHeight * scale}
+            imageHeight={imageHeight} 
+            ref={this.createCanvasRef(imageCount)} />
+            <CanvasImage 
+              src={source} 
+              className="hidden" 
+              ref={this.createImageRef(imageCount)}/>
+        </div>
+      )
 
       canvasImages.push(canvasImage);
       totalWidth -= currentWidth;
