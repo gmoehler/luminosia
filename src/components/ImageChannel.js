@@ -63,9 +63,7 @@ class Channel extends Component {
   }
 
   draw() {
-    const { imageHeight, scale } = this.props;
-
-    const factor = 5.0;
+    const { imageHeight, scale, factor } = this.props;
 
     let targetOffset = 0;
     for (let i = 0; i < this.canvases.length; i++) {

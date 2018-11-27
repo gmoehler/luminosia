@@ -59,6 +59,7 @@ export default class AudioGroup extends Component {
 				length={ 500 } 
 				bits={ bits } 
 				scale={ windowPixelRatio }
+				factor={5} 				// TODO needs more work
 				source={ channelAudioData.source }
 			/>;
 
