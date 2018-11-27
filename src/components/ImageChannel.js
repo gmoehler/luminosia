@@ -5,9 +5,8 @@ const MAX_CANVAS_WIDTH = 1000;
 
 const ImageProgress = styled.div`
   position: absolute;
-  background: ${props => props.theme.waveProgressColor};
   width: ${props => props.progress}px;
-  height: ${props => props.waveHeight}px;
+  height: ${props => props.imageHeight}px;
 `;
 
 const ImageCursor = styled.div`
@@ -15,7 +14,7 @@ const ImageCursor = styled.div`
   background: ${props => props.theme.cursorColor};
   width: 1px;
   left: ${props => props.cursorPos}px;
-  height: ${props => props.waveHeight}px;
+  height: ${props => props.imageHeight}px;
 `;
 
 const ImageSelection = styled.div`
@@ -23,7 +22,7 @@ const ImageSelection = styled.div`
   left: ${props => props.selection.from}px;
   background: ${props => props.theme.selectionColor};
   width: ${props => props.selection.to - props.selection.from}px;
-  height: ${props => props.waveHeight}px;
+  height: ${props => props.imageHeight}px;
 `;
 
 const ImageCanvas = styled.canvas`
@@ -32,22 +31,20 @@ const ImageCanvas = styled.canvas`
   margin: 0;
   padding: 0;
   width: ${props => props.cssWidth}px;
-  height: ${props => props.waveHeight}px;
+  height: ${props => props.imageHeight}px;
 `;
 
 const CanvasImage = styled.img`
   display: none;
 `;
 
-
 // need position:relative so children will respect parent margin/padding
 const ImageChannelWrapper = styled.div`
   position: relative; 
   margin: 0;
   padding: 0;
-  background: ${props => props.theme.waveFillColor};
   width: ${props => props.cssWidth}px;
-  height: ${props => props.waveHeight}px;
+  height: ${props => props.imageHeight}px;
 `;
 
 class Channel extends Component {
@@ -72,7 +69,7 @@ class Channel extends Component {
   }
 
   draw() {
-    const { bits, /* length,*/ waveHeight, theme, scale } = this.props;
+    const { bits, length, imageHeight, theme, scale } = this.props;
 
 
     let sourceOffset = 0;
@@ -81,13 +78,12 @@ class Channel extends Component {
       const img = this.images[i];
       const cc = canvas.getContext('2d');
       const sourceWidth = img.width;
-      const targetWidth = 300;
+      const targetWidth = length;
 
       cc.clearRect(0, 0, canvas.width, canvas.height);
-      cc.fillStyle = theme.waveOutlineColor;
       cc.scale(scale, scale);
 
-      img.onload = this.drawImage(cc, img, sourceOffset, sourceWidth, targetWidth, waveHeight)
+      img.onload = this.drawImage(cc, img, sourceOffset, sourceWidth, targetWidth, imageHeight)
 
       sourceOffset += MAX_CANVAS_WIDTH;
     }  
@@ -105,7 +101,7 @@ class Channel extends Component {
     const {
       source,
       length,
-      waveHeight,
+      imageHeight,
       scale,
       progress,
       cursorPos,
@@ -118,60 +114,55 @@ class Channel extends Component {
     } = this.props;
 
     let totalWidth = length;
-    let waveformCount = 0;
-    const waveforms = [];
+    let imageCount = 0;
+    const canvasImages = [];
     while (totalWidth > 0) {
       const currentWidth = Math.min(totalWidth, MAX_CANVAS_WIDTH);
-      const waveform = <div key= {`div-${waveformCount}`}>
+      const canvasImage = <div key= {`div-${waveformCount}`}>
       <ImageCanvas
-        key={`${length}-${waveformCount}`}
+        key={`${length}-${imageCount}`}
         cssWidth={currentWidth}
         width={currentWidth * scale}
-        height={waveHeight * scale}
-        waveHeight={waveHeight} 
-        ref={this.createCanvasRef(waveformCount)} />
+        height={imageHeight * scale}
+        imageHeight={imageHeight} 
+        ref={this.createCanvasRef(imageCount)} />
         <CanvasImage 
           src={source} 
           className="hidden" 
-          ref={this.createImageRef(waveformCount)}/>
+          ref={this.createImageRef(imageCount)}/>
       </div>
 
-      waveforms.push(waveform);
+      canvasImages.push(canvasImage);
       totalWidth -= currentWidth;
-      waveformCount += 1;
+      imageCount += 1;
     }
 
     return <ImageChannelWrapper 
       onMouseDown={handleMouseDown} onMouseUp={handleMouseUp} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}
-      cssWidth={length} theme={theme} waveHeight={waveHeight}>
-      <ImageProgress progress={progress} theme={theme} waveHeight={waveHeight} />
-      <ImageSelection selection={selection} theme={theme} waveHeight={waveHeight} />
-      {waveforms}
-      <ImageCursor cursorPos={cursorPos} theme={theme} waveHeight={waveHeight} /> 
+      cssWidth={length} theme={theme} imageHeight={imageHeight}>
+      <ImageProgress progress={progress} theme={theme} imageHeight={imageHeight} />
+      <ImageSelection selection={selection} theme={theme} imageHeight={imageHeight} />
+      {canvasImages}
+      <ImageCursor cursorPos={cursorPos} theme={theme} imageHeight={imageHeight} /> 
     </ImageChannelWrapper>;
   }
 }
 
 Channel.defaultProps = {
   theme: {
-    // color of the waveform outline
-    waveOutlineColor: '#282c34',
-    waveFillColor: '#05a0cd',
-    waveProgressColor: 'rgb(255,120,0)',
     cursorColor: 'red',
     selectionColor: 'rgba(0,0,255,0.5)'
   },
   // checking `window.devicePixelRatio` when drawing to canvas.
   scale: 1,
-  peaks: [],
   length: 0,
-  bits: 0,
-  // height in CSS pixels of each canvas element a waveform is on.
-  waveHeight: 80,
+  // height in CSS pixels of each canvas element an image is on.
+  imageHeight: 80,
   // width in CSS pixels of the progress on the channel.
   progress: 0,
   // position of the cursor in CSS pixels from the left of channel
   cursorPos: 0,
+  // position of the selection in CSS pixels from the left of channel
   selection: {from: 0, to:0}
 };
 

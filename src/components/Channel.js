@@ -159,6 +159,7 @@ Channel.defaultProps = {
   progress: 0,
   // position of the cursor in CSS pixels from the left of channel
   cursorPos: 0,
+  // position of the selection in CSS pixels from the left of channel
   selection: {from: 0, to:0}
 };
 
