@@ -34,7 +34,7 @@ const ImageCanvas = styled.canvas`
   height: ${props => props.imageHeight}px;
 `;
 
-const CanvasImage = styled.img`
+const CanvasRefImage = styled.img`
   display: none;
 `;
 
@@ -51,7 +51,7 @@ class Channel extends Component {
   constructor(props) {
     super(props);
     this.canvases = [];
-    this.images = [];
+    this.canvasImage = React.createRef();
   }
 
   componentDidMount() {
@@ -70,7 +70,7 @@ class Channel extends Component {
     let targetOffset = 0;
     for (let i = 0; i < this.canvases.length; i++) {
       const canvas = this.canvases[i];
-      const img = this.images[i];
+      const img = this.canvasImage.current;
       const cc = canvas.getContext('2d');
       const sourceOffset = targetOffset / factor;
       const targetWidth = MAX_CANVAS_WIDTH;
@@ -85,10 +85,6 @@ class Channel extends Component {
 
   createCanvasRef(i) {
     return (canvas) => {this.canvases[i] = canvas}
-  }
-
-  createImageRef(i) {
-    return (canvas) => {this.images[i] = canvas}
   }
 
   render() {
@@ -113,19 +109,13 @@ class Channel extends Component {
     while (totalWidth > 0) {
       const currentWidth = Math.min(totalWidth, MAX_CANVAS_WIDTH);
       const canvasImage = (
-        <div key= {`div-${imageCount}`}>
-          <ImageCanvas
-            key={`${length}-${imageCount}`}
-            cssWidth={currentWidth}
-            width={currentWidth * scale}
-            height={imageHeight * scale}
-            imageHeight={imageHeight} 
-            ref={this.createCanvasRef(imageCount)} />
-            <CanvasImage 
-              src={source} 
-              className="hidden" 
-              ref={this.createImageRef(imageCount)}/>
-        </div>
+        <ImageCanvas
+          key={`${length}-${imageCount}`}
+          cssWidth={currentWidth}
+          width={currentWidth * scale}
+          height={imageHeight * scale}
+          imageHeight={imageHeight} 
+          ref={this.createCanvasRef(imageCount)} />
       )
 
       canvasImages.push(canvasImage);
@@ -133,14 +123,18 @@ class Channel extends Component {
       imageCount += 1;
     }
 
-    return <ImageChannelWrapper 
-      onMouseDown={handleMouseDown} onMouseUp={handleMouseUp} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}
-      cssWidth={length} theme={theme} imageHeight={imageHeight}>
-      <ImageProgress progress={progress} theme={theme} imageHeight={imageHeight} />
-      <ImageSelection selection={selection} theme={theme} imageHeight={imageHeight} />
-      {canvasImages}
-      <ImageCursor cursorPos={cursorPos} theme={theme} imageHeight={imageHeight} /> 
-    </ImageChannelWrapper>;
+    return (
+      <ImageChannelWrapper 
+        onMouseDown={handleMouseDown} onMouseUp={handleMouseUp} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}
+        cssWidth={length} theme={theme} imageHeight={imageHeight}>
+        <CanvasRefImage  src={source} className="hidden" ref={this.canvasImage}/> 
+        <ImageProgress progress={progress} theme={theme} imageHeight={imageHeight} />
+        <ImageSelection selection={selection} theme={theme} imageHeight={imageHeight} />
+        {canvasImages}
+        <ImageCursor cursorPos={cursorPos} theme={theme} imageHeight={imageHeight} />
+
+      </ImageChannelWrapper>
+    );
   }
 }
 
