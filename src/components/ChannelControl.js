@@ -1,25 +1,25 @@
 import React, { Component } from 'react';
 import styled /*, { withTheme } */ from 'styled-components';
 
-const AudioControlWrapper = styled.div`
+const ChannelControlWrapper = styled.div`
   display: flex
   justify-content: center;
   margin: 0;
   padding: 20px;
 `;
 
-export default class AudioControl extends Component {
+export default class ChannelControl extends Component {
 
   render() {
 
     return (
-      <AudioControlWrapper>
+      <ChannelControlWrapper>
         <button onClick={ this.props.loadAudio }>Load</button>
         <button onClick={ this.props.playChannel }>Play</button>
         <button onClick={ this.props.stopChannel }>Stop</button>
-      </AudioControlWrapper>
+      </ChannelControlWrapper>
       );
   }
 }
 
-// export const AudioControlWithTheme = withTheme(AudioControl);
+// export const ChannelControlWithTheme = withTheme(ChannelControl);

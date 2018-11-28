@@ -7,7 +7,7 @@ import ImageChannel from './ImageChannel';
 import { withAudioPlay } from './withAudioPlay'
 import { withImagePlay } from './withImagePlay'
 
-const AudioGroupWrapper = styled.div`
+const ChannelGroupWrapper = styled.div`
 	width: 500px;
 	overflow: auto;
 	white-space: nowrap;
@@ -21,7 +21,7 @@ const AudioChannelWithPlay = withAudioPlay(Channel);
 const ImageChannelWithPlay = withImagePlay(ImageChannel);
 
 // contains multiple AudioChannels
-export default class AudioGroup extends Component {
+export default class ChannelGroup extends Component {
 
   render() {
 
@@ -90,9 +90,9 @@ export default class AudioGroup extends Component {
 		});
 
     return (
-			<AudioGroupWrapper>
+			<ChannelGroupWrapper>
 				{channelComponents}
-      </AudioGroupWrapper>
+      </ChannelGroupWrapper>
 		)}
 	}
 

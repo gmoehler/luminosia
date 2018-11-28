@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { loadAudio, playChannel, stopChannel } from '../actions/channelActions'
-import AudioControl from './AudioControl';
+import ChannelControl from './ChannelControl';
 
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
 const audioContext = new window.AudioContext();
 
-class AudioControlContainer extends Component {
+class ChannelControlContainer extends Component {
 
   doLoadAudio = (event) => {
     this.props.loadAudioAction({
@@ -18,7 +18,7 @@ class AudioControlContainer extends Component {
   render() {
 
     return (
-      <AudioControl loadAudio={ this.doLoadAudio } playChannel={ this.props.playChannelAction } stopChannel={ this.props.stopChannelAction } />
+      <ChannelControl loadAudio={ this.doLoadAudio } playChannel={ this.props.playChannelAction } stopChannel={ this.props.stopChannelAction } />
       );
   }
 }
@@ -34,4 +34,4 @@ const mapDispatchToProps = dispatch => ({
 })
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(AudioControlContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(ChannelControlContainer);

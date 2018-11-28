@@ -1,18 +1,18 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import AudioGroup from './AudioGroup'
+import ChannelGroup from './ChannelGroup'
 import { setChannelPlayState } from '../actions/channelActions'
 import { select } from '../actions/viewActions'
 import { getAllChannelData } from '../reducers/channelReducer'
 import { getSelectionRange } from '../reducers/viewReducer'
 
-class AudioGroupContainer extends Component {
+class ChannelGroupContainer extends Component {
 
   render() {
 
     return (
-      <AudioGroup {...this.props} />);
+      <ChannelGroup {...this.props} />);
   }
 }
 
@@ -35,4 +35,4 @@ const mapDispatchToProps = dispatch => ({
   })),
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(AudioGroupContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(ChannelGroupContainer);
