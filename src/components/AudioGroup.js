@@ -2,13 +2,15 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import Channel from './Channel';
-import { withAudioPlay } from './withAudioPlay'
 import ImageChannel from './ImageChannel';
+import { withAudioPlay } from './withAudioPlay'
+import { withImagePlay } from './withImagePlay'
 
 const windowPixelRatio = window.devicePixelRatio;
 
 // add play functionality to audio channels
 const AudioChannelWithPlay = withAudioPlay(Channel);
+const ImageChannelWithPlay = withImagePlay(ImageChannel);
 
 // contains multiple AudioChannels
 export default class AudioGroup extends Component {
@@ -29,7 +31,8 @@ export default class AudioGroup extends Component {
 			const channelAudioData = allAudioData[channelId];
 			const {data, /* length, */ bits} = { ...channelAudioData.peaks };
 			const peaksDataMono = Array.isArray(data) ? data[0] : []; // only one channel for now
-			const sampleRate = channelAudioData && channelAudioData.buffer && channelAudioData.buffer.sampleRate;
+			const sampleRate = (channelAudioData && channelAudioData.buffer && channelAudioData.buffer.sampleRate) ?
+				channelAudioData.buffer.sampleRate: 48000; // TODO: change this
 			const buffer = channelAudioData && channelAudioData.buffer; 
 			const playState = channelAudioData.playState;
 			const type = channelAudioData.type;
@@ -54,8 +57,19 @@ export default class AudioGroup extends Component {
 				scale={ windowPixelRatio }
 			/> :
 
-			<ImageChannel
+			<ImageChannelWithPlay
 				key={ channelId } // list items need a key
+				{...passthruProps}
+
+				// for withImagePlay
+				type={type}
+				playState={ playState }
+				sampleRate={ sampleRate }
+				buffer={buffer}
+				setChannelAudioState={ playState => 
+						this.props.setChannelPlayState(channelId, playState) }
+				
+				// for ImageChannel				
 				length={ 500 } 
 				bits={ bits } 
 				scale={ windowPixelRatio }

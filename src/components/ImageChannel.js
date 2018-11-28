@@ -5,6 +5,7 @@ const MAX_CANVAS_WIDTH = 1000;
 
 const ImageProgress = styled.div`
   position: absolute;
+  background: ${props => props.theme.waveProgressColor};
   width: ${props => props.progress}px;
   height: ${props => props.imageHeight}px;
 `;
@@ -126,9 +127,9 @@ class Channel extends Component {
         onMouseDown={handleMouseDown} onMouseUp={handleMouseUp} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}
         cssWidth={length} theme={theme} imageHeight={imageHeight}>
         <CanvasRefImage  src={source} className="hidden" ref={this.canvasImage}/> 
+        {canvasImages}
         <ImageProgress progress={progress} theme={theme} imageHeight={imageHeight} />
         <ImageSelection selection={selection} theme={theme} imageHeight={imageHeight} />
-        {canvasImages}
         <ImageCursor cursorPos={cursorPos} theme={theme} imageHeight={imageHeight} />
 
       </ImageChannelWrapper>
@@ -138,9 +139,11 @@ class Channel extends Component {
 
 Channel.defaultProps = {
   theme: {
+    waveProgressColor: 'rgb(255,255,255,0.5)', // transparent white
     cursorColor: 'red',
     selectionColor: 'rgba(0,0,255,0.5)'
   },
+  factor: 1,
   // checking `window.devicePixelRatio` when drawing to canvas.
   scale: 1,
   length: 0,

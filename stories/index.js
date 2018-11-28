@@ -3,9 +3,11 @@ import { ThemeProvider } from 'styled-components';
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import Channel from '../src/components/Channel';
+import ImageChannel from '../src/components/ImageChannel';
 import TimeScale from '../src/components/TimeScale';
 import TrackControls from '../src/components/TrackControls';
 import BBCWaveformData from '../public/media/json/vocals.json';
+import imageFile from '../public/media/image/mostlyStripes.png';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -30,6 +32,12 @@ const theme = {
   selectionColor: 'purple',
   timeColor: 'red',
 };
+
+const image = {
+  src: imageFile,
+  alt: 'my image',
+};
+
 
 const scale = window.devicePixelRatio;
 
@@ -78,6 +86,29 @@ storiesOf('Channel', module)
       </Channel>
     </ThemeProvider>
   ))
+  ;
+  
+  storiesOf('ImageChannel', module)
+  .add('Image channel.', () => (
+      <ImageChannel></ImageChannel>
+  ))
+  .add('Image channel with image and factor 5.', () => (
+      <ImageChannel source={image.src} length={length} factor={5}> </ImageChannel>
+  ))
+  .add('Image channel with image and factor 5 & progress.', () => (
+    <ImageChannel source={image.src} length={length} factor={5} scale={scale} progress={200}> </ImageChannel>
+  ))
+  .add('Image channel with image and factor 5 & cursor.', () => (
+    <ImageChannel source={image.src} length={length} factor={5} scale={scale} cursorPos={150}> </ImageChannel>
+  ))
+  .add('Image channel with image and factor 5 & selection.', () => (
+    <ImageChannel source={image.src} length={length} factor={5} scale={scale} selection={{from: 300, to: 450}} > </ImageChannel>
+  ))
+  .add('Image channel with image and factor 5 & cursor, progress & selection.', () => (
+    <ImageChannel source={image.src} length={length} factor={5} scale={scale} 
+    progress={200} cursorPos={150} selection={{from: 300, to: 450}} > </ImageChannel>
+  ))
+
   ;
 
 storiesOf('TimeScale', module)

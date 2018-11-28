@@ -14,9 +14,9 @@ export default class AudioControl extends Component {
 
     return (
         <AudioControlWrapper>
-          <button onClick={this.props.loadAudio}>Load audio</button>
-          <button onClick={this.props.playAudio}>Play audio</button>
-          <button onClick={this.props.stopAudio}>Stop audio</button>
+          <button onClick={this.props.loadAudio}>Load</button>
+          <button onClick={this.props.playAudio}>Play</button>
+          <button onClick={this.props.stopAudio}>Stop</button>
         </AudioControlWrapper>
       );
   }
