@@ -1,7 +1,6 @@
 import { merge } from 'lodash';
 
-import { LOAD_AUDIO_STARTED, LOAD_AUDIO_SUCCESS, LOAD_AUDIO_FAILURE, 
-  PLAY_AUDIO, STOP_AUDIO, SET_CHANNEL_PLAY_STATE } from '../actions/types';
+import { LOAD_CHANNEL_STARTED, LOAD_CHANNEL_SUCCESS, LOAD_CHANNEL_FAILURE, PLAY_AUDIO, STOP_AUDIO, SET_CHANNEL_PLAY_STATE } from '../actions/types';
 
 const initialState = {
   byIds: {}
@@ -9,7 +8,7 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case LOAD_AUDIO_STARTED:
+    case LOAD_CHANNEL_STARTED:
       return {
         ...state,
         byIds: {
@@ -18,7 +17,7 @@ export default (state = initialState, action) => {
           }
         }
       };
-    case LOAD_AUDIO_SUCCESS:
+    case LOAD_CHANNEL_SUCCESS:
       return {
         ...state,
         // TODO: improve this using a sub-reducer
@@ -35,7 +34,7 @@ export default (state = initialState, action) => {
           }
         }
       }
-    case LOAD_AUDIO_FAILURE:
+    case LOAD_CHANNEL_FAILURE:
       return {
         ...state,
         byIds: {

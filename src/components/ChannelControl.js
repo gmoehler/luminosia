@@ -14,7 +14,7 @@ export default class ChannelControl extends Component {
 
     return (
       <ChannelControlWrapper>
-        <button onClick={ this.props.loadAudio }>Load</button>
+        <button onClick={ this.props.loadChannel }>Load</button>
         <button onClick={ this.props.playChannel }>Play</button>
         <button onClick={ this.props.stopChannel }>Stop</button>
       </ChannelControlWrapper>
