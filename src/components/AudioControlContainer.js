@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { loadAudio, playAudio, stopAudio } from '../actions/channelActions'
+import { loadAudio, playChannel, stopChannel } from '../actions/channelActions'
 import AudioControl from './AudioControl';
 
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -18,10 +18,7 @@ class AudioControlContainer extends Component {
   render() {
 
     return (
-      <AudioControl
-        loadAudio={ this.doLoadAudio } 
-        playAudio={ this.props.playAudioAction }
-        stopAudio={ this.props.stopAudioAction } />
+      <AudioControl loadAudio={ this.doLoadAudio } playChannel={ this.props.playChannelAction } stopChannel={ this.props.stopChannelAction } />
       );
   }
 }
@@ -32,8 +29,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   loadAudioAction: (spec) => dispatch(loadAudio(spec)),
-  playAudioAction: () => dispatch(playAudio()),
-  stopAudioAction: () => dispatch(stopAudio())
+  playChannelAction: () => dispatch(playChannel()),
+  stopChannelAction: () => dispatch(stopChannel())
 })
 
 

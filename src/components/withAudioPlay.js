@@ -11,58 +11,58 @@ export function withAudioPlay(WrappedComponent) {
     constructor(props) {
       super(props);
       this.playout = null;
-      this.startTime = 0;       // start time of current play
-      this.mouseDownX = 0;      // x in px of mouse down event
+      this.startTime = 0; // start time of current play
+      this.mouseDownX = 0; // x in px of mouse down event
       this.state = {
-        progress: 0,            // play progress in secs
+        progress: 0, // play progress in secs
       };
       // class functions
       this.animateProgress = this.animateProgress.bind(this);
       this.stopAnimateProgress = this.stopAnimateProgress.bind(this);
-      this.playAudio = this.playAudio.bind(this);
-      this.stopAudio = this.stopAudio.bind(this);
+      this.playChannel = this.playChannel.bind(this);
+      this.stopChannel = this.stopChannel.bind(this);
 
       window.AudioContext = window.AudioContext || window.webkitAudioContext;
       this.audioContext = new window.AudioContext();
     }
 
     componentDidUpdate(prevProps, prevState) {
-    	
-      const { playState, selection } = this.props;
-    
+
+      const {playState, selection} = this.props;
+
       // start or stop playing
       if (prevProps.playState !== playState) {
         if (playState === "playing") {
-          this.playAudio(selection.from, selection.to);
-        } 
+          this.playChannel(selection.from, selection.to);
+        }
         // only stopped if not already (auto)stopped
-        else if (this.isPlaying())  {
-          this.stopAudio();
-        } 
+        else if (this.isPlaying()) {
+          this.stopChannel();
+        }
       }
     }
 
     componentWillUnmount() {
       // clean up playout and animation
-      if (this.isPlaying())  {
-        this.stopAudio();
-      } 
+      if (this.isPlaying()) {
+        this.stopChannel();
+      }
     }
 
-    playAudio(startAt, endAt, delay=0) {
+    playChannel(startAt, endAt, delay = 0) {
       if (this.props.type !== "audio") {
         return;
       }
       if (!this.playout) {
         this.playout = new Playout(this.audioContext, this.props.buffer);
       }
-      
+
       // regular start at startAt
       if (!this.isPlaying()) {
         const actStartAt = Math.max(0, startAt);
         console.log(`playing from ${actStartAt}s to ${endAt} with delay ${delay}`);
         this.playout.setUpSource()
-          .then(this.stopAudio);  // stop when end has reached
+          .then(this.stopChannel); // stop when end has reached
         const duration = endAt && Math.abs(endAt - actStartAt) > 0.1 ? endAt - actStartAt : 10;
         this.playout.play(delay, actStartAt, duration);
 
@@ -88,7 +88,7 @@ export function withAudioPlay(WrappedComponent) {
       return this.playout && this.playout.isPlaying();
     }
 
-    stopAudio() {
+    stopChannel() {
       this.playout && this.playout.stop();
       this.stopAnimateProgress();
       this.props.setChannelAudioState("stopped");
@@ -112,7 +112,7 @@ export function withAudioPlay(WrappedComponent) {
         const mouseDownTime = pixelsToSeconds(this.mouseDownX, 1000, this.props.sampleRate);
         const mouseUpTime = pixelsToSeconds(mouseUp, 1000, this.props.sampleRate);
         // console.log('mouse at: ', e.clientX - bounds.left);
-        if (mouseDownTime < mouseUpTime){
+        if (mouseDownTime < mouseUpTime) {
           this.props.select(mouseDownTime, mouseUpTime);
         } else {
           this.props.select(mouseUpTime, mouseDownTime);
@@ -139,25 +139,21 @@ export function withAudioPlay(WrappedComponent) {
 
     render() {
       // select props passed down to Channel
-      const {sampleRate, buffer, playState, selection, select, setChannelPlayState,
-	    	...passthruProps} = this.props;
+      const {sampleRate, buffer, playState, selection, select, setChannelPlayState, ...passthruProps} = this.props;
 
       const progressPx = secondsToPixels(this.state.progress, 1000, sampleRate);
       const cursorPx = secondsToPixels(selection.from, 1000, sampleRate);
-      const selectionPx = {from: cursorPx, 
-        to: secondsToPixels(selection.to, 1000, sampleRate)};
+      const selectionPx = {
+        from: cursorPx,
+        to: secondsToPixels(selection.to, 1000, sampleRate)
+      };
 
       // pass down props and progress
-      return <WrappedComponent {...passthruProps}
-        handleMouseDown={this.handleMouseDown}
-        handleMouseUp={this.handleMouseUp}
-        handleMouseMove={this.handleMouseMove}
-        handleMouseLeave={this.handleMouseLeave}
-        progress={ progressPx } 
-        cursorPos={ cursorPx } 
-        selection={ selectionPx } />;
+      return <WrappedComponent {...passthruProps} handleMouseDown={ this.handleMouseDown } handleMouseUp={ this.handleMouseUp } handleMouseMove={ this.handleMouseMove } handleMouseLeave={ this.handleMouseLeave }
+               progress={ progressPx } cursorPos={ cursorPx } selection={ selectionPx } />;
     }
-  };
+  }
+  ;
 
   WithAudioPlay.propTypes = {
     sampleRate: PropTypes.number,

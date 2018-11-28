@@ -57,11 +57,11 @@ export const loadAudio = (({audioSources, audioContext}) => {
   }
 });
 
-export const playAudio = () => ({
+export const playChannel = () => ({
   type: PLAY_AUDIO
 });
 
-export const stopAudio = () => ({
+export const stopChannel = () => ({
   type: STOP_AUDIO
 });
 

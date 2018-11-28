@@ -13,11 +13,11 @@ export default class AudioControl extends Component {
   render() {
 
     return (
-        <AudioControlWrapper>
-          <button onClick={this.props.loadAudio}>Load</button>
-          <button onClick={this.props.playAudio}>Play</button>
-          <button onClick={this.props.stopAudio}>Stop</button>
-        </AudioControlWrapper>
+      <AudioControlWrapper>
+        <button onClick={ this.props.loadAudio }>Load</button>
+        <button onClick={ this.props.playChannel }>Play</button>
+        <button onClick={ this.props.stopChannel }>Stop</button>
+      </AudioControlWrapper>
       );
   }
 }
