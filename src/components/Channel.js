@@ -8,6 +8,7 @@ const Progress = styled.div`
   background: ${props => props.theme.waveProgressColor};
   width: ${props => props.progress}px;
   height: ${props => props.waveHeight}px;
+  border-right: 1px solid ${props => props.theme.waveProgressBorderColor};
 `;
 
 const Cursor = styled.div`
@@ -145,6 +146,7 @@ Channel.defaultProps = {
     waveOutlineColor: '#282c34',
     waveFillColor: '#05a0cd',
     waveProgressColor: 'rgb(255,120,0)',
+    waveProgressBorderColor: 'rgb(255,255,255)',
     cursorColor: 'red',
     selectionColor: 'rgba(0,0,255,0.5)'
   },

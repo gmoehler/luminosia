@@ -8,6 +8,7 @@ const ImageProgress = styled.div`
   background: ${props => props.theme.waveProgressColor};
   width: ${props => props.progress}px;
   height: ${props => props.imageHeight}px;
+  border-right: 1px solid ${props => props.theme.waveProgressBorderColor};
 `;
 
 const ImageCursor = styled.div`
@@ -139,7 +140,8 @@ class Channel extends Component {
 
 Channel.defaultProps = {
   theme: {
-    waveProgressColor: 'rgb(255,255,255,0.5)', // transparent white
+    waveProgressColor: 'rgb(255,255,255,0.3)', // transparent white
+    waveProgressBorderColor: 'rgb(255,255,255,1)', // transparent white
     cursorColor: 'red',
     selectionColor: 'rgba(0,0,255,0.5)'
   },

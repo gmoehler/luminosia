@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import styled, { withTheme } from 'styled-components';
+import styled from 'styled-components';
 
 import Channel from './Channel';
 import ImageChannel from './ImageChannel';
@@ -10,6 +10,7 @@ import { withImagePlay } from './withImagePlay'
 const AudioGroupWrapper = styled.div`
 	width: 500px;
 	overflow: auto;
+	white-space: nowrap;
 `;
 
 
