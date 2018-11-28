@@ -5,7 +5,7 @@ import ChannelGroup from './ChannelGroup'
 import { setChannelPlayState } from '../actions/channelActions'
 import { select } from '../actions/viewActions'
 import { getallChannelsData } from '../reducers/channelReducer'
-import { getSelectionRange } from '../reducers/viewReducer'
+import { getSelectionRange, getZoomLevel } from '../reducers/viewReducer'
 
 class ChannelGroupContainer extends Component {
 
@@ -21,6 +21,7 @@ const mapStateToProps = (state, props) => {
   return {
     allChannelsData: getallChannelsData(state),
     selection: getSelectionRange(state),
+    pixelsPerSecond: getZoomLevel(state),
   }
 };
 

@@ -1,4 +1,4 @@
-import { SELECT, SET_ZOOM, ZOOM_IN } from './types';
+import { SELECT, SET_ZOOM_LEVEL } from './types';
 
 // load audio async action
 
@@ -6,4 +6,9 @@ import { SELECT, SET_ZOOM, ZOOM_IN } from './types';
 export const select = (selectInfo) => ({
   type: SELECT,
   payload: selectInfo
+});
+
+export const setZoomLevel = (zoomInfo) => ({
+  type: SET_ZOOM_LEVEL,
+  payload: zoomInfo
 });

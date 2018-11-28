@@ -35,7 +35,7 @@ export default class ChannelGroup extends Component {
 			.map((channelId) => {
 
 			// get channel data
-			const {allChannelsData, ...passthruProps} = this.props;
+			const {allChannelsData, pixelsPerSecond, ...passthruProps} = this.props;
 			const channelData = allChannelsData[channelId];
 			const {data, length,  bits} = { ...channelData.peaks };
 			const peaksDataMono = Array.isArray(data) ? data[0] : []; // only one channel for now
@@ -81,7 +81,7 @@ export default class ChannelGroup extends Component {
 				length={ 500 } 
 				bits={ bits } 
 				scale={ windowPixelRatio }
-				factor={5} 				// TODO needs more work
+				factor={ 1000 / pixelsPerSecond } 				// TODO needs more work
 				source={ channelData.source }
 			/>;
 

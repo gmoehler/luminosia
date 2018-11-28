@@ -17,6 +17,8 @@ export default class ChannelControl extends Component {
         <button onClick={ this.props.loadChannel }>Load</button>
         <button onClick={ this.props.playChannel }>Play</button>
         <button onClick={ this.props.stopChannel }>Stop</button>
+        <button onClick={ this.props.zoomIn }>Zoom in</button>
+        <button onClick={ this.props.zoomOut }>Zoom out</button>
       </ChannelControlWrapper>
       );
   }
