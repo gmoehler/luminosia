@@ -1,10 +1,17 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import styled, { withTheme } from 'styled-components';
 
 import Channel from './Channel';
 import ImageChannel from './ImageChannel';
 import { withAudioPlay } from './withAudioPlay'
 import { withImagePlay } from './withImagePlay'
+
+const AudioGroupWrapper = styled.div`
+	width: 500px;
+	overflow: auto;
+`;
+
 
 const windowPixelRatio = window.devicePixelRatio;
 
@@ -29,7 +36,7 @@ export default class AudioGroup extends Component {
 			// get channel data
 			const {allAudioData, ...passthruProps} = this.props;
 			const channelAudioData = allAudioData[channelId];
-			const {data, /* length, */ bits} = { ...channelAudioData.peaks };
+			const {data, length,  bits} = { ...channelAudioData.peaks };
 			const peaksDataMono = Array.isArray(data) ? data[0] : []; // only one channel for now
 			const sampleRate = (channelAudioData && channelAudioData.buffer && channelAudioData.buffer.sampleRate) ?
 				channelAudioData.buffer.sampleRate: 48000; // TODO: change this
@@ -52,7 +59,7 @@ export default class AudioGroup extends Component {
 				
 				// for Channel
 				peaks={ peaksDataMono } 
-				length={ 500 } 
+				length={ length } 
 				bits={ bits } 
 				scale={ windowPixelRatio }
 			/> :
@@ -82,9 +89,9 @@ export default class AudioGroup extends Component {
 		});
 
     return (
-			<div>
+			<AudioGroupWrapper>
 				{channelComponents}
-      </div>
+      </AudioGroupWrapper>
 		)}
 	}
 
