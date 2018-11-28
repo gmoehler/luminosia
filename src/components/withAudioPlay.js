@@ -91,7 +91,7 @@ export function withAudioPlay(WrappedComponent) {
     stopChannel() {
       this.playout && this.playout.stop();
       this.stopAnimateProgress();
-      this.props.setChannelAudioState("stopped");
+      this.props.setChannelPlayState("stopped");
     }
 
     // start selection

@@ -10,7 +10,7 @@ class ChannelControlContainer extends Component {
 
   doLoadChannel = (event) => {
     this.props.loadChannelAction({
-      audioSources: ["media/audio/BassDrums30.mp3", "media/audio/Vocals30.mp3", "media/image/mostlyStripes.png"],
+      channelSources: ["media/audio/BassDrums30.mp3", "media/audio/Vocals30.mp3", "media/image/mostlyStripes.png"],
       audioContext
     });
   }

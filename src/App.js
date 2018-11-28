@@ -7,9 +7,9 @@ import ChannelGroupContainer from './components/ChannelGroupContainer';
 import logo from './logo.svg';
 import './App.css';
 
-const AudioWrapper = styled.div`
-  displayName: 'AudioWrapper'
-  name: AudioWrapper
+const Wrapper = styled.div`
+  displayName: 'Wrapper'
+  name: Wrapper
   display: flex;
   flex-direction: column;
   justify-content: left;
@@ -27,10 +27,10 @@ export default class App extends Component {
           <p>
             Waveform demo
           </p>
-          <AudioWrapper>
+          <Wrapper>
             <ChannelControlContainer />
             <ChannelGroupContainer />
-          </AudioWrapper>
+          </Wrapper>
         </header>
       </div>
       );

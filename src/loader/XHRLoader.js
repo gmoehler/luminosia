@@ -25,8 +25,8 @@ export default class extends Loader {
 
         decoderPromise
           .catch(err => reject(err))
-          .then((audioBuffer) => {
-            resolve(audioBuffer);
+          .then((channelBuffer) => {
+            resolve(channelBuffer);
           })
           .catch(err => reject(err));
       });

@@ -13,9 +13,9 @@ class PlayoutHandler extends Component {
   }
 
   startPlaying() {
-    //TODO: react on changing audiobuffers
+    //TODO: react on changing channelBuffers
     if (!this.playout) {
-      this.playout = new Playout(this.audioContext, this.props.audioBuffer);
+      this.playout = new Playout(this.audioContext, this.props.channelBuffer);
     }
     // TODO: set this.isPlaying back to false when play ends
     this.playout.setUpSource();
@@ -36,8 +36,7 @@ class PlayoutHandler extends Component {
   componentDidMount() {
     if (!this.isPlaying && this.props.playing) {
       this.startPlaying();
-    }
-    else if (this.isPlaying && !this.props.playing) {
+    } else if (this.isPlaying && !this.props.playing) {
       this.stopPlaying();
     }
   }
@@ -45,10 +44,9 @@ class PlayoutHandler extends Component {
   componentDidUpdate() {
     if (!this.isPlaying && this.props.playing) {
       this.startPlaying();
-    }
-    else if (this.isPlaying && !this.props.playing) {
+    } else if (this.isPlaying && !this.props.playing) {
       this.stopPlaying();
-    }    
+    }
   }
 
   render() {
@@ -58,7 +56,7 @@ class PlayoutHandler extends Component {
 
 PlayoutHandler.propTypes = {
   audioContext: PropTypes.object,
-  audioBuffer: PropTypes.object,
+  channelBuffer: PropTypes.object,
   playing: PropTypes.bool,
 };
 

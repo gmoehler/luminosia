@@ -1,7 +1,7 @@
 import extractPeaks from 'webaudio-peaks';
 import LoaderFactory from '../loader/LoaderFactory'
 
-import { LOAD_CHANNEL_STARTED, LOAD_CHANNEL_FAILURE, LOAD_CHANNEL_SUCCESS, PLAY_AUDIO, STOP_AUDIO, SET_CHANNEL_PLAY_STATE,
+import { LOAD_CHANNEL_STARTED, LOAD_CHANNEL_FAILURE, LOAD_CHANNEL_SUCCESS, PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE,
 } from './types';
 
 // load audio async action
@@ -12,9 +12,9 @@ const loadChannelStarted = startInfo => ({
 });
 
 
-const loadChannelSuccess = audioInfo => ({
+const loadChannelSuccess = channelInfo => ({
   type: LOAD_CHANNEL_SUCCESS,
-  payload: audioInfo
+  payload: channelInfo
 });
 
 const loadChannelFailure = errorInfo => ({
@@ -22,47 +22,47 @@ const loadChannelFailure = errorInfo => ({
   payload: errorInfo
 });
 
-function loadChannelFromFile(audioSource, audioContext) {
-  const loader = LoaderFactory.createLoader(audioSource, audioContext);
+function loadChannelFromFile(channelSource, audioContext) {
+  const loader = LoaderFactory.createLoader(channelSource, audioContext);
   return loader.load();
 }
 ;
 
-function doLoad(dispatch, audioSource, audioContext) {
+function doLoad(dispatch, channelSource, audioContext) {
   dispatch(loadChannelStarted({
-    audioSource
+    channelSource
   }));
 
-  loadChannelFromFile(audioSource, audioContext)
-    .then(audioBuffer => {
-      const peaks = audioSource.endsWith(".png") ? null :
-        extractPeaks(audioBuffer, 1000, true, 0, audioBuffer.length, 16);
+  loadChannelFromFile(channelSource, audioContext)
+    .then(channelBuffer => {
+      const peaks = channelSource.endsWith(".png") ? null :
+        extractPeaks(channelBuffer, 1000, true, 0, channelBuffer.length, 16);
       dispatch(loadChannelSuccess({
-        audioSource,
-        audioBuffer,
+        channelSource,
+        channelBuffer,
         peaks
       }));
     })
     .catch(err => {
       dispatch(loadChannelFailure({
-        audioSource,
+        channelSource,
         err
       }));
     });
 }
 
-export const loadChannel = (({audioSources, audioContext}) => {
+export const loadChannel = (({channelSources, audioContext}) => {
   return dispatch => {
-    audioSources.map((audioSource) => doLoad(dispatch, audioSource, audioContext))
+    channelSources.map((channelSource) => doLoad(dispatch, channelSource, audioContext))
   }
 });
 
 export const playChannel = () => ({
-  type: PLAY_AUDIO
+  type: PLAY_CHANNELS
 });
 
 export const stopChannel = () => ({
-  type: STOP_AUDIO
+  type: STOP_CHANNELS
 });
 
 export const setChannelPlayState = (stateInfo) => ({

@@ -1,6 +1,6 @@
 import { merge } from 'lodash';
 
-import { LOAD_CHANNEL_STARTED, LOAD_CHANNEL_SUCCESS, LOAD_CHANNEL_FAILURE, PLAY_AUDIO, STOP_AUDIO, SET_CHANNEL_PLAY_STATE } from '../actions/types';
+import { LOAD_CHANNEL_STARTED, LOAD_CHANNEL_SUCCESS, LOAD_CHANNEL_FAILURE, PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE } from '../actions/types';
 
 const initialState = {
   byIds: {}
@@ -12,7 +12,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         byIds: {
-          [action.payload.audioSource]: {
+          [action.payload.channelSource]: {
             loading: true
           }
         }
@@ -23,14 +23,14 @@ export default (state = initialState, action) => {
         // TODO: improve this using a sub-reducer
         byIds: {
           ...state.byIds,
-          [action.payload.audioSource]: {
+          [action.payload.channelSource]: {
             loading: false,
-            type: action.payload.audioSource.endsWith(".png") ? "image" : "audio",
+            type: action.payload.channelSource.endsWith(".png") ? "image" : "audio",
             playState: "stopped",
             error: null,
-            buffer: action.payload.audioBuffer,
+            buffer: action.payload.channelBuffer,
             peaks: action.payload.peaks,
-            source: action.payload.audioSource
+            source: action.payload.channelSource
           }
         }
       }
@@ -38,7 +38,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         byIds: {
-          [action.payload.audioSource]: {
+          [action.payload.channelSource]: {
             loading: false,
             playState: "stopped",
             error: action.payload
@@ -46,7 +46,7 @@ export default (state = initialState, action) => {
         }
       };
 
-    case PLAY_AUDIO:
+    case PLAY_CHANNELS:
       if (allChannelsStopped(state)) {
         return {
           ...state,
@@ -57,7 +57,7 @@ export default (state = initialState, action) => {
         ...state
       }
 
-    case STOP_AUDIO:
+    case STOP_CHANNELS:
       return {
         ...state,
         byIds: mergePlayStateIntoToChannels(state, "stopped")
@@ -99,7 +99,7 @@ function mergePlayStateIntoToChannels(state, playState) {
   return mergedState;
 }
 
-export const getAllChannelData = (state) => {
+export const getallChannelsData = (state) => {
   return state.channel.byIds;
 }
 
@@ -107,8 +107,8 @@ export const getChannelData = (state, source) => {
   return state.channel.byIds[source];
 }
 
-function allChannelsStopped(audioState) {
-  return Object.keys(audioState.byIds)
-    .reduce((result, key) => result && (audioState.byIds[key].playState === "stopped"),
+function allChannelsStopped(playState) {
+  return Object.keys(playState.byIds)
+    .reduce((result, key) => result && (playState.byIds[key].playState === "stopped"),
       true)
 }

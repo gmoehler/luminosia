@@ -10,12 +10,12 @@ export function withImagePlay(WrappedComponent) {
     constructor(props) {
       super(props);
       this.playState = "running";
-      this.startTime = 0;                // start time of current play
-      this.endTime = 0;                  // end time of current play
-      this.animationStartTime = null;    // start time of internal animation timer, null means not playing
-      this.mouseDownX = 0;               // x in px of mouse down event
+      this.startTime = 0; // start time of current play
+      this.endTime = 0; // end time of current play
+      this.animationStartTime = null; // start time of internal animation timer, null means not playing
+      this.mouseDownX = 0; // x in px of mouse down event
       this.state = {
-        progress: 0,            // play progress in secs
+        progress: 0, // play progress in secs
       };
       // class functions
       this.animateProgress = this.animateProgress.bind(this);
@@ -25,40 +25,40 @@ export function withImagePlay(WrappedComponent) {
     }
 
     componentDidUpdate(prevProps, prevState) {
-    	
-      const { playState, selection } = this.props;
-    
+
+      const {playState, selection} = this.props;
+
       // start or stop playing
       if (prevProps.playState !== playState) {
         if (playState === "playing") {
           this.startPlay(selection.from, selection.to);
-        } 
+        }
         // only stopped if not already (auto)stopped
-        else if (this.isPlaying())  {
+        else if (this.isPlaying()) {
           this.stopPlay();
-        } 
+        }
       }
     }
 
     componentWillUnmount() {
       // clean up playout and animation
-      if (this.isPlaying())  {
+      if (this.isPlaying()) {
         this.stopPlay();
-      } 
+      }
     }
 
     startPlay(startAt, endAt) {
       if (this.props.type !== "image") {
         return;
       }
-      
+
       // regular start at startAt
       if (!this.isPlaying()) {
         this.startTime = Math.max(0, startAt);
         const duration = endAt && Math.abs(endAt - this.startTime) > 0.1 ? endAt - this.startTime : 10;
         this.endTime = this.startTime + duration;
         console.log(`playing image from ${this.startTime}s to ${this.endTime}`);
-        
+
         // nothing to be done for playing right now
 
         this.animationRequest = window.requestAnimationFrame(this.animateProgress);
@@ -66,7 +66,7 @@ export function withImagePlay(WrappedComponent) {
     }
 
     animateProgress(timestamp) {
-      if (!this.animationStartTime){
+      if (!this.animationStartTime) {
         this.animationStartTime = timestamp;
       }
       const duration = timestamp - this.animationStartTime;
@@ -93,7 +93,7 @@ export function withImagePlay(WrappedComponent) {
     stopPlay() {
       this.stopAnimateProgress();
       this.animationStartTime = null;
-      this.props.setChannelAudioState("stopped");
+      this.props.setChannelPlayState("stopped");
     }
 
     // start selection
@@ -114,7 +114,7 @@ export function withImagePlay(WrappedComponent) {
         const mouseDownTime = pixelsToSeconds(this.mouseDownX, 1000, this.props.sampleRate);
         const mouseUpTime = pixelsToSeconds(mouseUp, 1000, this.props.sampleRate);
         // console.log('mouse at: ', e.clientX - bounds.left);
-        if (mouseDownTime < mouseUpTime){
+        if (mouseDownTime < mouseUpTime) {
           this.props.select(mouseDownTime, mouseUpTime);
         } else {
           this.props.select(mouseUpTime, mouseDownTime);
@@ -141,26 +141,21 @@ export function withImagePlay(WrappedComponent) {
 
     render() {
       // select props passed down to Channel
-      const {sampleRate, buffer, playState, selection, select, setChannelPlayState, factor,
-	    	...passthruProps} = this.props;
+      const {sampleRate, buffer, playState, selection, select, setChannelPlayState, factor, ...passthruProps} = this.props;
 
       const progressPx = secondsToPixels(this.state.progress, 1000, sampleRate);
       const cursorPx = secondsToPixels(selection.from, 1000, sampleRate);
-      const selectionPx = {from: cursorPx, 
-        to: secondsToPixels(selection.to, 1000, sampleRate)};
+      const selectionPx = {
+        from: cursorPx,
+        to: secondsToPixels(selection.to, 1000, sampleRate)
+      };
 
       // pass down props and progress
-      return <WrappedComponent {...passthruProps}
-        factor={factor}
-        handleMouseDown={this.handleMouseDown}
-        handleMouseUp={this.handleMouseUp}
-        handleMouseMove={this.handleMouseMove}
-        handleMouseLeave={this.handleMouseLeave}
-        progress={ progressPx } 
-        cursorPos={ cursorPx } 
-        selection={ selectionPx } />;
+      return <WrappedComponent {...passthruProps} factor={ factor } handleMouseDown={ this.handleMouseDown } handleMouseUp={ this.handleMouseUp } handleMouseMove={ this.handleMouseMove }
+               handleMouseLeave={ this.handleMouseLeave } progress={ progressPx } cursorPos={ cursorPx } selection={ selectionPx } />;
     }
-  };
+  }
+  ;
 
   WithImagePlay.propTypes = {
     sampleRate: PropTypes.number,
