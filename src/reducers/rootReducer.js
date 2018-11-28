@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux';
 import channelReducer from './channelReducer';
-import selectionReducer from './selectionReducer';
+import viewReducer from './viewReducer';
 
 export default combineReducers({
     channel: channelReducer,
-    selection: selectionReducer
+    view: viewReducer
 });

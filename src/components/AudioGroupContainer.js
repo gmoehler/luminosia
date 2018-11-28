@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import AudioGroup from './AudioGroup'
-import { select, setChannelPlayState } from '../actions/audioActions'
+import { setChannelPlayState } from '../actions/channelActions'
+import { select } from '../actions/viewActions'
 import { getAllChannelData } from '../reducers/channelReducer'
-import { getSelectionRange } from '../reducers/selectionReducer'
+import { getSelectionRange } from '../reducers/viewReducer'
 
 class AudioGroupContainer extends Component {
 

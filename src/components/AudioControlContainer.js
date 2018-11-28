@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { loadAudio, playAudio, stopAudio } from '../actions/audioActions'
+import { loadAudio, playAudio, stopAudio } from '../actions/channelActions'
 import AudioControl from './AudioControl';
 
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
