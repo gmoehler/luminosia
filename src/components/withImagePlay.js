@@ -102,7 +102,7 @@ export function withImagePlay(WrappedComponent) {
       var bounds = e.target.getBoundingClientRect();
       this.mouseDownX = e.clientX - bounds.left;
       // console.log('mouse down at: ', this.mouseDownX);
-      const mouseDownTime = pixelsToSeconds(this.mouseDownX, 1000, this.props.sampleRate);
+      const mouseDownTime = pixelsToSeconds(this.mouseDownX, this.props.pixelsPerSecond, this.props.sampleRate);
       this.props.select(mouseDownTime, mouseDownTime);
     }
 
@@ -111,8 +111,8 @@ export function withImagePlay(WrappedComponent) {
         // parent node is always the ImageChannelWrapper
         const bounds = e.target.parentNode.getBoundingClientRect();
         const mouseUp = e.clientX - bounds.left
-        const mouseDownTime = pixelsToSeconds(this.mouseDownX, 1000, this.props.sampleRate);
-        const mouseUpTime = pixelsToSeconds(mouseUp, 1000, this.props.sampleRate);
+        const mouseDownTime = pixelsToSeconds(this.mouseDownX, this.props.pixelsPerSecond, this.props.sampleRate);
+        const mouseUpTime = pixelsToSeconds(mouseUp, this.props.pixelsPerSecond, this.props.sampleRate);
         // console.log('mouse at: ', e.clientX - bounds.left);
         if (mouseDownTime < mouseUpTime) {
           this.props.select(mouseDownTime, mouseUpTime);
@@ -143,11 +143,11 @@ export function withImagePlay(WrappedComponent) {
       // select props passed down to Channel
       const {sampleRate, buffer, playState, selection, select, setChannelPlayState, factor, ...passthruProps} = this.props;
 
-      const progressPx = secondsToPixels(this.state.progress, 1000, sampleRate);
-      const cursorPx = secondsToPixels(selection.from, 1000, sampleRate);
+      const progressPx = secondsToPixels(this.state.progress, this.props.pixelsPerSecond, sampleRate);
+      const cursorPx = secondsToPixels(selection.from, this.props.pixelsPerSecond, sampleRate);
       const selectionPx = {
         from: cursorPx,
-        to: secondsToPixels(selection.to, 1000, sampleRate)
+        to: secondsToPixels(selection.to, this.props.pixelsPerSecond, sampleRate)
       };
 
       // pass down props and progress

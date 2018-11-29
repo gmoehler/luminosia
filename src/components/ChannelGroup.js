@@ -51,7 +51,6 @@ export default class ChannelGroup extends Component {
 				// for withAudioPlay
 				type={type}
 				playState={ playState }
-				sampleRate={ sampleRate }
 				pixelsPerSecond={ pixelsPerSecond }
 				buffer={buffer}
 				setChannelPlayState={ playState => 

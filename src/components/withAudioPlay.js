@@ -88,6 +88,10 @@ export function withAudioPlay(WrappedComponent) {
     isPlaying() {
       return this.playout && this.playout.isPlaying();
     }
+    
+    getSampleRate() {
+    	return this.props.buffer && this.props.buffer.sampleRate;
+    }
 
     stopChannel() {
       this.playout && this.playout.stop();
@@ -101,7 +105,7 @@ export function withAudioPlay(WrappedComponent) {
       var bounds = e.target.getBoundingClientRect();
       this.mouseDownX = e.clientX - bounds.left;
       // console.log('mouse down at: ', this.mouseDownX);
-      const mouseDownTime = pixelsToSeconds(this.mouseDownX, 1000, this.props.sampleRate);
+      const mouseDownTime = pixelsToSeconds(this.mouseDownX, this.props.pixelsPerSecond, this.getSampleRate());
       this.props.select(mouseDownTime, mouseDownTime);
     }
 
@@ -110,8 +114,8 @@ export function withAudioPlay(WrappedComponent) {
         // parent node is always the ChannelWrapper
         const bounds = e.target.parentNode.getBoundingClientRect();
         const mouseUp = e.clientX - bounds.left
-        const mouseDownTime = pixelsToSeconds(this.mouseDownX, 1000, this.props.sampleRate);
-        const mouseUpTime = pixelsToSeconds(mouseUp, 1000, this.props.sampleRate);
+        const mouseDownTime = pixelsToSeconds(this.mouseDownX, this.props.pixelsPerSecond, this.getSampleRate());
+        const mouseUpTime = pixelsToSeconds(mouseUp, this.props.pixelsPerSecond, this.getSampleRate());
         // console.log('mouse at: ', e.clientX - bounds.left);
         if (mouseDownTime < mouseUpTime) {
           this.props.select(mouseDownTime, mouseUpTime);
@@ -140,14 +144,14 @@ export function withAudioPlay(WrappedComponent) {
 
     render() {
       // select props passed down to Channel
-      const {sampleRate, pixelsPerSecond, playState, 
+      const {pixelsPerSecond, playState, 
         buffer, selection, select, setChannelPlayState, ...passthruProps} = this.props;
 
-      const progressPx = secondsToPixels(this.state.progress, 1000, sampleRate);
-      const cursorPx = secondsToPixels(selection.from, 1000, sampleRate);
+      const progressPx = secondsToPixels(this.state.progress, this.props.pixelsPerSecond, this.getSampleRate());
+      const cursorPx = secondsToPixels(selection.from, this.props.pixelsPerSecond, this.getSampleRate());
       const selectionPx = {
         from: cursorPx,
-        to: secondsToPixels(selection.to, 1000, sampleRate)
+        to: secondsToPixels(selection.to, this.props.pixelsPerSecond, this.getSampleRate())
       };
       const  {data, length,  bits} = extractPeaks(buffer, pixelsPerSecond, true, 0, buffer.length, 16);
       const peaksDataMono = Array.isArray(data) ? data[0] : []; // only one channel for now
@@ -162,7 +166,6 @@ export function withAudioPlay(WrappedComponent) {
   ;
 
   WithAudioPlay.propTypes = {
-    sampleRate: PropTypes.number.isRequired,
     playState: PropTypes.oneOf(['stopped', 'playing']),
     pixelsPerSecond: PropTypes.number.isRequired,
     buffer: PropTypes.object.isRequired,
