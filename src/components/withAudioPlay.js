@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
+import extractPeaks from 'webaudio-peaks';
 
 import Playout from '../player/Playout'
 import { secondsToPixels, pixelsToSeconds } from '../utils/conversions';
@@ -139,7 +140,8 @@ export function withAudioPlay(WrappedComponent) {
 
     render() {
       // select props passed down to Channel
-      const {sampleRate, buffer, playState, selection, select, setChannelPlayState, ...passthruProps} = this.props;
+      const {sampleRate, pixelsPerSecond, playState, 
+        buffer, selection, select, setChannelPlayState, ...passthruProps} = this.props;
 
       const progressPx = secondsToPixels(this.state.progress, 1000, sampleRate);
       const cursorPx = secondsToPixels(selection.from, 1000, sampleRate);
@@ -147,18 +149,23 @@ export function withAudioPlay(WrappedComponent) {
         from: cursorPx,
         to: secondsToPixels(selection.to, 1000, sampleRate)
       };
-
-      // pass down props and progress
-      return <WrappedComponent {...passthruProps} handleMouseDown={ this.handleMouseDown } handleMouseUp={ this.handleMouseUp } handleMouseMove={ this.handleMouseMove } handleMouseLeave={ this.handleMouseLeave }
-               progress={ progressPx } cursorPos={ cursorPx } selection={ selectionPx } />;
+      const  {data, length,  bits} = extractPeaks(buffer, pixelsPerSecond, true, 0, buffer.length, 16);
+      const peaksDataMono = Array.isArray(data) ? data[0] : []; // only one channel for now
+      
+      return <WrappedComponent {...passthruProps} 
+        handleMouseDown={ this.handleMouseDown } handleMouseUp={ this.handleMouseUp } 
+        handleMouseMove={ this.handleMouseMove } handleMouseLeave={ this.handleMouseLeave }
+        peaks={peaksDataMono} bits={bits} length={length}
+        progress={ progressPx } cursorPos={ cursorPx } selection={ selectionPx } />;
     }
   }
   ;
 
   WithAudioPlay.propTypes = {
-    sampleRate: PropTypes.number,
-    buffer: PropTypes.object,
+    sampleRate: PropTypes.number.isRequired,
     playState: PropTypes.oneOf(['stopped', 'playing']),
+    pixelsPerSecond: PropTypes.number.isRequired,
+    buffer: PropTypes.object.isRequired,
     selection: PropTypes.object.isRequired,
     select: PropTypes.func.isRequired,
     setChannelPlayState: PropTypes.func.isRequired,

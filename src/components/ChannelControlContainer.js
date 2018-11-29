@@ -7,20 +7,29 @@ import ChannelControl from './ChannelControl';
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
 const audioContext = new window.AudioContext();
 
-const zoomLevels = [500, 1000, 3000, 5000];
+const zoomLevels = [100, 200, 500, 1000, 3000, 5000];
+const defaultZommLevelIdx = 3;
 
 class ChannelControlContainer extends Component {
 
   constructor(props) {
     super(props);
-    this.zoomLevelIdx = 1;
+    this.zoomLevelIdx = defaultZommLevelIdx;
   }
 
   doLoadChannel = (event) => {
+    this.resetZoom();
     this.props.loadChannelAction({
       channelSources: ["media/audio/BassDrums30.mp3", "media/audio/Vocals30.mp3", "media/image/mostlyStripes.png"],
       audioContext,
     });
+  }
+
+  resetZoom = () => {
+    this.zoomLevelIdx = defaultZommLevelIdx;
+    this.props.setZoomAction(
+      zoomLevels[this.zoomLevelIdx]
+    )
   }
 
   zoomIn = () => {
@@ -28,7 +37,6 @@ class ChannelControlContainer extends Component {
     this.props.setZoomAction(
       zoomLevels[this.zoomLevelIdx]
     )
-
   }
 
   zoomOut = () => {

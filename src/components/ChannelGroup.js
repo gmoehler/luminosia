@@ -37,8 +37,6 @@ export default class ChannelGroup extends Component {
 			// get channel data
 			const {allChannelsData, pixelsPerSecond, ...passthruProps} = this.props;
 			const channelData = allChannelsData[channelId];
-			const {data, length,  bits} = { ...channelData.peaks };
-			const peaksDataMono = Array.isArray(data) ? data[0] : []; // only one channel for now
 			const sampleRate = (channelData && channelData.buffer && channelData.buffer.sampleRate) ?
 				channelData.buffer.sampleRate: 48000; // TODO: change this
 			const buffer = channelData && channelData.buffer; 
@@ -54,14 +52,12 @@ export default class ChannelGroup extends Component {
 				type={type}
 				playState={ playState }
 				sampleRate={ sampleRate }
+				pixelsPerSecond={ pixelsPerSecond }
 				buffer={buffer}
 				setChannelPlayState={ playState => 
 						this.props.setChannelPlayState(channelId, playState) }
 				
 				// for Channel
-				peaks={ peaksDataMono } 
-				length={ length } 
-				bits={ bits } 
 				scale={ windowPixelRatio }
 			/> :
 
@@ -73,13 +69,13 @@ export default class ChannelGroup extends Component {
 				type={type}
 				playState={ playState }
 				sampleRate={ sampleRate }
+				pixelsPerSecond={ pixelsPerSecond }
 				buffer={buffer}
 				setChannelPlayState={ playState => 
 						this.props.setChannelPlayState(channelId, playState) }
 				
 				// for ImageChannel				
 				length={ 500 } 
-				bits={ bits } 
 				scale={ windowPixelRatio }
 				factor={ 1000 / pixelsPerSecond } 				// TODO needs more work
 				source={ channelData.source }

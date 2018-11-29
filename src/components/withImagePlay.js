@@ -152,7 +152,8 @@ export function withImagePlay(WrappedComponent) {
 
       // pass down props and progress
       return <WrappedComponent {...passthruProps} factor={ factor } handleMouseDown={ this.handleMouseDown } handleMouseUp={ this.handleMouseUp } handleMouseMove={ this.handleMouseMove }
-               handleMouseLeave={ this.handleMouseLeave } progress={ progressPx } cursorPos={ cursorPx } selection={ selectionPx } />;
+               handleMouseLeave={ this.handleMouseLeave } progress={ progressPx } cursorPos={ cursorPx } selection={ selectionPx }
+      />;
     }
   }
   ;

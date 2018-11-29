@@ -70,8 +70,12 @@ class Channel extends Component {
     let targetOffset = 0;
     for (let i = 0; i < this.canvases.length; i++) {
       const canvas = this.canvases[i];
+      if (!canvas) {
+        break; // TODO: find out how to reset canvases on new render
+      }
       const img = this.canvasImage.current;
       const cc = canvas.getContext('2d');
+      cc.clearRect(0, 0, canvas.width, canvas.height);
       const sourceOffset = targetOffset / factor;
       const targetWidth = MAX_CANVAS_WIDTH;
       const sourceWidth = targetWidth / factor;

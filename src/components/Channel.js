@@ -66,6 +66,9 @@ class Channel extends Component {
     let offset = 0;
     for (let i = 0; i < this.canvases.length; i++) {
       const canvas = this.canvases[i];
+      if (!canvas) {
+        break; // TODO: find out how to reset canvases on new render
+      }
       const cc = canvas.getContext('2d');
       const h2 = waveHeight / 2;
       const maxValue = 2 ** (bits - 1);
@@ -129,14 +132,16 @@ class Channel extends Component {
       waveformCount += 1;
     }
 
-    return <ChannelWrapper 
-      onMouseDown={handleMouseDown} onMouseUp={handleMouseUp} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}
-      cssWidth={length} theme={theme} waveHeight={waveHeight}>
-      <Progress progress={progress} theme={theme} waveHeight={waveHeight} />
-      <Selection selection={selection} theme={theme} waveHeight={waveHeight} />
-      {waveforms}
-      <Cursor cursorPos={cursorPos} theme={theme} waveHeight={waveHeight} /> 
-    </ChannelWrapper>;
+    return (
+      <ChannelWrapper 
+          onMouseDown={handleMouseDown} onMouseUp={handleMouseUp} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}
+          cssWidth={length} theme={theme} waveHeight={waveHeight}>
+        <Progress progress={progress} theme={theme} waveHeight={waveHeight} />
+        <Selection selection={selection} theme={theme} waveHeight={waveHeight} />
+        {waveforms}
+        <Cursor cursorPos={cursorPos} theme={theme} waveHeight={waveHeight} /> 
+    </ChannelWrapper>
+    );
   }
 }
 

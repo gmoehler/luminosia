@@ -29,7 +29,6 @@ export default (state = initialState, action) => {
             playState: "stopped",
             error: null,
             buffer: action.payload.channelBuffer,
-            peaks: action.payload.peaks,
             source: action.payload.channelSource
           }
         }
