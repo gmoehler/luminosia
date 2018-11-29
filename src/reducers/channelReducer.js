@@ -29,7 +29,7 @@ export default (state = initialState, action) => {
             playState: "stopped",
             error: null,
             buffer: action.payload.channelBuffer,
-            source: action.payload.channelSource
+            ...action.payload.channelConfig
           }
         }
       }

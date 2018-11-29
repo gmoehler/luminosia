@@ -27,29 +27,29 @@ function loadChannelFromFile(channelSource, audioContext) {
 }
 ;
 
-function doLoad(dispatch, getState, channelSource, audioContext) {
+function doLoad(dispatch, getState, channelConfig, audioContext) {
   dispatch(loadChannelStarted({
-    channelSource
+    channelSource: channelConfig.source
   }));
 
-  loadChannelFromFile(channelSource, audioContext)
+  loadChannelFromFile(channelConfig.source, audioContext)
     .then(channelBuffer => {
       dispatch(loadChannelSuccess({
-        channelSource,
+        channelConfig,
         channelBuffer,
       }));
     })
     .catch(err => {
       dispatch(loadChannelFailure({
-        channelSource,
+        channelSource: channelConfig.source,
         err
       }));
     });
 }
 
-export const loadChannel = (({channelSources, audioContext}) => {
+export const loadChannel = (({channelConfigs, channelSources, audioContext}) => {
   return (dispatch, getState) => {
-    channelSources.map((channelSource) => doLoad(dispatch, getState, channelSource, audioContext))
+    channelConfigs.map((channelConfig) => doLoad(dispatch, getState, channelConfig, audioContext))
   }
 });
 

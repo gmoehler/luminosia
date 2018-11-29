@@ -37,8 +37,8 @@ export default class ChannelGroup extends Component {
 			// get channel data
 			const {allChannelsData, pixelsPerSecond, ...passthruProps} = this.props;
 			const channelData = allChannelsData[channelId];
-			const sampleRate = (channelData && channelData.buffer && channelData.buffer.sampleRate) ?
-				channelData.buffer.sampleRate: 48000; // TODO: change this
+			// if sampleRate in config: use it, else: use sampleRate from buffer
+			const sampleRate = channelData.sampleRate && channelData.buffer && channelData.buffer.sampleRate;
 			const buffer = channelData && channelData.buffer; 
 			const playState = channelData.playState;
 			const type = channelData.type;
@@ -51,6 +51,7 @@ export default class ChannelGroup extends Component {
 				// for withAudioPlay
 				type={type}
 				playState={ playState }
+				sampleRate={ sampleRate }
 				pixelsPerSecond={ pixelsPerSecond }
 				buffer={buffer}
 				setChannelPlayState={ playState => 
