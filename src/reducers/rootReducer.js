@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux';
-import audioReducer from './audioReducer';
-import selectionReducer from './selectionReducer';
+import channelReducer from './channelReducer';
+import viewReducer from './viewReducer';
 
 export default combineReducers({
-    audio: audioReducer,
-    selection: selectionReducer
+    channel: channelReducer,
+    view: viewReducer
 });

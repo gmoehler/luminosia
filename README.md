@@ -5,11 +5,11 @@ Current Component Structure is:
 
 ```
 App
-  AudioControlContainer
-    AudioControl
+  ChannelControlContainer
+    ChannelControl
 
-  AudioGroupContainer
-    AudioGroup
+  ChannelGroupContainer
+    ChannelGroup
      withAudioPlay
       Channel
 ```

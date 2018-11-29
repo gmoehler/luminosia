@@ -16,7 +16,7 @@ export default class {
 
   setStateChange(state) {
     this.audioRequestState = state;
-    // this.ee.emit('audiorequeststatechange', this.audioRequestState, this.src);
+  // this.ee.emit('audiorequeststatechange', this.audioRequestState, this.src);
   }
 
   fileProgress(e) {
@@ -45,17 +45,17 @@ export default class {
           if (err) {
             reject(err);
           }
-          // mimic audioBuffer which has a duration
+          // mimic channelBuffer which has a duration
           resolve(png);
         });
       } else {
         this.ac.decodeAudioData(
           audioData,
-          (audioBuffer) => {
-            this.audioBuffer = audioBuffer;
+          (channelBuffer) => {
+            this.channelBuffer = channelBuffer;
             this.setStateChange(STATE_FINISHED);
-  
-            resolve(audioBuffer);
+
+            resolve(channelBuffer);
           },
           (err) => {
             reject(err);

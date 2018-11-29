@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import styled /*, { withTheme } */ from 'styled-components';
 
-import AudioControlContainer from './components/AudioControlContainer';
-import AudioGroupContainer from './components/AudioGroupContainer';
+import ChannelControlContainer from './components/ChannelControlContainer';
+import ChannelGroupContainer from './components/ChannelGroupContainer';
 
 import logo from './logo.svg';
 import './App.css';
 
-const AudioWrapper = styled.div`
-  displayName: 'AudioWrapper'
-  name: AudioWrapper
+const Wrapper = styled.div`
+  displayName: 'Wrapper'
+  name: Wrapper
   display: flex;
   flex-direction: column;
   justify-content: left;
@@ -27,10 +27,10 @@ export default class App extends Component {
           <p>
             Waveform demo
           </p>
-          <AudioWrapper >
-            <AudioControlContainer />
-            <AudioGroupContainer />
-          </AudioWrapper>
+          <Wrapper>
+            <ChannelControlContainer />
+            <ChannelGroupContainer />
+          </Wrapper>
         </header>
       </div>
       );

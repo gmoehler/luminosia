@@ -8,6 +8,7 @@ const Progress = styled.div`
   background: ${props => props.theme.waveProgressColor};
   width: ${props => props.progress}px;
   height: ${props => props.waveHeight}px;
+  border-right: 1px solid ${props => props.theme.waveProgressBorderColor};
 `;
 
 const Cursor = styled.div`
@@ -65,6 +66,9 @@ class Channel extends Component {
     let offset = 0;
     for (let i = 0; i < this.canvases.length; i++) {
       const canvas = this.canvases[i];
+      if (!canvas) {
+        break; // TODO: find out how to reset canvases on new render
+      }
       const cc = canvas.getContext('2d');
       const h2 = waveHeight / 2;
       const maxValue = 2 ** (bits - 1);
@@ -128,14 +132,16 @@ class Channel extends Component {
       waveformCount += 1;
     }
 
-    return <ChannelWrapper 
-      onMouseDown={handleMouseDown} onMouseUp={handleMouseUp} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}
-      cssWidth={length} theme={theme} waveHeight={waveHeight}>
-      <Progress progress={progress} theme={theme} waveHeight={waveHeight} />
-      <Selection selection={selection} theme={theme} waveHeight={waveHeight} />
-      {waveforms}
-      <Cursor cursorPos={cursorPos} theme={theme} waveHeight={waveHeight} /> 
-    </ChannelWrapper>;
+    return (
+      <ChannelWrapper 
+          onMouseDown={handleMouseDown} onMouseUp={handleMouseUp} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}
+          cssWidth={length} theme={theme} waveHeight={waveHeight}>
+        {waveforms}  
+        <Progress progress={progress} theme={theme} waveHeight={waveHeight} />
+        <Selection selection={selection} theme={theme} waveHeight={waveHeight} />
+        <Cursor cursorPos={cursorPos} theme={theme} waveHeight={waveHeight} /> 
+    </ChannelWrapper>
+    );
   }
 }
 
@@ -144,7 +150,8 @@ Channel.defaultProps = {
     // color of the waveform outline
     waveOutlineColor: '#282c34',
     waveFillColor: '#05a0cd',
-    waveProgressColor: 'rgb(255,120,0)',
+    waveProgressColor: 'transparent', //'rgb(255,120,0)',
+    waveProgressBorderColor: 'rgb(255,255,255)',
     cursorColor: 'red',
     selectionColor: 'rgba(0,0,255,0.5)'
   },
@@ -154,11 +161,12 @@ Channel.defaultProps = {
   length: 0,
   bits: 0,
   // height in CSS pixels of each canvas element a waveform is on.
-  waveHeight: 80,
+  waveHeight: 90,
   // width in CSS pixels of the progress on the channel.
   progress: 0,
   // position of the cursor in CSS pixels from the left of channel
   cursorPos: 0,
+  // position of the selection in CSS pixels from the left of channel
   selection: {from: 0, to:0}
 };
 
