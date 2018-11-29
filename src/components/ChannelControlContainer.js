@@ -7,26 +7,29 @@ import ChannelControl from './ChannelControl';
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
 const audioContext = new window.AudioContext();
 
-const zoomLevels = [100, 200, 500, 1000, 3000, 5000];
-const defaultZommLevelIdx = 3;
+const zoomLevels = [6, 12, 24, 48, 96, 192, 384, 768, 1536, 3072, 6144]; // in pixels / sec
+const defaultZommLevelIdx = 2;
 
-const channelConfig = [
+const channelConfigs = [
   {
     src: 'media/audio/Vocals30.mp3',
     name: 'Vocals',
+    type: 'audio',
     cuein: 5.918,
     cueout: 14.5,
   },
   {
     src: 'media/audio/BassDrums30.mp3',
     name: 'Drums',
+    type: 'audio',
     start: 3,
     soloed: false,
   },
   {
     src: 'media/image/mostlyStripes.png',
-    sampleRate: 100,  // one image frame is 10ms
     name: 'MostlyStripes',
+    type: 'image',
+    sampleRate: 100,  // one image frame is 10ms
     start: 23.5,
     cuein: 0.5,       // in secs
     cueout: 1.47,      // in secs
@@ -43,8 +46,7 @@ class ChannelControlContainer extends Component {
   doLoadChannel = (event) => {
     this.resetZoom();
     this.props.loadChannelAction({
-      channelSources: ["media/audio/BassDrums30.mp3", "media/audio/Vocals30.mp3", "media/image/mostlyStripes.png"],
-      channelConfig,
+      channelConfigs,
 	  audioContext,
     });
   }
@@ -57,14 +59,14 @@ class ChannelControlContainer extends Component {
   }
 
   zoomIn = () => {
-    this.zoomLevelIdx = Math.min(Math.max(parseInt(this.zoomLevelIdx)-1, 0), zoomLevels.length-1);
+    this.zoomLevelIdx = Math.min(Math.max(parseInt(this.zoomLevelIdx)+1, 0), zoomLevels.length-1);
     this.props.setZoomAction(
       zoomLevels[this.zoomLevelIdx]
     )
   }
 
   zoomOut = () => {
-    this.zoomLevelIdx = Math.min(Math.max(parseInt(this.zoomLevelIdx)+1, 0), zoomLevels.length-1);
+    this.zoomLevelIdx = Math.min(Math.max(parseInt(this.zoomLevelIdx)-1, 0), zoomLevels.length-1);
     this.props.setZoomAction(
       zoomLevels[this.zoomLevelIdx]
     )

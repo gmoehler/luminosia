@@ -30,59 +30,49 @@ export default class ChannelGroup extends Component {
 			return null;
 		}
 
-		// we have data: draw the channels
+		// we have data: draw all channels
 		const channelComponents = Object.keys(this.props.allChannelsData)
 			.map((channelId) => {
 
 			// get channel data
 			const {allChannelsData, pixelsPerSecond, ...passthruProps} = this.props;
+
 			const channelData = allChannelsData[channelId];
-			// if sampleRate in config: use it, else: use sampleRate from buffer
-			const sampleRate = channelData.sampleRate && channelData.buffer && channelData.buffer.sampleRate;
-			const buffer = channelData && channelData.buffer; 
-			const playState = channelData.playState;
-			const type = channelData.type;
+			if (channelData.loading) {
+				return null;
+			}
 
-			const channelElement = type === "audio" ?
-			<AudioChannelWithPlay 
-				key={ channelId } // list items need a key
-				{...passthruProps}
+			// if sampleRate is in config: use it, else: use sampleRate from buffer (audio only)
+			const sampleRate = channelData.buffer && channelData.buffer.sampleRate 
+				? channelData.buffer.sampleRate : channelData.sampleRate;
 
-				// for withAudioPlay
-				type={type}
-				playState={ playState }
-				sampleRate={ sampleRate }
-				pixelsPerSecond={ pixelsPerSecond }
-				buffer={buffer}
-				setChannelPlayState={ playState => 
-						this.props.setChannelPlayState(channelId, playState) }
-				
-				// for Channel
-				scale={ windowPixelRatio }
-			/> :
+			const channelProps = {
+				...passthruProps,
+				key: channelId, // required because of list
+				type: channelData.type,
+				playState: channelData.playState,
+				sampleRate,
+				resolution:  sampleRate / pixelsPerSecond,
+				buffer: channelData && channelData.buffer,
+				scale: windowPixelRatio,
+			}
 
-			<ImageChannelWithPlay
-				key={ channelId } // list items need a key
-				{...passthruProps}
+			if (channelData.type === "audio") {
+				return (
+					<AudioChannelWithPlay 
+						{...channelProps}
+						setChannelPlayState={ playState => 
+								this.props.setChannelPlayState(channelId, playState) }
+					/>);
+				}
 
-				// for withImagePlay
-				type={type}
-				playState={ playState }
-				sampleRate={ sampleRate }
-				pixelsPerSecond={ pixelsPerSecond }
-				buffer={buffer}
-				setChannelPlayState={ playState => 
-						this.props.setChannelPlayState(channelId, playState) }
-				
-				// for ImageChannel				
-				length={ 500 } 
-				scale={ windowPixelRatio }
-				factor={ 1000 / pixelsPerSecond } 				// TODO needs more work
-				source={ channelData.source }
-			/>;
-
-			return channelElement;
-
+			return (
+				<ImageChannelWithPlay
+					{...channelProps}
+					source={ channelData.src }
+					setChannelPlayState={ playState => 
+							this.props.setChannelPlayState(channelId, playState) }
+				/>);
 		});
 
     return (
@@ -93,6 +83,7 @@ export default class ChannelGroup extends Component {
 	}
 
   AudioChannelWithPlay.propTypes = {
-    allChannelsData: PropTypes.array, 		// data of all channels
+		allChannelsData: PropTypes.array, 		// data of all channels
+		pixelsPerSecond: PropTypes.number,
 		setChannelPlayState: PropTypes.func.isRequired,
   }

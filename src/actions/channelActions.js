@@ -29,10 +29,10 @@ function loadChannelFromFile(channelSource, audioContext) {
 
 function doLoad(dispatch, getState, channelConfig, audioContext) {
   dispatch(loadChannelStarted({
-    channelSource: channelConfig.source
+    channelSource: channelConfig.src
   }));
 
-  loadChannelFromFile(channelConfig.source, audioContext)
+  loadChannelFromFile(channelConfig.src, audioContext)
     .then(channelBuffer => {
       dispatch(loadChannelSuccess({
         channelConfig,
@@ -41,7 +41,7 @@ function doLoad(dispatch, getState, channelConfig, audioContext) {
     })
     .catch(err => {
       dispatch(loadChannelFailure({
-        channelSource: channelConfig.source,
+        channelSource: channelConfig.src,
         err
       }));
     });

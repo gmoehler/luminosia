@@ -136,9 +136,9 @@ class Channel extends Component {
       <ChannelWrapper 
           onMouseDown={handleMouseDown} onMouseUp={handleMouseUp} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}
           cssWidth={length} theme={theme} waveHeight={waveHeight}>
+        {waveforms}  
         <Progress progress={progress} theme={theme} waveHeight={waveHeight} />
         <Selection selection={selection} theme={theme} waveHeight={waveHeight} />
-        {waveforms}
         <Cursor cursorPos={cursorPos} theme={theme} waveHeight={waveHeight} /> 
     </ChannelWrapper>
     );
@@ -150,7 +150,7 @@ Channel.defaultProps = {
     // color of the waveform outline
     waveOutlineColor: '#282c34',
     waveFillColor: '#05a0cd',
-    waveProgressColor: 'rgb(255,120,0)',
+    waveProgressColor: 'transparent', //'rgb(255,120,0)',
     waveProgressBorderColor: 'rgb(255,255,255)',
     cursorColor: 'red',
     selectionColor: 'rgba(0,0,255,0.5)'
@@ -161,7 +161,7 @@ Channel.defaultProps = {
   length: 0,
   bits: 0,
   // height in CSS pixels of each canvas element a waveform is on.
-  waveHeight: 80,
+  waveHeight: 90,
   // width in CSS pixels of the progress on the channel.
   progress: 0,
   // position of the cursor in CSS pixels from the left of channel

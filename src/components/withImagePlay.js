@@ -102,7 +102,7 @@ export function withImagePlay(WrappedComponent) {
       var bounds = e.target.getBoundingClientRect();
       this.mouseDownX = e.clientX - bounds.left;
       // console.log('mouse down at: ', this.mouseDownX);
-      const mouseDownTime = pixelsToSeconds(this.mouseDownX, this.props.pixelsPerSecond, this.props.sampleRate);
+      const mouseDownTime = Math.max(0, pixelsToSeconds(this.mouseDownX, this.props.resolution, this.props.sampleRate));
       this.props.select(mouseDownTime, mouseDownTime);
     }
 
@@ -111,8 +111,8 @@ export function withImagePlay(WrappedComponent) {
         // parent node is always the ImageChannelWrapper
         const bounds = e.target.parentNode.getBoundingClientRect();
         const mouseUp = e.clientX - bounds.left
-        const mouseDownTime = pixelsToSeconds(this.mouseDownX, this.props.pixelsPerSecond, this.props.sampleRate);
-        const mouseUpTime = pixelsToSeconds(mouseUp, this.props.pixelsPerSecond, this.props.sampleRate);
+        const mouseDownTime = Math.max(0, pixelsToSeconds(this.mouseDownX, this.props.resolution, this.props.sampleRate));
+        const mouseUpTime = Math.max(0, pixelsToSeconds(mouseUp, this.props.resolution, this.props.sampleRate));
         // console.log('mouse at: ', e.clientX - bounds.left);
         if (mouseDownTime < mouseUpTime) {
           this.props.select(mouseDownTime, mouseUpTime);
@@ -137,31 +137,44 @@ export function withImagePlay(WrappedComponent) {
       e.preventDefault();
       this.handleSelectionTo(e);
       this.mouseDownX = null; // finalize selection
-    }
+    } 
 
     render() {
-      // select props passed down to Channel
-      const {sampleRate, buffer, playState, selection, select, setChannelPlayState, factor, ...passthruProps} = this.props;
 
-      const progressPx = secondsToPixels(this.state.progress, this.props.pixelsPerSecond, sampleRate);
-      const cursorPx = secondsToPixels(selection.from, this.props.pixelsPerSecond, sampleRate);
+      // select props passed down to Channel
+      const {sampleRate, buffer, playState, selection, select, setChannelPlayState, resolution, 
+        ...passthruProps} = this.props;
+
+      const progressPx = secondsToPixels(this.state.progress, resolution, sampleRate);
+      const cursorPx = secondsToPixels(selection.from, resolution, sampleRate);
       const selectionPx = {
         from: cursorPx,
-        to: secondsToPixels(selection.to, this.props.pixelsPerSecond, sampleRate)
+        to: secondsToPixels(selection.to, resolution, sampleRate)
       };
+      const factor = 1/resolution;
+      const length = buffer && buffer.width * factor;
 
       // pass down props and progress
-      return <WrappedComponent {...passthruProps} factor={ factor } handleMouseDown={ this.handleMouseDown } handleMouseUp={ this.handleMouseUp } handleMouseMove={ this.handleMouseMove }
-               handleMouseLeave={ this.handleMouseLeave } progress={ progressPx } cursorPos={ cursorPx } selection={ selectionPx }
+      return <WrappedComponent {...passthruProps} 
+        length={ length }
+        factor={ factor } 
+        progress={ progressPx } 
+        cursorPos={ cursorPx } 
+        selection={ selectionPx }
+        handleMouseDown={ this.handleMouseDown } 
+        handleMouseUp={ this.handleMouseUp } 
+        handleMouseMove={ this.handleMouseMove }
+        handleMouseLeave={ this.handleMouseLeave } 
       />;
     }
   }
   ;
 
   WithImagePlay.propTypes = {
-    sampleRate: PropTypes.number,
-    buffer: PropTypes.object,
-    playState: PropTypes.oneOf(['stopped', 'playing']),
+    sampleRate: PropTypes.number.isRequired,
+    resolution: PropTypes.number.isRequired,
+    buffer: PropTypes.object.isRequired,
+    playState: PropTypes.oneOf(['stopped', 'playing']).isRequired,
     selection: PropTypes.object.isRequired,
     select: PropTypes.func.isRequired,
     setChannelPlayState: PropTypes.func.isRequired,

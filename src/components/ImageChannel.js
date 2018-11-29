@@ -144,7 +144,7 @@ class Channel extends Component {
 
 Channel.defaultProps = {
   theme: {
-    waveProgressColor: 'rgb(255,255,255,0.3)', // transparent white
+    waveProgressColor: 'transparent', // 'rgb(255,255,255,0.3)', // transparent white
     waveProgressBorderColor: 'rgb(255,255,255,1)', // transparent white
     cursorColor: 'red',
     selectionColor: 'rgba(0,0,255,0.5)'
@@ -154,7 +154,7 @@ Channel.defaultProps = {
   scale: 1,
   length: 0,
   // height in CSS pixels of each canvas element an image is on.
-  imageHeight: 80,
+  imageHeight: 90, // multiple of num LEDs
   // width in CSS pixels of the progress on the channel.
   progress: 0,
   // position of the cursor in CSS pixels from the left of channel

@@ -1,7 +1,9 @@
 import { merge } from 'lodash';
 
-import { LOAD_CHANNEL_STARTED, LOAD_CHANNEL_SUCCESS, LOAD_CHANNEL_FAILURE, PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE } from '../actions/types';
+import { LOAD_CHANNEL_STARTED, LOAD_CHANNEL_SUCCESS, LOAD_CHANNEL_FAILURE, 
+  PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE } from '../actions/types';
 
+// TODO: improve this using a sub-reducer on the selected channel
 const initialState = {
   byIds: {}
 };
@@ -18,14 +20,14 @@ export default (state = initialState, action) => {
         }
       };
     case LOAD_CHANNEL_SUCCESS:
+    const channelSource = action.payload.channelConfig.src;
       return {
         ...state,
-        // TODO: improve this using a sub-reducer
         byIds: {
           ...state.byIds,
-          [action.payload.channelSource]: {
+          [channelSource]: {
             loading: false,
-            type: action.payload.channelSource.endsWith(".png") ? "image" : "audio",
+            type: channelSource.endsWith(".png") ? "image" : "audio",
             playState: "stopped",
             error: null,
             buffer: action.payload.channelBuffer,
