@@ -8,3 +8,4 @@ export const STOP_CHANNELS = "STOP_AUDIO";
 export const SELECT = "SELECT";
 export const SET_ZOOM_LEVEL = "SET_ZOOM_LEVEL";
 export const SET_CHANNEL_PLAY_STATE = "SET_CHANNEL_PLAY_STATE";
+export const SET_MODE = "SET_MODE";

@@ -156,6 +156,7 @@ export function withImagePlay(WrappedComponent) {
 
       // pass down props and progress
       return <WrappedComponent {...passthruProps} 
+        left={0}
         length={ length }
         factor={ factor } 
         progress={ progressPx } 

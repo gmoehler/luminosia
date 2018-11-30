@@ -1,4 +1,4 @@
-import {SELECT, SET_ZOOM_LEVEL} from '../actions/types';
+import {SELECT, SET_ZOOM_LEVEL, SET_MODE} from '../actions/types';
 
 const initialState = {
   selection: {
@@ -24,6 +24,12 @@ export default(state = initialState, action) => {
       return {
         ...state,
         zoomLevel: action.payload
+      }
+
+      case SET_MODE:
+      return {
+        ...state,
+        mode: action.payload
       }
 
     default:

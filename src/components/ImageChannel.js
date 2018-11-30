@@ -65,7 +65,7 @@ class Channel extends Component {
   }
 
   draw() {
-    const { imageHeight, scale, factor } = this.props;
+    const { imageHeight, scale, factor, left } = this.props;
 
     let targetOffset = 0;
     for (let i = 0; i < this.canvases.length; i++) {
@@ -81,7 +81,7 @@ class Channel extends Component {
       const sourceWidth = targetWidth / factor;
 
       cc.scale(scale, scale);
-      img.onload = cc.drawImage(img, sourceOffset, 0, sourceWidth, img.height, 0, 0, targetWidth, imageHeight)
+      img.onload = cc.drawImage(img, sourceOffset, 0, sourceWidth, img.height, left, 0, targetWidth, imageHeight)
 
       targetOffset += MAX_CANVAS_WIDTH;
     }  
@@ -153,6 +153,7 @@ Channel.defaultProps = {
   // checking `window.devicePixelRatio` when drawing to canvas.
   scale: 1,
   length: 0,
+  left: 0,
   // height in CSS pixels of each canvas element an image is on.
   imageHeight: 90, // multiple of num LEDs
   // width in CSS pixels of the progress on the channel.

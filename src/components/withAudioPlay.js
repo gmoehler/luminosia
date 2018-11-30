@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import extractPeaks from 'webaudio-peaks';
+import memoize from 'memoize-one';
 
 import Playout from '../player/Playout'
 import { secondsToPixels, pixelsToSeconds } from '../utils/conversions';
@@ -143,6 +144,10 @@ export function withAudioPlay(WrappedComponent) {
       this.mouseDownX = null; // finalize selection
     }
 
+    // only recalc when buffer, resolution of bits change
+    doExtractPeaks = memoize(
+      (buffer, resolution, bits) => extractPeaks(buffer, resolution, true, 0, buffer.length, bits));
+
     render() {
       // select props passed down to Channel
       const {resolution, playState, 
@@ -155,7 +160,7 @@ export function withAudioPlay(WrappedComponent) {
         to: secondsToPixels(selection.to, this.props.resolution, this.getSampleRate())
       };
       //TODO: improve performance by memoization of peaks data
-      const  {data, length,  bits} = extractPeaks(buffer, resolution, true, 0, buffer.length, 16);
+      const  {data, length,  bits} = this.doExtractPeaks(buffer, resolution, 16);
       const peaksDataMono = Array.isArray(data) ? data[0] : []; // only one channel for now
       
       return <WrappedComponent {...passthruProps} 
