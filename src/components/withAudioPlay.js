@@ -104,7 +104,7 @@ export function withAudioPlay(WrappedComponent) {
     // start selection
     handleMouseDown = (e) => {
       e.preventDefault();
-      var bounds = e.target.getBoundingClientRect();
+      var bounds = e.target.parentNode.getBoundingClientRect();
       this.mouseDownX = e.clientX - bounds.left;
       // console.log('mouse down at: ', this.mouseDownX);
       const mouseDownTime =  Math.max(0, pixelsToSeconds(this.mouseDownX, this.props.resolution, this.getSampleRate()));
