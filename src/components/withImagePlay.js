@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
+import MouseHandler from '../handler/MouseHandler'
 
 import { secondsToPixels, pixelsToSeconds } from '../utils/conversions';
 
@@ -17,6 +18,12 @@ export function withImagePlay(WrappedComponent) {
       this.state = {
         progress: 0, // play progress in secs
       };
+      this.mhandler = new MouseHandler(
+        {
+          select: this.select,
+        },
+      );
+
       // class functions
       this.animateProgress = this.animateProgress.bind(this);
       this.stopAnimateProgress = this.stopAnimateProgress.bind(this);
@@ -65,6 +72,13 @@ export function withImagePlay(WrappedComponent) {
       }
     }
 
+    // transform from pixel to time values
+    select = (fromPx, toPx) => {
+      const from = pixelsToSeconds(fromPx, this.props.resolution, this.props.sampleRate);
+      const to = pixelsToSeconds(toPx, this.props.resolution, this.props.sampleRate);
+      this.props.select(from, to);
+    }
+
     animateProgress(timestamp) {
       if (!this.animationStartTime) {
         this.animationStartTime = timestamp;
@@ -96,61 +110,6 @@ export function withImagePlay(WrappedComponent) {
       this.props.setChannelPlayState("stopped");
     }
 
-    getMouseEventX = (e) => {
-      // parent node is always the ChannelWrapper
-      const bounds = e.target.parentNode.getBoundingClientRect();
-      return Math.max(0, e.clientX - bounds.left);
-    }
-
-    getMouseEventTime = (e) => {
-      const x = this.getMouseEventX(e);
-      return pixelsToSeconds(x, this.props.resolution, this.props.sampleRate);
-    }
-
-    // start selection
-    handleSelectionFrom = (eventTime) => {
-      this.selectFromTime = eventTime;
-      this.props.select(eventTime, eventTime);
-    }
-
-    handleSelectionTo = (eventTime, finalizeSelection) => {
-      if (this.selectFromTime) { // only when mouse down has occured
-        // console.log('mouse at: ', e.clientX - bounds.left);
-        if (this.selectFromTime < eventTime) {
-          this.props.select(this.selectFromTime, eventTime);
-        } else {
-          this.props.select(eventTime, this.selectFromTime);
-        }
-        if (finalizeSelection) {
-          this.selectFromTime = null; 
-        }
-      }
-    }
-
-    handleMouseDown = (e) => {
-      e.preventDefault();
-      const eventTime = this.getMouseEventTime(e);
-      this.handleSelectionFrom(eventTime);
-    }
-
-    handleMouseMove = (e) => {
-      e.preventDefault();
-      const eventTime = this.getMouseEventTime(e);
-      this.handleSelectionTo(eventTime, false);
-    }
-
-    handleMouseUp = (e) => {
-      e.preventDefault();
-      const eventTime = this.getMouseEventTime(e);
-      this.handleSelectionTo(eventTime, true);
-    }
-
-    handleMouseLeave = (e) => {
-      e.preventDefault();
-      const eventTime = this.getMouseEventTime(e);
-      this.handleSelectionTo(eventTime, true);
-    } 
-
     render() {
 
       // select props passed down to Channel
@@ -174,10 +133,10 @@ export function withImagePlay(WrappedComponent) {
         progress={ progressPx } 
         cursorPos={ cursorPx } 
         selection={ selectionPx }
-        handleMouseDown={ this.handleMouseDown } 
-        handleMouseUp={ this.handleMouseUp } 
-        handleMouseMove={ this.handleMouseMove }
-        handleMouseLeave={ this.handleMouseLeave } 
+        handleMouseDown={ this.mhandler.handleMouseDown } 
+        handleMouseUp={ this.mhandler.handleMouseUp } 
+        handleMouseMove={ this.mhandler.handleMouseMove }
+        handleMouseLeave={ this.mhandler.handleMouseLeave } 
       />;
     }
   }
