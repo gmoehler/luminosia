@@ -13,7 +13,7 @@ export function withImagePlay(WrappedComponent) {
       this.startTime = 0; // start time of current play
       this.endTime = 0; // end time of current play
       this.animationStartTime = null; // start time of internal animation timer, null means not playing
-      this.mouseDownX = 0; // x in px of mouse down event
+      this.selectFromTime = 0; // time of selection start
       this.state = {
         progress: 0, // play progress in secs
       };
@@ -96,47 +96,59 @@ export function withImagePlay(WrappedComponent) {
       this.props.setChannelPlayState("stopped");
     }
 
-    // start selection
-    handleMouseDown = (e) => {
-      e.preventDefault();
-      var bounds = e.target.parentNode.getBoundingClientRect();
-      this.mouseDownX = e.clientX - bounds.left;
-      // console.log('mouse down at: ', this.mouseDownX);
-      const mouseDownTime = Math.max(0, pixelsToSeconds(this.mouseDownX, this.props.resolution, this.props.sampleRate));
-      this.props.select(mouseDownTime, mouseDownTime);
+    getMouseEventX = (e) => {
+      // parent node is always the ChannelWrapper
+      const bounds = e.target.parentNode.getBoundingClientRect();
+      return Math.max(0, e.clientX - bounds.left);
     }
 
-    handleSelectionTo = (e) => {
-      if (this.mouseDownX) { // only when mouse down has occured
-        // parent node is always the ImageChannelWrapper
-        const bounds = e.target.parentNode.getBoundingClientRect();
-        const mouseUp = e.clientX - bounds.left
-        const mouseDownTime = Math.max(0, pixelsToSeconds(this.mouseDownX, this.props.resolution, this.props.sampleRate));
-        const mouseUpTime = Math.max(0, pixelsToSeconds(mouseUp, this.props.resolution, this.props.sampleRate));
+    getMouseEventTime = (e) => {
+      const x = this.getMouseEventX(e);
+      return pixelsToSeconds(x, this.props.resolution, this.props.sampleRate);
+    }
+
+    // start selection
+    handleSelectionFrom = (eventTime) => {
+      this.selectFromTime = eventTime;
+      this.props.select(eventTime, eventTime);
+    }
+
+    handleSelectionTo = (eventTime, finalizeSelection) => {
+      if (this.selectFromTime) { // only when mouse down has occured
         // console.log('mouse at: ', e.clientX - bounds.left);
-        if (mouseDownTime < mouseUpTime) {
-          this.props.select(mouseDownTime, mouseUpTime);
+        if (this.selectFromTime < eventTime) {
+          this.props.select(this.selectFromTime, eventTime);
         } else {
-          this.props.select(mouseUpTime, mouseDownTime);
+          this.props.select(eventTime, this.selectFromTime);
+        }
+        if (finalizeSelection) {
+          this.selectFromTime = null; 
         }
       }
     }
 
+    handleMouseDown = (e) => {
+      e.preventDefault();
+      const eventTime = this.getMouseEventTime(e);
+      this.handleSelectionFrom(eventTime);
+    }
+
     handleMouseMove = (e) => {
       e.preventDefault();
-      this.handleSelectionTo(e);
+      const eventTime = this.getMouseEventTime(e);
+      this.handleSelectionTo(eventTime, false);
     }
 
     handleMouseUp = (e) => {
       e.preventDefault();
-      this.handleSelectionTo(e);
-      this.mouseDownX = null; // finalize selection
+      const eventTime = this.getMouseEventTime(e);
+      this.handleSelectionTo(eventTime, true);
     }
 
     handleMouseLeave = (e) => {
       e.preventDefault();
-      this.handleSelectionTo(e);
-      this.mouseDownX = null; // finalize selection
+      const eventTime = this.getMouseEventTime(e);
+      this.handleSelectionTo(eventTime, true);
     } 
 
     render() {
