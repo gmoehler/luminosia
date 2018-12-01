@@ -18,7 +18,7 @@ export function withImagePlay(WrappedComponent) {
       this.state = {
         progress: 0, // play progress in secs
       };
-      this.mhandler = new MouseHandler(
+      this.mousehandler = new MouseHandler(
         {
           select: this.select,
         },
@@ -133,10 +133,10 @@ export function withImagePlay(WrappedComponent) {
         progress={ progressPx } 
         cursorPos={ cursorPx } 
         selection={ selectionPx }
-        handleMouseDown={ this.mhandler.handleMouseDown } 
-        handleMouseUp={ this.mhandler.handleMouseUp } 
-        handleMouseMove={ this.mhandler.handleMouseMove }
-        handleMouseLeave={ this.mhandler.handleMouseLeave } 
+        handleMouseDown={ this.mousehandler.handleMouseDown } 
+        handleMouseUp={ this.mousehandler.handleMouseUp } 
+        handleMouseMove={ this.mousehandler.handleMouseMove }
+        handleMouseLeave={ this.mousehandler.handleMouseLeave } 
       />;
     }
   }

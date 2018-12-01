@@ -4,6 +4,7 @@ import extractPeaks from 'webaudio-peaks';
 import memoize from 'memoize-one';
 
 import Playout from '../player/Playout'
+import MouseHandler from '../handler/MouseHandler'
 import { secondsToPixels, pixelsToSeconds } from '../utils/conversions';
 
 // HOC to support audio playing for one channel
@@ -18,6 +19,11 @@ export function withAudioPlay(WrappedComponent) {
       this.state = {
         progress: 0, // play progress in secs
       };
+      this.mousehandler = new MouseHandler(
+        {
+          select: this.select,
+        },
+      );
 
       // member functions
       this.animateProgress = this.animateProgress.bind(this);
@@ -101,48 +107,11 @@ export function withAudioPlay(WrappedComponent) {
       this.props.setChannelPlayState("stopped");
     }
 
-    // start selection
-    handleMouseDown = (e) => {
-      e.preventDefault();
-      // parent node is always the ChannelWrapper
-      var bounds = e.target.parentNode.getBoundingClientRect();
-      this.mouseDownX = e.clientX - bounds.left;
-      // console.log('mouse down at: ', this.mouseDownX);
-      const mouseDownTime =  Math.max(0, pixelsToSeconds(this.mouseDownX, this.props.resolution, this.getSampleRate()));
-      this.props.select(mouseDownTime, mouseDownTime);
-    }
-
-    handleSelectionTo = (e) => {
-      if (this.mouseDownX) { // only when mouse down has occured
-        // parent node is always the ChannelWrapper
-        const bounds = e.target.parentNode.getBoundingClientRect();
-        const mouseUp = e.clientX - bounds.left
-        const mouseDownTime = Math.max(0, pixelsToSeconds(this.mouseDownX, this.props.resolution, this.getSampleRate()));
-        const mouseUpTime =  Math.max(0, pixelsToSeconds(mouseUp, this.props.resolution, this.getSampleRate()));
-        // console.log('mouse at: ', e.clientX - bounds.left);
-        if (mouseDownTime < mouseUpTime) {
-          this.props.select(mouseDownTime, mouseUpTime);
-        } else {
-          this.props.select(mouseUpTime, mouseDownTime);
-        }
-      }
-    }
-
-    handleMouseMove = (e) => {
-      e.preventDefault();
-      this.handleSelectionTo(e);
-    }
-
-    handleMouseUp = (e) => {
-      e.preventDefault();
-      this.handleSelectionTo(e);
-      this.mouseDownX = null; // finalize selection
-    }
-
-    handleMouseLeave = (e) => {
-      e.preventDefault();
-      this.handleSelectionTo(e);
-      this.mouseDownX = null; // finalize selection
+    // transform from pixel to time values (used by mouse handler)
+    select = (fromPx, toPx) => {
+      const from = pixelsToSeconds(fromPx, this.props.resolution, this.props.sampleRate);
+      const to = pixelsToSeconds(toPx, this.props.resolution, this.props.sampleRate);
+      this.props.select(from, to);
     }
 
     // only recalc when buffer, resolution of bits change
@@ -165,8 +134,10 @@ export function withAudioPlay(WrappedComponent) {
       const peaksDataMono = Array.isArray(data) ? data[0] : []; // only one channel for now
       
       return <WrappedComponent {...passthruProps} 
-        handleMouseDown={ this.handleMouseDown } handleMouseUp={ this.handleMouseUp } 
-        handleMouseMove={ this.handleMouseMove } handleMouseLeave={ this.handleMouseLeave }
+        handleMouseDown={ this.mousehandler.handleMouseDown } 
+        handleMouseUp={ this.mousehandler.handleMouseUp } 
+        handleMouseMove={ this.mousehandler.handleMouseMove } 
+        handleMouseLeave={ this.mousehandler.handleMouseLeave }
         peaks={peaksDataMono} bits={bits} length={length}
         progress={ progressPx } cursorPos={ cursorPx } selection={ selectionPx } />;
     }
