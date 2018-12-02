@@ -134,8 +134,9 @@ export function withAudioPlay(WrappedComponent) {
 
       return <WrappedComponent {...passthruProps} 
         handleMouseEvent={ this.mousehandler.handleMouseEvent } 
+        left={50}
         peaks={ peaksDataMono } bits={ bits } length={ length } progress={ progressPx } 
-        cursorPos={ cursorPx } selection={ selectionPx }
+        cursorPos={ cursorPx } selection={ selectionPx }  
       />;
     }
   }

@@ -36,9 +36,14 @@ const Waveform = styled.canvas`
   height: ${props => props.waveHeight}px;
 `;
 
+const WaveformCanvases = styled.div`
+  float: left;
+  position: relative;
+  left: ${props => props.left}px;
+`;
+
 // need position:relative so children will respect parent margin/padding
 const ChannelWrapper = styled.div`
-  className: 'ChannelWrapper';
   position: relative; 
   margin: 0;
   padding: 0;
@@ -62,7 +67,7 @@ class Channel extends Component {
   }
 
   draw() {
-    const { peaks, bits, /* length,*/ waveHeight, theme, scale } = this.props;
+    const {peaks, bits, /* length,*/ waveHeight, theme, scale} = this.props;
 
     let offset = 0;
     for (let i = 0; i < this.canvases.length; i++) {
@@ -82,7 +87,7 @@ class Channel extends Component {
       for (let i = 0; i < peakSegmentLength; i += 1) {
         const minPeak = peaks[(i + offset) * 2] / maxValue;
         const maxPeak = peaks[((i + offset) * 2) + 1] / maxValue;
-        
+
         const min = Math.abs(minPeak * h2);
         const max = Math.abs(maxPeak * h2);
 
@@ -93,7 +98,7 @@ class Channel extends Component {
       }
 
       offset += MAX_CANVAS_WIDTH;
-    }  
+    }
   }
 
   handleMouseEvent = (e, eventName) => {
@@ -114,32 +119,21 @@ class Channel extends Component {
   }
 
   createCanvasRef(i) {
-    return (canvas) => {this.canvases[i] = canvas}
+    return (canvas) => {
+      this.canvases[i] = canvas
+    }
   }
 
   render() {
-    const {
-      length,
-      waveHeight,
-      scale,
-      progress,
-      cursorPos,
-      selection,
-      theme,
-    } = this.props;
+    const {length, waveHeight, scale, progress, cursorPos, selection, theme, left} = this.props;
 
     let totalWidth = length;
     let waveformCount = 0;
     const waveforms = [];
     while (totalWidth > 0) {
       const currentWidth = Math.min(totalWidth, MAX_CANVAS_WIDTH);
-      const waveform = <Waveform
-        key={`${length}-${waveformCount}`}
-        cssWidth={currentWidth}
-        width={currentWidth * scale}
-        height={waveHeight * scale}
-        waveHeight={waveHeight} 
-        ref={this.createCanvasRef(waveformCount)} />
+      const waveform = <Waveform key={ `${length}-${waveformCount}` } cssWidth={ currentWidth } width={ currentWidth * scale } height={ waveHeight * scale } waveHeight={ waveHeight } ref={ this.createCanvasRef(waveformCount) }
+                       />
 
       waveforms.push(waveform);
       totalWidth -= currentWidth;
@@ -147,19 +141,16 @@ class Channel extends Component {
     }
 
     return (
-      <ChannelWrapper 
-        className='ChannelWrapper'
-        onMouseDown={(e) => this.handleMouseEvent(e, "mouseDown")} 
-        onMouseUp={(e) => this.handleMouseEvent(e, "mouseUp")} 
-        onMouseMove={(e) => this.handleMouseEvent(e, "mouseMove")} 
-        onMouseLeave={(e) => this.handleMouseEvent(e, "mouseLeave")}
-        cssWidth={length} theme={theme} waveHeight={waveHeight}>
-        {waveforms}  
-        <Progress progress={progress} theme={theme} waveHeight={waveHeight} />
-        <Selection selection={selection} theme={theme} waveHeight={waveHeight} />
-        <Cursor cursorPos={cursorPos} theme={theme} waveHeight={waveHeight} /> 
-    </ChannelWrapper>
-    );
+      <ChannelWrapper className='ChannelWrapper' onMouseDown={ (e) => this.handleMouseEvent(e, "mouseDown") } onMouseUp={ (e) => this.handleMouseEvent(e, "mouseUp") } onMouseMove={ (e) => this.handleMouseEvent(e, "mouseMove") } onMouseLeave={ (e) => this.handleMouseEvent(e, "mouseLeave") }
+        cssWidth={ length } theme={ theme } waveHeight={ waveHeight }>
+        <WaveformCanvases clasName='WaveformCanvases' left={left}>
+          { waveforms }
+        </WaveformCanvases>
+        <Progress progress={ progress } theme={ theme } waveHeight={ waveHeight } />
+        <Selection selection={ selection } theme={ theme } waveHeight={ waveHeight } />
+        <Cursor cursorPos={ cursorPos } theme={ theme } waveHeight={ waveHeight } />
+      </ChannelWrapper>
+      );
   }
 }
 
@@ -185,7 +176,10 @@ Channel.defaultProps = {
   // position of the cursor in CSS pixels from the left of channel
   cursorPos: 0,
   // position of the selection in CSS pixels from the left of channel
-  selection: {from: 0, to:0}
+  selection: {
+    from: 0,
+    to: 0
+  }
 };
 
 export default withTheme(Channel);

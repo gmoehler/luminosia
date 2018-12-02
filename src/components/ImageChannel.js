@@ -40,13 +40,18 @@ const CanvasRefImage = styled.img`
   display: none;
 `;
 
+const ImageCanvases = styled.div`
+  float: left;
+  position: relative;
+  left: ${props => props.left}px;
+`;
+
 // need position:relative so children will respect parent margin/padding
 const ImageChannelWrapper = styled.div`
-  className: 'ChannelWrapper';
   position: relative; 
+  background: ${props => props.theme.backgroundColor};
   margin: 0;
   padding: 0;
-  left: ${props => props.left}px;
   width: ${props => props.cssWidth}px;
   height: ${props => props.imageHeight}px;
 `;
@@ -93,13 +98,11 @@ class Channel extends Component {
     e.preventDefault();
     // find ChannelWrapper
     let el = e.target;
-    let offsetLeft = 0;
     while (el && el.classList && el.classList[0] !== 'ChannelWrapper') {
       el = el.parentNode;
-      offsetLeft += el.offsetLeft
     }
     if (el && el.classList && el.classList[0] === 'ChannelWrapper') {
-      const x = Math.max(0, e.clientX - offsetLeft);
+      const x = e.clientX - el.offsetLeft;
       this.props.handleMouseEvent(x, eventName);
       return;
     }
@@ -131,10 +134,16 @@ class Channel extends Component {
     }
 
     return (
-      <ImageChannelWrapper className='ChannelWrapper' onMouseDown={ (e) => this.handleMouseEvent(e, "mouseDown") } onMouseUp={ (e) => this.handleMouseEvent(e, "mouseUp") } onMouseMove={ (e) => this.handleMouseEvent(e, "mouseMove") } onMouseLeave={ (e) => this.handleMouseEvent(e, "mouseLeave") }
+      <ImageChannelWrapper className='ChannelWrapper' 
+        onMouseDown={ (e) => this.handleMouseEvent(e, "mouseDown") } 
+        onMouseUp={ (e) => this.handleMouseEvent(e, "mouseUp") } 
+        onMouseMove={ (e) => this.handleMouseEvent(e, "mouseMove") } 
+        onMouseLeave={ (e) => this.handleMouseEvent(e, "mouseLeave") }
         cssWidth={ length } theme={ theme } imageHeight={ imageHeight } left={ left }>
         <CanvasRefImage src={ source } className="hidden" ref={ this.canvasImage } />
-        { canvasImages }
+        <ImageCanvases clasName='ImageCanvases' left={left}>
+          { canvasImages }
+        </ImageCanvases>
         <ImageProgress progress={ progress } theme={ theme } imageHeight={ imageHeight } />
         <ImageSelection selection={ selection } theme={ theme } imageHeight={ imageHeight } />
         <ImageCursor cursorPos={ cursorPos } theme={ theme } imageHeight={ imageHeight } />
@@ -148,7 +157,8 @@ Channel.defaultProps = {
     waveProgressColor: 'transparent', // 'rgb(255,255,255,0.3)', // transparent white
     waveProgressBorderColor: 'rgb(255,255,255,1)', // transparent white
     cursorColor: 'red',
-    selectionColor: 'rgba(0,0,255,0.5)'
+    selectionColor: 'rgba(0,0,255,0.5)',
+    backgroundColor: 'black',
   },
   factor: 1,
   // checking `window.devicePixelRatio` when drawing to canvas.

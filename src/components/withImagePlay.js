@@ -113,8 +113,7 @@ export function withImagePlay(WrappedComponent) {
     render() {
 
       // select props passed down to Channel
-      const {sampleRate, buffer, playState, selection, select, setChannelPlayState, resolution, 
-        ...passthruProps} = this.props;
+      const {sampleRate, buffer, playState, selection, select, setChannelPlayState, resolution, ...passthruProps} = this.props;
 
       const progressPx = secondsToPixels(this.state.progress, resolution, sampleRate);
       const cursorPx = secondsToPixels(selection.from, resolution, sampleRate);
@@ -122,19 +121,12 @@ export function withImagePlay(WrappedComponent) {
         from: cursorPx,
         to: secondsToPixels(selection.to, resolution, sampleRate)
       };
-      const factor = 1/resolution;
+      const factor = 1 / resolution;
       const length = buffer && buffer.width * factor;
 
       // pass down props and progress
-      return <WrappedComponent {...passthruProps} 
-        left={0}
-        length={ length }
-        factor={ factor } 
-        progress={ progressPx } 
-        cursorPos={ cursorPx } 
-        selection={ selectionPx }
-        handleMouseEvent= {this.mousehandler.handleMouseEvent }
-      />;
+      return <WrappedComponent {...passthruProps} left={ 30 } length={ length } factor={ factor } progress={ progressPx } cursorPos={ cursorPx }
+               selection={ selectionPx } handleMouseEvent={ this.mousehandler.handleMouseEvent } />;
     }
   }
   ;
