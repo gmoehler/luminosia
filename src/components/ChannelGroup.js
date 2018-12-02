@@ -13,7 +13,6 @@ const ChannelGroupWrapper = styled.div`
 	white-space: nowrap;
 `;
 
-
 const windowPixelRatio = window.devicePixelRatio;
 
 // add play functionality to audio channels

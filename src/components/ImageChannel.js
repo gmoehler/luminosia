@@ -45,6 +45,7 @@ const ImageChannelWrapper = styled.div`
   position: relative; 
   margin: 0;
   padding: 0;
+  left: ${props => props.left}px;
   width: ${props => props.cssWidth}px;
   height: ${props => props.imageHeight}px;
 `;
@@ -81,10 +82,18 @@ class Channel extends Component {
       const sourceWidth = targetWidth / factor;
 
       cc.scale(scale, scale);
-      img.onload = cc.drawImage(img, sourceOffset, 0, sourceWidth, img.height, left, 0, targetWidth, imageHeight)
+      img.onload = cc.drawImage(img, sourceOffset, 0, sourceWidth, img.height, 0, 0, targetWidth, imageHeight)
 
       targetOffset += MAX_CANVAS_WIDTH;
     }  
+  }
+
+  handleMouseEvent = (e, eventName) => {
+    e.preventDefault();
+    // parent node is always the ChannelWrapper
+    const bounds = e.target.parentNode.getBoundingClientRect();
+    const x = Math.max(0, e.clientX - bounds.left);
+    this.props.handleMouseEvent(x, eventName);
   }
 
   createCanvasRef(i) {
@@ -100,11 +109,8 @@ class Channel extends Component {
       progress,
       cursorPos,
       selection,
+      left,
       theme,
-      handleMouseDown,
-      handleMouseUp,
-      handleMouseMove,
-      handleMouseLeave,
     } = this.props;
 
     let totalWidth = length;
@@ -129,8 +135,12 @@ class Channel extends Component {
 
     return (
       <ImageChannelWrapper 
-        onMouseDown={handleMouseDown} onMouseUp={handleMouseUp} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}
-        cssWidth={length} theme={theme} imageHeight={imageHeight}>
+        onMouseDown={(e) => this.handleMouseEvent(e, "mouseDown")} 
+        onMouseUp={(e) => this.handleMouseEvent(e, "mouseUp")} 
+        onMouseMove={(e) => this.handleMouseEvent(e, "mouseMove")} 
+        onMouseLeave={(e) => this.handleMouseEvent(e, "mouseLeave")}
+        cssWidth={length} theme={theme} imageHeight={imageHeight} left={left}>
+        
         <CanvasRefImage  src={source} className="hidden" ref={this.canvasImage}/> 
         {canvasImages}
         <ImageProgress progress={progress} theme={theme} imageHeight={imageHeight} />

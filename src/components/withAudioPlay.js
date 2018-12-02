@@ -4,7 +4,7 @@ import extractPeaks from 'webaudio-peaks';
 import memoize from 'memoize-one';
 
 import Playout from '../player/Playout'
-import MouseHandler from '../handler/MouseHandler'
+import MouseHandler from '../handler/SelectionMouseHandler'
 import { secondsToPixels, pixelsToSeconds } from '../utils/conversions';
 
 // HOC to support audio playing for one channel
@@ -96,9 +96,9 @@ export function withAudioPlay(WrappedComponent) {
     isPlaying() {
       return this.playout && this.playout.isPlaying();
     }
-    
+
     getSampleRate() {
-    	return this.props.sampleRate && this.props.buffer.sampleRate;
+      return this.props.sampleRate && this.props.buffer.sampleRate;
     }
 
     stopChannel() {
@@ -120,8 +120,7 @@ export function withAudioPlay(WrappedComponent) {
 
     render() {
       // select props passed down to Channel
-      const {resolution, playState, 
-        buffer, selection, select, setChannelPlayState, ...passthruProps} = this.props;
+      const {resolution, playState, buffer, selection, select, setChannelPlayState, ...passthruProps} = this.props;
 
       const progressPx = secondsToPixels(this.state.progress, this.props.resolution, this.getSampleRate());
       const cursorPx = secondsToPixels(selection.from, this.props.resolution, this.getSampleRate());
@@ -130,16 +129,14 @@ export function withAudioPlay(WrappedComponent) {
         to: secondsToPixels(selection.to, this.props.resolution, this.getSampleRate())
       };
       //TODO: improve performance by memoization of peaks data
-      const  {data, length,  bits} = this.doExtractPeaks(buffer, resolution, 16);
+      const {data, length, bits} = this.doExtractPeaks(buffer, resolution, 16);
       const peaksDataMono = Array.isArray(data) ? data[0] : []; // only one channel for now
-      
+
       return <WrappedComponent {...passthruProps} 
-        handleMouseDown={ this.mousehandler.handleMouseDown } 
-        handleMouseUp={ this.mousehandler.handleMouseUp } 
-        handleMouseMove={ this.mousehandler.handleMouseMove } 
-        handleMouseLeave={ this.mousehandler.handleMouseLeave }
-        peaks={peaksDataMono} bits={bits} length={length}
-        progress={ progressPx } cursorPos={ cursorPx } selection={ selectionPx } />;
+        handleMouseEvent={ this.mousehandler.handleMouseEvent } 
+        peaks={ peaksDataMono } bits={ bits } length={ length } progress={ progressPx } 
+        cursorPos={ cursorPx } selection={ selectionPx }
+      />;
     }
   }
   ;

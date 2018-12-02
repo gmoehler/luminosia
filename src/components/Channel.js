@@ -95,6 +95,14 @@ class Channel extends Component {
     }  
   }
 
+  handleMouseEvent = (e, eventName) => {
+    e.preventDefault();
+    // parent node is always the ChannelWrapper
+    const bounds = e.target.parentNode.getBoundingClientRect();
+    const x = Math.max(0, e.clientX - bounds.left);
+    this.props.handleMouseEvent(x, eventName);
+  }
+
   createCanvasRef(i) {
     return (canvas) => {this.canvases[i] = canvas}
   }
@@ -108,10 +116,6 @@ class Channel extends Component {
       cursorPos,
       selection,
       theme,
-      handleMouseDown,
-      handleMouseUp,
-      handleMouseMove,
-      handleMouseLeave,
     } = this.props;
 
     let totalWidth = length;
@@ -134,8 +138,11 @@ class Channel extends Component {
 
     return (
       <ChannelWrapper 
-          onMouseDown={handleMouseDown} onMouseUp={handleMouseUp} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}
-          cssWidth={length} theme={theme} waveHeight={waveHeight}>
+        onMouseDown={(e) => this.handleMouseEvent(e, "mouseDown")} 
+        onMouseUp={(e) => this.handleMouseEvent(e, "mouseUp")} 
+        onMouseMove={(e) => this.handleMouseEvent(e, "mouseMove")} 
+        onMouseLeave={(e) => this.handleMouseEvent(e, "mouseLeave")}
+        cssWidth={length} theme={theme} waveHeight={waveHeight}>
         {waveforms}  
         <Progress progress={progress} theme={theme} waveHeight={waveHeight} />
         <Selection selection={selection} theme={theme} waveHeight={waveHeight} />

@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import MouseHandler from '../handler/MouseHandler'
+import MouseHandler from '../handler/SelectionMouseHandler'
 
 import { secondsToPixels, pixelsToSeconds } from '../utils/conversions';
 
@@ -133,10 +133,7 @@ export function withImagePlay(WrappedComponent) {
         progress={ progressPx } 
         cursorPos={ cursorPx } 
         selection={ selectionPx }
-        handleMouseDown={ this.mousehandler.handleMouseDown } 
-        handleMouseUp={ this.mousehandler.handleMouseUp } 
-        handleMouseMove={ this.mousehandler.handleMouseMove }
-        handleMouseLeave={ this.mousehandler.handleMouseLeave } 
+        handleMouseEvent= {this.mousehandler.handleMouseEvent }
       />;
     }
   }
