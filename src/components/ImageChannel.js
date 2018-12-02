@@ -42,6 +42,7 @@ const CanvasRefImage = styled.img`
 
 // need position:relative so children will respect parent margin/padding
 const ImageChannelWrapper = styled.div`
+  className: 'ChannelWrapper';
   position: relative; 
   margin: 0;
   padding: 0;
@@ -66,7 +67,7 @@ class Channel extends Component {
   }
 
   draw() {
-    const { imageHeight, scale, factor, left } = this.props;
+    const {imageHeight, scale, factor} = this.props;
 
     let targetOffset = 0;
     for (let i = 0; i < this.canvases.length; i++) {
@@ -85,33 +86,34 @@ class Channel extends Component {
       img.onload = cc.drawImage(img, sourceOffset, 0, sourceWidth, img.height, 0, 0, targetWidth, imageHeight)
 
       targetOffset += MAX_CANVAS_WIDTH;
-    }  
+    }
   }
 
   handleMouseEvent = (e, eventName) => {
     e.preventDefault();
-    // parent node is always the ChannelWrapper
-    const bounds = e.target.parentNode.getBoundingClientRect();
-    const x = Math.max(0, e.clientX - bounds.left);
-    this.props.handleMouseEvent(x, eventName);
+    // find ChannelWrapper
+    let el = e.target;
+    let offsetLeft = 0;
+    while (el && el.classList && el.classList[0] !== 'ChannelWrapper') {
+      el = el.parentNode;
+      offsetLeft += el.offsetLeft
+    }
+    if (el && el.classList && el.classList[0] === 'ChannelWrapper') {
+      const x = Math.max(0, e.clientX - offsetLeft);
+      this.props.handleMouseEvent(x, eventName);
+      return;
+    }
+    console.warn("MouseEvent did not find ChannelWrapper");
   }
 
   createCanvasRef(i) {
-    return (canvas) => {this.canvases[i] = canvas}
+    return (canvas) => {
+      this.canvases[i] = canvas
+    }
   }
 
   render() {
-    const {
-      source,
-      length,
-      imageHeight,
-      scale,
-      progress,
-      cursorPos,
-      selection,
-      left,
-      theme,
-    } = this.props;
+    const {source, length, imageHeight, scale, progress, cursorPos, selection, left, theme, } = this.props;
 
     let totalWidth = length;
     let imageCount = 0;
@@ -119,13 +121,8 @@ class Channel extends Component {
     while (totalWidth > 0) {
       const currentWidth = Math.min(totalWidth, MAX_CANVAS_WIDTH);
       const canvasImage = (
-        <ImageCanvas
-          key={`${length}-${imageCount}`}
-          cssWidth={currentWidth}
-          width={currentWidth * scale}
-          height={imageHeight * scale}
-          imageHeight={imageHeight} 
-          ref={this.createCanvasRef(imageCount)} />
+      <ImageCanvas key={ `${length}-${imageCount}` } cssWidth={ currentWidth } width={ currentWidth * scale } height={ imageHeight * scale } imageHeight={ imageHeight } ref={ this.createCanvasRef(imageCount) }
+      />
       )
 
       canvasImages.push(canvasImage);
@@ -134,21 +131,15 @@ class Channel extends Component {
     }
 
     return (
-      <ImageChannelWrapper 
-        onMouseDown={(e) => this.handleMouseEvent(e, "mouseDown")} 
-        onMouseUp={(e) => this.handleMouseEvent(e, "mouseUp")} 
-        onMouseMove={(e) => this.handleMouseEvent(e, "mouseMove")} 
-        onMouseLeave={(e) => this.handleMouseEvent(e, "mouseLeave")}
-        cssWidth={length} theme={theme} imageHeight={imageHeight} left={left}>
-        
-        <CanvasRefImage  src={source} className="hidden" ref={this.canvasImage}/> 
-        {canvasImages}
-        <ImageProgress progress={progress} theme={theme} imageHeight={imageHeight} />
-        <ImageSelection selection={selection} theme={theme} imageHeight={imageHeight} />
-        <ImageCursor cursorPos={cursorPos} theme={theme} imageHeight={imageHeight} />
-
+      <ImageChannelWrapper className='ChannelWrapper' onMouseDown={ (e) => this.handleMouseEvent(e, "mouseDown") } onMouseUp={ (e) => this.handleMouseEvent(e, "mouseUp") } onMouseMove={ (e) => this.handleMouseEvent(e, "mouseMove") } onMouseLeave={ (e) => this.handleMouseEvent(e, "mouseLeave") }
+        cssWidth={ length } theme={ theme } imageHeight={ imageHeight } left={ left }>
+        <CanvasRefImage src={ source } className="hidden" ref={ this.canvasImage } />
+        { canvasImages }
+        <ImageProgress progress={ progress } theme={ theme } imageHeight={ imageHeight } />
+        <ImageSelection selection={ selection } theme={ theme } imageHeight={ imageHeight } />
+        <ImageCursor cursorPos={ cursorPos } theme={ theme } imageHeight={ imageHeight } />
       </ImageChannelWrapper>
-    );
+      );
   }
 }
 
@@ -171,7 +162,10 @@ Channel.defaultProps = {
   // position of the cursor in CSS pixels from the left of channel
   cursorPos: 0,
   // position of the selection in CSS pixels from the left of channel
-  selection: {from: 0, to:0}
+  selection: {
+    from: 0,
+    to: 0
+  }
 };
 
 export default withTheme(Channel);

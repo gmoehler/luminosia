@@ -38,6 +38,7 @@ const Waveform = styled.canvas`
 
 // need position:relative so children will respect parent margin/padding
 const ChannelWrapper = styled.div`
+  className: 'ChannelWrapper';
   position: relative; 
   margin: 0;
   padding: 0;
@@ -97,10 +98,19 @@ class Channel extends Component {
 
   handleMouseEvent = (e, eventName) => {
     e.preventDefault();
-    // parent node is always the ChannelWrapper
-    const bounds = e.target.parentNode.getBoundingClientRect();
-    const x = Math.max(0, e.clientX - bounds.left);
-    this.props.handleMouseEvent(x, eventName);
+    // find ChannelWrapper
+    let el = e.target;
+    let offsetLeft = 0;
+    while (el && el.classList && el.classList[0] !== 'ChannelWrapper') {
+      el = el.parentNode;
+      offsetLeft += el.offsetLeft
+    }
+    if (el && el.classList && el.classList[0] === 'ChannelWrapper') {
+      const x = Math.max(0, e.clientX - offsetLeft);
+      this.props.handleMouseEvent(x, eventName);
+      return;
+    }
+    console.warn("MouseEvent did not find ChannelWrapper");
   }
 
   createCanvasRef(i) {
@@ -138,6 +148,7 @@ class Channel extends Component {
 
     return (
       <ChannelWrapper 
+        className='ChannelWrapper'
         onMouseDown={(e) => this.handleMouseEvent(e, "mouseDown")} 
         onMouseUp={(e) => this.handleMouseEvent(e, "mouseUp")} 
         onMouseMove={(e) => this.handleMouseEvent(e, "mouseMove")} 
