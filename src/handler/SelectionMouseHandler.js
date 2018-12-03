@@ -38,7 +38,7 @@ export default class SelectionMouseHandler {
 
   handleSelectionTo = (x, finalizeSelection) => {
     if (this.selectFromX) { // only when mouse down has occured
-      // console.log('mouse at: ', e.clientX - bounds.left);
+      console.log('selection to: ', x);
       if (this.selectFromX < x) {
         this.handlerFunctions.select(this.selectFromX, x);
       } else {

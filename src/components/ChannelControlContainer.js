@@ -15,6 +15,7 @@ const channelConfigs = [
     src: 'media/audio/Vocals30.mp3',
     name: 'Vocals',
     type: 'audio',
+    offset: 2.0,
     cuein: 5.918,
     cueout: 14.5,
   },
@@ -22,6 +23,7 @@ const channelConfigs = [
     src: 'media/audio/BassDrums30.mp3',
     name: 'Drums',
     type: 'audio',
+    offset: 2.2,
     start: 3,
     soloed: false,
   },
@@ -29,6 +31,7 @@ const channelConfigs = [
     src: 'media/image/mostlyStripes.png',
     name: 'MostlyStripes',
     type: 'image',
+    offset: 1.75,
     sampleRate: 100, // one image frame is 10ms
     start: 23.5,
     cuein: 0.5, // in secs

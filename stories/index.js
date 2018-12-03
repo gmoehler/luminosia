@@ -27,9 +27,11 @@ const {
 const theme = {
   waveOutlineColor: 'green',
   waveFillColor: 'white',
-  waveProgressColor: 'yellow',
+  waveProgressColor: 'transparent',
+  waveProgressBorderColor: 'purple',
+  imageBackgroundColor: 'black',
   cursorColor: 'red',
-  selectionColor: 'purple',
+  selectionColor: 'rgba(0,0,255,0.5)',
   timeColor: 'red',
 };
 
@@ -86,6 +88,14 @@ storiesOf('Channel', module)
       </Channel>
     </ThemeProvider>
   ))
+  .add('BBC Waveform Peaks & devicePixelRatio & theming & selection and start.', () => (
+    <ThemeProvider theme={theme}>
+      <Channel peaks={data} length={length} bits={bits} scale={scale} 
+        progress={200} start={150}
+        selection={{from: 300, to: 450}}>
+      </Channel>
+    </ThemeProvider>
+  ))
   ;
   
   storiesOf('ImageChannel', module)
@@ -105,8 +115,17 @@ storiesOf('Channel', module)
     <ImageChannel source={image.src} length={length} factor={5} scale={scale} selection={{from: 300, to: 450}} > </ImageChannel>
   ))
   .add('Image channel with image and factor 5 & cursor, progress & selection.', () => (
-    <ImageChannel source={image.src} length={length} factor={5} scale={scale} 
-    progress={200} cursorPos={150} selection={{from: 300, to: 450}} > </ImageChannel>
+    <ImageChannel 
+    source={image.src} length={length} factor={5} scale={scale} 
+    progress={200} cursorPos={150} selection={{from: 300, to: 450}} > 
+    </ImageChannel>
+  ))
+  .add('Image channel with image and factor 5 & cursor, progress & selection & start.', () => (
+    <ImageChannel 
+    source={image.src} length={length} factor={5} scale={scale} 
+    progress={200} cursorPos={150} selection={{from: 300, to: 450}} 
+    start={150}> 
+    </ImageChannel>
   ))
 
   ;

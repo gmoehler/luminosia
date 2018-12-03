@@ -6,7 +6,7 @@ const MAX_CANVAS_WIDTH = 1000;
 const ImageProgress = styled.div`
   position: absolute;
   background: ${props => props.theme.waveProgressColor};
-  width: ${props => props.progress}px;
+  width: ${props => props.progress + props.offset}px;
   height: ${props => props.imageHeight}px;
   border-right: 1px solid ${props => props.theme.waveProgressBorderColor};
 `;
@@ -15,13 +15,13 @@ const ImageCursor = styled.div`
   position: absolute;
   background: ${props => props.theme.cursorColor};
   width: 1px;
-  left: ${props => props.cursorPos}px;
+  left: ${props => props.offset + props.cursorPos}px;
   height: ${props => props.imageHeight}px;
 `;
 
 const ImageSelection = styled.div`
   position: absolute;
-  left: ${props => props.selection.from}px;
+  left: ${props => props.offset + props.selection.from}px;
   background: ${props => props.theme.selectionColor};
   width: ${props => props.selection.to - props.selection.from}px;
   height: ${props => props.imageHeight}px;
@@ -43,17 +43,18 @@ const CanvasRefImage = styled.img`
 const ImageCanvases = styled.div`
   float: left;
   position: relative;
-  left: ${props => props.left}px;
+  left: ${props => props.offset}px;
 `;
 
 // need position:relative so children will respect parent margin/padding
 const ImageChannelWrapper = styled.div`
   position: relative; 
-  background: ${props => props.theme.backgroundColor};
   margin: 0;
   padding: 0;
+  background: ${props => props.theme.imageBackgroundColor};
   width: ${props => props.cssWidth}px;
   height: ${props => props.imageHeight}px;
+  
 `;
 
 class Channel extends Component {
@@ -95,18 +96,20 @@ class Channel extends Component {
   }
 
   handleMouseEvent = (e, eventName) => {
-    e.preventDefault();
-    // find ChannelWrapper
-    let el = e.target;
-    while (el && el.classList && el.classList[0] !== 'ChannelWrapper') {
-      el = el.parentNode;
+    if (this.props.handleMouseEvent) {
+      e.preventDefault();
+      // find ChannelWrapper
+      let el = e.target;
+      while (el && el.classList && el.classList[0] !== 'ChannelWrapper') {
+        el = el.parentNode;
+      }
+      if (el && el.classList && el.classList[0] === 'ChannelWrapper') {
+        const x =  Math.max(0, e.clientX - el.offsetLeft);
+        this.props.handleMouseEvent(x, eventName);
+        return;
+      }
+      console.warn("MouseEvent did not find ChannelWrapper");
     }
-    if (el && el.classList && el.classList[0] === 'ChannelWrapper') {
-      const x = e.clientX - el.offsetLeft;
-      this.props.handleMouseEvent(x, eventName);
-      return;
-    }
-    console.warn("MouseEvent did not find ChannelWrapper");
   }
 
   createCanvasRef(i) {
@@ -116,7 +119,7 @@ class Channel extends Component {
   }
 
   render() {
-    const {source, length, imageHeight, scale, progress, cursorPos, selection, left, theme, } = this.props;
+    const {source, length, imageHeight, scale, progress, cursorPos, selection, theme, offset, } = this.props;
 
     let totalWidth = length;
     let imageCount = 0;
@@ -139,14 +142,14 @@ class Channel extends Component {
         onMouseUp={ (e) => this.handleMouseEvent(e, "mouseUp") } 
         onMouseMove={ (e) => this.handleMouseEvent(e, "mouseMove") } 
         onMouseLeave={ (e) => this.handleMouseEvent(e, "mouseLeave") }
-        cssWidth={ length } theme={ theme } imageHeight={ imageHeight } left={ left }>
+        cssWidth={ length } theme={ theme } imageHeight={ imageHeight }>
         <CanvasRefImage src={ source } className="hidden" ref={ this.canvasImage } />
-        <ImageCanvases clasName='ImageCanvases' left={left}>
+        <ImageCanvases clasName='ImageCanvases' theme={ theme } offset={offset}>
           { canvasImages }
         </ImageCanvases>
-        <ImageProgress progress={ progress } theme={ theme } imageHeight={ imageHeight } />
-        <ImageSelection selection={ selection } theme={ theme } imageHeight={ imageHeight } />
-        <ImageCursor cursorPos={ cursorPos } theme={ theme } imageHeight={ imageHeight } />
+        <ImageProgress progress={ progress } theme={ theme } imageHeight={ imageHeight } offset={offset}/>
+        <ImageSelection selection={ selection } theme={ theme } imageHeight={ imageHeight } offset={offset}/>
+        <ImageCursor cursorPos={ cursorPos } theme={ theme } imageHeight={ imageHeight } offset={offset}/>
       </ImageChannelWrapper>
       );
   }
@@ -158,13 +161,13 @@ Channel.defaultProps = {
     waveProgressBorderColor: 'rgb(255,255,255,1)', // transparent white
     cursorColor: 'red',
     selectionColor: 'rgba(0,0,255,0.5)',
-    backgroundColor: 'black',
+    imageBackgroundColor: 'black',
   },
   factor: 1,
   // checking `window.devicePixelRatio` when drawing to canvas.
   scale: 1,
   length: 0,
-  left: 0,
+  offset: 0,
   // height in CSS pixels of each canvas element an image is on.
   imageHeight: 90, // multiple of num LEDs
   // width in CSS pixels of the progress on the channel.

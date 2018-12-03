@@ -37,12 +37,20 @@ export function withAudioPlay(WrappedComponent) {
 
     componentDidUpdate(prevProps, prevState) {
 
-      const {playState, selection} = this.props;
+      const {playState, selection, offset} = this.props;
 
       // start or stop playing
       if (prevProps.playState !== playState) {
         if (playState === "playing") {
-          this.playChannel(selection.from, selection.to);
+          const playFrom = selection.from // - offset;
+          const playTo = selection.to // - offset;
+         // if (playTo > 0) {
+         //  if (playFrom <0) {
+         //     // start in future
+         //     this.playChannel(0 , playTo, - playFrom);
+         //   }
+          this.playChannel(playFrom, playTo);
+         // }
         }
         // only stopped if not already (auto)stopped
         else if (this.isPlaying()) {
@@ -122,11 +130,12 @@ export function withAudioPlay(WrappedComponent) {
       // select props passed down to Channel
       const {resolution, playState, buffer, selection, select, setChannelPlayState, ...passthruProps} = this.props;
 
-      const progressPx = secondsToPixels(this.state.progress, this.props.resolution, this.getSampleRate());
-      const cursorPx = secondsToPixels(selection.from, this.props.resolution, this.getSampleRate());
+      const offset = secondsToPixels(this.props.offset, this.props.resolution, this.getSampleRate())
+      const progressPx = secondsToPixels(this.state.progress, this.props.resolution, this.getSampleRate()) - offset;
+      const cursorPx = secondsToPixels(selection.from, this.props.resolution, this.getSampleRate())  - offset;
       const selectionPx = {
         from: cursorPx,
-        to: secondsToPixels(selection.to, this.props.resolution, this.getSampleRate())
+        to: secondsToPixels(selection.to, this.props.resolution, this.getSampleRate()) - offset
       };
       //TODO: improve performance by memoization of peaks data
       const {data, length, bits} = this.doExtractPeaks(buffer, resolution, 16);
@@ -134,7 +143,7 @@ export function withAudioPlay(WrappedComponent) {
 
       return <WrappedComponent {...passthruProps} 
         handleMouseEvent={ this.mousehandler.handleMouseEvent } 
-        left={50}
+        offset={offset}
         peaks={ peaksDataMono } bits={ bits } length={ length } progress={ progressPx } 
         cursorPos={ cursorPx } selection={ selectionPx }  
       />;

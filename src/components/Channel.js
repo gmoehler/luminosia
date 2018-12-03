@@ -6,7 +6,7 @@ const MAX_CANVAS_WIDTH = 1000;
 const Progress = styled.div`
   position: absolute;
   background: ${props => props.theme.waveProgressColor};
-  width: ${props => props.progress}px;
+  width: ${props => props.progress + props.offset}px;
   height: ${props => props.waveHeight}px;
   border-right: 1px solid ${props => props.theme.waveProgressBorderColor};
 `;
@@ -15,13 +15,13 @@ const Cursor = styled.div`
   position: absolute;
   background: ${props => props.theme.cursorColor};
   width: 1px;
-  left: ${props => props.cursorPos}px;
+  left: ${props => props.offset + props.cursorPos}px;
   height: ${props => props.waveHeight}px;
 `;
 
 const Selection = styled.div`
   position: absolute;
-  left: ${props => props.selection.from}px;
+  left: ${props => props.offset + props.selection.from}px;
   background: ${props => props.theme.selectionColor};
   width: ${props => props.selection.to - props.selection.from}px;
   height: ${props => props.waveHeight}px;
@@ -39,7 +39,8 @@ const Waveform = styled.canvas`
 const WaveformCanvases = styled.div`
   float: left;
   position: relative;
-  left: ${props => props.left}px;
+  left: ${props => props.offset}px;
+  background: ${props => props.theme.waveFillColor};
 `;
 
 // need position:relative so children will respect parent margin/padding
@@ -47,7 +48,7 @@ const ChannelWrapper = styled.div`
   position: relative; 
   margin: 0;
   padding: 0;
-  background: ${props => props.theme.waveFillColor};
+  background: ${props => props.theme.waveOutlineColor};
   width: ${props => props.cssWidth}px;
   height: ${props => props.waveHeight}px;
 `;
@@ -102,20 +103,20 @@ class Channel extends Component {
   }
 
   handleMouseEvent = (e, eventName) => {
-    e.preventDefault();
-    // find ChannelWrapper
-    let el = e.target;
-    let offsetLeft = 0;
-    while (el && el.classList && el.classList[0] !== 'ChannelWrapper') {
-      el = el.parentNode;
-      offsetLeft += el.offsetLeft
+    if (this.props.handleMouseEvent) {
+      e.preventDefault();
+      // find ChannelWrapper
+      let el = e.target;
+      while (el && el.classList && el.classList[0] !== 'ChannelWrapper') {
+        el = el.parentNode;
+      }
+      if (el && el.classList && el.classList[0] === 'ChannelWrapper') {
+        const x = Math.max(0, e.clientX - el.offsetLeft);
+        this.props.handleMouseEvent(x, eventName);
+        return;
+      }
+      console.warn("MouseEvent did not find ChannelWrapper");
     }
-    if (el && el.classList && el.classList[0] === 'ChannelWrapper') {
-      const x = Math.max(0, e.clientX - offsetLeft);
-      this.props.handleMouseEvent(x, eventName);
-      return;
-    }
-    console.warn("MouseEvent did not find ChannelWrapper");
   }
 
   createCanvasRef(i) {
@@ -125,7 +126,7 @@ class Channel extends Component {
   }
 
   render() {
-    const {length, waveHeight, scale, progress, cursorPos, selection, theme, left} = this.props;
+    const {length, waveHeight, scale, progress, cursorPos, selection, theme, offset} = this.props;
 
     let totalWidth = length;
     let waveformCount = 0;
@@ -143,12 +144,12 @@ class Channel extends Component {
     return (
       <ChannelWrapper className='ChannelWrapper' onMouseDown={ (e) => this.handleMouseEvent(e, "mouseDown") } onMouseUp={ (e) => this.handleMouseEvent(e, "mouseUp") } onMouseMove={ (e) => this.handleMouseEvent(e, "mouseMove") } onMouseLeave={ (e) => this.handleMouseEvent(e, "mouseLeave") }
         cssWidth={ length } theme={ theme } waveHeight={ waveHeight }>
-        <WaveformCanvases clasName='WaveformCanvases' left={left}>
+        <WaveformCanvases clasName='WaveformCanvases' theme={ theme } offset={offset} >
           { waveforms }
         </WaveformCanvases>
-        <Progress progress={ progress } theme={ theme } waveHeight={ waveHeight } />
-        <Selection selection={ selection } theme={ theme } waveHeight={ waveHeight } />
-        <Cursor cursorPos={ cursorPos } theme={ theme } waveHeight={ waveHeight } />
+        <Progress progress={ progress } theme={ theme } waveHeight={ waveHeight } offset={offset}/>
+        <Selection selection={ selection } theme={ theme } waveHeight={ waveHeight } offset={offset}/>
+        <Cursor cursorPos={ cursorPos } theme={ theme } waveHeight={ waveHeight } offset={offset}/>
       </ChannelWrapper>
       );
   }
@@ -166,6 +167,7 @@ Channel.defaultProps = {
   },
   // checking `window.devicePixelRatio` when drawing to canvas.
   scale: 1,
+  offset: 0,
   peaks: [],
   length: 0,
   bits: 0,
