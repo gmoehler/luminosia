@@ -170,6 +170,7 @@ Channel.defaultProps = {
   offset: 0,
   // height in CSS pixels of each canvas element an image is on.
   imageHeight: 90, // multiple of num LEDs
+  // all x pixel values are from 0 regardless of offset
   // width in CSS pixels of the progress on the channel.
   progress: 0,
   // position of the cursor in CSS pixels from the left of channel

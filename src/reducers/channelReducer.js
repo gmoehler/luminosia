@@ -2,6 +2,7 @@ import { merge } from 'lodash';
 
 import { LOAD_CHANNEL_STARTED, LOAD_CHANNEL_SUCCESS, LOAD_CHANNEL_FAILURE, 
   PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE } from '../actions/types';
+import { Object } from 'es6-shim';
 
 // TODO: improve this using a sub-reducer on the selected channel
 const initialState = {
@@ -112,4 +113,16 @@ function allChannelsStopped(playState) {
   return Object.keys(playState.byIds)
     .reduce((result, key) => result && (playState.byIds[key].playState === "stopped"),
       true)
+}
+
+function getDuration(state, id) {
+  const channelData = state.channel.byIds[id];
+  return channelData.offset 
+    + channelData.type === "audio" ?
+    channelData.buffer.length : channelData.buffer.width;
+}
+
+export const getMaxDuration = (state) => {
+  return Object.keys(state.channel.byIds)
+    .reduce((result, key) => Math.max(result, getDuration(state, key), 0))
 }
