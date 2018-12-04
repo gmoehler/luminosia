@@ -72,13 +72,6 @@ export function withImagePlay(WrappedComponent) {
       }
     }
 
-    // transform from pixel to time values
-    select = (fromPx, toPx) => {
-      const from = pixelsToSeconds(fromPx, this.props.resolution, this.props.sampleRate);
-      const to = pixelsToSeconds(toPx, this.props.resolution, this.props.sampleRate);
-      this.props.select(from, to);
-    }
-
     animateProgress(timestamp) {
       if (!this.animationStartTime) {
         this.animationStartTime = timestamp;
@@ -100,6 +93,7 @@ export function withImagePlay(WrappedComponent) {
       window.cancelAnimationFrame(this.animationRequest);
     }
 
+
     isPlaying() {
       return this.animationStartTime !== null;
     }
@@ -110,6 +104,13 @@ export function withImagePlay(WrappedComponent) {
       this.props.setChannelPlayState("stopped");
     }
 
+    // transform from pixel to time values
+    select = (fromPx, toPx) => {
+      const from = pixelsToSeconds(fromPx, this.props.resolution, this.props.sampleRate);
+      const to = pixelsToSeconds(toPx, this.props.resolution, this.props.sampleRate);
+      this.props.select(from, to);
+    }
+    
     render() {
 
       // select props passed down to Channel

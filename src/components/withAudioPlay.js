@@ -14,8 +14,9 @@ export function withAudioPlay(WrappedComponent) {
     constructor(props) {
       super(props);
       this.playout = null;
-      this.startTime = 0; // start time of current play
       this.mouseDownX = 0; // x in px of mouse down event
+      this.animationStartTime = null; // start time of progress animation
+      this.playStartAt = 0;
       this.state = {
         progress: 0, // play progress in secs
       };
@@ -42,15 +43,9 @@ export function withAudioPlay(WrappedComponent) {
       // start or stop playing
       if (prevProps.playState !== playState) {
         if (playState === "playing") {
-          const playFrom = selection.from // - offset;
-          const playTo = selection.to // - offset;
-         // if (playTo > 0) {
-         //  if (playFrom <0) {
-         //     // start in future
-         //     this.playChannel(0 , playTo, - playFrom);
-         //   }
-          this.playChannel(playFrom, playTo);
-         // }
+          const playFrom = selection.from;
+          const playTo = selection.to;
+          this.playChannel(playFrom, playTo, offset);
         }
         // only stopped if not already (auto)stopped
         else if (this.isPlaying()) {
@@ -66,7 +61,7 @@ export function withAudioPlay(WrappedComponent) {
       }
     }
 
-    playChannel(startAt, endAt, delay = 0) {
+    playChannel(startAt, endAt, offset) {
       if (this.props.type !== "audio") {
         return;
       }
@@ -76,33 +71,51 @@ export function withAudioPlay(WrappedComponent) {
 
       // regular start at startAt
       if (!this.isPlaying()) {
+        this.playStartAt = startAt;
+        startAt = startAt - offset; // TODO do this cleaner
+        endAt = endAt - offset;     // TODO do this cleaner
         const actStartAt = Math.max(0, startAt);
-        console.log(`playing from ${actStartAt}s to ${endAt} with delay ${delay}`);
-        this.playout.setUpSource()
-          .then(this.stopChannel); // stop when end has reached
-        const duration = endAt && Math.abs(endAt - actStartAt) > 0.1 ? endAt - actStartAt : 10;
-        this.playout.play(delay, actStartAt, duration);
+        const delay = startAt < 0 ? -startAt : 0;
+      
+        let actEndAt = endAt;
+        if (endAt && Math.abs(endAt - startAt) < 0.1) {
+          // startAt and endAt are the same: just play 10 secs
+          actEndAt = endAt + 10;
+        }
+        // only play if there is something to play
+        if (actEndAt > 0) {
+          const duration = actEndAt - actStartAt;
 
-        // remember time when audio would have started at 0
-        this.startTime = this.audioContext.currentTime - actStartAt;
+          console.log(`playing from ${actStartAt}s( ${startAt}s) to ${actEndAt}(${endAt}s) with delay ${delay}`);
+          this.playout.setUpSource()
+            .then(this.stopChannel); // stop when end has reached
+            
+          this.playout.play(this.audioContext.currentTime + delay, actStartAt, duration);
+        } else {
+          console.log(`skip playing from ${startAt}s to ${endAt}`);
+        }
         this.animationRequest = window.requestAnimationFrame(this.animateProgress);
       }
     }
 
-    animateProgress() {
+    animateProgress(timestamp) {
+      if (!this.animationStartTime) {
+        this.animationStartTime = timestamp;
+      }
       this.setState({
         ...this.state,
-        progress: this.audioContext.currentTime - this.startTime
+        progress:  this.playStartAt + (timestamp - this.animationStartTime) / 1000 // in secs
       })
       this.animationRequest = window.requestAnimationFrame(this.animateProgress);
     }
 
     stopAnimateProgress() {
       window.cancelAnimationFrame(this.animationRequest);
+      this.animationStartTime = null;
     }
 
     isPlaying() {
-      return this.playout && this.playout.isPlaying();
+      return this.animationStartTime !== null;
     }
 
     getSampleRate() {
