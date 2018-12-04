@@ -1,11 +1,3 @@
-// pixel: pixel on screen
-// sample: value in image / audio
-// sampleRate: samples / sec
-// resolution: pixels / sample
-// zoom level / pixelsPerSecond: pixels / sec
-// => 
-// resolution = sampleRate / pixelsPerSecond
-
 export function samplesToSeconds(samples, sampleRate) {
   return samples / sampleRate;
 }
