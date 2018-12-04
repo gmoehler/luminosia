@@ -77,7 +77,7 @@ export function withAudioPlay(WrappedComponent) {
         const duration = actEndAt - actStartAt;
 
         this.playStartAt = startAt; // for progress offset
-        this.playStopAt = actEndAt;
+        this.playStopAt = actEndAt + offset;
 
         // only play if there is something to play
         if (actEndAt > 0) {
@@ -104,7 +104,7 @@ export function withAudioPlay(WrappedComponent) {
 
       this.setState({
         ...this.state,
-        progress: duration
+        progress: currentTimeInSecs
       })
       
       if (currentTimeInSecs < this.playStopAt) {
