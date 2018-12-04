@@ -43,9 +43,7 @@ export function withAudioPlay(WrappedComponent) {
       // start or stop playing
       if (prevProps.playState !== playState) {
         if (playState === "playing") {
-          const playFrom = selection.from;
-          const playTo = selection.to;
-          this.playChannel(playFrom, playTo, offset);
+          this.playChannel(selection.from, selection.to, offset);
         }
         // only stopped if not already (auto)stopped
         else if (this.isPlaying()) {
@@ -72,19 +70,20 @@ export function withAudioPlay(WrappedComponent) {
       // regular start at startAt
       if (!this.isPlaying()) {
 
+        // look at offset
         const actStartAt = startAt - offset < 0 ? 0 : startAt;
         const delay = startAt - offset < 0 ? offset - startAt : 0;
         const actEndAt = (Math.abs(endAt - startAt) < 0.1) ? actStartAt + 10 : endAt - offset;
+        const duration = actEndAt - actStartAt;
+
+        this.playStartAt = startAt; // for progress offset
 
         // only play if there is something to play
         if (actEndAt > 0) {
-          const duration = actEndAt - actStartAt;
-
           console.log(`playing from ${actStartAt}s( ${startAt}s) to ${actEndAt}(${endAt}s) with delay ${delay}, offset: ${offset}`);
           this.playout.setUpSource()
             .then(this.stopChannel); // stop when end has reached
             
-          this.playStartAt = startAt; // for progress offset
           this.playout.play(this.audioContext.currentTime + delay, actStartAt, duration);
         } else {
           console.log(`skip playing from ${startAt}s to ${endAt}`);
