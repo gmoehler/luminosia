@@ -77,6 +77,7 @@ export function withAudioPlay(WrappedComponent) {
         const duration = actEndAt - actStartAt;
 
         this.playStartAt = startAt; // for progress offset
+        this.playStopAt = actEndAt;
 
         // only play if there is something to play
         if (actEndAt > 0) {
@@ -97,11 +98,20 @@ export function withAudioPlay(WrappedComponent) {
         this.animationStartTime = timestamp;
         //TODO: sync with playout time
       }
+
+      const duration = timestamp - this.animationStartTime;
+      const currentTimeInSecs = this.playStartAt + duration / 1000.0;
+
       this.setState({
         ...this.state,
-        progress:  this.playStartAt + (timestamp - this.animationStartTime) / 1000 // in secs
+        progress: duration
       })
-      this.animationRequest = window.requestAnimationFrame(this.animateProgress);
+      
+      if (currentTimeInSecs < this.playStopAt) {
+        this.animationRequest = window.requestAnimationFrame(this.animateProgress);
+      } else {
+        this.stopChannel();
+      }
     }
 
     stopAnimateProgress() {
