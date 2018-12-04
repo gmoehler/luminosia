@@ -71,25 +71,20 @@ export function withAudioPlay(WrappedComponent) {
 
       // regular start at startAt
       if (!this.isPlaying()) {
-        this.playStartAt = startAt;
-        startAt = startAt - offset; // TODO do this cleaner
-        endAt = endAt - offset;     // TODO do this cleaner
-        const actStartAt = Math.max(0, startAt);
-        const delay = startAt < 0 ? -startAt : 0;
-      
-        let actEndAt = endAt;
-        if (endAt && Math.abs(endAt - startAt) < 0.1) {
-          // startAt and endAt are the same: just play 10 secs
-          actEndAt = endAt + 10;
-        }
+
+        const actStartAt = startAt - offset < 0 ? 0 : startAt;
+        const delay = startAt - offset < 0 ? offset - startAt : 0;
+        const actEndAt = (Math.abs(endAt - startAt) < 0.1) ? actStartAt + 10 : endAt - offset;
+
         // only play if there is something to play
         if (actEndAt > 0) {
           const duration = actEndAt - actStartAt;
 
-          console.log(`playing from ${actStartAt}s( ${startAt}s) to ${actEndAt}(${endAt}s) with delay ${delay}`);
+          console.log(`playing from ${actStartAt}s( ${startAt}s) to ${actEndAt}(${endAt}s) with delay ${delay}, offset: ${offset}`);
           this.playout.setUpSource()
             .then(this.stopChannel); // stop when end has reached
             
+          this.playStartAt = startAt; // for progress offset
           this.playout.play(this.audioContext.currentTime + delay, actStartAt, duration);
         } else {
           console.log(`skip playing from ${startAt}s to ${endAt}`);
@@ -101,6 +96,7 @@ export function withAudioPlay(WrappedComponent) {
     animateProgress(timestamp) {
       if (!this.animationStartTime) {
         this.animationStartTime = timestamp;
+        //TODO: sync with playout time
       }
       this.setState({
         ...this.state,
