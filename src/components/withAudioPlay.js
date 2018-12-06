@@ -67,7 +67,7 @@ export function withAudioPlay(WrappedComponent) {
 
         // look at offset
         const actStartAt = Math.max(0, startAt); // dont start before 0
-        const actEndAt = endAt - startAt < 0.1 ? startAt + 10 : endAt; // TODO: 10 -> track duration
+        const actEndAt = endAt - startAt < 0.1 ? this.props.buffer.duration + offset: endAt;
         const duration = actEndAt - actStartAt;
 
         const trackStartAt = actStartAt - offset < 0 ? 0 : actStartAt - offset;

@@ -2,7 +2,8 @@ import { merge } from 'lodash';
 
 import { LOAD_CHANNEL_STARTED, LOAD_CHANNEL_SUCCESS, LOAD_CHANNEL_FAILURE, 
   PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE } from '../actions/types';
-import { Object } from 'es6-shim';
+
+import { samplesToSeconds } from '../utils/conversions';
 
 // TODO: improve this using a sub-reducer on the selected channel
 const initialState = {
@@ -119,7 +120,7 @@ function getDuration(state, id) {
   const channelData = state.channel.byIds[id];
   return channelData.offset 
     + channelData.type === "audio" ?
-    channelData.buffer.length : channelData.buffer.width;
+    channelData.buffer.duration :  samplesToSeconds(channelData.buffer.width, channelData.sampleRate); ;
 }
 
 export const getMaxDuration = (state) => {

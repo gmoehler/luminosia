@@ -58,7 +58,7 @@ export function withImagePlay(WrappedComponent) {
 
         // look at offset
         const actStartAt = Math.max(0, startAt); // dont start before 0
-        const actEndAt = endAt - startAt < 0.1 ? startAt+ 10 : endAt; // TODO: 10 -> track duration
+        const actEndAt = endAt - startAt < 0.1 ? startAt + 10 : endAt; // TODO: 10 -> track duration
 
         const trackStartAt = actStartAt - offset < 0 ? 0 : actStartAt - offset;
         const trackDelay = startAt - offset < 0 ? offset - startAt : 0;
