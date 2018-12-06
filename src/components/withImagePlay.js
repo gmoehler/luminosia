@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import MouseHandler from '../handler/SelectionMouseHandler'
+import SelectionMouseHandler from '../handler/SelectionMouseHandler';
+import MoveMouseHandler from '../handler/MoveMouseHandler'
 
 import { secondsToPixels, pixelsToSeconds, samplesToSeconds } from '../utils/conversions';
 
@@ -18,11 +19,8 @@ export function withImagePlay(WrappedComponent) {
       this.state = {
         progress: 0, // play progress in secs
       };
-      this.mousehandler = new MouseHandler(
-        {
-          select: this.select,
-        },
-      );
+      this.selectionMousehandler = new SelectionMouseHandler({ select: this.select });
+      this.moveMousehandler = new MoveMouseHandler({ move: this.move });
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -46,6 +44,18 @@ export function withImagePlay(WrappedComponent) {
       if (this.isPlaying()) {
         this.stopPlay();
       }
+    }
+    
+    getMouseHandler = (mode) => {
+    	switch(mode) {
+    		case "selectionMode":
+    			return this.selectionMousehandler;
+    		case "moveMode":
+    			return this.moveMousehandler;
+    		default:
+    			console.log("unknown mode " + mode);
+    			return this.selectionMousehandler;
+        }
     }
 
     startPlay = (startAt, endAt, offset) => {
@@ -124,7 +134,7 @@ export function withImagePlay(WrappedComponent) {
     render() {
 
       // select props passed down to Channel
-      const {sampleRate, buffer, playState, selection, select, setChannelPlayState, resolution, ...passthruProps} = this.props;
+      const {sampleRate, buffer, playState, selection, select, setChannelPlayState, resolution, mode, ...passthruProps} = this.props;
 
       const offset = secondsToPixels(this.props.offset, this.props.resolution, sampleRate)
       const progressPx = secondsToPixels(this.state.progress, resolution, sampleRate) - offset;
@@ -135,10 +145,11 @@ export function withImagePlay(WrappedComponent) {
       };
       const factor = 1 / resolution;
       const length = buffer && buffer.width * factor;
+      const mousehandler = this.getMouseHandler(mode);
 
       // pass down props and progress
       return <WrappedComponent {...passthruProps} offset={ offset } length={ length } factor={ factor } progress={ progressPx } cursorPos={ cursorPx }
-               selection={ selectionPx } handleMouseEvent={ this.mousehandler.handleMouseEvent } />;
+           selection={ selectionPx } handleMouseEvent={ mousehandler.handleMouseEvent } />;
     }
   }
   ;
@@ -150,8 +161,10 @@ export function withImagePlay(WrappedComponent) {
     maxDuration:  PropTypes.number.isRequired,
     playState: PropTypes.oneOf(['stopped', 'playing']).isRequired,
     selection: PropTypes.object.isRequired,
+    offset: PropTypes.number.isRequired,
     select: PropTypes.func.isRequired,
     setChannelPlayState: PropTypes.func.isRequired,
+    mode: PropTypes.oneOf(['selectMode', 'moveMode']).isRequired,
   }
 
   withImagePlay.displayName = `WithSubscription(${getDisplayName(WrappedComponent)})`;

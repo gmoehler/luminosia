@@ -1,7 +1,7 @@
 import { merge } from 'lodash';
 
 import { LOAD_CHANNEL_STARTED, LOAD_CHANNEL_SUCCESS, LOAD_CHANNEL_FAILURE, 
-  PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE } from '../actions/types';
+  PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL } from '../actions/types';
 
 import { samplesToSeconds } from '../utils/conversions';
 
@@ -74,12 +74,33 @@ export default (state = initialState, action) => {
           playState: action.payload.playState
         }
       );
-
+      
       return {
         ...state,
         byIds: {
           ...state.byIds,
           [action.payload.channelId]: mergedChannelState
+        }
+      }
+      
+      case MOVE_CHANNEL:
+      
+         const currentOffset = state.byIds[action.payload.channelId];
+         const offsetIncr = action.payload.incr;
+         const updatedOffset = currentOffset ? 
+			currentOffset + offsetIncr : offsetIncr;
+ 		const mergedMoveChannelState = merge({},
+        state.byIds[action.payload.channelId],
+        {
+          offset: Math.max(0, updatedOffset),
+        }
+      );
+      
+      return {
+        ...state,
+        byIds: {
+          ...state.byIds,
+          [action.payload.channelId]: mergedMoveChannelState
         }
       }
 
