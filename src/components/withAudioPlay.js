@@ -16,7 +16,8 @@ export function withAudioPlay(WrappedComponent) {
       this.playout = null;
       this.mouseDownX = 0; // x in px of mouse down event
       this.animationStartTime = null; // start time of progress animation
-      this.playStartAt = 0;
+      this.playStartAt = 0; // start of current play
+      this.playEndAt = 0; // end of current play
       this.state = {
         progress: 0, // play progress in secs
       };
@@ -25,12 +26,6 @@ export function withAudioPlay(WrappedComponent) {
           select: this.select,
         },
       );
-
-      // member functions
-      this.animateProgress = this.animateProgress.bind(this);
-      this.stopAnimateProgress = this.stopAnimateProgress.bind(this);
-      this.playChannel = this.playChannel.bind(this);
-      this.stopChannel = this.stopChannel.bind(this);
 
       window.AudioContext = window.AudioContext || window.webkitAudioContext;
       this.audioContext = new window.AudioContext();
@@ -43,11 +38,11 @@ export function withAudioPlay(WrappedComponent) {
       // start or stop playing
       if (prevProps.playState !== playState) {
         if (playState === "playing") {
-          this.playChannel(selection.from, selection.to, offset);
+          this.startPlay(selection.from, selection.to, offset);
         }
         // only stopped if not already (auto)stopped
         else if (this.isPlaying()) {
-          this.stopChannel();
+          this.stopPlay();
         }
       }
     }
@@ -55,11 +50,11 @@ export function withAudioPlay(WrappedComponent) {
     componentWillUnmount() {
       // clean up playout and animation
       if (this.isPlaying()) {
-        this.stopChannel();
+        this.stopPlay();
       }
     }
 
-    playChannel(startAt, endAt, offset) {
+    startPlay = (startAt, endAt, offset) => {
       if (this.props.type !== "audio") {
         return;
       }
@@ -68,32 +63,38 @@ export function withAudioPlay(WrappedComponent) {
       }
 
       // regular start at startAt
-      if (!this.isPlaying()) {
+      if (!this.isPlaying() && endAt >= startAt) {
 
         // look at offset
-        const actStartAt = startAt - offset < 0 ? 0 : startAt;
-        const delay = startAt - offset < 0 ? offset - startAt : 0;
-        const actEndAt = (Math.abs(endAt - startAt) < 0.1) ? actStartAt + 10 : endAt - offset;
+        const actStartAt = Math.max(0, startAt); // dont start before 0
+        const actEndAt = endAt - startAt < 0.1 ? startAt + 10 : endAt; // TODO: 10 -> track duration
         const duration = actEndAt - actStartAt;
 
-        this.playStartAt = startAt; // for progress offset
-        this.playStopAt = actEndAt + offset;
+        const trackStartAt = actStartAt - offset < 0 ? 0 : actStartAt - offset;
+        const trackDelay = startAt - offset < 0 ? offset - startAt : 0;
+        const trackEndAt = actEndAt - offset;
+
+        // remeber for progress offset
+        this.playStartAt = actStartAt; 
+        this.playStopAt = actEndAt;
 
         // only play if there is something to play
-        if (actEndAt > 0) {
-          console.log(`playing from ${actStartAt}s( ${startAt}s) to ${actEndAt}(${endAt}s) with delay ${delay}, offset: ${offset}`);
+        if (trackEndAt > 0) {
+          console.log(`playing from ${trackStartAt}s( ${actStartAt}s) to ${trackStartAt}(${actEndAt}s) with delay ${trackDelay}, offset: ${offset}`);
           this.playout.setUpSource()
-            .then(this.stopChannel); // stop when end has reached
+            .then(this.stopPlay); // stop when end has reached
             
-          this.playout.play(this.audioContext.currentTime + delay, actStartAt, duration);
+          this.playout.play(this.audioContext.currentTime + trackDelay, trackStartAt, duration);
         } else {
-          console.log(`skip playing from ${startAt}s to ${endAt}`);
+          console.log(`skip playing from ${actStartAt}s to ${actEndAt}`);
         }
+
+        // start progress animation
         this.animationRequest = window.requestAnimationFrame(this.animateProgress);
       }
     }
 
-    animateProgress(timestamp) {
+    animateProgress = (timestamp) => {
       if (!this.animationStartTime) {
         this.animationStartTime = timestamp;
         //TODO: sync with playout time
@@ -110,24 +111,24 @@ export function withAudioPlay(WrappedComponent) {
       if (currentTimeInSecs < this.playStopAt) {
         this.animationRequest = window.requestAnimationFrame(this.animateProgress);
       } else {
-        this.stopChannel();
+        this.stopPlay();
       }
     }
 
-    stopAnimateProgress() {
+    stopAnimateProgress = () => {
       window.cancelAnimationFrame(this.animationRequest);
       this.animationStartTime = null;
     }
 
-    isPlaying() {
+    isPlaying = () => {
       return this.animationStartTime !== null;
     }
 
-    getSampleRate() {
+    getSampleRate = () => {
       return this.props.sampleRate && this.props.buffer.sampleRate;
     }
 
-    stopChannel() {
+    stopPlay = () => {
       this.playout && this.playout.stop();
       this.stopAnimateProgress();
       this.props.setChannelPlayState("stopped");
