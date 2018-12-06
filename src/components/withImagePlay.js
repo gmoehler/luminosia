@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import MouseHandler from '../handler/SelectionMouseHandler'
 
-import { secondsToPixels, pixelsToSeconds } from '../utils/conversions';
+import { secondsToPixels, pixelsToSeconds, samplesToSeconds } from '../utils/conversions';
 
 // HOC to support image playing for one channel
 export function withImagePlay(WrappedComponent) {
@@ -58,7 +58,7 @@ export function withImagePlay(WrappedComponent) {
 
         // look at offset
         const actStartAt = Math.max(0, startAt); // dont start before 0
-        const actEndAt = endAt - startAt < 0.1 ? startAt + 10 : endAt; // TODO: 10 -> track duration
+        const actEndAt = endAt - startAt < 0.1 ? samplesToSeconds(this.props.buffer.width, this.props.sampleRate) + offset : endAt; // TODO: 10 -> track duration
 
         const trackStartAt = actStartAt - offset < 0 ? 0 : actStartAt - offset;
         const trackDelay = startAt - offset < 0 ? offset - startAt : 0;
@@ -66,7 +66,6 @@ export function withImagePlay(WrappedComponent) {
 
         // remeber for progress offset
         this.playStartAt = actStartAt; 
-        this.playStopAt = actEndAt;
         
         if (trackEndAt > 0) {
           console.log(`playing image from ${trackStartAt}s( ${actStartAt}s) to ${trackEndAt}(${actEndAt}s) with delay ${trackDelay}, offset: ${offset}`);
@@ -93,7 +92,7 @@ export function withImagePlay(WrappedComponent) {
         progress: currentTimeInSecs
       })
       
-      if (currentTimeInSecs < this.playStopAt) {
+      if (currentTimeInSecs < this.props.maxDuration) {
         this.animationRequest = window.requestAnimationFrame(this.animateProgress);
       } else {
         this.stopPlay();
@@ -148,6 +147,7 @@ export function withImagePlay(WrappedComponent) {
     sampleRate: PropTypes.number.isRequired,
     resolution: PropTypes.number.isRequired,
     buffer: PropTypes.object.isRequired,
+    maxDuration:  PropTypes.number.isRequired,
     playState: PropTypes.oneOf(['stopped', 'playing']).isRequired,
     selection: PropTypes.object.isRequired,
     select: PropTypes.func.isRequired,

@@ -118,12 +118,18 @@ function allChannelsStopped(playState) {
 
 function getDuration(state, id) {
   const channelData = state.channel.byIds[id];
-  return channelData.offset 
-    + channelData.type === "audio" ?
-    channelData.buffer.duration :  samplesToSeconds(channelData.buffer.width, channelData.sampleRate); ;
+  const offset = channelData.offset ? channelData.offset : 0;
+  if (channelData.type === "audio") {
+    return channelData.buffer.duration 
+      + offset;
+  }
+  return channelData.buffer && channelData.buffer.width ? 
+    samplesToSeconds(channelData.buffer.width, channelData.sampleRate)  + offset 
+    : 0;
 }
 
 export const getMaxDuration = (state) => {
-  return Object.keys(state.channel.byIds)
-    .reduce((result, key) => Math.max(result, getDuration(state, key), 0))
+  return state.channel.byIds === {} ? 0 : 
+    Object.keys(state.channel.byIds)
+    .reduce((result, key) => Math.max(result, getDuration(state, key)), 0);
 }

@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import ChannelGroup from './ChannelGroup'
 import { setChannelPlayState } from '../actions/channelActions'
 import { select } from '../actions/viewActions'
-import { getallChannelsData } from '../reducers/channelReducer'
+import { getallChannelsData, getMaxDuration } from '../reducers/channelReducer'
 import { getSelectionRange, getZoomLevel } from '../reducers/viewReducer'
 
 class ChannelGroupContainer extends Component {
@@ -22,6 +22,7 @@ const mapStateToProps = (state, props) => {
     allChannelsData: getallChannelsData(state),
     selection: getSelectionRange(state),
     pixelsPerSecond: getZoomLevel(state),
+    maxDuration: getMaxDuration(state)
   }
 };
 
