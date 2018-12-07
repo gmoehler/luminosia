@@ -1,6 +1,7 @@
 import LoaderFactory from '../loader/LoaderFactory'
 
-import { LOAD_CHANNEL_STARTED, LOAD_CHANNEL_FAILURE, LOAD_CHANNEL_SUCCESS, PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE,
+import { LOAD_CHANNEL_STARTED, LOAD_CHANNEL_FAILURE, LOAD_CHANNEL_SUCCESS, 
+	PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL,
 } from './types';
 
 // load channel async action
@@ -67,3 +68,9 @@ export const setChannelPlayState = (stateInfo) => ({
   type: SET_CHANNEL_PLAY_STATE,
   payload: stateInfo
 });
+
+export const moveChannel = (moveInfo) => ({
+  type: MOVE_CHANNEL,
+  payload: moveInfo
+});
+

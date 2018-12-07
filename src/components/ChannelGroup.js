@@ -13,7 +13,6 @@ const ChannelGroupWrapper = styled.div`
 	white-space: nowrap;
 `;
 
-
 const windowPixelRatio = window.devicePixelRatio;
 
 // add play functionality to audio channels
@@ -51,6 +50,7 @@ export default class ChannelGroup extends Component {
 				key: channelId, // required because of list
 				type: channelData.type,
 				playState: channelData.playState,
+				offset: channelData.offset,
 				sampleRate,
 				resolution:  sampleRate / pixelsPerSecond,
 				buffer: channelData && channelData.buffer,
@@ -63,6 +63,8 @@ export default class ChannelGroup extends Component {
 						{...channelProps}
 						setChannelPlayState={ playState => 
 								this.props.setChannelPlayState(channelId, playState) }
+						moveChannel={ incr => 
+							this.props.moveChannel(channelId, incr) }
 					/>);
 				}
 
@@ -72,6 +74,8 @@ export default class ChannelGroup extends Component {
 					source={ channelData.src }
 					setChannelPlayState={ playState => 
 							this.props.setChannelPlayState(channelId, playState) }
+					move={ incr => 
+							this.props.move(channelId, incr) }
 				/>);
 		});
 

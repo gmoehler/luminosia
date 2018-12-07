@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import ChannelGroup from './ChannelGroup'
-import { setChannelPlayState } from '../actions/channelActions'
+import { setChannelPlayState, moveChannel } from '../actions/channelActions'
 import { select } from '../actions/viewActions'
-import { getallChannelsData } from '../reducers/channelReducer'
-import { getSelectionRange, getZoomLevel } from '../reducers/viewReducer'
+import { getallChannelsData, getMaxDuration } from '../reducers/channelReducer'
+import { getSelectionRange, getZoomLevel, getMode } from '../reducers/viewReducer'
 
 class ChannelGroupContainer extends Component {
 
@@ -22,6 +22,8 @@ const mapStateToProps = (state, props) => {
     allChannelsData: getallChannelsData(state),
     selection: getSelectionRange(state),
     pixelsPerSecond: getZoomLevel(state),
+    maxDuration: getMaxDuration(state),
+    mode: getMode(state),
   }
 };
 
@@ -29,6 +31,10 @@ const mapDispatchToProps = dispatch => ({
   select: (from, to) => dispatch(select({
     from,
     to
+  })),
+  move: (channelId, incr) => dispatch(moveChannel({
+    channelId, 
+    incr
   })),
   setChannelPlayState: (channelId, playState) => dispatch(setChannelPlayState({
     channelId,

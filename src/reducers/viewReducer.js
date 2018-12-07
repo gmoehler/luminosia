@@ -1,4 +1,4 @@
-import {SELECT, SET_ZOOM_LEVEL} from '../actions/types';
+import {SELECT, SET_ZOOM_LEVEL, SET_MODE} from '../actions/types';
 
 const initialState = {
   selection: {
@@ -6,6 +6,7 @@ const initialState = {
     to: 0
   },
   zoomLevel: 1000,
+  mode: "selectionMode",
 };
 
 export default(state = initialState, action) => {
@@ -26,6 +27,12 @@ export default(state = initialState, action) => {
         zoomLevel: action.payload
       }
 
+      case SET_MODE:
+      return {
+        ...state,
+        mode: action.payload
+      }
+
     default:
       return state
   }
@@ -40,4 +47,8 @@ export const getSelectionRange = (state) => {
 
 export const getZoomLevel = (state) => {
   return state.view.zoomLevel
+}
+
+export const getMode = (state) => {
+  return state.view.mode
 }

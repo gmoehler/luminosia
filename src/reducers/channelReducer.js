@@ -1,7 +1,9 @@
 import { merge } from 'lodash';
 
 import { LOAD_CHANNEL_STARTED, LOAD_CHANNEL_SUCCESS, LOAD_CHANNEL_FAILURE, 
-  PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE } from '../actions/types';
+  PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL } from '../actions/types';
+
+import { samplesToSeconds } from '../utils/conversions';
 
 // TODO: improve this using a sub-reducer on the selected channel
 const initialState = {
@@ -72,12 +74,32 @@ export default (state = initialState, action) => {
           playState: action.payload.playState
         }
       );
-
+      
       return {
         ...state,
         byIds: {
           ...state.byIds,
           [action.payload.channelId]: mergedChannelState
+        }
+      }
+      
+    case MOVE_CHANNEL:
+
+      const currentOffset = state.byIds[action.payload.channelId].offset;
+      const offsetIncr = action.payload.incr;
+      const updatedOffset = currentOffset ? currentOffset + offsetIncr : offsetIncr;
+      const mergedMoveChannelState = merge({},
+        state.byIds[action.payload.channelId],
+        {
+          offset: Math.max(0, updatedOffset),
+        }
+      );
+
+      return {
+        ...state,
+        byIds: {
+          ...state.byIds,
+          [action.payload.channelId]: mergedMoveChannelState
         }
       }
 
@@ -112,4 +134,22 @@ function allChannelsStopped(playState) {
   return Object.keys(playState.byIds)
     .reduce((result, key) => result && (playState.byIds[key].playState === "stopped"),
       true)
+}
+
+function getDuration(state, id) {
+  const channelData = state.channel.byIds[id];
+  const offset = channelData.offset ? channelData.offset : 0;
+  if (channelData.type === "audio") {
+    return channelData.buffer.duration 
+      + offset;
+  }
+  return channelData.buffer && channelData.buffer.width ? 
+    samplesToSeconds(channelData.buffer.width, channelData.sampleRate)  + offset 
+    : 0;
+}
+
+export const getMaxDuration = (state) => {
+  return state.channel.byIds === {} ? 0 : 
+    Object.keys(state.channel.byIds)
+    .reduce((result, key) => Math.max(result, getDuration(state, key)), 0);
 }
