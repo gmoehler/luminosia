@@ -137,11 +137,11 @@ export function withImagePlay(WrappedComponent) {
  		...passthruProps} = this.props;
 
       const offsetPx = secondsToPixels(offset, resolution, sampleRate)
-      const progressPx = secondsToPixels(this.state.progress, resolution, sampleRate) - offset;
-      const cursorPx = secondsToPixels(selection.from, resolution, sampleRate) - offset;
+      const progressPx = secondsToPixels(this.state.progress, resolution, sampleRate) - offsetPx;
+      const cursorPx = secondsToPixels(selection.from, resolution, sampleRate) - offsetPx;
       const selectionPx = {
         from: cursorPx,
-        to: secondsToPixels(selection.to, resolution, sampleRate) - offset
+        to: secondsToPixels(selection.to, resolution, sampleRate) - offsetPx
       };
       const maxWidth = secondsToPixels(maxDuration, resolution, sampleRate);
       const factor = 1 / resolution;
