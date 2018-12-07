@@ -7,7 +7,7 @@ const ImageProgress = styled.div`
   position: absolute;
   background: ${props => props.theme.waveProgressColor};
   width: ${props => props.progress + props.offset}px;
-  height: ${props => props.imageHeight}px;
+  height: ${props => props.height}px;
   border-right: 1px solid ${props => props.theme.waveProgressBorderColor};
 `;
 
@@ -16,7 +16,7 @@ const ImageCursor = styled.div`
   background: ${props => props.theme.cursorColor};
   width: 1px;
   left: ${props => props.offset + props.cursorPos}px;
-  height: ${props => props.imageHeight}px;
+  height: ${props => props.height}px;
 `;
 
 const ImageSelection = styled.div`
@@ -24,7 +24,7 @@ const ImageSelection = styled.div`
   left: ${props => props.offset + props.selection.from}px;
   background: ${props => props.theme.selectionColor};
   width: ${props => props.selection.to - props.selection.from}px;
-  height: ${props => props.imageHeight}px;
+  height: ${props => props.height}px;
 `;
 
 const ImageCanvas = styled.canvas`
@@ -33,7 +33,7 @@ const ImageCanvas = styled.canvas`
   margin: 0;
   padding: 0;
   width: ${props => props.cssWidth}px;
-  height: ${props => props.imageHeight}px;
+  height: ${props => props.height}px;
 `;
 
 const CanvasRefImage = styled.img`
@@ -53,7 +53,7 @@ const ImageChannelWrapper = styled.div`
   padding: 0;
   background: ${props => props.theme.imageBackgroundColor};
   width: ${props => props.cssWidth}px;
-  height: ${props => props.imageHeight}px;
+  height: ${props => props.height}px;
   
 `;
 
@@ -120,7 +120,7 @@ class Channel extends Component {
   }
 
   render() {
-    const {source, length, imageHeight, scale, progress, cursorPos, selection, theme, offset, } = this.props;
+    const {source, length, imageHeight, scale, progress, cursorPos, selection, theme, offset, maxWidth} = this.props;
 
     let totalWidth = length;
     let imageCount = 0;
@@ -128,7 +128,7 @@ class Channel extends Component {
     while (totalWidth > 0) {
       const currentWidth = Math.min(totalWidth, MAX_CANVAS_WIDTH);
       const canvasImage = (
-      <ImageCanvas key={ `${length}-${imageCount}` } cssWidth={ currentWidth } width={ currentWidth * scale } height={ imageHeight * scale } imageHeight={ imageHeight } ref={ this.createCanvasRef(imageCount) }
+      <ImageCanvas key={ `${length}-${imageCount}` } cssWidth={ currentWidth } width={ currentWidth * scale } height={ imageHeight } ref={ this.createCanvasRef(imageCount) }
       />
       )
 
@@ -143,14 +143,14 @@ class Channel extends Component {
         onMouseUp={ (e) => this.handleMouseEvent(e, "mouseUp") } 
         onMouseMove={ (e) => this.handleMouseEvent(e, "mouseMove") } 
         onMouseLeave={ (e) => this.handleMouseEvent(e, "mouseLeave") }
-        cssWidth={ length } theme={ theme } imageHeight={ imageHeight }>
+        cssWidth={ maxWidth } theme={ theme } height={ imageHeight }>
         <CanvasRefImage src={ source } className="hidden" ref={ this.canvasImage } />
         <ImageCanvases clasName='ImageCanvases' theme={ theme } offset={offset}>
           { canvasImages }
         </ImageCanvases>
-        <ImageProgress progress={ progress } theme={ theme } imageHeight={ imageHeight } offset={offset}/>
-        <ImageSelection selection={ selection } theme={ theme } imageHeight={ imageHeight } offset={offset}/>
-        <ImageCursor cursorPos={ cursorPos } theme={ theme } imageHeight={ imageHeight } offset={offset}/>
+        <ImageProgress progress={ progress } theme={ theme } height={ imageHeight } offset={offset}/>
+        <ImageSelection selection={ selection } theme={ theme } height={ imageHeight } offset={offset}/>
+        <ImageCursor cursorPos={ cursorPos } theme={ theme } height={ imageHeight } offset={offset}/>
       </ImageChannelWrapper>
       );
   }
