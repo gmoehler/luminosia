@@ -1,8 +1,8 @@
-// handles all mouse events and selects the action from it
+// handles all mouse events for the move action
 
-export default class SelectionMouseHandler {
+export default class MoveMouseHandler {
 
-  constructor(handlerFunctions, defaultMode){
+  constructor(handlerFunctions){
     this.handlerFunctions = handlerFunctions;
     this.moveFromX = null;
   }
@@ -33,13 +33,16 @@ export default class SelectionMouseHandler {
 
   handleMoveFrom = (x) => {
     this.moveFromX = x;
-    this.handlerFunctions.select(x, x);
   }
 
   handleMoveTo = (x, finalizeSelection) => {
     if (this.moveFromX) { // only when mouse down has occured
-      console.log('move to: ', x);
-      this.handlerFunctions.move(x - this.moveFromX);
+      // console.log(`move from ${this.moveFromX} to ${x}`);
+      const incrX = x - this.moveFromX;
+      if (Math.abs(incrX) > 0) {
+        this.handlerFunctions.move(incrX);
+        this.moveFromX = x; 
+      }
 
       if (finalizeSelection) {
         this.moveFromX = null; 

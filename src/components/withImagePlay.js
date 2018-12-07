@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import SelectionMouseHandler from '../handler/SelectionMouseHandler';
-import MoveMouseHandler from '../handler/MoveMouseHandler'
+import MouseHandler from '../handler/MouseHandler';
 
 import { secondsToPixels, pixelsToSeconds, samplesToSeconds } from '../utils/conversions';
 
@@ -19,8 +18,10 @@ export function withImagePlay(WrappedComponent) {
       this.state = {
         progress: 0, // play progress in secs
       };
-      this.selectionMousehandler = new SelectionMouseHandler({ select: this.select });
-      this.moveMousehandler = new MoveMouseHandler({ move: this.move });
+      this.mousehandler = new MouseHandler({
+        select: this.select, // use member func for px2time 
+        move: this.move // use member func for px2time 
+      })
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -45,18 +46,6 @@ export function withImagePlay(WrappedComponent) {
         this.stopPlay();
       }
     }
-    
-    getMouseHandler = (mode) => {
-    	switch(mode) {
-    		case "selectionMode":
-    			return this.selectionMousehandler;
-    		case "moveMode":
-    			return this.moveMousehandler;
-    		default:
-    			console.log("unknown mode " + mode);
-    			return this.selectionMousehandler;
-        }
-    }
 
     startPlay = (startAt, endAt, offset) => {
       if (this.props.type !== "image") {
@@ -66,16 +55,19 @@ export function withImagePlay(WrappedComponent) {
       // regular start at startAt
       if (!this.isPlaying() && endAt >= startAt) {
 
-        // look at offset
+        // act.. values is global time interval of this channel
         const actStartAt = Math.max(0, startAt); // dont start before 0
         const actEndAt = endAt - startAt < 0.1 ? samplesToSeconds(this.props.buffer.width, this.props.sampleRate) + offset : endAt; // TODO: 10 -> track duration
 
+        // track.. values are local image time
         const trackStartAt = actStartAt - offset < 0 ? 0 : actStartAt - offset;
         const trackDelay = startAt - offset < 0 ? offset - startAt : 0;
         const trackEndAt = actEndAt - offset;
 
         // remeber for progress offset
-        this.playStartAt = actStartAt; 
+        this.animateStartAt = actStartAt; 
+        this.animateEndAt = endAt - startAt < 0.1 ? 
+          this.props.maxDuration  + offset : trackEndAt + offset;
         
         if (trackEndAt > 0) {
           console.log(`playing image from ${trackStartAt}s( ${actStartAt}s) to ${trackEndAt}(${actEndAt}s) with delay ${trackDelay}, offset: ${offset}`);
@@ -95,14 +87,14 @@ export function withImagePlay(WrappedComponent) {
       }
 
       const duration = timestamp - this.animationStartTime;
-      const currentTimeInSecs = this.playStartAt + duration / 1000.0;
+      const currentTimeInSecs = this.animateStartAt + duration / 1000.0;
 
       this.setState({
         ...this.state,
         progress: currentTimeInSecs
       })
       
-      if (currentTimeInSecs < this.props.maxDuration) {
+      if (currentTimeInSecs < this.animateEndAt) {
         this.animationRequest = window.requestAnimationFrame(this.animateProgress);
       } else {
         this.stopPlay();
@@ -130,7 +122,13 @@ export function withImagePlay(WrappedComponent) {
       const to = pixelsToSeconds(toPx, this.props.resolution, this.props.sampleRate);
       this.props.select(from, to);
     }
-    
+
+    // transform from pixel to time values
+    move = (incrX) => {
+      const incr = pixelsToSeconds(incrX, this.props.resolution, this.props.sampleRate);
+      this.props.move(incr);
+    }
+ 
     render() {
 
       // select props passed down to Channel
@@ -145,11 +143,12 @@ export function withImagePlay(WrappedComponent) {
       };
       const factor = 1 / resolution;
       const length = buffer && buffer.width * factor;
-      const mousehandler = this.getMouseHandler(mode);
+      this.mousehandler.setMode(mode);
 
       // pass down props and progress
       return <WrappedComponent {...passthruProps} offset={ offset } length={ length } factor={ factor } progress={ progressPx } cursorPos={ cursorPx }
-           selection={ selectionPx } handleMouseEvent={ mousehandler.handleMouseEvent } />;
+        selection={ selectionPx } 
+        handleMouseEvent={ this.mousehandler.handleMouseEvent } />;
     }
   }
   ;
@@ -164,7 +163,7 @@ export function withImagePlay(WrappedComponent) {
     offset: PropTypes.number.isRequired,
     select: PropTypes.func.isRequired,
     setChannelPlayState: PropTypes.func.isRequired,
-    mode: PropTypes.oneOf(['selectMode', 'moveMode']).isRequired,
+    mode: PropTypes.oneOf(['selectionMode', 'moveMode']).isRequired,
   }
 
   withImagePlay.displayName = `WithSubscription(${getDisplayName(WrappedComponent)})`;

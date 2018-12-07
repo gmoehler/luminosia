@@ -111,7 +111,8 @@ class Channel extends Component {
         el = el.parentNode;
       }
       if (el && el.classList && el.classList[0] === 'ChannelWrapper') {
-        const x = Math.max(0, e.clientX - el.offsetLeft);
+        const parentScroll = el.parentNode ? el.parentNode.scrollLeft : 0;
+        const x =  Math.max(0, e.clientX - el.offsetLeft + parentScroll);
         this.props.handleMouseEvent(x, eventName);
         return;
       }

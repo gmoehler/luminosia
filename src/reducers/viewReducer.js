@@ -6,6 +6,7 @@ const initialState = {
     to: 0
   },
   zoomLevel: 1000,
+  mode: "selectionMode",
 };
 
 export default(state = initialState, action) => {
@@ -46,4 +47,8 @@ export const getSelectionRange = (state) => {
 
 export const getZoomLevel = (state) => {
   return state.view.zoomLevel
+}
+
+export const getMode = (state) => {
+  return state.view.mode
 }

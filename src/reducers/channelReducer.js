@@ -83,19 +83,18 @@ export default (state = initialState, action) => {
         }
       }
       
-      case MOVE_CHANNEL:
-      
-         const currentOffset = state.byIds[action.payload.channelId];
-         const offsetIncr = action.payload.incr;
-         const updatedOffset = currentOffset ? 
-			currentOffset + offsetIncr : offsetIncr;
- 		const mergedMoveChannelState = merge({},
+    case MOVE_CHANNEL:
+
+      const currentOffset = state.byIds[action.payload.channelId].offset;
+      const offsetIncr = action.payload.incr;
+      const updatedOffset = currentOffset ? currentOffset + offsetIncr : offsetIncr;
+      const mergedMoveChannelState = merge({},
         state.byIds[action.payload.channelId],
         {
           offset: Math.max(0, updatedOffset),
         }
       );
-      
+
       return {
         ...state,
         byIds: {

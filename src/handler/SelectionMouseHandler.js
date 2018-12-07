@@ -1,8 +1,8 @@
-// handles all mouse events and selects the action from it
+// handles all mouse events for the select action 
 
 export default class SelectionMouseHandler {
 
-  constructor(handlerFunctions, defaultMode){
+  constructor(handlerFunctions){
     this.handlerFunctions = handlerFunctions;
     this.selectFromX = null;
   }
@@ -38,7 +38,7 @@ export default class SelectionMouseHandler {
 
   handleSelectionTo = (x, finalizeSelection) => {
     if (this.selectFromX) { // only when mouse down has occured
-      console.log('selection to: ', x);
+      // console.log('selection to: ', x);
       if (this.selectFromX < x) {
         this.handlerFunctions.select(this.selectFromX, x);
       } else {

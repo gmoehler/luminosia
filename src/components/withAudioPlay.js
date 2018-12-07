@@ -75,7 +75,10 @@ export function withAudioPlay(WrappedComponent) {
         const trackEndAt = actEndAt - offset;
 
         // remeber for progress offset
-        this.playStartAt = actStartAt; 
+        this.animateStartAt = actStartAt; 
+        this.animateEndAt = endAt - startAt < 0.1 ? 
+          this.props.maxDuration  + offset : trackEndAt + offset;
+
 
         // only play if there is something to play
         if (trackEndAt > 0) {
@@ -100,14 +103,14 @@ export function withAudioPlay(WrappedComponent) {
       }
 
       const duration = timestamp - this.animationStartTime;
-      const currentTimeInSecs = this.playStartAt + duration / 1000.0;
+      const currentTimeInSecs = this.animateStartAt + duration / 1000.0;
 
       this.setState({
         ...this.state,
         progress: currentTimeInSecs
       })
       
-      if (currentTimeInSecs < this.props.maxDuration) {
+      if (currentTimeInSecs < this.animateEndAt) {
         this.animationRequest = window.requestAnimationFrame(this.animateProgress);
       } else {
         this.stopPlay();
