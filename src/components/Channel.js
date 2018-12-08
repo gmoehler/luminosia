@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import styled, { withTheme } from 'styled-components';
+import { getMouseEventPosition } from '../utils/eventUtils';
 
 const MAX_CANVAS_WIDTH = 1000;
 
@@ -104,19 +105,9 @@ class Channel extends Component {
 
   handleMouseEvent = (e, eventName) => {
     if (this.props.handleMouseEvent) {
-      e.preventDefault();
-      // find ChannelWrapper
-      let el = e.target;
-      while (el && el.classList && el.classList[0] !== 'ChannelWrapper') {
-        el = el.parentNode;
-      }
-      if (el && el.classList && el.classList[0] === 'ChannelWrapper') {
-        const parentScroll = el.parentNode ? el.parentNode.scrollLeft : 0;
-        const x =  Math.max(0, e.clientX - el.offsetLeft + parentScroll);
-        this.props.handleMouseEvent(x, eventName);
+      const posX = getMouseEventPosition(e, "ChannelWrapper");
+        this.props.handleMouseEvent(posX, eventName);
         return;
-      }
-      console.warn("MouseEvent did not find ChannelWrapper");
     }
   }
 
