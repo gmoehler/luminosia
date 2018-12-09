@@ -151,12 +151,12 @@ export function withAudioPlay(WrappedComponent) {
       // select props passed down to Channel
       const {resolution, playState, buffer, selection, select, setChannelPlayState, ...passthruProps} = this.props;
 
-      const offset = secondsToPixels(this.props.offset, this.props.resolution, this.getSampleRate())
-      const progressPx = secondsToPixels(this.state.progress, this.props.resolution, this.getSampleRate()) - offset;
-      const cursorPx = secondsToPixels(selection.from, this.props.resolution, this.getSampleRate())  - offset;
+      const offsetPx = secondsToPixels(this.props.offset, this.props.resolution, this.getSampleRate())
+      const progressPx = secondsToPixels(this.state.progress, this.props.resolution, this.getSampleRate()) - offsetPx;
+      const cursorPx = secondsToPixels(selection.from, this.props.resolution, this.getSampleRate())  - offsetPx;
       const selectionPx = {
         from: cursorPx,
-        to: secondsToPixels(selection.to, this.props.resolution, this.getSampleRate()) - offset
+        to: secondsToPixels(selection.to, this.props.resolution, this.getSampleRate()) - offsetPx
       };
       //TODO: improve performance by memoization of peaks data
       const {data, length, bits} = this.doExtractPeaks(buffer, resolution, 16);
@@ -164,7 +164,7 @@ export function withAudioPlay(WrappedComponent) {
 
       return <WrappedComponent {...passthruProps} 
         handleMouseEvent={ this.mousehandler.handleMouseEvent } 
-        offset={offset}
+        offset={offsetPx}
         peaks={ peaksDataMono } bits={ bits } length={ length } progress={ progressPx } 
         cursorPos={ cursorPx } selection={ selectionPx }  
       />;

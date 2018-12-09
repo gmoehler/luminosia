@@ -90,7 +90,8 @@ class Channel extends Component {
       const sourceWidth = targetWidth / factor;
 
       cc.scale(scale, scale);
-      img.onload = cc.drawImage(img, sourceOffset, 0, sourceWidth, img.height, 0, 0, targetWidth, imageHeight)
+      img.onload = cc.drawImage(img, sourceOffset, 0, sourceWidth, img.height, 
+        0, 0, targetWidth, imageHeight)
 
       targetOffset += MAX_CANVAS_WIDTH;
     }
@@ -112,7 +113,8 @@ class Channel extends Component {
   }
 
   render() {
-    const {source, length, imageHeight, scale, progress, cursorPos, selection, theme, offset, maxWidth} = this.props;
+    const {source, length, imageHeight, scale, progress, cursorPos, 
+      selection, theme, offset, maxWidth} = this.props;
 
     let totalWidth = length;
     let imageCount = 0;
