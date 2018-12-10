@@ -133,15 +133,27 @@ class Channel extends Component {
       waveformCount += 1;
     }
 
+    const progressElem = progress ? 
+      <Progress progress={ progress } theme={ theme } waveHeight={ waveHeight } offset={offset}/>
+      : null;
+
+    const selectionElem = selection && selection.from && selection.to ? 
+      <Selection selection={ selection } theme={ theme } waveHeight={ waveHeight } offset={offset}/>
+      : null;
+
+    const cursorElem = cursorPos ? 
+      <Cursor cursorPos={ cursorPos } theme={ theme } waveHeight={ waveHeight } offset={offset}/>
+      : null;
+
     return (
       <ChannelWrapper className='ChannelWrapper' onMouseDown={ (e) => this.handleMouseEvent(e, "mouseDown") } onMouseUp={ (e) => this.handleMouseEvent(e, "mouseUp") } onMouseMove={ (e) => this.handleMouseEvent(e, "mouseMove") } onMouseLeave={ (e) => this.handleMouseEvent(e, "mouseLeave") }
         cssWidth={ length } theme={ theme } waveHeight={ waveHeight }>
         <WaveformCanvases clasName='WaveformCanvases' theme={ theme } offset={offset} >
           { waveforms }
         </WaveformCanvases>
-        <Progress progress={ progress } theme={ theme } waveHeight={ waveHeight } offset={offset}/>
-        <Selection selection={ selection } theme={ theme } waveHeight={ waveHeight } offset={offset}/>
-        <Cursor cursorPos={ cursorPos } theme={ theme } waveHeight={ waveHeight } offset={offset}/>
+        {progressElem}
+        {selectionElem}
+        {cursorElem}
       </ChannelWrapper>
       );
   }
