@@ -31,7 +31,7 @@ const channelConfigs = [
     name: 'Channel 1 with images',
     type: 'image',
     sampleRate: 100, // one image frame is 10ms
-    images: [{
+    parts: [{
       src: 'media/image/mostlyStripes.png',
       offset: 1.75,
       cuein: 0.5, // in secs

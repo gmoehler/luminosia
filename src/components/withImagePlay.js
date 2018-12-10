@@ -1,7 +1,13 @@
+/* 
+  Deals with image channel playing, progress & mouse handling
+  Also does time (in secs) to pixel conversion
+*/
+
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import MouseHandler from '../handler/MouseHandler';
+import deepClone from 'lodash'
 
+import MouseHandler from '../handler/MouseHandler';
 import { secondsToPixels, pixelsToSeconds, samplesToSeconds } from '../utils/conversions';
 
 // HOC to support image playing for one channel
@@ -126,37 +132,41 @@ export function withImagePlay(WrappedComponent) {
     // transform from pixel to time values
     move = (incrX) => {
       const incr = pixelsToSeconds(incrX, this.props.resolution, this.props.sampleRate);
-      this.props.move(incr);
+        this.props.move(incr);
     }
  
     render() {
 
       // select props passed down to Channel
-      const {sampleRate, buffer, playState, selection, select, 
- 		setChannelPlayState, resolution, mode, offset, maxDuration,
- 		...passthruProps} = this.props;
+      const {sampleRate, parts, playState, selection, select, 
+ 		        setChannelPlayState, resolution, mode, offset, maxDuration,
+ 		        ...passthruProps} = this.props;
 
-      const offsetPx = secondsToPixels(offset, resolution, sampleRate)
-      const progressPx = secondsToPixels(this.state.progress, resolution, sampleRate) - offsetPx;
-      const cursorPx = secondsToPixels(selection.from, resolution, sampleRate) - offsetPx;
-      const selectionPx = {
-        from: cursorPx,
-        to: secondsToPixels(selection.to, resolution, sampleRate) - offsetPx
-      };
-      const maxWidth = secondsToPixels(maxDuration, resolution, sampleRate);
       const factor = 1 / resolution;
-      const lengthPx = buffer && buffer.width * factor;
       this.mousehandler.setMode(mode);
 
-      // pass down props and progress
+      // conversion time (in secs) to pixels 
+      const progressPx = secondsToPixels(this.state.progress, resolution, sampleRate);
+      const cursorPx = secondsToPixels(selection.from, resolution, sampleRate);
+      const selectionPx = {
+        from: cursorPx,
+        to: secondsToPixels(selection.to, resolution, sampleRate)
+      };
+      const maxWidthPx = secondsToPixels(maxDuration, resolution, sampleRate);
+      const partsPx =  Object.values(parts).slice(); // duplicate array
+      Object.values(parts).forEach(part => {
+        part.offsetPx = part.offset ? secondsToPixels(part.offset, resolution, sampleRate) : null;
+        part.cueinPx = part.cuein ? secondsToPixels(part.cuein, resolution, sampleRate) : null;    
+        part.cueoutPx = part.cueout ? secondsToPixels(part.cueout, resolution, sampleRate) : null;
+      })
+
       return <WrappedComponent {...passthruProps} 
-		offset={ offsetPx } 
-		length={ lengthPx } 
-		factor={ factor } 
-		progress={ progressPx } 
-		cursorPos={ cursorPx }
+        parts={ partsPx } 
+        factor={ factor } 
+        progress={ progressPx } 
+        cursorPos={ cursorPx }
         selection={ selectionPx } 
-        maxWidth = { maxWidth }
+        maxWidth = { maxWidthPx }
         handleMouseEvent={ this.mousehandler.handleMouseEvent } />;
     }
   }
@@ -165,11 +175,10 @@ export function withImagePlay(WrappedComponent) {
   WithImagePlay.propTypes = {
     sampleRate: PropTypes.number.isRequired,
     resolution: PropTypes.number.isRequired,
-    buffer: PropTypes.object.isRequired,
+    parts: PropTypes.object.isRequired,
     maxDuration:  PropTypes.number.isRequired,
     playState: PropTypes.oneOf(['stopped', 'playing']).isRequired,
     selection: PropTypes.object.isRequired,
-    offset: PropTypes.number.isRequired,
     select: PropTypes.func.isRequired,
     setChannelPlayState: PropTypes.func.isRequired,
     mode: PropTypes.oneOf(['selectionMode', 'moveMode']).isRequired,

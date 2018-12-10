@@ -45,7 +45,7 @@ const imageChannel = {
   name: 'Channel 1 with images',
   type: 'image',
   sampleRate: 100, // one image frame is 10ms
-  images: [{
+  parts: [{
     source: imageFile,
     offset: 50,
     cuein: 0.5, // in secs
@@ -117,20 +117,20 @@ storiesOf('Channel', module)
       <ImageChannel></ImageChannel>
   ))
   .add('Image channel with image at offset 50 and factor 3.', () => (
-      <ImageChannel id={"myImgChannel"} images={imageChannel.images} factor={3}> </ImageChannel>
+      <ImageChannel id={"myImgChannel"} parts={imageChannel.parts} factor={3}> </ImageChannel>
   ))
   .add('Image channel with image at offset 50  and factor 3 & progress.', () => (
-    <ImageChannel id={"myImgChannel"} images={imageChannel.images} factor={3} scale={scale} progress={200}> </ImageChannel>
+    <ImageChannel id={"myImgChannel"} parts={imageChannel.parts} factor={3} scale={scale} progress={200}> </ImageChannel>
   ))
   .add('Image channel with image at offset 50  and factor 3 & cursor.', () => (
-    <ImageChannel id={"myImgChannel"} images={imageChannel.images} factor={3} scale={scale} cursorPos={150}> </ImageChannel>
+    <ImageChannel id={"myImgChannel"} parts={imageChannel.parts} factor={3} scale={scale} cursorPos={150}> </ImageChannel>
   ))
   .add('Image channel with image at offset 50 & factor 3 & selection.', () => (
-    <ImageChannel id={"myImgChannel"} images={imageChannel.images} factor={3} scale={scale} selection={{from: 300, to: 450}} > </ImageChannel>
+    <ImageChannel id={"myImgChannel"} parts={imageChannel.parts} factor={3} scale={scale} selection={{from: 300, to: 450}} > </ImageChannel>
   ))
   .add('Image channel with image at offset 50  & factor 3 & cursor, progress & selection.', () => (
     <ImageChannel 
-    id={"myImgChannel"} images={imageChannel.images} factor={3} scale={scale} 
+    id={"myImgChannel"} parts={imageChannel.parts} factor={3} scale={scale} 
     progress={200} cursorPos={150} selection={{from: 300, to: 450}} > 
     </ImageChannel>
   ))

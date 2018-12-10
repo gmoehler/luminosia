@@ -1,3 +1,8 @@
+/* 
+  Deals with audio channel playing, progress & mouse handling
+  Also does time (in secs) to pixel conversion
+*/
+
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import extractPeaks from 'webaudio-peaks';
@@ -143,7 +148,7 @@ export function withAudioPlay(WrappedComponent) {
       this.props.select(from, to);
     }
 
-    // only recalc when buffer, resolution of bits change
+    // only re-calc when buffer, resolution of bits change
     doExtractPeaks = memoize(
       (buffer, resolution, bits) => extractPeaks(buffer, resolution, true, 0, buffer.length, bits));
 
@@ -151,6 +156,7 @@ export function withAudioPlay(WrappedComponent) {
       // select props passed down to Channel
       const {resolution, playState, buffer, selection, select, setChannelPlayState, ...passthruProps} = this.props;
 
+      // conversion time (in secs) to pixels 
       const offsetPx = secondsToPixels(this.props.offset, this.props.resolution, this.getSampleRate())
       const progressPx = secondsToPixels(this.state.progress, this.props.resolution, this.getSampleRate()) - offsetPx;
       const cursorPx = secondsToPixels(selection.from, this.props.resolution, this.getSampleRate())  - offsetPx;
@@ -158,7 +164,8 @@ export function withAudioPlay(WrappedComponent) {
         from: cursorPx,
         to: secondsToPixels(selection.to, this.props.resolution, this.getSampleRate()) - offsetPx
       };
-      //TODO: improve performance by memoization of peaks data
+
+      // memoized peak data
       const {data, length, bits} = this.doExtractPeaks(buffer, resolution, 16);
       const peaksDataMono = Array.isArray(data) ? data[0] : []; // only one channel for now
 

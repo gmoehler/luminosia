@@ -91,7 +91,7 @@ class Channel extends Component {
       const sourceWidth = targetWidth / factor;
 
       cc.scale(scale, scale);
-      img.onload = cc.drawImage(img, sourceOffset, 0, sourceWidth, img.height, 
+      img.onload = cc.drawImage(img, sourceOffset, 0, sourceWidth, img.height,
         0, 0, targetWidth, imageHeight)
 
       targetOffset += MAX_CANVAS_WIDTH;
@@ -101,8 +101,8 @@ class Channel extends Component {
   handleMouseEvent = (e, eventName) => {
     if (this.props.handleMouseEvent) {
       const posX = getMouseEventPosition(e, "ChannelWrapper");
-        this.props.handleMouseEvent(posX, eventName);
-        return;
+      this.props.handleMouseEvent(posX, eventName);
+      return;
     }
   }
 
@@ -114,29 +114,29 @@ class Channel extends Component {
   }
 
   render() {
-    const {id, images, imageHeight, scale, progress, cursorPos, 
-      selection, theme, maxWidth, factor} = this.props;
+    const {id, parts, imageHeight, scale, progress, cursorPos, selection, theme, maxWidth, factor} = this.props;
 
     // loop thru all images
     const allImageCanvases = [];
-    const allCanvasRefImages = [];  
+    const allCanvasRefImages = [];
     let imageCount = 0;
     let initialOffset = 0;
 
-    if (images && Array.isArray(images)) {
-      images.forEach((img) => {
+    if (parts && Array.isArray(parts)) {
+      parts.forEach((part) => {
 
-        const {source, length, offset} = {...img};
+        const {src, offsetPx, buffer} = {...part};
 
         // paint images of canvases with max with MAX_CANVAS_WIDTH
-        const canvasImages = [];  
+        const offset = offsetPx;
+        const canvasImages = [];
+        const length = buffer.width;
         let totalWidth = length * factor;
 
         while (totalWidth > 0) {
           const currentWidth = Math.min(totalWidth, MAX_CANVAS_WIDTH);
           const canvasImage = (
-          <ImageCanvas key={ `${id}-${source}-${imageCount}` } cssWidth={ currentWidth } width={ currentWidth * scale } height={ imageHeight } ref={ this.createCanvasRef(imageCount) }
-          />
+          <ImageCanvas key={ `${id}-${src}-${imageCount}` } cssWidth={ currentWidth } width={ currentWidth * scale } height={ imageHeight } ref={ this.createCanvasRef(imageCount) } />
           )
 
           canvasImages.push(canvasImage);
@@ -144,41 +144,37 @@ class Channel extends Component {
           imageCount += 1;
         }
         allImageCanvases.push(
-          <ImageCanvases clasName='ImageCanvases' theme={ theme } offset={offset}>
-          { canvasImages }
+          <ImageCanvases className='ImageCanvases' theme={ theme } offset={ offset }>
+            { canvasImages }
           </ImageCanvases>
         );
         allCanvasRefImages.push(
-          <CanvasRefImage src={ source } className="hidden" ref={ this.canvasImage } />
+          <CanvasRefImage key={src} src={ src } className="hidden" ref={ this.canvasImage } />
         )
       });
-      initialOffset = images[0] && images[0].offset ? images[0].offset : 0;
+      initialOffset = parts[0] && parts[0].offset ? parts[0].offset : 0;
     }
 
-    const progressElem = progress ? 
-      <ImageProgress progress={ progress } theme={ theme } height={ imageHeight } offset={initialOffset}/> 
+    const progressElem = progress ?
+      <ImageProgress progress={ progress } theme={ theme } height={ imageHeight } offset={ initialOffset } />
       : null;
 
-    const selectionElem = selection && selection.from && selection.to ? 
-    <ImageSelection selection={ selection } theme={ theme } height={ imageHeight } offset={initialOffset}/>
+    const selectionElem = selection && selection.from && selection.to ?
+      <ImageSelection selection={ selection } theme={ theme } height={ imageHeight } offset={ initialOffset } />
       : null;
 
-    const cursorElem = cursorPos ? 
-    <ImageCursor cursorPos={ cursorPos } theme={ theme } height={ imageHeight } offset={initialOffset}/>
+    const cursorElem = cursorPos ?
+      <ImageCursor cursorPos={ cursorPos } theme={ theme } height={ imageHeight } offset={ initialOffset } />
       : null;
 
     return (
-      <ImageChannelWrapper className='ChannelWrapper' 
-        onMouseDown={ (e) => this.handleMouseEvent(e, "mouseDown") } 
-        onMouseUp={ (e) => this.handleMouseEvent(e, "mouseUp") } 
-        onMouseMove={ (e) => this.handleMouseEvent(e, "mouseMove") } 
-        onMouseLeave={ (e) => this.handleMouseEvent(e, "mouseLeave") }
+      <ImageChannelWrapper className='ChannelWrapper' onMouseDown={ (e) => this.handleMouseEvent(e, "mouseDown") } onMouseUp={ (e) => this.handleMouseEvent(e, "mouseUp") } onMouseMove={ (e) => this.handleMouseEvent(e, "mouseMove") } onMouseLeave={ (e) => this.handleMouseEvent(e, "mouseLeave") }
         cssWidth={ maxWidth } theme={ theme } height={ imageHeight }>
-        {allCanvasRefImages}
-        {allImageCanvases}
-        {progressElem}
-        {selectionElem}
-        {cursorElem}
+        { allCanvasRefImages }
+        { allImageCanvases }
+        { progressElem }
+        { selectionElem }
+        { cursorElem }
       </ImageChannelWrapper>
       );
   }
@@ -195,7 +191,6 @@ Channel.defaultProps = {
   factor: 1,
   // checking `window.devicePixelRatio` when drawing to canvas.
   scale: 1,
-  length: 0,
   maxWidth: 800,
   offset: 0,
   // height in CSS pixels of each canvas element an image is on.

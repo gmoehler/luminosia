@@ -54,6 +54,7 @@ export default class ChannelGroup extends Component {
 				sampleRate,
 				resolution:  sampleRate / pixelsPerSecond,
 				buffer: channelData && channelData.buffer,
+				parts: channelData.byParts,
 				scale: windowPixelRatio,
 			}
 

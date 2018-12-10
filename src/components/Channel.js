@@ -178,15 +178,12 @@ Channel.defaultProps = {
   // height in CSS pixels of each canvas element a waveform is on.
   waveHeight: 90,
   // all x pixel values are from 0 regardless of offset
-  // width in CSS pixels of the progress on the channel.
-  progress: 0,
-  // position of the cursor in CSS pixels from the left of channel
-  cursorPos: 0,
-  // position of the selection in CSS pixels from the left of channel
-  selection: {
-    from: 0,
-    to: 0
-  }
+  // width in CSS pixels of the progress on the channel  (not drawn on null)
+  progress: null,
+  // position of the cursor in CSS pixels from the left of channel (not drawn on null)
+  cursorPos: null,
+  // position of the selection in CSS pixels from the left of channel (not drawn on null)
+  selection: null
 };
 
 export default withTheme(Channel);
