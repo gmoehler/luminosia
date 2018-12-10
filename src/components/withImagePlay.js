@@ -5,7 +5,7 @@
 
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import deepClone from 'lodash'
+import {cloneDeep} from 'lodash'
 
 import MouseHandler from '../handler/MouseHandler';
 import { secondsToPixels, pixelsToSeconds, samplesToSeconds } from '../utils/conversions';
@@ -153,11 +153,12 @@ export function withImagePlay(WrappedComponent) {
         to: secondsToPixels(selection.to, resolution, sampleRate)
       };
       const maxWidthPx = secondsToPixels(maxDuration, resolution, sampleRate);
-      const partsPx =  Object.values(parts).slice(); // duplicate array
-      Object.values(parts).forEach(part => {
-        part.offsetPx = part.offset ? secondsToPixels(part.offset, resolution, sampleRate) : null;
-        part.cueinPx = part.cuein ? secondsToPixels(part.cuein, resolution, sampleRate) : null;    
-        part.cueoutPx = part.cueout ? secondsToPixels(part.cueout, resolution, sampleRate) : null;
+      const clonedParts = cloneDeep(parts);
+      const partsPx =  Object.values(clonedParts); 
+      partsPx.forEach(part => {
+        part.offset = part.offset ? secondsToPixels(part.offset, resolution, sampleRate) : null;
+        part.cuein = part.cuein ? secondsToPixels(part.cuein, resolution, sampleRate) : null;    
+        part.cueout = part.cueout ? secondsToPixels(part.cueout, resolution, sampleRate) : null;
       })
 
       return <WrappedComponent {...passthruProps} 

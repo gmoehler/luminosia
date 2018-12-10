@@ -125,10 +125,9 @@ class Channel extends Component {
     if (parts && Array.isArray(parts)) {
       parts.forEach((part) => {
 
-        const {src, offsetPx, buffer} = {...part};
+        const {src, offset, buffer} = {...part};
 
         // paint images of canvases with max with MAX_CANVAS_WIDTH
-        const offset = offsetPx;
         const canvasImages = [];
         const length = buffer.width;
         let totalWidth = length * factor;
