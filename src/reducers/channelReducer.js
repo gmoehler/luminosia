@@ -128,13 +128,20 @@ export default (state = initialState, action) => {
       }
       
     case MOVE_CHANNEL:
-      const currentOffset = state.byIds[action.payload.channelId].offset;
+      const channel = state.byIds[action.payload.channelId];
+      const part = channel.byParts[action.payload.moveSrc];
+      const currentOffset = part.offset;
       const offsetIncr = action.payload.incr;
       const updatedOffset = currentOffset ? currentOffset + offsetIncr : offsetIncr;
-      const mergedMoveChannelState = merge({},
-        state.byIds[action.payload.channelId],
+      const mergedPart = {...part, 
+      	offset: Math.max(0, updatedOffset),
+      };
+	  const mergedMoveChannelState = merge({},
+        channel,
         {
-          offset: Math.max(0, updatedOffset),
+        	byParts: {
+        		[action.payload.moveSrc]: mergedPart
+        	}
         }
       );
 

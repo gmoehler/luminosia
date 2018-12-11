@@ -114,7 +114,7 @@ class Channel extends Component {
   }
 
   render() {
-    const {id, parts, imageHeight, scale, progress, cursorPos, selection, theme, maxWidth, factor} = this.props;
+    const {parts, imageHeight, scale, progress, cursorPos, selection, theme, maxWidth, factor} = this.props;
 
     // loop thru all images
     const allImageCanvases = [];
