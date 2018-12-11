@@ -38,7 +38,7 @@ export default class MoveMouseHandler {
   }
 
   handleMoveTo = (pos, finalizeSelection) => {
-    if (this.moveFromX) { 
+    if (this.moveFromX && this.moveSrc) { 
       // only when mouse down has occured
       // console.log(`move from ${this.moveFromX} to ${x}`);
       const incrX = pos.x - this.moveFromX;

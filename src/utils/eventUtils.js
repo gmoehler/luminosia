@@ -2,7 +2,7 @@ export function getMouseEventPosition(e, className) {
 
     // find div with className
     let el = e.target;
-    const src = el.attributes.src;
+    const src = el.attributes["src"] ? el.attributes["src"].value  : null;
     while (el && el.classList && el.classList[0] !== className) {
       el = el.parentNode;
     }
@@ -16,6 +16,6 @@ export function getMouseEventPosition(e, className) {
     console.warn(`MouseEvent did not find ${className}`);
     return {
       x: 0,
-      src: src
+      src
     }
 }
