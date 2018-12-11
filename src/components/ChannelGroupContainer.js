@@ -32,8 +32,9 @@ const mapDispatchToProps = dispatch => ({
     from,
     to
   })),
-  move: (channelId, incr) => dispatch(moveChannel({
+  move: (channelId, moveSrc, incr) => dispatch(moveChannel({
     channelId, 
+    moveSrc,
     incr
   })),
   setChannelPlayState: (channelId, playState) => dispatch(setChannelPlayState({

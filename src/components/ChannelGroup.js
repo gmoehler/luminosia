@@ -64,8 +64,8 @@ export default class ChannelGroup extends Component {
 						{...channelProps}
 						setChannelPlayState={ playState => 
 								this.props.setChannelPlayState(channelId, playState) }
-						moveChannel={ incr => 
-							this.props.moveChannel(channelId, incr) }
+						moveChannel={ (moveSrc, incr) => 
+							this.props.moveChannel(channelId, moveSrc, incr) }
 					/>);
 				}
 

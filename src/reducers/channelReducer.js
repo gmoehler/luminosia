@@ -128,7 +128,6 @@ export default (state = initialState, action) => {
       }
       
     case MOVE_CHANNEL:
-
       const currentOffset = state.byIds[action.payload.channelId].offset;
       const offsetIncr = action.payload.incr;
       const updatedOffset = currentOffset ? currentOffset + offsetIncr : offsetIncr;

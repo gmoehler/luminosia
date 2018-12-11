@@ -5,25 +5,26 @@ export default class MoveMouseHandler {
   constructor(handlerFunctions){
     this.handlerFunctions = handlerFunctions;
     this.moveFromX = null;
+    this.moveSrc = null;
   }
 
-  handleMouseEvent = (x, eventName) => {
+  handleMouseEvent = (pos, eventName) => {
     switch (eventName) {
 
       case "mouseDown":
-      this.handleMoveFrom(x);
+      this.handleMoveFrom(pos);
       break;
 
       case "mouseMove":
-      this.handleMoveTo(x, false);
+      this.handleMoveTo(pos, false);
       break;
 
       case "mouseUp":
-      this.handleMoveTo(x, true);
+      this.handleMoveTo(pos, true);
       break;
 
       case "mouseLeave":
-      this.handleMoveTo(x, true);
+      this.handleMoveTo(pos, true);
       break;
 
       default:
@@ -31,21 +32,24 @@ export default class MoveMouseHandler {
     }
   }
 
-  handleMoveFrom = (x) => {
-    this.moveFromX = x;
+  handleMoveFrom = (pos) => {
+    this.moveFromX = pos.x;
+    this.moveSrc = pos.src;
   }
 
-  handleMoveTo = (x, finalizeSelection) => {
-    if (this.moveFromX) { // only when mouse down has occured
+  handleMoveTo = (pos, finalizeSelection) => {
+    if (this.moveFromX) { 
+      // only when mouse down has occured
       // console.log(`move from ${this.moveFromX} to ${x}`);
-      const incrX = x - this.moveFromX;
+      const incrX = pos.x - this.moveFromX;
       if (Math.abs(incrX) > 0) {
-        this.handlerFunctions.move(incrX);
-        this.moveFromX = x; 
+        this.handlerFunctions.move(this.moveSrc, incrX);
+        this.moveFromX = pos.x; 
       }
 
       if (finalizeSelection) {
         this.moveFromX = null; 
+        this.moveSrc = null;
       }
     }
   }

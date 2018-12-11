@@ -12,4 +12,10 @@ App
     ChannelGroup
      withAudioPlay
       Channel
+     withImagePlay
+      ImageChannel
 ```
+
+Todos:
+- only load img once initially
+- HOC for time to px conversion

@@ -59,8 +59,11 @@ function doLoadMulti(dispatch, getState, channelConfig, audioContext) {
       // organize result object
       const normalizedBuffers = channelBuffers.reduce((res, buf) => {
         const src = buf.src;
+        // we only need width of image because we load image again for canvas
         res[src] = {
-          buffer: buf
+          buffer: {
+            width: buf.width 
+          }
         }
         return res;
       }, {})

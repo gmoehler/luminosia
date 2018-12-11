@@ -5,7 +5,7 @@
 
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import {cloneDeep} from 'lodash'
+import { cloneDeep } from 'lodash'
 
 import MouseHandler from '../handler/MouseHandler';
 import { secondsToPixels, pixelsToSeconds, samplesToSeconds } from '../utils/conversions';
@@ -71,13 +71,13 @@ export function withImagePlay(WrappedComponent) {
         const trackEndAt = actEndAt - offset;
 
         // remeber for progress offset
-        this.animateStartAt = actStartAt; 
-        this.animateEndAt = endAt - startAt < 0.1 ? 
-          this.props.maxDuration  + offset : trackEndAt + offset;
-        
+        this.animateStartAt = actStartAt;
+        this.animateEndAt = endAt - startAt < 0.1 ?
+          this.props.maxDuration + offset : trackEndAt + offset;
+
         if (trackEndAt > 0) {
           console.log(`playing image from ${trackStartAt}s( ${actStartAt}s) to ${trackEndAt}(${actEndAt}s) with delay ${trackDelay}, offset: ${offset}`);
-          // TODO: do the image playing
+        // TODO: do the image playing
         } else {
           console.log(`skip image playing from ${actStartAt}s to ${actEndAt}`);
         }
@@ -99,7 +99,7 @@ export function withImagePlay(WrappedComponent) {
         ...this.state,
         progress: currentTimeInSecs
       })
-      
+
       if (currentTimeInSecs < this.animateEndAt) {
         this.animationRequest = window.requestAnimationFrame(this.animateProgress);
       } else {
@@ -130,17 +130,15 @@ export function withImagePlay(WrappedComponent) {
     }
 
     // transform from pixel to time values
-    move = (incrX) => {
+    move = (moveSrc, incrX) => {
       const incr = pixelsToSeconds(incrX, this.props.resolution, this.props.sampleRate);
-        this.props.move(incr);
+      this.props.move(moveSrc, incr);
     }
- 
+
     render() {
 
       // select props passed down to Channel
-      const {sampleRate, parts, playState, selection, select, 
- 		        setChannelPlayState, resolution, mode, offset, maxDuration,
- 		        ...passthruProps} = this.props;
+      const {sampleRate, parts, playState, selection, select, setChannelPlayState, resolution, mode, offset, maxDuration, ...passthruProps} = this.props;
 
       const factor = 1 / resolution;
       this.mousehandler.setMode(mode);
@@ -153,22 +151,15 @@ export function withImagePlay(WrappedComponent) {
         to: secondsToPixels(selection.to, resolution, sampleRate)
       };
       const maxWidthPx = secondsToPixels(maxDuration, resolution, sampleRate);
-      const clonedParts = cloneDeep(parts);
-      const partsPx =  Object.values(clonedParts); 
+      const partsPx = Object.values(cloneDeep(parts));
       partsPx.forEach(part => {
         part.offset = part.offset ? secondsToPixels(part.offset, resolution, sampleRate) : null;
-        part.cuein = part.cuein ? secondsToPixels(part.cuein, resolution, sampleRate) : null;    
+        part.cuein = part.cuein ? secondsToPixels(part.cuein, resolution, sampleRate) : null;
         part.cueout = part.cueout ? secondsToPixels(part.cueout, resolution, sampleRate) : null;
       })
 
-      return <WrappedComponent {...passthruProps} 
-        parts={ partsPx } 
-        factor={ factor } 
-        progress={ progressPx } 
-        cursorPos={ cursorPx }
-        selection={ selectionPx } 
-        maxWidth = { maxWidthPx }
-        handleMouseEvent={ this.mousehandler.handleMouseEvent } />;
+      return <WrappedComponent {...passthruProps} parts={ partsPx } factor={ factor } progress={ progressPx } cursorPos={ cursorPx } selection={ selectionPx }
+               maxWidth={ maxWidthPx } handleMouseEvent={ this.mousehandler.handleMouseEvent } />;
     }
   }
   ;
@@ -177,7 +168,7 @@ export function withImagePlay(WrappedComponent) {
     sampleRate: PropTypes.number.isRequired,
     resolution: PropTypes.number.isRequired,
     parts: PropTypes.object.isRequired,
-    maxDuration:  PropTypes.number.isRequired,
+    maxDuration: PropTypes.number.isRequired,
     playState: PropTypes.oneOf(['stopped', 'playing']).isRequired,
     selection: PropTypes.object.isRequired,
     select: PropTypes.func.isRequired,

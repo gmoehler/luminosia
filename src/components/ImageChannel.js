@@ -17,13 +17,13 @@ const ImageCursor = styled.div`
   position: absolute;
   background: ${props => props.theme.cursorColor};
   width: 1px;
-  left: ${props => props.offset + props.cursorPos}px;
+  left: ${props => props.cursorPos}px;
   height: ${props => props.height}px;
 `;
 
 const ImageSelection = styled.div`
   position: absolute;
-  left: ${props => props.offset + props.selection.from}px;
+  left: ${props => props.selection.from}px;
   background: ${props => props.theme.selectionColor};
   width: ${props => props.selection.to - props.selection.from}px;
   height: ${props => props.height}px;
@@ -100,8 +100,8 @@ class Channel extends Component {
 
   handleMouseEvent = (e, eventName) => {
     if (this.props.handleMouseEvent) {
-      const posX = getMouseEventPosition(e, "ChannelWrapper");
-      this.props.handleMouseEvent(posX, eventName);
+      const pos = getMouseEventPosition(e, "ChannelWrapper");
+      this.props.handleMouseEvent(pos, eventName);
       return;
     }
   }
@@ -120,7 +120,6 @@ class Channel extends Component {
     const allImageCanvases = [];
     const allCanvasRefImages = [];
     let imageCount = 0;
-    let initialOffset = 0;
 
     if (parts && Array.isArray(parts)) {
       parts.forEach((part) => {
@@ -135,7 +134,14 @@ class Channel extends Component {
         while (totalWidth > 0) {
           const currentWidth = Math.min(totalWidth, MAX_CANVAS_WIDTH);
           const canvasImage = (
-          <ImageCanvas key={ `${id}-${src}-${imageCount}` } cssWidth={ currentWidth } width={ currentWidth * scale } height={ imageHeight } ref={ this.createCanvasRef(imageCount) } />
+          <ImageCanvas 
+            key={ `${src}-${imageCount}` } 
+            cssWidth={ currentWidth } 
+            width={ currentWidth * scale } 
+            height={ imageHeight } 
+            ref={ this.createCanvasRef(imageCount) } 
+            src= { src }
+          />
           )
 
           canvasImages.push(canvasImage);
@@ -143,37 +149,50 @@ class Channel extends Component {
           imageCount += 1;
         }
         allImageCanvases.push(
-          <ImageCanvases className='ImageCanvases' theme={ theme } offset={ offset }>
+          <ImageCanvases 
+            key= { src }
+            className='ImageCanvases' 
+            theme={ theme } 
+            offset={ offset }
+          >
             { canvasImages }
+
           </ImageCanvases>
         );
         allCanvasRefImages.push(
           <CanvasRefImage key={src} src={ src } className="hidden" ref={ this.canvasImage } />
         )
       });
-      initialOffset = parts[0] && parts[0].offset ? parts[0].offset : 0;
     }
 
     const progressElem = progress ?
-      <ImageProgress progress={ progress } theme={ theme } height={ imageHeight } offset={ initialOffset } />
+      <ImageProgress className='Progress' progress={ progress } theme={ theme } height={ imageHeight } />
       : null;
 
     const selectionElem = selection && selection.from && selection.to ?
-      <ImageSelection selection={ selection } theme={ theme } height={ imageHeight } offset={ initialOffset } />
+      <ImageSelection className='Selection' selection={ selection } theme={ theme } height={ imageHeight } />
       : null;
 
     const cursorElem = cursorPos ?
-      <ImageCursor cursorPos={ cursorPos } theme={ theme } height={ imageHeight } offset={ initialOffset } />
+      <ImageCursor className='Cursor' cursorPos={ cursorPos } theme={ theme } height={ imageHeight }/>
       : null;
 
     return (
-      <ImageChannelWrapper className='ChannelWrapper' onMouseDown={ (e) => this.handleMouseEvent(e, "mouseDown") } onMouseUp={ (e) => this.handleMouseEvent(e, "mouseUp") } onMouseMove={ (e) => this.handleMouseEvent(e, "mouseMove") } onMouseLeave={ (e) => this.handleMouseEvent(e, "mouseLeave") }
-        cssWidth={ maxWidth } theme={ theme } height={ imageHeight }>
+      <ImageChannelWrapper className='ChannelWrapper' 
+        onMouseDown={ (e) => this.handleMouseEvent(e, "mouseDown") } 
+        onMouseUp={ (e) => this.handleMouseEvent(e, "mouseUp") } 
+        onMouseMove={ (e) => this.handleMouseEvent(e, "mouseMove") } 
+        onMouseLeave={ (e) => this.handleMouseEvent(e, "mouseLeave") }
+        cssWidth={ maxWidth } 
+        theme={ theme } 
+        height={ imageHeight }>
+
         { allCanvasRefImages }
         { allImageCanvases }
         { progressElem }
         { selectionElem }
         { cursorElem }
+
       </ImageChannelWrapper>
       );
   }
