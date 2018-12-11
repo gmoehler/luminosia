@@ -10,7 +10,7 @@ export function getMouseEventPosition(e, className) {
       const parentScroll = el.parentNode ? el.parentNode.scrollLeft : 0;
       return  {
         x: Math.max(0, e.clientX - el.offsetLeft + parentScroll),
-        src: src
+        src
       }
     }
     console.warn(`MouseEvent did not find ${className}`);
