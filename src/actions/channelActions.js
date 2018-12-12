@@ -68,6 +68,7 @@ function doLoadMulti(dispatch, getState, channelConfig, audioContext) {
         return res;
       }, {})
 
+	  // an icrementing integer is the part id used as key
       const normalizedParts = channelConfig.parts.reduce((res, buf) => {
         const partId = res.maxPartId+1;
         buf.id = partId;
