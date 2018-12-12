@@ -72,7 +72,6 @@ export default class ChannelGroup extends Component {
 			return (
 				<ImageChannelWithPlay
 					{...channelProps}
-					source={ channelData.src }
 					setChannelPlayState={ playState => 
 							this.props.setChannelPlayState(channelId, playState) }
 					move={  (partId, incr) => 
@@ -91,4 +90,6 @@ export default class ChannelGroup extends Component {
 		allChannelsData: PropTypes.array, 		// data of all channels
 		pixelsPerSecond: PropTypes.number,
 		setChannelPlayState: PropTypes.func.isRequired,
+		move: PropTypes.func.isRequired,
+		moveChannel: PropTypes.func.isRequired
   }

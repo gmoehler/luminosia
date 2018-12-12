@@ -140,7 +140,7 @@ class Channel extends Component {
             width={ currentWidth * scale } 
             height={ imageHeight } 
             ref={ this.createCanvasRef(imageCount) } 
-            partId= { id }
+            data-partId= { id }
           />
           )
 

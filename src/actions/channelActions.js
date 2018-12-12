@@ -58,29 +58,30 @@ function doLoadMulti(dispatch, getState, channelConfig, audioContext) {
 
       // organize result object
       const normalizedBuffers = channelBuffers.reduce((res, buf) => {
-        const src = buf.src;
+
         // we only need width of image because we load image again for canvas
-        res[src] = {
+        res[res.numParts] = {
           buffer: {
             width: buf.width 
           }
-        }
+        };
+        res.numParts++;
         return res;
-      }, {})
+      }, {numParts: 0})
 
 	  // an icrementing integer is the part id used as key
       const normalizedParts = channelConfig.parts.reduce((res, buf) => {
-        const partId = res.maxPartId+1;
-        buf.id = partId;
-        res[partId] = buf;
-        res.maxPartId++;
+        buf.id = res.numParts;
+        res[res.numParts] = buf;
+        res.numParts++;
         return res;
-      }, {maxPartId: -1})
+      }, {numParts: 0})
 
       const channelParts = merge({}, normalizedBuffers, normalizedParts);
+      delete channelParts.numParts; // delete intermediate value
 
       const reducedConfig = Object.assign({}, channelConfig);
-      delete reducedConfig.parts;
+      delete reducedConfig.parts; // will be normalized with channelParts
 
       dispatch(loadMultiChannelSuccess({
         channelConfig: reducedConfig,
