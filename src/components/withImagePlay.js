@@ -130,9 +130,9 @@ export function withImagePlay(WrappedComponent) {
     }
 
     // transform from pixel to time values
-    move = (moveSrc, incrX) => {
+    move = (partId, incrX) => {
       const incr = pixelsToSeconds(incrX, this.props.resolution, this.props.sampleRate);
-      this.props.move(moveSrc, incr);
+      this.props.move(partId, incr);
     }
 
     render() {

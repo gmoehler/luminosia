@@ -129,7 +129,7 @@ export default (state = initialState, action) => {
       
     case MOVE_CHANNEL:
       const channel = state.byIds[action.payload.channelId];
-      const part = channel.byParts[action.payload.moveSrc];
+      const part = channel.byParts[action.payload.partId];
       const currentOffset = part.offset;
       const offsetIncr = action.payload.incr;
       const updatedOffset = currentOffset ? currentOffset + offsetIncr : offsetIncr;
@@ -140,7 +140,7 @@ export default (state = initialState, action) => {
         channel,
         {
         	byParts: {
-        		[action.payload.moveSrc]: mergedPart
+        		[action.payload.partId]: mergedPart
         	}
         }
       );
