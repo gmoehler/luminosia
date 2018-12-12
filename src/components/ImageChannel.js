@@ -124,7 +124,7 @@ class Channel extends Component {
     if (parts && Array.isArray(parts)) {
       parts.forEach((part) => {
 
-        const {src, offset, buffer} = {...part};
+        const {id, src, offset, buffer} = {...part};
 
         // paint images of canvases with max with MAX_CANVAS_WIDTH
         const canvasImages = [];
@@ -135,12 +135,12 @@ class Channel extends Component {
           const currentWidth = Math.min(totalWidth, MAX_CANVAS_WIDTH);
           const canvasImage = (
           <ImageCanvas 
-            key={ `${src}-${imageCount}` } 
+            key={ `${id}-${imageCount}` } 
             cssWidth={ currentWidth } 
             width={ currentWidth * scale } 
             height={ imageHeight } 
             ref={ this.createCanvasRef(imageCount) } 
-            partId= { src }
+            partId= { id }
           />
           )
 
@@ -150,7 +150,7 @@ class Channel extends Component {
         }
         allImageCanvases.push(
           <ImageCanvases 
-            key= { src }
+            key= { id }
             className='ImageCanvases' 
             theme={ theme } 
             offset={ offset }
@@ -160,7 +160,7 @@ class Channel extends Component {
           </ImageCanvases>
         );
         allCanvasRefImages.push(
-          <CanvasRefImage key={src} src={ src } className="hidden" ref={ this.canvasImage } />
+          <CanvasRefImage key={id} src={ src } className="hidden" ref={ this.canvasImage } />
         )
       });
     }

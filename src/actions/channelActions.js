@@ -69,10 +69,13 @@ function doLoadMulti(dispatch, getState, channelConfig, audioContext) {
       }, {})
 
       const normalizedParts = channelConfig.parts.reduce((res, buf) => {
-        const src = buf.src;
-        res[src] = buf;
+        const partId = maxPartId+1;
+        buf.id = partId;
+        res[partId] = buf;
+        
+        res.maxPartId++;
         return res;
-      }, {})
+      }, {maxPartId = -1})
 
       const channelParts = merge({}, normalizedBuffers, normalizedParts);
 
