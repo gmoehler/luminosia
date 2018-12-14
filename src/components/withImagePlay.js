@@ -63,7 +63,8 @@ export function withImagePlay(WrappedComponent) {
 
         // act.. values is global time interval of this channel
         const actStartAt = Math.max(0, startAt); // dont start before 0
-        const actEndAt = endAt - startAt < 0.1 ? samplesToSeconds(this.props.buffer.width, this.props.sampleRate) + offset : endAt; // TODO: 10 -> track duration
+        //TODO: this.props.buffer.width will no longer work
+        const actEndAt = endAt - startAt < 0.1 ? samplesToSeconds(this.props.buffer.width, this.props.sampleRate) + offset : endAt; 
 
         // track.. values are local image time
         const trackStartAt = actStartAt - offset < 0 ? 0 : actStartAt - offset;
@@ -133,6 +134,11 @@ export function withImagePlay(WrappedComponent) {
     move = (partId, incrX) => {
       const incr = pixelsToSeconds(incrX, this.props.resolution, this.props.sampleRate);
       this.props.move(partId, incr);
+      // select part
+      const part = this.props.parts[partId];
+      const from = part.offset + incr;
+      const to = part.offset + incr + part.buffer.width / this.props.sampleRate;
+      this.props.select(from, to);
     }
 
     render() {
