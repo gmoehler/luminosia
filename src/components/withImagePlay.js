@@ -151,11 +151,11 @@ export function withImagePlay(WrappedComponent) {
         to: secondsToPixels(selection.to, resolution, sampleRate)
       };
       const maxWidthPx = secondsToPixels(maxDuration, resolution, sampleRate);
-      const partsPx = Object.values(cloneDeep(parts));
-      partsPx.forEach(part => {
-        part.offset = part.offset ? secondsToPixels(part.offset, resolution, sampleRate) : null;
-        part.cuein = part.cuein ? secondsToPixels(part.cuein, resolution, sampleRate) : null;
-        part.cueout = part.cueout ? secondsToPixels(part.cueout, resolution, sampleRate) : null;
+      const partsPx = parts ? Object.values(cloneDeep(parts)) : [];
+	  partsPx.forEach(part => {
+      	part.offset = part.offset ? secondsToPixels(part.offset, resolution, sampleRate) : null;
+      	part.cuein = part.cuein ? secondsToPixels(part.cuein, resolution, sampleRate) : null;
+      	part.cueout = part.cueout ? secondsToPixels(part.cueout, resolution, sampleRate) : null;
       })
 
       return <WrappedComponent {...passthruProps} parts={ partsPx } factor={ factor } progress={ progressPx } cursorPos={ cursorPx } selection={ selectionPx }

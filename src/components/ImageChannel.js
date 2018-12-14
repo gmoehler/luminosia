@@ -81,22 +81,24 @@ class Channel extends Component {
 
       const img = this.images[i];
       let targetOffset = 0;
+      if (!img) {
+          break; // TODO: find out how to reset canvases on new render
+        }
 
-      for (let c = 0; c < this.canvases.length; c++) {
-        const canvas = this.canvases[c];
-
-        if (!canvas || !img) {
+      for (let c = 0; c < this.canvases[i].length; c++) {
+        const canvas = this.canvases[i][c];
+        if (!canvas) {
           break; // TODO: find out how to reset canvases on new render
         }
 
         const cc = canvas.getContext('2d');
         cc.clearRect(0, 0, canvas.width, canvas.height);
         const sourceOffset = targetOffset / factor;
-        const targetWidth = MAX_CANVAS_WIDTH;
+        const targetWidth = canvas.width;
         const sourceWidth = targetWidth / factor;
 
         cc.scale(scale, scale);
-        img.onload = cc.drawImage(img, sourceOffset, 0, sourceWidth, img.height,
+        img.onload = cc.drawImage(img, sourceOffset, 0, sourceWidth, imageHeight,
           0, 0, targetWidth, imageHeight)
 
         targetOffset += MAX_CANVAS_WIDTH;
@@ -113,18 +115,20 @@ class Channel extends Component {
   }
 
 
-  createCanvasRef(i) {
+  createCanvasRef(i, c) {
     return (canvas) => {
-      this.canvases[i] = canvas
+    	if (! this.canvases[i]) {
+    	  this.canvases[i] = [];
+        }
+      this.canvases[i][c] = canvas
     }
   }
 
   createImageRef(i) {
     return (image) => {
-      this.images[i] = image
+      this.images[i] = image;
     }
   }
-
 
   render() {
     const {parts, imageHeight, scale, progress, cursorPos, selection, theme, maxWidth, factor} = this.props;
@@ -132,7 +136,6 @@ class Channel extends Component {
     // loop thru all images/parts
     const allImageCanvases = [];
     const allCanvasRefImages = [];
-    let imageCount = 0;
     this.canvases = [];
     this.images = []; 
 
@@ -146,23 +149,24 @@ class Channel extends Component {
         const canvasImages = [];
         const length = buffer.width;
         let totalWidth = length * factor;
-
+		let canvasCount = 0;
+		
         while (totalWidth > 0) {
           const currentWidth = Math.min(totalWidth, MAX_CANVAS_WIDTH);
           const canvasImage = (
           <ImageCanvas 
-            key={ String(id) + "-" + String(imageCount) } 
+            key={ String(id) + "-" + String(canvasCount) } 
             cssWidth={ currentWidth } 
             width={ currentWidth * scale } 
             height={ imageHeight } 
-            ref={ this.createCanvasRef(imageCount) } 
+            ref={ this.createCanvasRef(id, canvasCount) } 
             data-partId= { id }
           />
           )
 
           canvasImages.push(canvasImage);
           totalWidth -= currentWidth;
-          imageCount += 1;
+          canvasCount += 1;
         }
         allImageCanvases.push(
           <ImageCanvases 
