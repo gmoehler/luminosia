@@ -44,7 +44,7 @@ const CanvasRefImage = styled.img`
 
 const ImageCanvases = styled.div`
   float: left;
-  position: relative;
+  position: absolute;
   left: ${props => props.offset}px;
 `;
 
@@ -80,28 +80,27 @@ class Channel extends Component {
     for (let i = 0; i < this.images.length; i++) {
 
       const img = this.images[i];
-      let targetOffset = 0;
-      if (!img) {
-          break; // TODO: find out how to reset canvases on new render
-        }
+      let canvasOffset = 0;
+      if (!img) { break; }
 
       for (let c = 0; c < this.canvases[i].length; c++) {
         const canvas = this.canvases[i][c];
-        if (!canvas) {
-          break; // TODO: find out how to reset canvases on new render
-        }
+        if (!canvas) { break; }
 
         const cc = canvas.getContext('2d');
         cc.clearRect(0, 0, canvas.width, canvas.height);
-        const sourceOffset = targetOffset / factor;
+        const imageOffset = canvasOffset / factor;
+
         const targetWidth = canvas.width;
         const sourceWidth = targetWidth / factor;
 
-        cc.scale(scale, scale);
-        img.onload = cc.drawImage(img, sourceOffset, 0, sourceWidth, imageHeight,
-          0, 0, targetWidth, imageHeight)
+        const targetHeight = imageHeight;
 
-        targetOffset += MAX_CANVAS_WIDTH;
+        cc.scale(scale, scale);
+        img.onload = cc.drawImage(img, imageOffset, 0, sourceWidth, img.height,
+          0, 0, targetWidth, targetHeight)
+
+        canvasOffset += MAX_CANVAS_WIDTH;
       }
     }
   }
@@ -149,7 +148,7 @@ class Channel extends Component {
         const canvasImages = [];
         const length = buffer.width;
         let totalWidth = length * factor;
-		let canvasCount = 0;
+		    let canvasCount = 0;
 		
         while (totalWidth > 0) {
           const currentWidth = Math.min(totalWidth, MAX_CANVAS_WIDTH);
