@@ -63,7 +63,7 @@ class Channel extends Component {
   constructor(props) {
     super(props);
     this.canvases = [];
-    this.canvasImage = React.createRef();
+    this.canvasImageRefs = []; 
   }
 
   componentDidMount() {
@@ -74,16 +74,19 @@ class Channel extends Component {
     this.draw();
   }
 
-  draw() {
+  draw =() => {
     const {imageHeight, scale, factor} = this.props;
 
     let targetOffset = 0;
+
     for (let i = 0; i < this.canvases.length; i++) {
       const canvas = this.canvases[i];
-      if (!canvas) {
+      const canvasRef = this.canvasImageRefs[i];
+      if (!canvas || !canvasRef) {
         break; // TODO: find out how to reset canvases on new render
       }
-      const img = this.canvasImage.current;
+
+      const img = canvasRef.current;
       const cc = canvas.getContext('2d');
       cc.clearRect(0, 0, canvas.width, canvas.height);
       const sourceOffset = targetOffset / factor;
@@ -120,8 +123,11 @@ class Channel extends Component {
     const allImageCanvases = [];
     const allCanvasRefImages = [];
     let imageCount = 0;
+    this.canvases = [];
+    this.canvasImageRefs = []; 
 
     if (parts && Array.isArray(parts)) {
+      
       parts.forEach((part) => {
 
         const {id, src, offset, buffer} = {...part};
@@ -148,7 +154,10 @@ class Channel extends Component {
           totalWidth -= currentWidth;
           imageCount += 1;
         }
+        const imgRef = React.createRef()
+        this.canvasImageRefs.push(imgRef);
         allImageCanvases.push(
+          
           <ImageCanvases 
             key= { id }
             className='ImageCanvases' 
@@ -160,8 +169,8 @@ class Channel extends Component {
           </ImageCanvases>
         );
         allCanvasRefImages.push(
-          <CanvasRefImage key={id} src={ src } className="hidden" ref={ this.canvasImage } />
-        )
+          <CanvasRefImage key={id} src={ src } className="hidden" ref={ imgRef } />
+        ) 
       });
     }
 
