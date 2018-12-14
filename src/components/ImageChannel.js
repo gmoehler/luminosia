@@ -63,7 +63,7 @@ class Channel extends Component {
   constructor(props) {
     super(props);
     this.canvases = [];
-    this.canvasImageRefs = []; 
+    this.images = []; 
   }
 
   componentDidMount() {
@@ -77,27 +77,30 @@ class Channel extends Component {
   draw =() => {
     const {imageHeight, scale, factor} = this.props;
 
-    let targetOffset = 0;
+    for (let i = 0; i < this.images.length; i++) {
 
-    for (let i = 0; i < this.canvases.length; i++) {
-      const canvas = this.canvases[i];
-      const canvasRef = this.canvasImageRefs[i];
-      if (!canvas || !canvasRef) {
-        break; // TODO: find out how to reset canvases on new render
+      const img = this.images[i];
+      let targetOffset = 0;
+
+      for (let c = 0; c < this.canvases.length; c++) {
+        const canvas = this.canvases[c];
+
+        if (!canvas || !img) {
+          break; // TODO: find out how to reset canvases on new render
+        }
+
+        const cc = canvas.getContext('2d');
+        cc.clearRect(0, 0, canvas.width, canvas.height);
+        const sourceOffset = targetOffset / factor;
+        const targetWidth = MAX_CANVAS_WIDTH;
+        const sourceWidth = targetWidth / factor;
+
+        cc.scale(scale, scale);
+        img.onload = cc.drawImage(img, sourceOffset, 0, sourceWidth, img.height,
+          0, 0, targetWidth, imageHeight)
+
+        targetOffset += MAX_CANVAS_WIDTH;
       }
-
-      const img = canvasRef.current;
-      const cc = canvas.getContext('2d');
-      cc.clearRect(0, 0, canvas.width, canvas.height);
-      const sourceOffset = targetOffset / factor;
-      const targetWidth = MAX_CANVAS_WIDTH;
-      const sourceWidth = targetWidth / factor;
-
-      cc.scale(scale, scale);
-      img.onload = cc.drawImage(img, sourceOffset, 0, sourceWidth, img.height,
-        0, 0, targetWidth, imageHeight)
-
-      targetOffset += MAX_CANVAS_WIDTH;
     }
   }
 
@@ -116,15 +119,22 @@ class Channel extends Component {
     }
   }
 
+  createImageRef(i) {
+    return (image) => {
+      this.images[i] = image
+    }
+  }
+
+
   render() {
     const {parts, imageHeight, scale, progress, cursorPos, selection, theme, maxWidth, factor} = this.props;
 
-    // loop thru all images
+    // loop thru all images/parts
     const allImageCanvases = [];
     const allCanvasRefImages = [];
     let imageCount = 0;
     this.canvases = [];
-    this.canvasImageRefs = []; 
+    this.images = []; 
 
     if (parts && Array.isArray(parts)) {
       
@@ -141,7 +151,7 @@ class Channel extends Component {
           const currentWidth = Math.min(totalWidth, MAX_CANVAS_WIDTH);
           const canvasImage = (
           <ImageCanvas 
-            key={ `${id}-${imageCount}` } 
+            key={ String(id) + "-" + String(imageCount) } 
             cssWidth={ currentWidth } 
             width={ currentWidth * scale } 
             height={ imageHeight } 
@@ -154,10 +164,7 @@ class Channel extends Component {
           totalWidth -= currentWidth;
           imageCount += 1;
         }
-        const imgRef = React.createRef()
-        this.canvasImageRefs.push(imgRef);
         allImageCanvases.push(
-          
           <ImageCanvases 
             key= { id }
             className='ImageCanvases' 
@@ -169,7 +176,7 @@ class Channel extends Component {
           </ImageCanvases>
         );
         allCanvasRefImages.push(
-          <CanvasRefImage key={id} src={ src } className="hidden" ref={ imgRef } />
+          <CanvasRefImage key={id} src={ src } className="hidden" ref={ this.createImageRef(id) } />
         ) 
       });
     }
