@@ -29,8 +29,21 @@ export default class ChannelGroup extends Component {
 			return null;
 		}
 
-		// we have data: draw all channels
-		const channelComponents = Object.keys(this.props.allChannelsData)
+		// we have data: audio first, image second, then by source
+		const keys = Object.keys(this.props.allChannelsData)
+			.sort((k1, k2) => {
+				const data1 = this.props.allChannelsData[k1];
+				const data2 = this.props.allChannelsData[k2];
+				const str1 = data1.type + data1.src;
+				const str2 = data2.type + data2.src;
+				if (str1 < str2) {
+					return -1;
+				} else if (str2 > str1) {
+					return 1;
+				}
+				return 0;
+			})
+		const channelComponents = keys
 			.map((channelId) => {
 
 			// get channel data
@@ -54,6 +67,7 @@ export default class ChannelGroup extends Component {
 				sampleRate,
 				resolution:  sampleRate / pixelsPerSecond,
 				buffer: channelData && channelData.buffer,
+				parts: channelData.byParts,
 				scale: windowPixelRatio,
 			}
 
@@ -63,7 +77,7 @@ export default class ChannelGroup extends Component {
 						{...channelProps}
 						setChannelPlayState={ playState => 
 								this.props.setChannelPlayState(channelId, playState) }
-						moveChannel={ incr => 
+						moveChannel={ (incr) => 
 							this.props.moveChannel(channelId, incr) }
 					/>);
 				}
@@ -71,11 +85,10 @@ export default class ChannelGroup extends Component {
 			return (
 				<ImageChannelWithPlay
 					{...channelProps}
-					source={ channelData.src }
 					setChannelPlayState={ playState => 
 							this.props.setChannelPlayState(channelId, playState) }
-					move={ incr => 
-							this.props.move(channelId, incr) }
+					move={  (partId, incr) => 
+							this.props.move(channelId, partId, incr) }
 				/>);
 		});
 
@@ -90,4 +103,6 @@ export default class ChannelGroup extends Component {
 		allChannelsData: PropTypes.array, 		// data of all channels
 		pixelsPerSecond: PropTypes.number,
 		setChannelPlayState: PropTypes.func.isRequired,
+		move: PropTypes.func.isRequired,
+		moveChannel: PropTypes.func.isRequired
   }

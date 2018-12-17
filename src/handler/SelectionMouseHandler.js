@@ -7,23 +7,23 @@ export default class SelectionMouseHandler {
     this.selectFromX = null;
   }
 
-  handleMouseEvent = (x, eventName) => {
+  handleMouseEvent = (pos, eventName) => {
     switch (eventName) {
 
       case "mouseDown":
-      this.handleSelectionFrom(x);
+      this.handleSelectionFrom(pos);
       break;
 
       case "mouseMove":
-      this.handleSelectionTo(x, false);
+      this.handleSelectionTo(pos, false);
       break;
 
       case "mouseUp":
-      this.handleSelectionTo(x, true);
+      this.handleSelectionTo(pos, true);
       break;
 
       case "mouseLeave":
-      this.handleSelectionTo(x, true);
+      this.handleSelectionTo(pos, true);
       break;
 
       default:
@@ -31,18 +31,18 @@ export default class SelectionMouseHandler {
     }
   }
 
-  handleSelectionFrom = (x) => {
-    this.selectFromX = x;
-    this.handlerFunctions.select(x, x);
+  handleSelectionFrom = (pos) => {
+    this.selectFromX = pos.x;
+    this.handlerFunctions.select(pos.x, pos.x);
   }
 
-  handleSelectionTo = (x, finalizeSelection) => {
+  handleSelectionTo = (pos, finalizeSelection) => {
     if (this.selectFromX) { // only when mouse down has occured
       // console.log('selection to: ', x);
-      if (this.selectFromX < x) {
-        this.handlerFunctions.select(this.selectFromX, x);
+      if (this.selectFromX < pos.x) {
+        this.handlerFunctions.select(this.selectFromX, pos.x);
       } else {
-        this.handlerFunctions.select(x, this.selectFromX);
+        this.handlerFunctions.select(pos.x, this.selectFromX);
       }
       if (finalizeSelection) {
         this.selectFromX = null; 

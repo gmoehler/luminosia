@@ -31,13 +31,26 @@ const theme = {
   waveProgressBorderColor: 'purple',
   imageBackgroundColor: 'black',
   cursorColor: 'red',
+  markerColor: 'blue',
   selectionColor: 'rgba(0,0,255,0.5)',
   timeColor: 'red',
 };
 
-const image = {
-  src: imageFile,
-  alt: 'my image',
+const imageChannel = {
+  id: 'imgChannel1',
+  name: 'Channel 1 with images',
+  type: 'image',
+  sampleRate: 100, // one image frame is 10ms
+  parts: [{
+    id: 1,
+    src: imageFile,
+    offset: 50,
+    cuein: 0.5, // in secs
+    cueout: 1.47, // in secs
+    buffer: {
+    	width: 100,
+    }
+  }],  
 };
 
 
@@ -88,10 +101,17 @@ storiesOf('Channel', module)
       </Channel>
     </ThemeProvider>
   ))
-  .add('BBC Waveform Peaks & devicePixelRatio & theming & selection and start.', () => (
+  .add('BBC Waveform Peaks & devicePixelRatio & theming & markers.', () => (
+    <ThemeProvider theme={theme}>
+      <Channel peaks={data} length={length} bits={bits} scale={scale} progress={200} 
+        markers={[{id: "1", pos:220}, {id: "5", pos:270}]}>
+      </Channel>
+    </ThemeProvider>
+  ))
+  .add('BBC Waveform Peaks & devicePixelRatio & theming & selection and offset.', () => (
     <ThemeProvider theme={theme}>
       <Channel peaks={data} length={length} bits={bits} scale={scale} 
-        progress={200} start={150}
+        progress={200} offset={150}
         selection={{from: 300, to: 450}}>
       </Channel>
     </ThemeProvider>
@@ -102,32 +122,28 @@ storiesOf('Channel', module)
   .add('Image channel.', () => (
       <ImageChannel></ImageChannel>
   ))
-  .add('Image channel with image and factor 5.', () => (
-      <ImageChannel source={image.src} length={length} factor={5}> </ImageChannel>
+  .add('Image channel with image at offset 50 and factor 3.', () => (
+      <ImageChannel id={"myImgChannel"} parts={imageChannel.parts} factor={3}> </ImageChannel>
   ))
-  .add('Image channel with image and factor 5 & progress.', () => (
-    <ImageChannel source={image.src} length={length} factor={5} scale={scale} progress={200}> </ImageChannel>
+  .add('Image channel with image at offset 50  and factor 3 & progress.', () => (
+    <ImageChannel id={"myImgChannel"} parts={imageChannel.parts} factor={3} scale={scale} progress={200}> </ImageChannel>
   ))
-  .add('Image channel with image and factor 5 & cursor.', () => (
-    <ImageChannel source={image.src} length={length} factor={5} scale={scale} cursorPos={150}> </ImageChannel>
+  .add('Image channel with image at offset 50  and factor 3 & cursor.', () => (
+    <ImageChannel id={"myImgChannel"} parts={imageChannel.parts} factor={3} scale={scale} cursorPos={150}> </ImageChannel>
   ))
-  .add('Image channel with image and factor 5 & selection.', () => (
-    <ImageChannel source={image.src} length={length} factor={5} scale={scale} selection={{from: 300, to: 450}} > </ImageChannel>
+  .add('Image channel with image at offset 50 & factor 3 & selection.', () => (
+    <ImageChannel id={"myImgChannel"} parts={imageChannel.parts} factor={3} scale={scale} selection={{from: 300, to: 450}} > </ImageChannel>
   ))
-  .add('Image channel with image and factor 5 & cursor, progress & selection.', () => (
+  .add('Image channel with image at offset 50 & factor 3 & markers.', () => (
+    <ImageChannel id={"myImgChannel"} parts={imageChannel.parts} factor={3} scale={scale} 
+      markers={[{id: "1", pos:220}, {id: "5", pos:270}]} > </ImageChannel>
+  ))
+  .add('Image channel with image at offset 50  & factor 3 & cursor, progress & selection.', () => (
     <ImageChannel 
-    source={image.src} length={length} factor={5} scale={scale} 
+    id={"myImgChannel"} parts={imageChannel.parts} factor={3} scale={scale} 
     progress={200} cursorPos={150} selection={{from: 300, to: 450}} > 
     </ImageChannel>
   ))
-  .add('Image channel with image and factor 5 & cursor, progress & selection & start.', () => (
-    <ImageChannel 
-    source={image.src} length={length} factor={5} scale={scale} 
-    progress={200} cursorPos={150} selection={{from: 300, to: 450}} 
-    start={150}> 
-    </ImageChannel>
-  ))
-
   ;
 
 storiesOf('TimeScale', module)

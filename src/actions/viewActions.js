@@ -1,4 +1,4 @@
-import { SELECT, SET_ZOOM_LEVEL, SET_MODE } from './types';
+import { SELECT, SET_ZOOM_LEVEL, SET_MODE, UPDATE_MARKER } from './types';
 
 // load audio async action
 
@@ -17,3 +17,8 @@ export const setMode = (modeInfo) => ({
   type: SET_MODE,
   payload: modeInfo
 })
+
+export const updateMarker = (markerInfo) => ({
+  type: UPDATE_MARKER,
+  payload: markerInfo
+});

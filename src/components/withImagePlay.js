@@ -1,8 +1,14 @@
+/* 
+  Deals with image channel playing, progress & mouse handling
+  Also does time (in secs) to pixel conversion
+*/
+
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import MouseHandler from '../handler/MouseHandler';
+import { cloneDeep } from 'lodash'
 
-import { secondsToPixels, pixelsToSeconds, samplesToSeconds } from '../utils/conversions';
+import MouseHandler from '../handler/MouseHandler';
+import { secondsToPixels, pixelsToSeconds } from '../utils/conversions';
 
 // HOC to support image playing for one channel
 export function withImagePlay(WrappedComponent) {
@@ -26,12 +32,12 @@ export function withImagePlay(WrappedComponent) {
 
     componentDidUpdate(prevProps, prevState) {
 
-      const {playState, selection, offset} = this.props;
+      const {playState, selection} = this.props;
 
       // start or stop playing
       if (prevProps.playState !== playState) {
         if (playState === "playing") {
-          this.startPlay(selection.from, selection.to, offset);
+          this.startPlay(selection.from, selection.to);
         }
         // only stopped if not already (auto)stopped
         else if (this.isPlaying()) {
@@ -47,7 +53,7 @@ export function withImagePlay(WrappedComponent) {
       }
     }
 
-    startPlay = (startAt, endAt, offset) => {
+    startPlay = (startAt, endAt) => {
       if (this.props.type !== "image") {
         return;
       }
@@ -57,21 +63,20 @@ export function withImagePlay(WrappedComponent) {
 
         // act.. values is global time interval of this channel
         const actStartAt = Math.max(0, startAt); // dont start before 0
-        const actEndAt = endAt - startAt < 0.1 ? samplesToSeconds(this.props.buffer.width, this.props.sampleRate) + offset : endAt; // TODO: 10 -> track duration
+        const actEndAt = endAt - startAt < 0.1 ? this.props.maxDuration : endAt;
 
         // track.. values are local image time
-        const trackStartAt = actStartAt - offset < 0 ? 0 : actStartAt - offset;
-        const trackDelay = startAt - offset < 0 ? offset - startAt : 0;
-        const trackEndAt = actEndAt - offset;
+        const trackStartAt = actStartAt < 0 ? 0 : actStartAt;
+        const trackDelay = startAt < 0 ? - startAt : 0;
+        const trackEndAt = actEndAt;
 
-        // remeber for progress offset
-        this.animateStartAt = actStartAt; 
-        this.animateEndAt = endAt - startAt < 0.1 ? 
-          this.props.maxDuration  + offset : trackEndAt + offset;
-        
+        // remeber for progress
+        this.animateStartAt = actStartAt;
+        this.animateEndAt = endAt - startAt < 0.1 ? this.props.maxDuration : trackEndAt;
+
         if (trackEndAt > 0) {
-          console.log(`playing image from ${trackStartAt}s( ${actStartAt}s) to ${trackEndAt}(${actEndAt}s) with delay ${trackDelay}, offset: ${offset}`);
-          // TODO: do the image playing
+          console.log(`playing image from ${trackStartAt}s( ${actStartAt}s) to ${trackEndAt}(${actEndAt}s) with delay ${trackDelay}`);
+        // TODO: do the image playing
         } else {
           console.log(`skip image playing from ${actStartAt}s to ${actEndAt}`);
         }
@@ -93,7 +98,7 @@ export function withImagePlay(WrappedComponent) {
         ...this.state,
         progress: currentTimeInSecs
       })
-      
+
       if (currentTimeInSecs < this.animateEndAt) {
         this.animationRequest = window.requestAnimationFrame(this.animateProgress);
       } else {
@@ -124,30 +129,47 @@ export function withImagePlay(WrappedComponent) {
     }
 
     // transform from pixel to time values
-    move = (incrX) => {
+    move = (partId, incrX) => {
       const incr = pixelsToSeconds(incrX, this.props.resolution, this.props.sampleRate);
-      this.props.move(incr);
+      this.props.move(partId, incr);
+      // select part
+      const part = this.props.parts[partId];
+      const from = part.offset + incr;
+      const to = part.offset + incr + part.buffer.width / this.props.sampleRate;
+      this.props.updateMarker(part.id + "-l", from);
+      this.props.updateMarker(part.id + "-r", to);
     }
- 
+
     render() {
 
       // select props passed down to Channel
-      const {sampleRate, buffer, playState, selection, select, setChannelPlayState, resolution, mode, ...passthruProps} = this.props;
+      const {sampleRate, parts, playState, selection, select, markers, updateMarker, setChannelPlayState, resolution, mode, maxDuration, ...passthruProps} = this.props;
 
-      const offset = secondsToPixels(this.props.offset, this.props.resolution, sampleRate)
-      const progressPx = secondsToPixels(this.state.progress, resolution, sampleRate) - offset;
-      const cursorPx = secondsToPixels(selection.from, resolution, sampleRate) - offset;
-      const selectionPx = {
-        from: cursorPx,
-        to: secondsToPixels(selection.to, resolution, sampleRate) - offset
-      };
       const factor = 1 / resolution;
-      const length = buffer && buffer.width * factor;
       this.mousehandler.setMode(mode);
 
-      // pass down props and progress
-      return <WrappedComponent {...passthruProps} offset={ offset } length={ length } factor={ factor } progress={ progressPx } cursorPos={ cursorPx }
-        selection={ selectionPx } 
+      // conversion time (in secs) to pixels 
+      const progressPx = secondsToPixels(this.state.progress, resolution, sampleRate);
+      const cursorPx = secondsToPixels(selection.from, resolution, sampleRate);
+      const selectionPx = {
+        from: cursorPx,
+        to: secondsToPixels(selection.to, resolution, sampleRate)
+      };
+      const maxWidthPx = secondsToPixels(maxDuration, resolution, sampleRate);
+      const partsPx = parts ? Object.values(cloneDeep(parts)) : [];
+      partsPx.forEach(part => {
+        part.offset = part.offset ? secondsToPixels(part.offset, resolution, sampleRate) : null;
+        part.duration = part.duration ? secondsToPixels(part.duration, resolution, sampleRate) : null;
+        part.cuein = part.cuein ? secondsToPixels(part.cuein, resolution, sampleRate) : null;
+        part.cueout = part.cueout ? secondsToPixels(part.cueout, resolution, sampleRate) : null;
+      })
+      const markersPx = markers ? cloneDeep(markers) : [];
+      markersPx.forEach(marker => {
+        marker.pos = marker.pos ? secondsToPixels(marker.pos, resolution, sampleRate) : null;
+      })
+
+      return <WrappedComponent {...passthruProps} parts={ partsPx } factor={ factor } progress={ progressPx } cursorPos={ cursorPx } selection={ selectionPx }
+        markers={ markersPx } maxWidth={ maxWidthPx } 
         handleMouseEvent={ this.mousehandler.handleMouseEvent } />;
     }
   }
@@ -156,11 +178,10 @@ export function withImagePlay(WrappedComponent) {
   WithImagePlay.propTypes = {
     sampleRate: PropTypes.number.isRequired,
     resolution: PropTypes.number.isRequired,
-    buffer: PropTypes.object.isRequired,
-    maxDuration:  PropTypes.number.isRequired,
+    parts: PropTypes.object.isRequired,
+    maxDuration: PropTypes.number.isRequired,
     playState: PropTypes.oneOf(['stopped', 'playing']).isRequired,
     selection: PropTypes.object.isRequired,
-    offset: PropTypes.number.isRequired,
     select: PropTypes.func.isRequired,
     setChannelPlayState: PropTypes.func.isRequired,
     mode: PropTypes.oneOf(['selectionMode', 'moveMode']).isRequired,

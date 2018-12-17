@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import styled, { withTheme } from 'styled-components';
+import { getMouseEventPosition } from '../utils/eventUtils';
 
 const MAX_CANVAS_WIDTH = 1000;
 
@@ -16,6 +17,14 @@ const Cursor = styled.div`
   background: ${props => props.theme.cursorColor};
   width: 1px;
   left: ${props => props.offset + props.cursorPos}px;
+  height: ${props => props.waveHeight}px;
+`;
+
+const Marker = styled.div`
+  position: absolute;
+  background: ${props => props.theme.markerColor};
+  width: 1px;
+  left: ${props => props.offset + props.markerPos}px;
   height: ${props => props.waveHeight}px;
 `;
 
@@ -104,19 +113,9 @@ class Channel extends Component {
 
   handleMouseEvent = (e, eventName) => {
     if (this.props.handleMouseEvent) {
-      e.preventDefault();
-      // find ChannelWrapper
-      let el = e.target;
-      while (el && el.classList && el.classList[0] !== 'ChannelWrapper') {
-        el = el.parentNode;
-      }
-      if (el && el.classList && el.classList[0] === 'ChannelWrapper') {
-        const parentScroll = el.parentNode ? el.parentNode.scrollLeft : 0;
-        const x =  Math.max(0, e.clientX - el.offsetLeft + parentScroll);
-        this.props.handleMouseEvent(x, eventName);
+      const posX = getMouseEventPosition(e, "ChannelWrapper");
+        this.props.handleMouseEvent(posX, eventName);
         return;
-      }
-      console.warn("MouseEvent did not find ChannelWrapper");
     }
   }
 
@@ -127,7 +126,7 @@ class Channel extends Component {
   }
 
   render() {
-    const {length, waveHeight, scale, progress, cursorPos, selection, theme, offset} = this.props;
+    const {length, waveHeight, scale, progress, cursorPos, selection, markers, theme, offset} = this.props;
 
     let totalWidth = length;
     let waveformCount = 0;
@@ -142,15 +141,35 @@ class Channel extends Component {
       waveformCount += 1;
     }
 
+    const progressElem = progress ? 
+      <Progress className='Progress' progress={ progress } theme={ theme } waveHeight={ waveHeight } offset={offset}/>
+      : null;
+
+    const selectionElem = selection && selection.from && selection.to ? 
+      <Selection className='Selection' selection={ selection } theme={ theme } waveHeight={ waveHeight } offset={offset}/>
+      : null;
+
+    const cursorElem = cursorPos ? 
+      <Cursor className='Cursor' cursorPos={ cursorPos } theme={ theme } waveHeight={ waveHeight } offset={offset}/>
+      : null;
+      
+    const markerElems = markers && Array.isArray(markers) ?
+      markers.map((marker) => 
+        <Marker className='Marker' markerPos= { marker.pos } theme={ theme } waveHeight={ waveHeight } offset={offset}/>
+      ) : null;
+
     return (
       <ChannelWrapper className='ChannelWrapper' onMouseDown={ (e) => this.handleMouseEvent(e, "mouseDown") } onMouseUp={ (e) => this.handleMouseEvent(e, "mouseUp") } onMouseMove={ (e) => this.handleMouseEvent(e, "mouseMove") } onMouseLeave={ (e) => this.handleMouseEvent(e, "mouseLeave") }
         cssWidth={ length } theme={ theme } waveHeight={ waveHeight }>
-        <WaveformCanvases clasName='WaveformCanvases' theme={ theme } offset={offset} >
+        <WaveformCanvases className='WaveformCanvases' theme={ theme } offset={offset} >
           { waveforms }
         </WaveformCanvases>
-        <Progress progress={ progress } theme={ theme } waveHeight={ waveHeight } offset={offset}/>
-        <Selection selection={ selection } theme={ theme } waveHeight={ waveHeight } offset={offset}/>
-        <Cursor cursorPos={ cursorPos } theme={ theme } waveHeight={ waveHeight } offset={offset}/>
+        
+        { progressElem }
+        { selectionElem }
+        { cursorElem }
+        { markerElems }
+        
       </ChannelWrapper>
       );
   }
@@ -164,7 +183,8 @@ Channel.defaultProps = {
     waveProgressColor: 'transparent', //'rgb(255,120,0)',
     waveProgressBorderColor: 'rgb(255,255,255)',
     cursorColor: 'red',
-    selectionColor: 'rgba(0,0,255,0.5)'
+    markerColor: 'rgba(255,255, 0, 0.5)', // transparent yellow
+    selectionColor: 'rgba(0,0,255,0.5)',
   },
   // checking `window.devicePixelRatio` when drawing to canvas.
   scale: 1,
@@ -175,15 +195,14 @@ Channel.defaultProps = {
   // height in CSS pixels of each canvas element a waveform is on.
   waveHeight: 90,
   // all x pixel values are from 0 regardless of offset
-  // width in CSS pixels of the progress on the channel.
-  progress: 0,
-  // position of the cursor in CSS pixels from the left of channel
-  cursorPos: 0,
-  // position of the selection in CSS pixels from the left of channel
-  selection: {
-    from: 0,
-    to: 0
-  }
+  // width in CSS pixels of the progress on the channel  (not drawn on null)
+  progress: null,
+  // position of the cursor in CSS pixels from the left of channel (not drawn on null)
+  cursorPos: null,
+  // position of the selection in CSS pixels from the left of channel (not drawn on null)
+  selection: null,
+    // positions of the markers in CSS pixels from the left of channel (null: do not draw)
+  markers: [],
 };
 
 export default withTheme(Channel);

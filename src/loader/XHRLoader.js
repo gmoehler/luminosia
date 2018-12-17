@@ -26,6 +26,8 @@ export default class extends Loader {
         decoderPromise
           .catch(err => reject(err))
           .then((channelBuffer) => {
+            // add source to buffer
+            channelBuffer.src= that.src;
             resolve(channelBuffer);
           })
           .catch(err => reject(err));

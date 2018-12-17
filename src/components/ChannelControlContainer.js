@@ -27,13 +27,22 @@ const channelConfigs = [
     soloed: false,
   },
   {
-    src: 'media/image/mostlyStripes.png',
-    name: 'MostlyStripes',
+    id: 'imgChannel1',
+    name: 'Channel 1 with images',
     type: 'image',
-    offset: 1.75,
     sampleRate: 100, // one image frame is 10ms
-    cuein: 0.5, // in secs
-    cueout: 1.47, // in secs
+    parts: [{
+      src: 'media/image/mostlyStripes.png',
+      offset: 1.75,
+      cuein: 0.5, // in secs
+      cueout: 1.47, // in secs
+    },
+    {
+      src: 'media/image/blueLine.png',
+      offset: 3.75,
+      cuein: 0.5, // in secs
+      cueout: 1.47, // in secs
+    }],  
   },
 ]
 

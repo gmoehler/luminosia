@@ -1,6 +1,7 @@
 import { merge } from 'lodash';
 
 import { LOAD_CHANNEL_STARTED, LOAD_CHANNEL_SUCCESS, LOAD_CHANNEL_FAILURE, 
+  LOAD_MULTICHANNEL_STARTED, LOAD_MULTICHANNEL_FAILURE, LOAD_MULTICHANNEL_SUCCESS, 
   PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL } from '../actions/types';
 
 import { samplesToSeconds } from '../utils/conversions';
@@ -21,6 +22,7 @@ export default (state = initialState, action) => {
           }
         }
       };
+
     case LOAD_CHANNEL_SUCCESS:
     const channelSource = action.payload.channelConfig.src;
       return {
@@ -36,12 +38,54 @@ export default (state = initialState, action) => {
             ...action.payload.channelConfig
           }
         }
-      }
+      };
+
     case LOAD_CHANNEL_FAILURE:
       return {
         ...state,
         byIds: {
           [action.payload.channelSource]: {
+            loading: false,
+            playState: "stopped",
+            error: action.payload
+          }
+        }
+      };
+
+    case LOAD_MULTICHANNEL_STARTED:
+      return {
+        ...state,
+        byIds: {
+          [action.payload.channelId]: {
+            loading: true
+          }
+        }
+      };
+  
+      case LOAD_MULTICHANNEL_SUCCESS:
+      const channelId = action.payload.channelConfig.id;
+        return {
+          ...state,
+          byIds: {
+            ...state.byIds,
+            [channelId]: {
+              loading: false,
+              type: "image",
+              playState: "stopped",
+              error: null,
+              ...action.payload.channelConfig,
+              byParts: {
+                ...action.payload.channelParts,
+              }
+            }
+          }
+        }
+  
+    case LOAD_MULTICHANNEL_FAILURE:
+      return {
+        ...state,
+        byIds: {
+          [action.payload.channelId]: {
             loading: false,
             playState: "stopped",
             error: action.payload
@@ -84,14 +128,20 @@ export default (state = initialState, action) => {
       }
       
     case MOVE_CHANNEL:
-
-      const currentOffset = state.byIds[action.payload.channelId].offset;
+      const channel = state.byIds[action.payload.channelId];
+      const part = channel.byParts[action.payload.partId];
+      const currentOffset = part.offset;
       const offsetIncr = action.payload.incr;
       const updatedOffset = currentOffset ? currentOffset + offsetIncr : offsetIncr;
-      const mergedMoveChannelState = merge({},
-        state.byIds[action.payload.channelId],
+      const mergedPart = {...part, 
+      	offset: Math.max(0, updatedOffset),
+      };
+	  const mergedMoveChannelState = merge({},
+        channel,
         {
-          offset: Math.max(0, updatedOffset),
+        	byParts: {
+        		[action.payload.partId]: mergedPart
+        	}
         }
       );
 

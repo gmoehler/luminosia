@@ -1,7 +1,13 @@
+/* 
+  Deals with audio channel playing, progress & mouse handling
+  Also does time (in secs) to pixel conversion
+*/
+
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import extractPeaks from 'webaudio-peaks';
 import memoize from 'memoize-one';
+import { cloneDeep } from 'lodash'
 
 import Playout from '../player/Playout'
 import MouseHandler from '../handler/SelectionMouseHandler'
@@ -19,7 +25,7 @@ export function withAudioPlay(WrappedComponent) {
       this.playStartAt = 0; // start of current play
       this.playEndAt = 0; // end of current play
       this.state = {
-        progress: 0, // play progress in secs
+        progress: null, // play progress in secs
       };
       this.mousehandler = new MouseHandler(
         {
@@ -143,28 +149,36 @@ export function withAudioPlay(WrappedComponent) {
       this.props.select(from, to);
     }
 
-    // only recalc when buffer, resolution of bits change
+    // only re-calc when buffer, resolution of bits change
     doExtractPeaks = memoize(
       (buffer, resolution, bits) => extractPeaks(buffer, resolution, true, 0, buffer.length, bits));
 
     render() {
       // select props passed down to Channel
-      const {resolution, playState, buffer, selection, select, setChannelPlayState, ...passthruProps} = this.props;
+      const {resolution, playState, buffer, selection, select, setChannelPlayState, markers,
+        ...passthruProps} = this.props;
 
-      const offset = secondsToPixels(this.props.offset, this.props.resolution, this.getSampleRate())
-      const progressPx = secondsToPixels(this.state.progress, this.props.resolution, this.getSampleRate()) - offset;
-      const cursorPx = secondsToPixels(selection.from, this.props.resolution, this.getSampleRate())  - offset;
-      const selectionPx = {
+      // conversion time (in secs) to pixels 
+      const offsetPx = secondsToPixels(this.props.offset, this.props.resolution, this.getSampleRate())
+      const progressPx = this.state.progress ? secondsToPixels(this.state.progress, this.props.resolution, this.getSampleRate()) - offsetPx : null;
+      const cursorPx = selection.from ? secondsToPixels(selection.from, this.props.resolution, this.getSampleRate())  - offsetPx : null;
+      const selectionPx = selection && selection.from && selection.to ? {
         from: cursorPx,
-        to: secondsToPixels(selection.to, this.props.resolution, this.getSampleRate()) - offset
-      };
-      //TODO: improve performance by memoization of peaks data
+        to: secondsToPixels(selection.to, this.props.resolution, this.getSampleRate()) - offsetPx
+      } : null;
+      const markersPx = markers ? cloneDeep(markers) : [];
+      markersPx.forEach(marker => {
+        marker.pos = marker.pos ? secondsToPixels(marker.pos, resolution, this.getSampleRate()) - offsetPx : null;
+      })
+
+
+      // memoized peak data
       const {data, length, bits} = this.doExtractPeaks(buffer, resolution, 16);
       const peaksDataMono = Array.isArray(data) ? data[0] : []; // only one channel for now
 
       return <WrappedComponent {...passthruProps} 
         handleMouseEvent={ this.mousehandler.handleMouseEvent } 
-        offset={offset}
+        offset={offsetPx} markers={markersPx}
         peaks={ peaksDataMono } bits={ bits } length={ length } progress={ progressPx } 
         cursorPos={ cursorPx } selection={ selectionPx }  
       />;
