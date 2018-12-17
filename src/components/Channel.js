@@ -184,7 +184,7 @@ Channel.defaultProps = {
     waveProgressBorderColor: 'rgb(255,255,255)',
     cursorColor: 'red',
     selectionColor: 'rgba(0,0,255,0.5)',
-    markerColor: 'red',
+    markerColor: 'yellow',
   },
   // checking `window.devicePixelRatio` when drawing to canvas.
   scale: 1,

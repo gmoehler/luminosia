@@ -71,7 +71,7 @@ class Channel extends Component {
   constructor(props) {
     super(props);
     this.canvases = [];
-    this.images = []; 
+    this.images = [];
   }
 
   componentDidMount() {
@@ -82,18 +82,22 @@ class Channel extends Component {
     this.draw();
   }
 
-  draw =() => {
+  draw = () => {
     const {imageHeight, scale, factor} = this.props;
 
-    for (let i = 0; i < this.images.length; i++) {
+    Object.keys(this.images).forEach((idx) => {
 
-      const img = this.images[i];
+      const img = this.images[idx];
       let canvasOffset = 0;
-      if (!img) { break; }
+      if (!img) {
+        return;
+      }
 
-      for (let c = 0; c < this.canvases[i].length; c++) {
-        const canvas = this.canvases[i][c];
-        if (!canvas) { break; }
+      for (let c = 0; c < this.canvases[idx].length; c++) {
+        const canvas = this.canvases[idx][c];
+        if (!canvas) {
+          break;
+        }
 
         const cc = canvas.getContext('2d');
         cc.clearRect(0, 0, canvas.width, canvas.height);
@@ -110,7 +114,7 @@ class Channel extends Component {
 
         canvasOffset += MAX_CANVAS_WIDTH;
       }
-    }
+    })
   }
 
   handleMouseEvent = (e, eventName) => {
@@ -124,9 +128,9 @@ class Channel extends Component {
 
   createCanvasRef(i, c) {
     return (canvas) => {
-    	if (! this.canvases[i]) {
-    	  this.canvases[i] = [];
-        }
+      if (!this.canvases[i]) {
+        this.canvases[i] = [];
+      }
       this.canvases[i][c] = canvas
     }
   }
@@ -144,30 +148,26 @@ class Channel extends Component {
     const allImageCanvases = [];
     const allCanvasRefImages = [];
     this.canvases = [];
-    this.images = []; 
+    this.images = [];
 
     if (parts && Array.isArray(parts)) {
-      
+
       parts.forEach((part) => {
 
-        const {id, src, offset, buffer} = {...part};
+        const {id, src, offset, buffer} = {
+          ...part
+        };
 
         // paint images of canvases with max with MAX_CANVAS_WIDTH
         const canvasImages = [];
         const length = buffer.width;
         let totalWidth = length * factor;
-		    let canvasCount = 0;
-		
+        let canvasCount = 0;
+
         while (totalWidth > 0) {
           const currentWidth = Math.min(totalWidth, MAX_CANVAS_WIDTH);
           const canvasImage = (
-          <ImageCanvas 
-            key={ String(id) + "-" + String(canvasCount) } 
-            cssWidth={ currentWidth } 
-            width={ currentWidth * scale } 
-            height={ imageHeight } 
-            ref={ this.createCanvasRef(id, canvasCount) } 
-            data-partId= { id }
+          <ImageCanvas key={ String(id) + "-" + String(canvasCount) } cssWidth={ currentWidth } width={ currentWidth * scale } height={ imageHeight } ref={ this.createCanvasRef(id, canvasCount) } data-partid={ id }
           />
           )
 
@@ -176,19 +176,13 @@ class Channel extends Component {
           canvasCount += 1;
         }
         allImageCanvases.push(
-          <ImageCanvases 
-            key= { id }
-            className='ImageCanvases' 
-            theme={ theme } 
-            offset={ offset }
-          >
+          <ImageCanvases key={ id } className='ImageCanvases' theme={ theme } offset={ offset }>
             { canvasImages }
-
           </ImageCanvases>
         );
         allCanvasRefImages.push(
-          <CanvasRefImage key={id} src={ src } className="hidden" ref={ this.createImageRef(id) } />
-        ) 
+          <CanvasRefImage key={ id } src={ src } className="hidden" ref={ this.createImageRef(id) } />
+        )
       });
     }
 
@@ -201,31 +195,22 @@ class Channel extends Component {
       : null;
 
     const cursorElem = cursorPos ?
-      <ImageCursor className='Cursor' cursorPos={ cursorPos } theme={ theme } height={ imageHeight }/>
+      <ImageCursor className='Cursor' cursorPos={ cursorPos } theme={ theme } height={ imageHeight } />
       : null;
-      
+
     const markerElems = markers && Array.isArray(markers) ?
-      markers.map((markerPos) => 
-        <ImageMarker className='Marker' markerPos= { markerPos } theme={ theme } height={ imageHeight }/>
+      markers.map((markerPos) => <ImageMarker className='Marker' markerPos={ markerPos } theme={ theme } height={ imageHeight } />
       ) : null;
 
     return (
-      <ImageChannelWrapper className='ChannelWrapper' 
-        onMouseDown={ (e) => this.handleMouseEvent(e, "mouseDown") } 
-        onMouseUp={ (e) => this.handleMouseEvent(e, "mouseUp") } 
-        onMouseMove={ (e) => this.handleMouseEvent(e, "mouseMove") } 
-        onMouseLeave={ (e) => this.handleMouseEvent(e, "mouseLeave") }
-        cssWidth={ maxWidth } 
-        theme={ theme } 
-        height={ imageHeight }>
-
+      <ImageChannelWrapper className='ChannelWrapper' onMouseDown={ (e) => this.handleMouseEvent(e, "mouseDown") } onMouseUp={ (e) => this.handleMouseEvent(e, "mouseUp") } onMouseMove={ (e) => this.handleMouseEvent(e, "mouseMove") } onMouseLeave={ (e) => this.handleMouseEvent(e, "mouseLeave") }
+        cssWidth={ maxWidth } theme={ theme } height={ imageHeight }>
         { allCanvasRefImages }
         { allImageCanvases }
         { progressElem }
         { selectionElem }
         { cursorElem }
         { markerElems }
-
       </ImageChannelWrapper>
       );
   }

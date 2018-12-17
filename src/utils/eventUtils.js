@@ -2,7 +2,7 @@ export function getMouseEventPosition(e, className) {
 
     // find div with className
     let el = e.target;
-    const partId = el.getAttribute("data-partId");
+    const partId = el.getAttribute("data-partid");
     while (el && el.classList && el.classList[0] !== className) {
       el = el.parentNode;
     }

@@ -35,22 +35,17 @@ const theme = {
   timeColor: 'red',
 };
 
-const image = {
-  src: imageFile,
-  alt: 'my image',
-};
-
 const imageChannel = {
   id: 'imgChannel1',
   name: 'Channel 1 with images',
   type: 'image',
   sampleRate: 100, // one image frame is 10ms
   parts: [{
-    source: imageFile,
+    id: 1,
+    src: imageFile,
     offset: 50,
     cuein: 0.5, // in secs
     cueout: 1.47, // in secs
-    length: 100,
     buffer: {
     	width: 100,
     }
