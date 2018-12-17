@@ -32,12 +32,12 @@ export function withImagePlay(WrappedComponent) {
 
     componentDidUpdate(prevProps, prevState) {
 
-      const {playState, selection, offset} = this.props;
+      const {playState, selection} = this.props;
 
       // start or stop playing
       if (prevProps.playState !== playState) {
         if (playState === "playing") {
-          this.startPlay(selection.from, selection.to, offset);
+          this.startPlay(selection.from, selection.to);
         }
         // only stopped if not already (auto)stopped
         else if (this.isPlaying()) {
@@ -53,7 +53,7 @@ export function withImagePlay(WrappedComponent) {
       }
     }
 
-    startPlay = (startAt, endAt, offset) => {
+    startPlay = (startAt, endAt) => {
       if (this.props.type !== "image") {
         return;
       }
@@ -63,21 +63,19 @@ export function withImagePlay(WrappedComponent) {
 
         // act.. values is global time interval of this channel
         const actStartAt = Math.max(0, startAt); // dont start before 0
-        //TODO: this.props.buffer.width will no longer work
-        const actEndAt = endAt - startAt < 0.1 ? samplesToSeconds(this.props.buffer.width, this.props.sampleRate) + offset : endAt;
+        const actEndAt = endAt - startAt < 0.1 ? this.props.maxDuration : endAt;
 
         // track.. values are local image time
-        const trackStartAt = actStartAt - offset < 0 ? 0 : actStartAt - offset;
-        const trackDelay = startAt - offset < 0 ? offset - startAt : 0;
-        const trackEndAt = actEndAt - offset;
+        const trackStartAt = actStartAt < 0 ? 0 : actStartAt;
+        const trackDelay = startAt < 0 ? - startAt : 0;
+        const trackEndAt = actEndAt;
 
-        // remeber for progress offset
+        // remeber for progress
         this.animateStartAt = actStartAt;
-        this.animateEndAt = endAt - startAt < 0.1 ?
-          this.props.maxDuration + offset : trackEndAt + offset;
+        this.animateEndAt = endAt - startAt < 0.1 ? this.props.maxDuration : trackEndAt;
 
         if (trackEndAt > 0) {
-          console.log(`playing image from ${trackStartAt}s( ${actStartAt}s) to ${trackEndAt}(${actEndAt}s) with delay ${trackDelay}, offset: ${offset}`);
+          console.log(`playing image from ${trackStartAt}s( ${actStartAt}s) to ${trackEndAt}(${actEndAt}s) with delay ${trackDelay}`);
         // TODO: do the image playing
         } else {
           console.log(`skip image playing from ${actStartAt}s to ${actEndAt}`);
@@ -145,7 +143,7 @@ export function withImagePlay(WrappedComponent) {
     render() {
 
       // select props passed down to Channel
-      const {sampleRate, parts, playState, selection, select, markers, updateMarker, setChannelPlayState, resolution, mode, offset, maxDuration, ...passthruProps} = this.props;
+      const {sampleRate, parts, playState, selection, select, markers, updateMarker, setChannelPlayState, resolution, mode, maxDuration, ...passthruProps} = this.props;
 
       const factor = 1 / resolution;
       this.mousehandler.setMode(mode);

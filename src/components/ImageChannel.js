@@ -5,10 +5,9 @@ import { getMouseEventPosition } from '../utils/eventUtils';
 const MAX_CANVAS_WIDTH = 1000;
 
 const ImageProgress = styled.div`
-  display: ${props => props.progress}
   position: absolute;
   background: ${props => props.theme.waveProgressColor};
-  width: ${props => props.progress + props.offset}px;
+  width: ${props => props.progress}px;
   height: ${props => props.height}px;
   border-right: 1px solid ${props => props.theme.waveProgressBorderColor};
 `;
