@@ -51,6 +51,9 @@ const imageChannel = {
     cuein: 0.5, // in secs
     cueout: 1.47, // in secs
     length: 100,
+    buffer: {
+    	width: 100,
+    }
   }],  
 };
 
@@ -102,6 +105,13 @@ storiesOf('Channel', module)
       </Channel>
     </ThemeProvider>
   ))
+  .add('BBC Waveform Peaks & devicePixelRatio & theming & markers.', () => (
+    <ThemeProvider theme={theme}>
+      <Channel peaks={data} length={length} bits={bits} scale={scale} progress={200} 
+        markers={[220, 270]}>
+      </Channel>
+    </ThemeProvider>
+  ))
   .add('BBC Waveform Peaks & devicePixelRatio & theming & selection and offset.', () => (
     <ThemeProvider theme={theme}>
       <Channel peaks={data} length={length} bits={bits} scale={scale} 
@@ -127,6 +137,9 @@ storiesOf('Channel', module)
   ))
   .add('Image channel with image at offset 50 & factor 3 & selection.', () => (
     <ImageChannel id={"myImgChannel"} parts={imageChannel.parts} factor={3} scale={scale} selection={{from: 300, to: 450}} > </ImageChannel>
+  ))
+  .add('Image channel with image at offset 50 & factor 3 & markers.', () => (
+    <ImageChannel id={"myImgChannel"} parts={imageChannel.parts} factor={3} scale={scale} markers={[220, 270]} > </ImageChannel>
   ))
   .add('Image channel with image at offset 50  & factor 3 & cursor, progress & selection.', () => (
     <ImageChannel 

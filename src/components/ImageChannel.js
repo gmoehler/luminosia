@@ -21,6 +21,14 @@ const ImageCursor = styled.div`
   height: ${props => props.height}px;
 `;
 
+const ImageMarker = styled.div`
+  position: absolute;
+  background: ${props => props.theme.markerColor};
+  width: 1px;
+  left: ${props => props.markerPos}px;
+  height: ${props => props.height}px;
+`;
+
 const ImageSelection = styled.div`
   position: absolute;
   left: ${props => props.selection.from}px;
@@ -130,7 +138,7 @@ class Channel extends Component {
   }
 
   render() {
-    const {parts, imageHeight, scale, progress, cursorPos, selection, theme, maxWidth, factor} = this.props;
+    const {parts, imageHeight, scale, progress, cursorPos, selection, markers, theme, maxWidth, factor} = this.props;
 
     // loop thru all images/parts
     const allImageCanvases = [];
@@ -195,6 +203,11 @@ class Channel extends Component {
     const cursorElem = cursorPos ?
       <ImageCursor className='Cursor' cursorPos={ cursorPos } theme={ theme } height={ imageHeight }/>
       : null;
+      
+    const markerElems = markers && Array.isArray(markers) ?
+      markers.map((markerPos) => 
+        <ImageMarker className='Marker' markerPos= { markerPos } theme={ theme } height={ imageHeight }/>
+      ) : null;
 
     return (
       <ImageChannelWrapper className='ChannelWrapper' 
@@ -211,6 +224,7 @@ class Channel extends Component {
         { progressElem }
         { selectionElem }
         { cursorElem }
+        { markerElems }
 
       </ImageChannelWrapper>
       );
@@ -222,6 +236,7 @@ Channel.defaultProps = {
     waveProgressColor: 'transparent', // 'rgb(255,255,255,0.3)', // transparent white
     waveProgressBorderColor: 'rgb(255,255,255,1)', // transparent white
     cursorColor: 'red',
+    markerColor: 'yellow',
     selectionColor: 'rgba(0,0,255,0.5)',
     imageBackgroundColor: 'black',
   },
@@ -239,6 +254,8 @@ Channel.defaultProps = {
   cursorPos: null,
   // position of the selection in CSS pixels from the left of channel (null: do not draw)
   selection: null,
+  // positions of the markers in CSS pixels from the left of channel (null: do not draw)
+  markers: [],
 };
 
 export default withTheme(Channel);

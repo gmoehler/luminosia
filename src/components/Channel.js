@@ -20,6 +20,14 @@ const Cursor = styled.div`
   height: ${props => props.waveHeight}px;
 `;
 
+const Marker = styled.div`
+  position: absolute;
+  background: ${props => props.theme.cursorColor};
+  width: 1px;
+  left: ${props => props.offset + props.markerPos}px;
+  height: ${props => props.waveHeight}px;
+`;
+
 const Selection = styled.div`
   position: absolute;
   left: ${props => props.offset + props.selection.from}px;
@@ -118,7 +126,7 @@ class Channel extends Component {
   }
 
   render() {
-    const {length, waveHeight, scale, progress, cursorPos, selection, theme, offset} = this.props;
+    const {length, waveHeight, scale, progress, cursorPos, selection, markers, theme, offset} = this.props;
 
     let totalWidth = length;
     let waveformCount = 0;
@@ -144,16 +152,24 @@ class Channel extends Component {
     const cursorElem = cursorPos ? 
       <Cursor cursorPos={ cursorPos } theme={ theme } waveHeight={ waveHeight } offset={offset}/>
       : null;
+      
+    const markerElems = markers && Array.isArray(markers) ?
+      markers.map((markerPos) => 
+        <Marker className='Marker' markerPos= { markerPos } theme={ theme } waveHeight={ waveHeight } offset={offset}/>
+      ) : null;
 
     return (
       <ChannelWrapper className='ChannelWrapper' onMouseDown={ (e) => this.handleMouseEvent(e, "mouseDown") } onMouseUp={ (e) => this.handleMouseEvent(e, "mouseUp") } onMouseMove={ (e) => this.handleMouseEvent(e, "mouseMove") } onMouseLeave={ (e) => this.handleMouseEvent(e, "mouseLeave") }
         cssWidth={ length } theme={ theme } waveHeight={ waveHeight }>
-        <WaveformCanvases clasName='WaveformCanvases' theme={ theme } offset={offset} >
+        <WaveformCanvases className='WaveformCanvases' theme={ theme } offset={offset} >
           { waveforms }
         </WaveformCanvases>
-        {progressElem}
-        {selectionElem}
-        {cursorElem}
+        
+        { progressElem }
+        { selectionElem }
+        { cursorElem }
+        { markerElems }
+        
       </ChannelWrapper>
       );
   }
@@ -167,7 +183,8 @@ Channel.defaultProps = {
     waveProgressColor: 'transparent', //'rgb(255,120,0)',
     waveProgressBorderColor: 'rgb(255,255,255)',
     cursorColor: 'red',
-    selectionColor: 'rgba(0,0,255,0.5)'
+    selectionColor: 'rgba(0,0,255,0.5)',
+    markerColor: 'red',
   },
   // checking `window.devicePixelRatio` when drawing to canvas.
   scale: 1,
@@ -183,7 +200,9 @@ Channel.defaultProps = {
   // position of the cursor in CSS pixels from the left of channel (not drawn on null)
   cursorPos: null,
   // position of the selection in CSS pixels from the left of channel (not drawn on null)
-  selection: null
+  selection: null,
+    // positions of the markers in CSS pixels from the left of channel (null: do not draw)
+  markers: [],
 };
 
 export default withTheme(Channel);
