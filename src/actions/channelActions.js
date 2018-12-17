@@ -47,7 +47,7 @@ function loadChannelFromFile(channelSource, audioContext) {
 }
 ;
 
-function doLoadMulti(dispatch, getState, channelConfig, audioContext) {
+function doLoadMultiPart(dispatch, getState, channelConfig, audioContext) {
   dispatch(loadMultiChannelStarted({
     channelId: channelConfig.id
   }));
@@ -129,7 +129,7 @@ export const loadChannel = (({channelConfigs, channelSources, audioContext}) => 
   return (dispatch, getState) => {
     channelConfigs.map((channelConfig) => {
       if (channelConfig.parts) {
-        return doLoadMulti(dispatch, getState, channelConfig, audioContext);
+        return doLoadMultiPart(dispatch, getState, channelConfig, audioContext);
       }
       return doLoad(dispatch, getState, channelConfig, audioContext);
     })
