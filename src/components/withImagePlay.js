@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import { cloneDeep } from 'lodash'
 
 import MouseHandler from '../handler/MouseHandler';
-import { secondsToPixels, pixelsToSeconds, samplesToSeconds } from '../utils/conversions';
+import { secondsToPixels, pixelsToSeconds } from '../utils/conversions';
 
 // HOC to support image playing for one channel
 export function withImagePlay(WrappedComponent) {
