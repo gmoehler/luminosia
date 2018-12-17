@@ -64,7 +64,7 @@ export function withImagePlay(WrappedComponent) {
         // act.. values is global time interval of this channel
         const actStartAt = Math.max(0, startAt); // dont start before 0
         //TODO: this.props.buffer.width will no longer work
-        const actEndAt = endAt - startAt < 0.1 ? samplesToSeconds(this.props.buffer.width, this.props.sampleRate) + offset : endAt; 
+        const actEndAt = endAt - startAt < 0.1 ? samplesToSeconds(this.props.buffer.width, this.props.sampleRate) + offset : endAt;
 
         // track.. values are local image time
         const trackStartAt = actStartAt - offset < 0 ? 0 : actStartAt - offset;
@@ -138,13 +138,14 @@ export function withImagePlay(WrappedComponent) {
       const part = this.props.parts[partId];
       const from = part.offset + incr;
       const to = part.offset + incr + part.buffer.width / this.props.sampleRate;
-      this.props.select(from, to);
+      this.props.updateMarker(part.id + "-l", from);
+      this.props.updateMarker(part.id + "-r", to);
     }
 
     render() {
 
       // select props passed down to Channel
-      const {sampleRate, parts, playState, selection, select, setChannelPlayState, resolution, mode, offset, maxDuration, ...passthruProps} = this.props;
+      const {sampleRate, parts, playState, selection, select, markers, updateMarker, setChannelPlayState, resolution, mode, offset, maxDuration, ...passthruProps} = this.props;
 
       const factor = 1 / resolution;
       this.mousehandler.setMode(mode);
@@ -158,14 +159,20 @@ export function withImagePlay(WrappedComponent) {
       };
       const maxWidthPx = secondsToPixels(maxDuration, resolution, sampleRate);
       const partsPx = parts ? Object.values(cloneDeep(parts)) : [];
-	  partsPx.forEach(part => {
-      	part.offset = part.offset ? secondsToPixels(part.offset, resolution, sampleRate) : null;
-      	part.cuein = part.cuein ? secondsToPixels(part.cuein, resolution, sampleRate) : null;
-      	part.cueout = part.cueout ? secondsToPixels(part.cueout, resolution, sampleRate) : null;
+      partsPx.forEach(part => {
+        part.offset = part.offset ? secondsToPixels(part.offset, resolution, sampleRate) : null;
+        part.duration = part.duration ? secondsToPixels(part.duration, resolution, sampleRate) : null;
+        part.cuein = part.cuein ? secondsToPixels(part.cuein, resolution, sampleRate) : null;
+        part.cueout = part.cueout ? secondsToPixels(part.cueout, resolution, sampleRate) : null;
+      })
+      const markersPx = markers ? cloneDeep(markers) : [];
+      markersPx.forEach(marker => {
+        marker.pos = marker.pos ? secondsToPixels(marker.pos, resolution, sampleRate) : null;
       })
 
       return <WrappedComponent {...passthruProps} parts={ partsPx } factor={ factor } progress={ progressPx } cursorPos={ cursorPx } selection={ selectionPx }
-               maxWidth={ maxWidthPx } handleMouseEvent={ this.mousehandler.handleMouseEvent } />;
+        markers={ markersPx } maxWidth={ maxWidthPx } 
+        handleMouseEvent={ this.mousehandler.handleMouseEvent } />;
     }
   }
   ;

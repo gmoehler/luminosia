@@ -88,7 +88,7 @@ class Channel extends Component {
     Object.keys(this.images).forEach((idx) => {
 
       const img = this.images[idx];
-      let canvasOffset = 0;
+      let canvasOffset = 0; // TODO: use cue
       if (!img) {
         return;
       }
@@ -142,7 +142,7 @@ class Channel extends Component {
   }
 
   render() {
-    const {parts, imageHeight, scale, progress, cursorPos, selection, markers, theme, maxWidth, factor} = this.props;
+    const {parts, imageHeight, scale, progress, cursorPos, selection, markers, theme, maxWidth} = this.props;
 
     // loop thru all images/parts
     const allImageCanvases = [];
@@ -154,14 +154,13 @@ class Channel extends Component {
 
       parts.forEach((part) => {
 
-        const {id, src, offset, buffer} = {
+        const {id, src, offset, duration} = {
           ...part
         };
 
         // paint images of canvases with max with MAX_CANVAS_WIDTH
         const canvasImages = [];
-        const length = buffer.width;
-        let totalWidth = length * factor;
+        let totalWidth = duration;
         let canvasCount = 0;
 
         while (totalWidth > 0) {
@@ -199,7 +198,7 @@ class Channel extends Component {
       : null;
 
     const markerElems = markers && Array.isArray(markers) ?
-      markers.map((markerPos) => <ImageMarker className='Marker' markerPos={ markerPos } theme={ theme } height={ imageHeight } />
+      markers.map((marker) => <ImageMarker className='Marker' markerPos={ marker.pos } theme={ theme } height={ imageHeight } />
       ) : null;
 
     return (
@@ -221,7 +220,7 @@ Channel.defaultProps = {
     waveProgressColor: 'transparent', // 'rgb(255,255,255,0.3)', // transparent white
     waveProgressBorderColor: 'rgb(255,255,255,1)', // transparent white
     cursorColor: 'red',
-    markerColor: 'yellow',
+    markerColor: 'rgba(255,255, 0, 0.5)', // transparent yellow
     selectionColor: 'rgba(0,0,255,0.5)',
     imageBackgroundColor: 'black',
   },

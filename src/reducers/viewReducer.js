@@ -1,10 +1,11 @@
-import {SELECT, SET_ZOOM_LEVEL, SET_MODE} from '../actions/types';
+import {SELECT, SET_ZOOM_LEVEL, SET_MODE, UPDATE_MARKER} from '../actions/types';
 
 const initialState = {
   selection: {
-    from: 0,
-    to: 0
+    from: null,
+    to: null
   },
+  markersById: {},
   zoomLevel: 1000,
   mode: "selectionMode",
 };
@@ -18,6 +19,18 @@ export default(state = initialState, action) => {
         selection: {
           from: action.payload.from,
           to: action.payload.to
+        }
+      };
+
+    case UPDATE_MARKER:
+      return {
+        ...state,
+        markersById: {
+          ...state.markersById,
+          [action.payload.markerId] : {
+            id: action.payload.markerId,
+            pos: action.payload.pos,
+          }
         }
       };
 
@@ -51,4 +64,8 @@ export const getZoomLevel = (state) => {
 
 export const getMode = (state) => {
   return state.view.mode
+}
+
+export const getMarkers = (state) => {
+  return state.view.markersById ? Object.values(state.view.markersById) : [];
 }

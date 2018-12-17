@@ -4,6 +4,9 @@ import { merge } from 'lodash';
 import { LOAD_CHANNEL_STARTED, LOAD_CHANNEL_FAILURE, LOAD_CHANNEL_SUCCESS, LOAD_MULTICHANNEL_STARTED, LOAD_MULTICHANNEL_FAILURE, LOAD_MULTICHANNEL_SUCCESS, PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL,
 } from './types';
 
+import { updateMarker } from './viewActions';
+import { samplesToSeconds } from '../utils/conversions';
+
 // load channel async action
 
 const loadChannelStarted = startInfo => ({
@@ -63,16 +66,17 @@ function doLoadMulti(dispatch, getState, channelConfig, audioContext) {
         res[res.numParts] = {
           buffer: {
             width: buf.width 
-          }
+          },
+          duration: samplesToSeconds(buf.width, channelConfig.sampleRate)
         };
         res.numParts++;
         return res;
       }, {numParts: 0})
 
 	  // an icrementing integer is the part id used as key
-      const normalizedParts = channelConfig.parts.reduce((res, buf) => {
-        buf.id = res.numParts;
-        res[res.numParts] = buf;
+      const normalizedParts = channelConfig.parts.reduce((res, part) => {
+        part.id = res.numParts;
+        res[res.numParts] = part;
         res.numParts++;
         return res;
       }, {numParts: 0})
@@ -88,6 +92,10 @@ function doLoadMulti(dispatch, getState, channelConfig, audioContext) {
         channelParts
       }
       ))
+      Object.values(channelParts).forEach((part) => {
+        dispatch(updateMarker({markerId: part.id + "-l", pos: part.offset}))
+        dispatch(updateMarker({markerId: part.id + "-r", pos: part.offset + part.duration}))
+      })
     })
     .catch(err => {
       dispatch(loadMultiChannelFailure({

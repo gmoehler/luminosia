@@ -31,6 +31,7 @@ const theme = {
   waveProgressBorderColor: 'purple',
   imageBackgroundColor: 'black',
   cursorColor: 'red',
+  markerColor: 'blue',
   selectionColor: 'rgba(0,0,255,0.5)',
   timeColor: 'red',
 };
@@ -103,7 +104,7 @@ storiesOf('Channel', module)
   .add('BBC Waveform Peaks & devicePixelRatio & theming & markers.', () => (
     <ThemeProvider theme={theme}>
       <Channel peaks={data} length={length} bits={bits} scale={scale} progress={200} 
-        markers={[220, 270]}>
+        markers={[{id: "1", pos:220}, {id: "5", pos:270}]}>
       </Channel>
     </ThemeProvider>
   ))
@@ -134,7 +135,8 @@ storiesOf('Channel', module)
     <ImageChannel id={"myImgChannel"} parts={imageChannel.parts} factor={3} scale={scale} selection={{from: 300, to: 450}} > </ImageChannel>
   ))
   .add('Image channel with image at offset 50 & factor 3 & markers.', () => (
-    <ImageChannel id={"myImgChannel"} parts={imageChannel.parts} factor={3} scale={scale} markers={[220, 270]} > </ImageChannel>
+    <ImageChannel id={"myImgChannel"} parts={imageChannel.parts} factor={3} scale={scale} 
+      markers={[{id: "1", pos:220}, {id: "5", pos:270}]} > </ImageChannel>
   ))
   .add('Image channel with image at offset 50  & factor 3 & cursor, progress & selection.', () => (
     <ImageChannel 

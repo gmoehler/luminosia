@@ -39,7 +39,7 @@ const channelConfigs = [
     },
     {
       src: 'media/image/blueLine.png',
-      offset: 2.75,
+      offset: 3.75,
       cuein: 0.5, // in secs
       cueout: 1.47, // in secs
     }],  

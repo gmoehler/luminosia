@@ -22,7 +22,7 @@ const Cursor = styled.div`
 
 const Marker = styled.div`
   position: absolute;
-  background: ${props => props.theme.cursorColor};
+  background: ${props => props.theme.markerColor};
   width: 1px;
   left: ${props => props.offset + props.markerPos}px;
   height: ${props => props.waveHeight}px;
@@ -142,20 +142,20 @@ class Channel extends Component {
     }
 
     const progressElem = progress ? 
-      <Progress progress={ progress } theme={ theme } waveHeight={ waveHeight } offset={offset}/>
+      <Progress className='Progress' progress={ progress } theme={ theme } waveHeight={ waveHeight } offset={offset}/>
       : null;
 
     const selectionElem = selection && selection.from && selection.to ? 
-      <Selection selection={ selection } theme={ theme } waveHeight={ waveHeight } offset={offset}/>
+      <Selection className='Selection' selection={ selection } theme={ theme } waveHeight={ waveHeight } offset={offset}/>
       : null;
 
     const cursorElem = cursorPos ? 
-      <Cursor cursorPos={ cursorPos } theme={ theme } waveHeight={ waveHeight } offset={offset}/>
+      <Cursor className='Cursor' cursorPos={ cursorPos } theme={ theme } waveHeight={ waveHeight } offset={offset}/>
       : null;
       
     const markerElems = markers && Array.isArray(markers) ?
-      markers.map((markerPos) => 
-        <Marker className='Marker' markerPos= { markerPos } theme={ theme } waveHeight={ waveHeight } offset={offset}/>
+      markers.map((marker) => 
+        <Marker className='Marker' markerPos= { marker.pos } theme={ theme } waveHeight={ waveHeight } offset={offset}/>
       ) : null;
 
     return (
@@ -183,8 +183,8 @@ Channel.defaultProps = {
     waveProgressColor: 'transparent', //'rgb(255,120,0)',
     waveProgressBorderColor: 'rgb(255,255,255)',
     cursorColor: 'red',
+    markerColor: 'rgba(255,255, 0, 0.5)', // transparent yellow
     selectionColor: 'rgba(0,0,255,0.5)',
-    markerColor: 'yellow',
   },
   // checking `window.devicePixelRatio` when drawing to canvas.
   scale: 1,
