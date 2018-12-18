@@ -46,11 +46,9 @@ const imageChannel = {
     id: 1,
     src: imageFile,
     offset: 50, // in pixels
-    cuein: 30 // in pixels
+    cuein: 30, // in pixels
     cueout: 80, // in pixels
-    buffer: {
-    	width: 100,
-    }
+    duration: 100
   }],  
 };
 
@@ -59,15 +57,15 @@ const imageChannelInSecs = {
   name: 'Channel 1 with images',
   type: 'image',
   sampleRate: 100, // one image frame is 10ms
+  resolution: 200,
+  maxDuration: 2.0,
   parts: [{
     id: 1,
     src: imageFile,
     offset: 0.7, // in secs
     cuein: 0.3, // in secs
-    cueout: 1.47, // in secs
-    buffer: {
-    	width: 100,
-    }
+    cueout: 0.9, // in secs
+    duration: 1.0
   }],  
 };
 const ImageChannelInSecs = timeToPixels(ImageChannel);
@@ -165,9 +163,11 @@ storiesOf('Channel', module)
   ))
    .add('Image channel (time imput) with image at offset 50  & factor 3 & cursor, progress, selection & markers.', () => (
     <ImageChannelInSecs 
-    id={"myImgChannel"} parts={imageChannelInSecs.parts} factor={3} scale={scale} 
+    id={"myImgChannel"} sampleRate={imageChannelInSecs.sampleRate} resolution={imageChannelInSecs.resolution}
+    maxDuration={imageChannelInSecs.maxDuration}
+    parts={imageChannelInSecs.parts} factor={3} scale={scale} 
     progress={1.5} cursorPos={3.0} selection={{from: 3.5, to: 4.0}} 
-	markers={[{id: "1", pos: 2.2}, {id: "5", pos:2.7}]} > 
+	  markers={[{id: "1", pos: 2.2}, {id: "5", pos:2.7}]} > 
     </ImageChannelInSecs>
   ))
   ;

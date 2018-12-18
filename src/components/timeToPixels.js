@@ -4,6 +4,7 @@
 
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
+import { cloneDeep } from 'lodash'
 
 import { secondsToPixels, pixelsToSeconds } from '../utils/conversions';
 
@@ -30,9 +31,9 @@ export function timeToPixels(WrappedComponent) {
     render() {
 
       const {sampleRate, resolution, 
-      	progress, cursor, selection, maxDuration, parts,
-		  select, move, handleMouseEvent,
-		  ...passthruProps} = this.props;
+      	progress, cursorPos, selection, maxDuration, parts,
+		    select, move, handleMouseEvent,
+		    ...passthruProps} = this.props;
 
       const progressPx = secondsToPixels(progress, resolution, sampleRate);
       const cursorPosPx = secondsToPixels(cursorPos, resolution, sampleRate);
@@ -42,28 +43,28 @@ export function timeToPixels(WrappedComponent) {
       };
       const maxWidthPx = secondsToPixels(maxDuration, resolution, sampleRate);
       const partsPx = parts ? cloneDeep(parts) : [];
-	  partsPx.forEach(part => {
+	    partsPx.forEach(part => {
       	part.offset = part.offset ? secondsToPixels(part.offset, resolution, sampleRate) : null;
       	part.cuein = part.cuein ? secondsToPixels(part.cuein, resolution, sampleRate) : null;
       	part.cueout = part.cueout ? secondsToPixels(part.cueout, resolution, sampleRate) : null;
       })
 
       return <WrappedComponent 
-		{...passthruProps} 
-		
-		progress={ progressPx } 
-		cursorPos={ cursorPosPx } 
-		selection={ selectionPx }
-        maxWidth={ maxWidthPx } 
-        parts={ partsPx } 
+        {...passthruProps} 
+        
+        progress={ progressPx } 
+        cursorPos={ cursorPosPx } 
+        selection={ selectionPx }
+            maxWidth={ maxWidthPx } 
+            parts={ partsPx } 
 
-		select={this.select}
-		move={this.move}
-		handleMouseEvent={ this.handleMouseEvent } 
+        select={this.select}
+        move={this.move}
+        handleMouseEvent={ this.handleMouseEvent } 
 
-		/>;
+        />;
+      }
     }
-  }
   ;
 
   TimeToPixels.propTypes = {
@@ -74,11 +75,11 @@ export function timeToPixels(WrappedComponent) {
     cursorPos: PropTypes.number.isRequired,
     selection: PropTypes.object.isRequired,
     maxDuration: PropTypes.number.isRequired,
-    parts: PropTypes.object.isRequired,
+    parts: PropTypes.array.isRequired,
     
-    select: PropTypes.func.isRequired,
-    move: PropTypes.func.isRequired,
-    handleMouseEvent: PropTypes.func.isRequired,
+    select: PropTypes.func,
+    move: PropTypes.func,
+    handleMouseEvent: PropTypes.func,
   }
 
   return TimeToPixels;

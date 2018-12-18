@@ -5,7 +5,7 @@
 
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { cloneDeep } from 'lodash'
+import { cloneDeep } from 'lodash';
 
 import MouseHandler from '../handler/MouseHandler';
 import { secondsToPixels, pixelsToSeconds } from '../utils/conversions';
