@@ -66,7 +66,7 @@ export function timeToPixels(WrappedComponent) {
   }
   ;
 
-  WithImagePlay.propTypes = {
+  TimeToPixels.propTypes = {
     sampleRate: PropTypes.number.isRequired,
     resolution: PropTypes.number.isRequired,
     
