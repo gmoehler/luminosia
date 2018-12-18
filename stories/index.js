@@ -48,7 +48,7 @@ const imageChannel = {
     offset: 50, // in pixels
     cuein: 30, // in pixels
     cueout: 80, // in pixels
-    duration: 100
+    duration: 100 // in pixels
   }],  
 };
 
@@ -56,16 +56,16 @@ const imageChannelInSecs = {
   id: 'imgChannelSecs1',
   name: 'Channel 1 with images',
   type: 'image',
-  sampleRate: 100, // one image frame is 10ms
-  resolution: 200,
-  maxDuration: 2.0,
+  sampleRate: 20, // one image frame is 10ms
+  resolution: 10,
+  maxDuration: 5.0,
   parts: [{
     id: 1,
     src: imageFile,
     offset: 0.7, // in secs
     cuein: 0.3, // in secs
     cueout: 0.9, // in secs
-    duration: 1.0
+    duration: 1.0 // in secs
   }],  
 };
 const ImageChannelInSecs = timeToPixels(ImageChannel);
