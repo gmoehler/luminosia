@@ -37,7 +37,8 @@ export function timeToPixels(WrappedComponent) {
     render() {
 
       const {resolution, 
-      	progress, cursorPos, selection, maxDuration, parts,
+        progress, cursorPos, selection, maxDuration, 
+        parts, markers,
 		    select, move, handleMouseEvent,
 		    ...passthruProps} = this.props;
 
@@ -55,6 +56,10 @@ export function timeToPixels(WrappedComponent) {
       	part.cuein = part.cuein ? secondsToPixels(part.cuein, resolution) : null;
       	part.cueout = part.cueout ? secondsToPixels(part.cueout, resolution) : null;
       })
+      const markersPx = markers ? cloneDeep(markers) : [];
+      markersPx.forEach((marker) => {
+        marker.pos = marker.pos? secondsToPixels(marker.pos, resolution) : null;
+      })
 
       return <WrappedComponent 
         {...passthruProps} 
@@ -62,8 +67,10 @@ export function timeToPixels(WrappedComponent) {
         progress={ progressPx } 
         cursorPos={ cursorPosPx } 
         selection={ selectionPx }
-            maxWidth={ maxWidthPx } 
-            parts={ partsPx } 
+        maxWidth={ maxWidthPx } 
+
+        parts={ partsPx } 
+        markers={ markersPx }
 
         select={this.select}
         move={this.move}
