@@ -65,7 +65,7 @@ export default class ChannelGroup extends Component {
 				playState: channelData.playState,
 				offset: channelData.offset,
 				sampleRate,
-				resolution:  sampleRate / pixelsPerSecond,
+				resolution: pixelsPerSecond,
 				buffer: channelData && channelData.buffer,
 				parts: channelData.byParts,
 				scale: windowPixelRatio,

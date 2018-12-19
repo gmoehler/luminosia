@@ -151,7 +151,7 @@ export function withAudioPlay(WrappedComponent) {
 
     // only re-calc when buffer, resolution of bits change
     doExtractPeaks = memoize(
-      (buffer, resolution, bits) => extractPeaks(buffer, resolution, true, 0, buffer.length, bits));
+      (buffer, pixPerSample, bits) => extractPeaks(buffer, pixPerSample, true, 0, buffer.length, bits));
 
     render() {
       // select props passed down to Channel
@@ -173,7 +173,7 @@ export function withAudioPlay(WrappedComponent) {
 
 
       // memoized peak data
-      const {data, length, bits} = this.doExtractPeaks(buffer, resolution, 16);
+      const {data, length, bits} = this.doExtractPeaks(buffer, this.getSampleRate() / resolution, 16);
       const peaksDataMono = Array.isArray(data) ? data[0] : []; // only one channel for now
 
       return <WrappedComponent {...passthruProps} 
@@ -188,7 +188,7 @@ export function withAudioPlay(WrappedComponent) {
 
   WithAudioPlay.propTypes = {
     playState: PropTypes.oneOf(['stopped', 'playing']).isRequired,
-    resolution: PropTypes.number.isRequired, // pixels per sample 
+    resolution: PropTypes.number.isRequired, // pixels per second 
     buffer: PropTypes.object.isRequired,
     selection: PropTypes.object.isRequired,
     select: PropTypes.func.isRequired,

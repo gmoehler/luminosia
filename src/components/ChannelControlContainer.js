@@ -8,8 +8,8 @@ window.AudioContext = window.AudioContext || window.webkitAudioContext;
 const audioContext = new window.AudioContext();
 
 //const zoomLevels = [6, 12, 24, 48, 96, 192, 384, 768, 1536, 3072, 6144]; // in pixels / sec
-const zoomLevels = [8000, 4000, 2000, 1000, 500, 250, 125, 80, 40, 20, 10]; // in pixels / sec
-const defaultZoomLevelIdx = 2;
+const zoomLevels = [4000, 2000, 1000, 500, 250, 125, 80, 40, 20, 10, 5]; // in pixels / sec
+const defaultZoomLevelIdx = 6;
 
 const channelConfigs = [
   {
@@ -70,14 +70,14 @@ class ChannelControlContainer extends Component {
   }
 
   zoomIn = () => {
-    this.zoomLevelIdx = Math.min(Math.max(parseInt(this.zoomLevelIdx) + 1, 0), zoomLevels.length - 1);
+    this.zoomLevelIdx = Math.min(Math.max(parseInt(this.zoomLevelIdx) - 1, 0), zoomLevels.length - 1);
     this.props.setZoomAction(
       zoomLevels[this.zoomLevelIdx]
     )
   }
 
   zoomOut = () => {
-    this.zoomLevelIdx = Math.min(Math.max(parseInt(this.zoomLevelIdx) - 1, 0), zoomLevels.length - 1);
+    this.zoomLevelIdx = Math.min(Math.max(parseInt(this.zoomLevelIdx) + 1, 0), zoomLevels.length - 1);
     this.props.setZoomAction(
       zoomLevels[this.zoomLevelIdx]
     )
