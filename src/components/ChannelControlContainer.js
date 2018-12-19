@@ -7,8 +7,9 @@ import ChannelControl from './ChannelControl';
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
 const audioContext = new window.AudioContext();
 
-const zoomLevels = [6, 12, 24, 48, 96, 192, 384, 768, 1536, 3072, 6144]; // in pixels / sec
-const defaultZommLevelIdx = 2;
+//const zoomLevels = [6, 12, 24, 48, 96, 192, 384, 768, 1536, 3072, 6144]; // in pixels / sec
+const zoomLevels = [8000, 4000, 2000, 1000, 500, 250, 125, 80, 40, 20, 10]; // in pixels / sec
+const defaultZoomLevelIdx = 2;
 
 const channelConfigs = [
   {
@@ -50,7 +51,7 @@ class ChannelControlContainer extends Component {
 
   constructor(props) {
     super(props);
-    this.zoomLevelIdx = defaultZommLevelIdx;
+    this.zoomLevelIdx = defaultZoomLevelIdx;
   }
 
   doLoadChannel = (event) => {
@@ -62,7 +63,7 @@ class ChannelControlContainer extends Component {
   }
 
   resetZoom = () => {
-    this.zoomLevelIdx = defaultZommLevelIdx;
+    this.zoomLevelIdx = defaultZoomLevelIdx;
     this.props.setZoomAction(
       zoomLevels[this.zoomLevelIdx]
     )

@@ -14,46 +14,46 @@ export function timeToPixels(WrappedComponent) {
 
     select = (fromPx, toPx) => {
       if (this.props.select) {
-        const from = pixelsToSeconds(fromPx, this.props.resolution, this.props.sampleRate);
-        const to = pixelsToSeconds(toPx, this.props.resolution, this.props.sampleRate);
+        const from = pixelsToSeconds(fromPx, this.props.resolution);
+        const to = pixelsToSeconds(toPx, this.props.resolution);
         this.props.select(from, to);
       }
     }
     
     move = (partId, incrX) => {
       if (this.props.move) {
-        const incr = pixelsToSeconds(incrX, this.props.resolution, this.props.sampleRate);
+        const incr = pixelsToSeconds(incrX, this.props.resolution);
         this.props.move(partId, incr);
       }
     }
     
     handleMouseEvent = (posX, eventName) => {
       if (this.props.handleMouseEvent) {
-    	  const pos = pixelsToSeconds(posX, this.props.resolution, this.props.sampleRate);
+    	  const pos = pixelsToSeconds(posX, this.props.resolution);
         this.props.handleMouseEvent(pos, eventName);
       }
     }
 
     render() {
 
-      const {sampleRate, resolution, 
+      const {resolution, 
       	progress, cursorPos, selection, maxDuration, parts,
 		    select, move, handleMouseEvent,
 		    ...passthruProps} = this.props;
 
-      const progressPx = progress ? secondsToPixels(progress, resolution, sampleRate) : null;
-      const cursorPosPx = cursorPos ? secondsToPixels(cursorPos, resolution, sampleRate) : null;
+      const progressPx = progress ? secondsToPixels(progress, resolution) : null;
+      const cursorPosPx = cursorPos ? secondsToPixels(cursorPos, resolution) : null;
       const selectionPx = selection ? {
-        from: selection.from ? secondsToPixels(selection.from, resolution, sampleRate): null,
-        to: selection.to ? secondsToPixels(selection.to, resolution, sampleRate): null
+        from: selection.from ? secondsToPixels(selection.from, resolution): null,
+        to: selection.to ? secondsToPixels(selection.to, resolution): null
       } : null;
-      const maxWidthPx = secondsToPixels(maxDuration, resolution, sampleRate);
+      const maxWidthPx = secondsToPixels(maxDuration, resolution);
       const partsPx = parts ? cloneDeep(parts) : [];
 	    partsPx.forEach(part => {
-        part.offset = part.offset ? secondsToPixels(part.offset, resolution, sampleRate) : null;
-        part.duration = part.duration ? secondsToPixels(part.duration, resolution, sampleRate) : null;
-      	part.cuein = part.cuein ? secondsToPixels(part.cuein, resolution, sampleRate) : null;
-      	part.cueout = part.cueout ? secondsToPixels(part.cueout, resolution, sampleRate) : null;
+        part.offset = part.offset ? secondsToPixels(part.offset, resolution) : null;
+        part.duration = part.duration ? secondsToPixels(part.duration, resolution) : null;
+      	part.cuein = part.cuein ? secondsToPixels(part.cuein, resolution) : null;
+      	part.cueout = part.cueout ? secondsToPixels(part.cueout, resolution) : null;
       })
 
       return <WrappedComponent 

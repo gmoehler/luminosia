@@ -56,7 +56,7 @@ const imageChannelInSecs = {
   id: 'imgChannelSecs1',
   name: 'Channel 1 with images',
   type: 'image',
-  sampleRate: 2000, // one image frame is 10ms
+  sampleRate: 100, // one image frame is 10ms
   resolution: 100,
   maxDuration: 5.0,
   parts: [{

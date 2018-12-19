@@ -145,7 +145,7 @@ export function withImagePlay(WrappedComponent) {
       // select props passed down to Channel
       const {sampleRate, parts, playState, selection, select, markers, updateMarker, setChannelPlayState, resolution, mode, maxDuration, ...passthruProps} = this.props;
 
-      const factor = 1 / resolution;
+      const factor = resolution / sampleRate;
       this.mousehandler.setMode(mode);
 
       // conversion time (in secs) to pixels 
