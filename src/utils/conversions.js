@@ -1,7 +1,6 @@
 // sampleRate: samples in image / sound  per second
 // resolution: pixels on screen per second (was: pixels per sample)
 
-
 export function samplesToSeconds(samples, sampleRate) {
   return samples / sampleRate;
 }

@@ -37,11 +37,12 @@ export function timeToPixels(WrappedComponent) {
     render() {
 
       const {resolution, 
-        progress, cursorPos, selection, maxDuration, 
+        offset , progress, cursorPos, selection, maxDuration, 
         parts, markers,
 		    select, move, handleMouseEvent,
 		    ...passthruProps} = this.props;
 
+      const offsetPx = offset ? secondsToPixels(offset, resolution) : null;
       const progressPx = progress ? secondsToPixels(progress, resolution) : null;
       const cursorPosPx = cursorPos ? secondsToPixels(cursorPos, resolution) : null;
       const selectionPx = selection ? {
@@ -64,6 +65,7 @@ export function timeToPixels(WrappedComponent) {
       return <WrappedComponent 
         {...passthruProps} 
         
+        offset={offsetPx}
         progress={ progressPx } 
         cursorPos={ cursorPosPx } 
         selection={ selectionPx }
