@@ -13,19 +13,25 @@ export function timeToPixels(WrappedComponent) {
   class TimeToPixels extends PureComponent {
 
     select = (fromPx, toPx) => {
-      const from = pixelsToSeconds(fromPx, this.props.resolution, this.props.sampleRate);
-      const to = pixelsToSeconds(toPx, this.props.resolution, this.props.sampleRate);
-      this.props.select(from, to);
+      if (this.props.select) {
+        const from = pixelsToSeconds(fromPx, this.props.resolution, this.props.sampleRate);
+        const to = pixelsToSeconds(toPx, this.props.resolution, this.props.sampleRate);
+        this.props.select(from, to);
+      }
     }
     
     move = (partId, incrX) => {
-      const incr = pixelsToSeconds(incrX, this.props.resolution, this.props.sampleRate);
-      this.props.move(partId, incr);
+      if (this.props.move) {
+        const incr = pixelsToSeconds(incrX, this.props.resolution, this.props.sampleRate);
+        this.props.move(partId, incr);
+      }
     }
     
     handleMouseEvent = (posX, eventName) => {
-    	const pos = pixelsToSeconds(posX, this.props.resolution, this.props.sampleRate);
-    	this.props.handleMouseEvent(pos, eventName);
+      if (this.props.handleMouseEvent) {
+    	  const pos = pixelsToSeconds(posX, this.props.resolution, this.props.sampleRate);
+        this.props.handleMouseEvent(pos, eventName);
+      }
     }
 
     render() {
@@ -35,16 +41,17 @@ export function timeToPixels(WrappedComponent) {
 		    select, move, handleMouseEvent,
 		    ...passthruProps} = this.props;
 
-      const progressPx = secondsToPixels(progress, resolution, sampleRate);
-      const cursorPosPx = secondsToPixels(cursorPos, resolution, sampleRate);
-      const selectionPx = {
-        from: secondsToPixels(selection.from, resolution, sampleRate),
-        to: secondsToPixels(selection.to, resolution, sampleRate)
-      };
+      const progressPx = progress ? secondsToPixels(progress, resolution, sampleRate) : null;
+      const cursorPosPx = cursorPos ? secondsToPixels(cursorPos, resolution, sampleRate) : null;
+      const selectionPx = selection ? {
+        from: selection.from ? secondsToPixels(selection.from, resolution, sampleRate): null,
+        to: selection.to ? secondsToPixels(selection.to, resolution, sampleRate): null
+      } : null;
       const maxWidthPx = secondsToPixels(maxDuration, resolution, sampleRate);
       const partsPx = parts ? cloneDeep(parts) : [];
 	    partsPx.forEach(part => {
-      	part.offset = part.offset ? secondsToPixels(part.offset, resolution, sampleRate) : null;
+        part.offset = part.offset ? secondsToPixels(part.offset, resolution, sampleRate) : null;
+        part.duration = part.duration ? secondsToPixels(part.duration, resolution, sampleRate) : null;
       	part.cuein = part.cuein ? secondsToPixels(part.cuein, resolution, sampleRate) : null;
       	part.cueout = part.cueout ? secondsToPixels(part.cueout, resolution, sampleRate) : null;
       })
