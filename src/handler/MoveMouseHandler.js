@@ -35,6 +35,7 @@ export default class MoveMouseHandler {
 
   handleMoveFrom = (pos) => {
     this.moveFromX = pos.x;
+    this.channelId = pos.channelId;
     this.partId = pos.partId;
   }
 
@@ -46,11 +47,19 @@ export default class MoveMouseHandler {
       if (Math.abs(incrX) > 0) {
         this.handlerFunctions.move(this.partId, incrX);
         this.moveFromX = pos.x; 
+        // also move the markers
+        this.handlerFunctions.updateMarker(`${this.channelId}-${this.partId}-l`, incrX);
+        this.handlerFunctions.updateMarker(`${this.channelId}-${this.partId}-r`, incrX);
       }
 
       if (finalizeSelection) {
+        this.xOrigin = null;
         this.moveFromX = null; 
         this.partId = null;
+
+        // TODO: clean markers after move?
+        // this.handlerFunctions.clearMarker(`${this.channelId}-${this.partId}-l`);
+        // this.handlerFunctions.clearMarker(`${this.channelId}-${this.partId}-r`);
       }
     }
   }

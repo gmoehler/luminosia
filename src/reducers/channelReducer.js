@@ -33,6 +33,7 @@ export default (state = initialState, action) => {
             loading: false,
             type: channelSource.endsWith(".png") ? "image" : "audio",
             playState: "stopped",
+            sampleRate: action.payload.channelBuffer.sampleRate, 
             error: null,
             buffer: action.payload.channelBuffer,
             ...action.payload.channelConfig

@@ -10,9 +10,9 @@ App
 
   ChannelGroupContainer
     ChannelGroup
-     withAudioPlay
+     withPlay
       Channel
-     withImagePlay
+     withPlay
       ImageChannel
 ```
 

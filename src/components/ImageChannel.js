@@ -119,7 +119,7 @@ class Channel extends Component {
 
   handleMouseEvent = (e, eventName) => {
     if (this.props.handleMouseEvent) {
-      const pos = getMouseEventPosition(e, "ChannelWrapper");
+      const pos = getMouseEventPosition(e, "ChannelWrapper", this.props.id);
       this.props.handleMouseEvent(pos, eventName);
       return;
     }
@@ -198,7 +198,7 @@ class Channel extends Component {
       : null;
 
     const markerElems = markers && Array.isArray(markers) ?
-      markers.map((marker) => <ImageMarker className='Marker' markerPos={ marker.pos } theme={ theme } height={ imageHeight } />
+      markers.map((marker) => <ImageMarker key={marker.id} className='Marker' markerPos={ marker.pos } theme={ theme } height={ imageHeight } />
       ) : null;
 
     return (

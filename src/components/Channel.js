@@ -155,7 +155,7 @@ class Channel extends Component {
       
     const markerElems = markers && Array.isArray(markers) ?
       markers.map((marker) => 
-        <Marker className='Marker' markerPos= { marker.pos } theme={ theme } waveHeight={ waveHeight } offset={offset}/>
+        <Marker className='Marker' key={marker.id} markerPos= { marker.pos } theme={ theme } waveHeight={ waveHeight } offset={offset}/>
       ) : null;
 
     return (

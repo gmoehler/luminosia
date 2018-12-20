@@ -14,7 +14,7 @@ export function timeToPixels(WrappedComponent) {
     
     handleMouseEvent = (pos, eventName, resolution) => {
       if (this.props.handleMouseEvent) {
-    	  pos.x = pixelsToSeconds(pos.x, resolution);
+        pos.x = pixelsToSeconds(pos.x, resolution);
         this.props.handleMouseEvent(pos, eventName);
       }
     }
