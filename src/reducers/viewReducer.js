@@ -1,4 +1,4 @@
-import {SELECT, SET_ZOOM_LEVEL, SET_MODE, UPDATE_MARKER} from '../actions/types';
+import {SELECT, SET_ZOOM_LEVEL, SET_MODE, SET_MARKER, UPDATE_MARKER} from '../actions/types';
 
 const initialState = {
   selection: {
@@ -22,7 +22,7 @@ export default(state = initialState, action) => {
         }
       };
 
-    case UPDATE_MARKER:
+    case SET_MARKER:
       return {
         ...state,
         markersById: {
@@ -30,6 +30,19 @@ export default(state = initialState, action) => {
           [action.payload.markerId] : {
             id: action.payload.markerId,
             pos: action.payload.pos,
+          }
+        }
+      };
+
+    case UPDATE_MARKER:
+      const currentPos = state.markersById[action.payload.markerId] && state.markersById[action.payload.markerId].pos;
+      return {
+        ...state,
+        markersById: {
+          ...state.markersById,
+          [action.payload.markerId] : {
+            id: action.payload.markerId,
+            pos: currentPos + action.payload.incr,
           }
         }
       };

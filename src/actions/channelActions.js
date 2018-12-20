@@ -4,7 +4,7 @@ import { merge } from 'lodash';
 import { LOAD_CHANNEL_STARTED, LOAD_CHANNEL_FAILURE, LOAD_CHANNEL_SUCCESS, LOAD_MULTICHANNEL_STARTED, LOAD_MULTICHANNEL_FAILURE, LOAD_MULTICHANNEL_SUCCESS, PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL,
 } from './types';
 
-import { updateMarker } from './viewActions';
+import { setMarker } from './viewActions';
 import { samplesToSeconds } from '../utils/conversions';
 
 // load channel async action
@@ -90,10 +90,10 @@ function doLoadMultiPart(dispatch, getState, channelConfig, audioContext) {
       }
       ))
       Object.values(channelParts).forEach((part) => {
-        dispatch(updateMarker({
+        dispatch(setMarker({
           markerId: `${channelConfig.id}-${part.id}-l`, 
           pos: part.offset}))
-        dispatch(updateMarker({
+        dispatch(setMarker({
           markerId: `${channelConfig.id}-${part.id}-r`, 
           pos: part.offset + part.duration}))
       })

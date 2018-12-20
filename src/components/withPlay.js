@@ -1,5 +1,7 @@
 /* 
-  HOC to support audio/image playing for one channel & progress & mouse handling
+  HOC to support audio/image playing for one channel 
+  also updates play progress in channel 
+  and delegates mouse events to mouse handler
 */
 
 import React, { PureComponent } from 'react';
@@ -23,16 +25,20 @@ export function withPlay(WrappedComponent) {
       this.animationStartTime = null; // start time of progress animation timer, null means not playing
       this.playStartAt = 0; // start of current play
       this.playEndAt = 0; // end of current play
+      this.mousehandler = null;
       this.state = {
         progress: null, // play progress in secs
       };
-      this.mousehandler = new MouseHandler({
-          select: this.select,
-          move: this.move,
-      });
     }
 
     componentDidMount() {
+      // mouse handler setup
+      this.mousehandler = new MouseHandler({
+        select: this.props.select,
+        move: this.props.move,
+        updateMarker: this.props.updateMarker,
+        setMarker: this.props.setMarker,
+    });
       // audio setup
       if (this.props.type === "audio") { 
         this.playout = null;
@@ -149,23 +155,6 @@ export function withPlay(WrappedComponent) {
       this.props.setChannelPlayState("stopped");
     }
 
-    select = (from, to) => {
-      this.props.select(from, to);
-    }
-
-    move = (partId, incr) => {
-      if (partId && incr) {
-        this.props.move(partId, incr);
-        // select the part using markers
-        const channelId = this.props.id;
-        const part = this.props.parts[partId];
-        const from = part.offset + incr;
-        const to = part.offset + incr + part.duration;
-        this.props.updateMarker(`${channelId}-${part.id}-l`, from);
-        this.props.updateMarker(`${channelId}-${part.id}-r`, to);
-      }
-    }
-
     // only re-calc when buffer, resolution of bits change
     doExtractPeaks = memoize(
       (buffer, pixPerSample, bits) => extractPeaks(buffer, pixPerSample, true, 0, buffer.length, bits));
@@ -174,7 +163,9 @@ export function withPlay(WrappedComponent) {
 
       const {buffer, mode, sampleRate, ...passthruProps} = this.props;
 
-      this.mousehandler.setMode(mode);
+      if (this.mousehandler) {
+        this.mousehandler.setMode(mode);
+      }
 
       // memoized audio peak data
       const {data, length, bits} = buffer ? this.doExtractPeaks(buffer, sampleRate / this.props.resolution, 16) 
@@ -185,7 +176,7 @@ export function withPlay(WrappedComponent) {
       return <WrappedComponentInTime 
         {...passthruProps} 
         progress={ this.state.progress }
-        handleMouseEvent={ (pos, event) => this.mousehandler.handleMouseEvent(pos,event, this.props.resolution) } 
+        handleMouseEvent={ (pos, event) => this.mousehandler.handleMouseEvent(pos, event, this.props.resolution) } 
         factor={ this.props.resolution / sampleRate }  /* req only for images */
         peaks={ peaksDataMono } /* only for audio */
         bits={ bits } /* only for audio */
@@ -202,6 +193,8 @@ export function withPlay(WrappedComponent) {
     selection: PropTypes.object.isRequired,
     select: PropTypes.func.isRequired,
     setChannelPlayState: PropTypes.func.isRequired,
+    setMarker: PropTypes.func.isRequired,
+    updateMarker: PropTypes.func.isRequired,
     mode: PropTypes.oneOf(['selectionMode', 'moveMode']).isRequired,
     parts: PropTypes.array,
     maxDuration: PropTypes.number,
