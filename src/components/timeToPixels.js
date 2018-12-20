@@ -27,13 +27,14 @@ export function timeToPixels(WrappedComponent) {
 		    select, move, handleMouseEvent,
 		    ...passthruProps} = this.props;
 
-      const offsetPx = offset ? secondsToPixels(offset, resolution) : null;
-      const progressPx = progress ? secondsToPixels(progress, resolution) : null;
+      // channel offset only used for audio buffer which does not contain parts
+      const offsetPx = offset ? secondsToPixels(offset, resolution) : 0;
+      const progressPx = progress ? secondsToPixels(progress, resolution) - offsetPx: null;
       const selectionPx = selection ? {
-        from: selection.from ? secondsToPixels(selection.from, resolution): null,
-        to: selection.to ? secondsToPixels(selection.to, resolution): null
+        from: selection.from ? secondsToPixels(selection.from, resolution) - offsetPx: null,
+        to: selection.to ? secondsToPixels(selection.to, resolution) - offsetPx: null
       } : null;
-      const cursorPosPx = selection.from ? secondsToPixels(selection.from, resolution) : null;
+      const cursorPosPx = selection.from ? secondsToPixels(selection.from, resolution) - offsetPx: null;
       const maxWidthPx = maxDuration ? secondsToPixels(maxDuration, resolution) : null;
       const partsPx = parts ? cloneDeep(parts) : [];
 	    partsPx.forEach(part => {
@@ -44,7 +45,7 @@ export function timeToPixels(WrappedComponent) {
       })
       const markersPx = markers ? cloneDeep(markers) : [];
       markersPx.forEach((marker) => {
-        marker.pos = marker.pos? secondsToPixels(marker.pos, resolution) : null;
+        marker.pos = marker.pos? secondsToPixels(marker.pos, resolution) - offsetPx: null;
       })
 
       return <WrappedComponent 
