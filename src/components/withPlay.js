@@ -94,18 +94,16 @@ export function withPlay(WrappedComponent) {
         this.animateEndAt = endAt - startAt < 0.1 ? 
           this.props.maxDuration + actOffset : trackEndAt + actOffset;
 
-        // only play if there is something to play
-        if (trackEndAt > 0) {
+        // only play if there is something to play and only for audio (for now)
+        if (trackEndAt > 0 && this.playout) {
           console.log(`playing ${this.props.type} from ${trackStartAt}s( ${actStartAt}s) ` 
             + `to ${trackEndAt}(${actEndAt}s) with delay ${trackDelay}, offset: ${actOffset}, delay ${trackDelay}`);
-             // only audio playing for now
-            if (this.playout) {
-              this.playout.setUpSource()
-                .then(this.stopPlay); // stop when end has reached
-                
-              const duration = actEndAt - actStartAt;  
-              this.playout.play(this.audioContext.currentTime + trackDelay, trackStartAt, duration);
-            }
+
+          this.playout.setUpSource()
+            .then(this.stopPlay); // stop when end has reached
+            
+          const duration = actEndAt - actStartAt;  
+          this.playout.play(this.audioContext.currentTime + trackDelay, trackStartAt, duration);
         } else {
           console.log(`skip  ${this.props.type} playing from ${actStartAt}s to ${actEndAt}`);
         }
