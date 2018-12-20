@@ -176,7 +176,7 @@ export function withPlay(WrappedComponent) {
 
       this.mousehandler.setMode(mode);
 
-      // memoized peak data
+      // memoized audio peak data
       const {data, length, bits} = buffer ? this.doExtractPeaks(buffer, sampleRate / this.props.resolution, 16) 
         : {data: [], length: 0, bits: 0};
       const peaksDataMono = Array.isArray(data) ? data[0] : []; // only one channel for now
