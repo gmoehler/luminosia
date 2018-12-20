@@ -4,8 +4,7 @@ import styled from 'styled-components';
 
 import Channel from './Channel';
 import ImageChannel from './ImageChannel';
-import { withAudioPlay } from './withAudioPlay'
-import { withImagePlay } from './withImagePlay'
+import { withPlay } from './withPlay'
 
 const ChannelGroupWrapper = styled.div`
 	width: 500px;
@@ -16,8 +15,8 @@ const ChannelGroupWrapper = styled.div`
 const windowPixelRatio = window.devicePixelRatio;
 
 // add play functionality to audio channels
-const AudioChannelWithPlay = withAudioPlay(Channel);
-const ImageChannelWithPlay = withImagePlay(ImageChannel);
+const AudioChannelWithPlay = withPlay(Channel);
+const ImageChannelWithPlay = withPlay(ImageChannel);
 
 // contains multiple AudioChannels
 export default class ChannelGroup extends Component {

@@ -62,11 +62,8 @@ function doLoadMultiPart(dispatch, getState, channelConfig, audioContext) {
       // organize result object
       const normalizedBuffers = channelBuffers.reduce((res, buf) => {
 
-        // we only need width of image because we load image again for canvas
+        // buffer is only needed for duration because we load image again for canvas
         res[res.numParts] = {
-          buffer: {
-            width: buf.width 
-          },
           duration: samplesToSeconds(buf.width, channelConfig.sampleRate)
         };
         res.numParts++;
