@@ -2,6 +2,7 @@ import React from 'react';
 import { ThemeProvider } from 'styled-components';
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
+import { timeToPixels } from '../src/components/timeToPixels';
 import Channel from '../src/components/Channel';
 import ImageChannel from '../src/components/ImageChannel';
 import TimeScale from '../src/components/TimeScale';
@@ -44,15 +45,30 @@ const imageChannel = {
   parts: [{
     id: 1,
     src: imageFile,
-    offset: 50,
-    cuein: 0.5, // in secs
-    cueout: 1.47, // in secs
-    buffer: {
-    	width: 100,
-    }
+    offset: 50, // in pixels
+    cuein: 30, // in pixels
+    cueout: 80, // in pixels
+    duration: 100 // in pixels
   }],  
 };
 
+const imageChannelInSecs = {
+  id: 'imgChannelSecs1',
+  name: 'Channel 1 with images',
+  type: 'image',
+  sampleRate: 100, // one image frame is 10ms
+  resolution: 100,
+  maxDuration: 5.0,
+  parts: [{
+    id: 1,
+    src: imageFile,
+    offset: 0.7, // in secs
+    cuein: 0.3, // in secs
+    cueout: 0.9, // in secs
+    duration: 1.0 // in secs
+  }],  
+};
+const ImageChannelInSecs = timeToPixels(ImageChannel);
 
 const scale = window.devicePixelRatio;
 
@@ -138,11 +154,21 @@ storiesOf('Channel', module)
     <ImageChannel id={"myImgChannel"} parts={imageChannel.parts} factor={3} scale={scale} 
       markers={[{id: "1", pos:220}, {id: "5", pos:270}]} > </ImageChannel>
   ))
-  .add('Image channel with image at offset 50  & factor 3 & cursor, progress & selection.', () => (
+  .add('Image channel with image at offset 50  & factor 3 & cursor, progress, selection & markers.', () => (
     <ImageChannel 
     id={"myImgChannel"} parts={imageChannel.parts} factor={3} scale={scale} 
-    progress={200} cursorPos={150} selection={{from: 300, to: 450}} > 
+    progress={200} cursorPos={150} selection={{from: 300, to: 450}} 
+	markers={[{id: "1", pos:220}, {id: "5", pos:270}]} > 
     </ImageChannel>
+  ))
+   .add('Image channel (time imput) with image at offset 50  & factor 3 & cursor, progress, selection & markers.', () => (
+    <ImageChannelInSecs 
+    id={"myImgChannel"} sampleRate={imageChannelInSecs.sampleRate} resolution={imageChannelInSecs.resolution}
+    maxDuration={imageChannelInSecs.maxDuration}
+    parts={imageChannelInSecs.parts} factor={3} scale={scale} 
+    progress={1.5} cursorPos={3.0} selection={{from: 3.5, to: 4.0}} 
+	  markers={[{id: "1", pos: 2.2}, {id: "5", pos:2.7}]} > 
+    </ImageChannelInSecs>
   ))
   ;
 

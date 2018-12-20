@@ -24,6 +24,7 @@ export default class MouseHandler {
       }
   }
 
+  // if TimeToPixels HOC wraps the Channel then x is in secs
   handleMouseEvent = (x, eventName) => {
     return this.mousehandler.handleMouseEvent(x, eventName);
   }

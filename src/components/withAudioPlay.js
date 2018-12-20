@@ -7,14 +7,16 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import extractPeaks from 'webaudio-peaks';
 import memoize from 'memoize-one';
-import { cloneDeep } from 'lodash'
 
 import Playout from '../player/Playout'
 import MouseHandler from '../handler/SelectionMouseHandler'
-import { secondsToPixels, pixelsToSeconds } from '../utils/conversions';
+import { timeToPixels } from './timeToPixels';
 
 // HOC to support audio playing for one channel
 export function withAudioPlay(WrappedComponent) {
+
+  const WrappedComponentInTime = timeToPixels(WrappedComponent);
+
   class WithAudioPlay extends PureComponent {
 
     constructor(props) {
@@ -125,6 +127,10 @@ export function withAudioPlay(WrappedComponent) {
 
     stopAnimateProgress = () => {
       window.cancelAnimationFrame(this.animationRequest);
+      this.setState({
+        ...this.state,
+        progress: null
+      })
       this.animationStartTime = null;
     }
 
@@ -143,44 +149,29 @@ export function withAudioPlay(WrappedComponent) {
     }
 
     // transform from pixel to time values (used by mouse handler)
-    select = (fromPx, toPx) => {
-      const from = pixelsToSeconds(fromPx, this.props.resolution, this.props.sampleRate);
-      const to = pixelsToSeconds(toPx, this.props.resolution, this.props.sampleRate);
+    select = (from, to) => {
       this.props.select(from, to);
     }
 
     // only re-calc when buffer, resolution of bits change
     doExtractPeaks = memoize(
-      (buffer, resolution, bits) => extractPeaks(buffer, resolution, true, 0, buffer.length, bits));
+      (buffer, pixPerSample, bits) => extractPeaks(buffer, pixPerSample, true, 0, buffer.length, bits));
 
     render() {
-      // select props passed down to Channel
-      const {resolution, playState, buffer, selection, select, setChannelPlayState, markers,
-        ...passthruProps} = this.props;
 
-      // conversion time (in secs) to pixels 
-      const offsetPx = secondsToPixels(this.props.offset, this.props.resolution, this.getSampleRate())
-      const progressPx = this.state.progress ? secondsToPixels(this.state.progress, this.props.resolution, this.getSampleRate()) - offsetPx : null;
-      const cursorPx = selection.from ? secondsToPixels(selection.from, this.props.resolution, this.getSampleRate())  - offsetPx : null;
-      const selectionPx = selection && selection.from && selection.to ? {
-        from: cursorPx,
-        to: secondsToPixels(selection.to, this.props.resolution, this.getSampleRate()) - offsetPx
-      } : null;
-      const markersPx = markers ? cloneDeep(markers) : [];
-      markersPx.forEach(marker => {
-        marker.pos = marker.pos ? secondsToPixels(marker.pos, resolution, this.getSampleRate()) - offsetPx : null;
-      })
-
+      const {buffer, ...passthruProps} = this.props;
 
       // memoized peak data
-      const {data, length, bits} = this.doExtractPeaks(buffer, resolution, 16);
+      const {data, length, bits} = this.doExtractPeaks(buffer, this.getSampleRate() / this.props.resolution, 16);
       const peaksDataMono = Array.isArray(data) ? data[0] : []; // only one channel for now
 
-      return <WrappedComponent {...passthruProps} 
-        handleMouseEvent={ this.mousehandler.handleMouseEvent } 
-        offset={offsetPx} markers={markersPx}
-        peaks={ peaksDataMono } bits={ bits } length={ length } progress={ progressPx } 
-        cursorPos={ cursorPx } selection={ selectionPx }  
+      return <WrappedComponentInTime 
+        {...passthruProps} 
+        progress={ this.state.progress }
+        handleMouseEvent={ (pos, event) => this.mousehandler.handleMouseEvent(pos,event, this.props.resolution) } 
+        peaks={ peaksDataMono } 
+        bits={ bits } 
+        length={ length } 
       />;
     }
   }
@@ -188,7 +179,7 @@ export function withAudioPlay(WrappedComponent) {
 
   WithAudioPlay.propTypes = {
     playState: PropTypes.oneOf(['stopped', 'playing']).isRequired,
-    resolution: PropTypes.number.isRequired, // pixels per sample 
+    resolution: PropTypes.number.isRequired, // pixels per second 
     buffer: PropTypes.object.isRequired,
     selection: PropTypes.object.isRequired,
     select: PropTypes.func.isRequired,

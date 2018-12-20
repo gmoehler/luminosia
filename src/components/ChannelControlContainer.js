@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { loadChannel, playChannel, stopChannel } from '../actions/channelActions'
-import { setZoomLevel, setMode } from '../actions/viewActions'
+import { setZoomLevel, setMode, select } from '../actions/viewActions'
 import ChannelControl from './ChannelControl';
 
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
 const audioContext = new window.AudioContext();
 
-const zoomLevels = [6, 12, 24, 48, 96, 192, 384, 768, 1536, 3072, 6144]; // in pixels / sec
-const defaultZommLevelIdx = 2;
+//const zoomLevels = [6, 12, 24, 48, 96, 192, 384, 768, 1536, 3072, 6144]; // in pixels / sec
+const zoomLevels = [4000, 2000, 1000, 500, 250, 125, 80, 40, 20, 10, 5]; // in pixels / sec
+const defaultZoomLevelIdx = 6;
 
 const channelConfigs = [
   {
@@ -50,7 +51,7 @@ class ChannelControlContainer extends Component {
 
   constructor(props) {
     super(props);
-    this.zoomLevelIdx = defaultZommLevelIdx;
+    this.zoomLevelIdx = defaultZoomLevelIdx;
   }
 
   doLoadChannel = (event) => {
@@ -62,33 +63,41 @@ class ChannelControlContainer extends Component {
   }
 
   resetZoom = () => {
-    this.zoomLevelIdx = defaultZommLevelIdx;
+    this.zoomLevelIdx = defaultZoomLevelIdx;
     this.props.setZoomAction(
       zoomLevels[this.zoomLevelIdx]
     )
   }
 
   zoomIn = () => {
-    this.zoomLevelIdx = Math.min(Math.max(parseInt(this.zoomLevelIdx) + 1, 0), zoomLevels.length - 1);
-    this.props.setZoomAction(
-      zoomLevels[this.zoomLevelIdx]
-    )
-  }
-
-  zoomOut = () => {
     this.zoomLevelIdx = Math.min(Math.max(parseInt(this.zoomLevelIdx) - 1, 0), zoomLevels.length - 1);
     this.props.setZoomAction(
       zoomLevels[this.zoomLevelIdx]
     )
   }
 
+  zoomOut = () => {
+    this.zoomLevelIdx = Math.min(Math.max(parseInt(this.zoomLevelIdx) + 1, 0), zoomLevels.length - 1);
+    this.props.setZoomAction(
+      zoomLevels[this.zoomLevelIdx]
+    )
+  }
+
+  setMode = (mode) => {
+    this.props.selectAction({from:null, to: null});
+    this.props.setModeAction(mode);
+  }
+
   render() {
 
     return (
-      <ChannelControl loadChannel={ this.doLoadChannel } 
-        playChannel={ this.props.playChannelAction } stopChannel={ this.props.stopChannelAction } 
-        zoomIn={ this.zoomIn } zoomOut={ this.zoomOut }
-        setMode={ this.props.setModeAction } />
+      <ChannelControl 
+        loadChannel={ this.doLoadChannel } 
+        playChannel={ this.props.playChannelAction } 
+        stopChannel={ this.props.stopChannelAction } 
+        zoomIn={ this.zoomIn } 
+        zoomOut={ this.zoomOut }
+        setMode={ this.setMode } />
       );
   }
 }
@@ -103,6 +112,7 @@ const mapDispatchToProps = dispatch => ({
   stopChannelAction: () => dispatch(stopChannel()),
   setZoomAction: (zoomLevel) => dispatch(setZoomLevel(zoomLevel)),
   setModeAction: (modeEvent) => dispatch(setMode(modeEvent.target.value)),
+  selectAction: (range) => dispatch(select(range))
 })
 
 
