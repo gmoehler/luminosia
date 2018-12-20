@@ -17,13 +17,11 @@ export function withImagePlay(WrappedComponent) {
 
     constructor(props) {
       super(props);
-      this.playState = "running";
-      this.animationStartTime = null; // start time of internal animation timer, null means not playing
+      this.animationStartTime = null; // start time of progress animation timer, null means not playing
       this.playStartAt = 0; // start of current play
       this.playEndAt = 0; // end of current play
-      this.selectFromTime = 0; // time of selection start
       this.state = {
-        progress: 0, // play progress in secs
+        progress: null, // play progress in secs
       };
       this.mousehandler = new MouseHandler({
         select: this.select, 
@@ -33,12 +31,13 @@ export function withImagePlay(WrappedComponent) {
 
     componentDidUpdate(prevProps, prevState) {
 
+      // offset is 0
       const {playState, selection} = this.props;
 
       // start or stop playing
       if (prevProps.playState !== playState) {
         if (playState === "playing") {
-          this.startPlay(selection.from, selection.to);
+          this.startPlay(selection.from, selection.to, 0);
         }
         // only stopped if not already (auto)stopped
         else if (this.isPlaying()) {
@@ -54,7 +53,7 @@ export function withImagePlay(WrappedComponent) {
       }
     }
 
-    startPlay = (startAt, endAt) => {
+    startPlay = (startAt, endAt, offset) => {
       if (this.props.type !== "image") {
         return;
       }
@@ -67,19 +66,22 @@ export function withImagePlay(WrappedComponent) {
         const actEndAt = endAt - startAt < 0.1 ? this.props.maxDuration : endAt;
 
         // track.. values are local image time
-        const trackStartAt = actStartAt < 0 ? 0 : actStartAt;
-        const trackDelay = startAt < 0 ? - startAt : 0;
-        const trackEndAt = actEndAt;
+        const trackStartAt = actStartAt - offset < 0 ? 0 : actStartAt - offset;
+        const trackDelay = startAt - offset < 0 ? offset - startAt : 0;
+        const trackEndAt = actEndAt - offset;
 
-        // remeber for progress
+        // remeber for progress offset
         this.animateStartAt = actStartAt;
-        this.animateEndAt = endAt - startAt < 0.1 ? this.props.maxDuration : trackEndAt;
+        this.animateEndAt = endAt - startAt < 0.1 ? 
+          this.props.maxDuration + offset : trackEndAt + offset;
 
+        // only play if there is something to play
         if (trackEndAt > 0) {
-          console.log(`playing image from ${trackStartAt}s( ${actStartAt}s) to ${trackEndAt}(${actEndAt}s) with delay ${trackDelay}`);
+          console.log(`playing ${this.props.type} from ${trackStartAt}s( ${actStartAt}s) ` 
+            + `to ${trackEndAt}(${actEndAt}s) with delay ${trackDelay}, offset: ${offset}, delay ${trackDelay}`);
         // TODO: do the image playing
         } else {
-          console.log(`skip image playing from ${actStartAt}s to ${actEndAt}`);
+          console.log(`skip  ${this.props.type} playing from ${actStartAt}s to ${actEndAt}`);
         }
 
         // start progress animation
@@ -90,6 +92,7 @@ export function withImagePlay(WrappedComponent) {
     animateProgress = (timestamp) => {
       if (!this.animationStartTime) {
         this.animationStartTime = timestamp;
+         //TODO: sync with playout time
       }
 
       const duration = timestamp - this.animationStartTime;
@@ -115,7 +118,6 @@ export function withImagePlay(WrappedComponent) {
       })
       this.animationStartTime = null;
     }
-
 
     isPlaying = () => {
       return this.animationStartTime !== null;
@@ -145,15 +147,15 @@ export function withImagePlay(WrappedComponent) {
 
       const {sampleRate, mode, ...passthruProps} = this.props;
 
-      const factor = this.props.resolution / sampleRate;
       this.mousehandler.setMode(mode);
+      const factor = this.props.resolution / sampleRate;
 
       // time to pixel conversion is done in HOC TimeToPixel
       return <WrappedComponentInTime 
         {...passthruProps} 
         progress={ this.state.progress }
-        factor={ factor }  
         handleMouseEvent={ (pos, event) => this.mousehandler.handleMouseEvent(pos,event, this.props.resolution) } 
+        factor={ factor }  
       />;
     }
   }
@@ -162,13 +164,13 @@ export function withImagePlay(WrappedComponent) {
   WithImagePlay.propTypes = {
     sampleRate: PropTypes.number.isRequired,
     resolution: PropTypes.number.isRequired,
-    parts: PropTypes.array.isRequired,
-    maxDuration: PropTypes.number.isRequired,
     playState: PropTypes.oneOf(['stopped', 'playing']).isRequired,
     selection: PropTypes.object.isRequired,
     select: PropTypes.func.isRequired,
     setChannelPlayState: PropTypes.func.isRequired,
     mode: PropTypes.oneOf(['selectionMode', 'moveMode']).isRequired,
+    parts: PropTypes.array.isRequired,
+    maxDuration: PropTypes.number.isRequired,
   }
 
   withImagePlay.displayName = `WithSubscription(${getDisplayName(WrappedComponent)})`;

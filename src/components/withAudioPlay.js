@@ -21,20 +21,18 @@ export function withAudioPlay(WrappedComponent) {
 
     constructor(props) {
       super(props);
-      this.playout = null;
-      this.mouseDownX = 0; // x in px of mouse down event
-      this.animationStartTime = null; // start time of progress animation
+      this.animationStartTime = null; // start time of progress animation timer, null means not playing
       this.playStartAt = 0; // start of current play
       this.playEndAt = 0; // end of current play
       this.state = {
         progress: null, // play progress in secs
       };
-      this.mousehandler = new MouseHandler(
-        {
+      this.mousehandler = new MouseHandler({
           select: this.select,
-        },
-      );
+      });
 
+      // audio setup
+      this.playout = null;
       window.AudioContext = window.AudioContext || window.webkitAudioContext;
       this.audioContext = new window.AudioContext();
     }
@@ -73,11 +71,11 @@ export function withAudioPlay(WrappedComponent) {
       // regular start at startAt
       if (!this.isPlaying() && endAt >= startAt) {
 
-        // look at offset
+        // act.. values is global time interval of this channel
         const actStartAt = Math.max(0, startAt); // dont start before 0
         const actEndAt = endAt - startAt < 0.1 ? this.props.buffer.duration + offset: endAt;
-        const duration = actEndAt - actStartAt;
 
+        // track.. values are local image time
         const trackStartAt = actStartAt - offset < 0 ? 0 : actStartAt - offset;
         const trackDelay = startAt - offset < 0 ? offset - startAt : 0;
         const trackEndAt = actEndAt - offset;
@@ -85,18 +83,19 @@ export function withAudioPlay(WrappedComponent) {
         // remeber for progress offset
         this.animateStartAt = actStartAt; 
         this.animateEndAt = endAt - startAt < 0.1 ? 
-          this.props.maxDuration  + offset : trackEndAt + offset;
-
+          this.props.maxDuration + offset : trackEndAt + offset;
 
         // only play if there is something to play
         if (trackEndAt > 0) {
-          console.log(`playing from ${trackStartAt}s( ${actStartAt}s) to ${trackStartAt}(${actEndAt}s) with delay ${trackDelay}, offset: ${offset}`);
+          console.log(`playing ${this.props.type} from ${trackStartAt}s( ${actStartAt}s) ` 
+            + `to ${trackEndAt}(${actEndAt}s) with delay ${trackDelay}, offset: ${offset}, delay ${trackDelay}`);
           this.playout.setUpSource()
             .then(this.stopPlay); // stop when end has reached
             
+          const duration = actEndAt - actStartAt;  
           this.playout.play(this.audioContext.currentTime + trackDelay, trackStartAt, duration);
         } else {
-          console.log(`skip playing from ${actStartAt}s to ${actEndAt}`);
+          console.log(`skip  ${this.props.type} playing from ${actStartAt}s to ${actEndAt}`);
         }
 
         // start progress animation
@@ -138,17 +137,12 @@ export function withAudioPlay(WrappedComponent) {
       return this.animationStartTime !== null;
     }
 
-    getSampleRate = () => {
-      return this.props.sampleRate && this.props.buffer.sampleRate;
-    }
-
     stopPlay = () => {
       this.playout && this.playout.stop();
       this.stopAnimateProgress();
       this.props.setChannelPlayState("stopped");
     }
 
-    // transform from pixel to time values (used by mouse handler)
     select = (from, to) => {
       this.props.select(from, to);
     }
@@ -159,10 +153,10 @@ export function withAudioPlay(WrappedComponent) {
 
     render() {
 
-      const {buffer, ...passthruProps} = this.props;
+      const {buffer, mode, sampleRate, ...passthruProps} = this.props;
 
       // memoized peak data
-      const {data, length, bits} = this.doExtractPeaks(buffer, this.getSampleRate() / this.props.resolution, 16);
+      const {data, length, bits} = this.doExtractPeaks(buffer, sampleRate / this.props.resolution, 16);
       const peaksDataMono = Array.isArray(data) ? data[0] : []; // only one channel for now
 
       return <WrappedComponentInTime 
@@ -178,12 +172,13 @@ export function withAudioPlay(WrappedComponent) {
   ;
 
   WithAudioPlay.propTypes = {
+    sampleRate: PropTypes.number.isRequired,
+    resolution: PropTypes.number.isRequired,
     playState: PropTypes.oneOf(['stopped', 'playing']).isRequired,
-    resolution: PropTypes.number.isRequired, // pixels per second 
-    buffer: PropTypes.object.isRequired,
     selection: PropTypes.object.isRequired,
     select: PropTypes.func.isRequired,
     setChannelPlayState: PropTypes.func.isRequired,
+    mode: PropTypes.oneOf(['selectionMode', 'moveMode']).isRequired,
   }
 
   withAudioPlay.displayName = `WithSubscription(${getDisplayName(WrappedComponent)})`;
