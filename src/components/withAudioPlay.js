@@ -125,6 +125,10 @@ export function withAudioPlay(WrappedComponent) {
 
     stopAnimateProgress = () => {
       window.cancelAnimationFrame(this.animationRequest);
+      this.setState({
+        ...this.state,
+        progress: null
+      })
       this.animationStartTime = null;
     }
 

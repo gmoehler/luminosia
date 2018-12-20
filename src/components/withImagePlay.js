@@ -109,6 +109,11 @@ export function withImagePlay(WrappedComponent) {
 
     stopAnimateProgress = () => {
       window.cancelAnimationFrame(this.animationRequest);
+      this.setState({
+        ...this.state,
+        progress: null
+      })
+      this.animationStartTime = null;
     }
 
 
@@ -118,7 +123,6 @@ export function withImagePlay(WrappedComponent) {
 
     stopPlay = () => {
       this.stopAnimateProgress();
-      this.animationStartTime = null;
       this.props.setChannelPlayState("stopped");
     }
 
