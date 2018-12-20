@@ -7,7 +7,8 @@ const MAX_CANVAS_WIDTH = 1000;
 const ImageProgress = styled.div`
   position: absolute;
   background: ${props => props.theme.waveProgressColor};
-  width: ${props => props.progress}px;
+  width: 1px;
+  left: ${props => props.progress}px;
   height: ${props => props.height}px;
   border-right: 1px solid ${props => props.theme.waveProgressBorderColor};
 `;
@@ -201,8 +202,16 @@ class Channel extends Component {
       ) : null;
 
     return (
-      <ImageChannelWrapper className='ChannelWrapper' onMouseDown={ (e) => this.handleMouseEvent(e, "mouseDown") } onMouseUp={ (e) => this.handleMouseEvent(e, "mouseUp") } onMouseMove={ (e) => this.handleMouseEvent(e, "mouseMove") } onMouseLeave={ (e) => this.handleMouseEvent(e, "mouseLeave") }
-        cssWidth={ maxWidth } theme={ theme } height={ imageHeight }>
+      <ImageChannelWrapper 
+        className='ChannelWrapper' 
+        onMouseDown={ (e) => this.handleMouseEvent(e, "mouseDown") } 
+        onMouseUp={ (e) => this.handleMouseEvent(e, "mouseUp") } 
+        onMouseMove={ (e) => this.handleMouseEvent(e, "mouseMove") } 
+        onMouseLeave={ (e) => this.handleMouseEvent(e, "mouseLeave") }
+        cssWidth={ maxWidth } 
+        theme={ theme } 
+        height={ imageHeight }>
+        
         { allCanvasRefImages }
         { allImageCanvases }
         { progressElem }

@@ -1,17 +1,18 @@
 /* 
   Deals with image channel playing, progress & mouse handling
-  Also does time (in secs) to pixel conversion
 */
 
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { cloneDeep } from 'lodash';
 
 import MouseHandler from '../handler/MouseHandler';
-import { secondsToPixels, pixelsToSeconds } from '../utils/conversions';
+import { timeToPixels } from './timeToPixels';
 
 // HOC to support image playing for one channel
 export function withImagePlay(WrappedComponent) {
+
+  const WrappedComponentInTime = timeToPixels(WrappedComponent);
+
   class WithImagePlay extends PureComponent {
 
     constructor(props) {
@@ -25,8 +26,8 @@ export function withImagePlay(WrappedComponent) {
         progress: 0, // play progress in secs
       };
       this.mousehandler = new MouseHandler({
-        select: this.select, // use member func for px2time 
-        move: this.move // use member func for px2time 
+        select: this.select, 
+        move: this.move 
       })
     }
 
@@ -121,56 +122,35 @@ export function withImagePlay(WrappedComponent) {
       this.props.setChannelPlayState("stopped");
     }
 
-    // transform from pixel to time values
-    select = (fromPx, toPx) => {
-      const from = pixelsToSeconds(fromPx, this.props.resolution, this.props.sampleRate);
-      const to = pixelsToSeconds(toPx, this.props.resolution, this.props.sampleRate);
+    select = (from, to) => {
       this.props.select(from, to);
     }
 
-    // transform from pixel to time values
-    move = (partId, incrX) => {
-      const incr = pixelsToSeconds(incrX, this.props.resolution, this.props.sampleRate);
+    move = (partId, incr) => {
       this.props.move(partId, incr);
-      // select part
+      // select the part using markers
+      const channelId = this.props.id;
       const part = this.props.parts[partId];
       const from = part.offset + incr;
-      const to = part.offset + incr + part.buffer.width / this.props.sampleRate;
-      this.props.updateMarker(part.id + "-l", from);
-      this.props.updateMarker(part.id + "-r", to);
+      const to = part.offset + incr + part.duration;
+      this.props.updateMarker(`${channelId}-${part.id}-l`, from);
+      this.props.updateMarker(`${channelId}-${part.id}-r`, to);
     }
 
     render() {
 
-      // select props passed down to Channel
-      const {sampleRate, parts, playState, selection, select, markers, updateMarker, setChannelPlayState, resolution, mode, maxDuration, ...passthruProps} = this.props;
+      const {sampleRate, mode, ...passthruProps} = this.props;
 
-      const factor = resolution / sampleRate;
+      const factor = this.props.resolution / sampleRate;
       this.mousehandler.setMode(mode);
 
-      // conversion time (in secs) to pixels 
-      const progressPx = secondsToPixels(this.state.progress, resolution, sampleRate);
-      const cursorPx = secondsToPixels(selection.from, resolution, sampleRate);
-      const selectionPx = {
-        from: cursorPx,
-        to: secondsToPixels(selection.to, resolution, sampleRate)
-      };
-      const maxWidthPx = secondsToPixels(maxDuration, resolution, sampleRate);
-      const partsPx = parts ? Object.values(cloneDeep(parts)) : [];
-      partsPx.forEach(part => {
-        part.offset = part.offset ? secondsToPixels(part.offset, resolution, sampleRate) : null;
-        part.duration = part.duration ? secondsToPixels(part.duration, resolution, sampleRate) : null;
-        part.cuein = part.cuein ? secondsToPixels(part.cuein, resolution, sampleRate) : null;
-        part.cueout = part.cueout ? secondsToPixels(part.cueout, resolution, sampleRate) : null;
-      })
-      const markersPx = markers ? cloneDeep(markers) : [];
-      markersPx.forEach(marker => {
-        marker.pos = marker.pos ? secondsToPixels(marker.pos, resolution, sampleRate) : null;
-      })
-
-      return <WrappedComponent {...passthruProps} parts={ partsPx } factor={ factor } progress={ progressPx } cursorPos={ cursorPx } selection={ selectionPx }
-        markers={ markersPx } maxWidth={ maxWidthPx } 
-        handleMouseEvent={ this.mousehandler.handleMouseEvent } />;
+      // time to pixel conversion is done in HOC TimeToPixel
+      return <WrappedComponentInTime 
+        {...passthruProps} 
+        progress={ this.state.progress }
+        factor={ factor }  
+        handleMouseEvent={ (pos, event) => this.mousehandler.handleMouseEvent(pos,event, this.props.resolution) } 
+      />;
     }
   }
   ;
@@ -178,7 +158,7 @@ export function withImagePlay(WrappedComponent) {
   WithImagePlay.propTypes = {
     sampleRate: PropTypes.number.isRequired,
     resolution: PropTypes.number.isRequired,
-    parts: PropTypes.object.isRequired,
+    parts: PropTypes.array.isRequired,
     maxDuration: PropTypes.number.isRequired,
     playState: PropTypes.oneOf(['stopped', 'playing']).isRequired,
     selection: PropTypes.object.isRequired,

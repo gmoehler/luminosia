@@ -60,6 +60,7 @@ export default class ChannelGroup extends Component {
 
 			const channelProps = {
 				...passthruProps,
+				id: channelId,
 				key: channelId, // required because of list
 				type: channelData.type,
 				playState: channelData.playState,
@@ -67,7 +68,7 @@ export default class ChannelGroup extends Component {
 				sampleRate,
 				resolution: pixelsPerSecond,
 				buffer: channelData && channelData.buffer,
-				parts: channelData.byParts,
+				parts: channelData.byParts ? Object.values(channelData.byParts) : [],
 				scale: windowPixelRatio,
 			}
 

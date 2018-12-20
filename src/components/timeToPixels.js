@@ -11,25 +11,10 @@ import { secondsToPixels, pixelsToSeconds } from '../utils/conversions';
 // HOC to support time to pixel conversion for one channel
 export function timeToPixels(WrappedComponent) {
   class TimeToPixels extends PureComponent {
-
-    select = (fromPx, toPx) => {
-      if (this.props.select) {
-        const from = pixelsToSeconds(fromPx, this.props.resolution);
-        const to = pixelsToSeconds(toPx, this.props.resolution);
-        this.props.select(from, to);
-      }
-    }
     
-    move = (partId, incrX) => {
-      if (this.props.move) {
-        const incr = pixelsToSeconds(incrX, this.props.resolution);
-        this.props.move(partId, incr);
-      }
-    }
-    
-    handleMouseEvent = (posX, eventName) => {
+    handleMouseEvent = (pos, eventName, resolution) => {
       if (this.props.handleMouseEvent) {
-    	  const pos = pixelsToSeconds(posX, this.props.resolution);
+    	  pos.x = pixelsToSeconds(pos.x, resolution);
         this.props.handleMouseEvent(pos, eventName);
       }
     }
@@ -44,12 +29,12 @@ export function timeToPixels(WrappedComponent) {
 
       const offsetPx = offset ? secondsToPixels(offset, resolution) : null;
       const progressPx = progress ? secondsToPixels(progress, resolution) : null;
-      const cursorPosPx = cursorPos ? secondsToPixels(cursorPos, resolution) : null;
       const selectionPx = selection ? {
         from: selection.from ? secondsToPixels(selection.from, resolution): null,
         to: selection.to ? secondsToPixels(selection.to, resolution): null
       } : null;
-      const maxWidthPx = secondsToPixels(maxDuration, resolution);
+      const cursorPosPx = selection.from ? secondsToPixels(selection.from, resolution) : null;
+      const maxWidthPx = maxDuration ? secondsToPixels(maxDuration, resolution) : null;
       const partsPx = parts ? cloneDeep(parts) : [];
 	    partsPx.forEach(part => {
         part.offset = part.offset ? secondsToPixels(part.offset, resolution) : null;
@@ -76,7 +61,7 @@ export function timeToPixels(WrappedComponent) {
 
         select={this.select}
         move={this.move}
-        handleMouseEvent={ this.handleMouseEvent } 
+        handleMouseEvent={ (pos, event) => this.handleMouseEvent(pos, event, resolution) } 
 
         />;
       }
@@ -84,17 +69,14 @@ export function timeToPixels(WrappedComponent) {
   ;
 
   TimeToPixels.propTypes = {
-    sampleRate: PropTypes.number.isRequired,
     resolution: PropTypes.number.isRequired,
     
-    progress: PropTypes.number.isRequired,
-    cursorPos: PropTypes.number.isRequired,
-    selection: PropTypes.object.isRequired,
+    progress: PropTypes.number,
+    cursorPos: PropTypes.number,
+    selection: PropTypes.object,
     maxDuration: PropTypes.number.isRequired,
     parts: PropTypes.array.isRequired,
     
-    select: PropTypes.func,
-    move: PropTypes.func,
     handleMouseEvent: PropTypes.func,
   }
 

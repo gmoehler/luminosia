@@ -8,6 +8,7 @@ export default class MoveMouseHandler {
     this.partId = null;
   }
 
+  // if TimeToPixels HOC wraps the Channel then pos is in secs
   handleMouseEvent = (pos, eventName) => {
     switch (eventName) {
 

@@ -93,8 +93,12 @@ function doLoadMultiPart(dispatch, getState, channelConfig, audioContext) {
       }
       ))
       Object.values(channelParts).forEach((part) => {
-        dispatch(updateMarker({markerId: part.id + "-l", pos: part.offset}))
-        dispatch(updateMarker({markerId: part.id + "-r", pos: part.offset + part.duration}))
+        dispatch(updateMarker({
+          markerId: `${channelConfig.id}-${part.id}-l`, 
+          pos: part.offset}))
+        dispatch(updateMarker({
+          markerId: `${channelConfig.id}-${part.id}-r`, 
+          pos: part.offset + part.duration}))
       })
     })
     .catch(err => {

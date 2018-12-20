@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { loadChannel, playChannel, stopChannel } from '../actions/channelActions'
-import { setZoomLevel, setMode } from '../actions/viewActions'
+import { setZoomLevel, setMode, select } from '../actions/viewActions'
 import ChannelControl from './ChannelControl';
 
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -83,13 +83,21 @@ class ChannelControlContainer extends Component {
     )
   }
 
+  setMode = (mode) => {
+    this.props.selectAction({from:null, to: null});
+    this.props.setModeAction(mode);
+  }
+
   render() {
 
     return (
-      <ChannelControl loadChannel={ this.doLoadChannel } 
-        playChannel={ this.props.playChannelAction } stopChannel={ this.props.stopChannelAction } 
-        zoomIn={ this.zoomIn } zoomOut={ this.zoomOut }
-        setMode={ this.props.setModeAction } />
+      <ChannelControl 
+        loadChannel={ this.doLoadChannel } 
+        playChannel={ this.props.playChannelAction } 
+        stopChannel={ this.props.stopChannelAction } 
+        zoomIn={ this.zoomIn } 
+        zoomOut={ this.zoomOut }
+        setMode={ this.setMode } />
       );
   }
 }
@@ -104,6 +112,7 @@ const mapDispatchToProps = dispatch => ({
   stopChannelAction: () => dispatch(stopChannel()),
   setZoomAction: (zoomLevel) => dispatch(setZoomLevel(zoomLevel)),
   setModeAction: (modeEvent) => dispatch(setMode(modeEvent.target.value)),
+  selectAction: (range) => dispatch(select(range))
 })
 
 
