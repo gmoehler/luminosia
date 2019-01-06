@@ -119,6 +119,7 @@ class Channel extends Component {
 
   handleMouseEvent = (e, eventName) => {
     if (this.props.handleMouseEvent) {
+      e.preventDefault();
       const pos = getMouseEventPosition(e, "ChannelWrapper", this.props.id);
       this.props.handleMouseEvent(pos, eventName);
       return;
@@ -208,6 +209,15 @@ class Channel extends Component {
         onMouseUp={ (e) => this.handleMouseEvent(e, "mouseUp") } 
         onMouseMove={ (e) => this.handleMouseEvent(e, "mouseMove") } 
         onMouseLeave={ (e) => this.handleMouseEvent(e, "mouseLeave") }
+
+        onDragEnter={ (e) => this.handleMouseEvent(e, "dragEnter") }
+        onDragEnd={ (e) => this.handleMouseEvent(e, "dragEnd") }
+        onDragExit={ (e) => this.handleMouseEvent(e, "dragExit") }
+        onDragLeave={ (e) => this.handleMouseEvent(e, "dragLeave") }
+        onDragOver={ (e) => this.handleMouseEvent(e, "dragOver") }
+        onDragStart={ (e) => this.handleMouseEvent(e, "dragStart") }
+        onDrop={ (e) => this.handleMouseEvent(e, "drop") }
+
         cssWidth={ maxWidth } 
         theme={ theme } 
         height={ imageHeight }>

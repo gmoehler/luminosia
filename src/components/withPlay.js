@@ -174,7 +174,7 @@ export function withPlay(WrappedComponent) {
       return <WrappedComponentInTime 
         {...passthruProps} 
         progress={ this.state.progress }
-        handleMouseEvent={ (pos, event) => this.mousehandler.handleMouseEvent(pos, event, this.props.resolution) } 
+        handleMouseEvent={ (pos, eventName) => this.mousehandler.handleMouseEvent(pos, eventName, this.props.resolution) } 
         factor={ this.props.resolution / sampleRate }  /* req only for images */
         peaks={ peaksDataMono } /* only for audio */
         bits={ bits } /* only for audio */

@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { loadChannel, playChannel, stopChannel } from '../actions/channelActions'
 import { setZoomLevel, setMode, select } from '../actions/viewActions'
 import ChannelControl from './ChannelControl';
+import { addImage } from '../actions/imageListActions';
 
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
 const audioContext = new window.AudioContext();
@@ -11,7 +12,7 @@ const audioContext = new window.AudioContext();
 const zoomLevels = [4000, 2000, 1000, 500, 250, 125, 80, 40, 20, 10, 5]; // in pixels / sec
 const defaultZoomLevelIdx = 6;
 
-const channelConfigs = [
+const channels = [
   {
     src: 'media/audio/Vocals30.mp3',
     name: 'Vocals',
@@ -47,6 +48,21 @@ const channelConfigs = [
   },
 ]
 
+const images =  [
+  {
+    src: 'media/image/mostlyStripes.png'
+  },
+  {
+    src: 'media/image/blueLine.png'
+  },
+];
+
+/*
+const config = {
+  images,
+  channels,
+} */
+
 class ChannelControlContainer extends Component {
 
   constructor(props) {
@@ -54,12 +70,15 @@ class ChannelControlContainer extends Component {
     this.zoomLevelIdx = defaultZoomLevelIdx;
   }
 
-  doLoadChannel = (event) => {
+  doLoad = (event) => {
     this.resetZoom();
     this.props.loadChannelAction({
-      channelConfigs,
+      channels,
       audioContext,
     });
+    images.forEach((img) => 
+      this.props.addImageAction(img)
+    ); 
   }
 
   resetZoom = () => {
@@ -92,7 +111,8 @@ class ChannelControlContainer extends Component {
 
     return (
       <ChannelControl 
-        loadChannel={ this.doLoadChannel } 
+        load={ this.doLoad } 
+        loadImageList={ this.doImageList } 
         playChannel={ this.props.playChannelAction } 
         stopChannel={ this.props.stopChannelAction } 
         zoomIn={ this.zoomIn } 
@@ -110,6 +130,7 @@ const mapDispatchToProps = dispatch => ({
   loadChannelAction: (spec) => dispatch(loadChannel(spec)),
   playChannelAction: () => dispatch(playChannel()),
   stopChannelAction: () => dispatch(stopChannel()),
+  addImageAction: (spec) => dispatch(addImage(spec)),
   setZoomAction: (zoomLevel) => dispatch(setZoomLevel(zoomLevel)),
   setModeAction: (modeEvent) => dispatch(setMode(modeEvent.target.value)),
   selectAction: (range) => dispatch(select(range))

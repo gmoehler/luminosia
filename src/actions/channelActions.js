@@ -1,7 +1,9 @@
 import LoaderFactory from '../loader/LoaderFactory'
 import { merge } from 'lodash';
 
-import { LOAD_CHANNEL_STARTED, LOAD_CHANNEL_FAILURE, LOAD_CHANNEL_SUCCESS, LOAD_MULTICHANNEL_STARTED, LOAD_MULTICHANNEL_FAILURE, LOAD_MULTICHANNEL_SUCCESS, PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL,
+import { LOAD_CHANNEL_STARTED, LOAD_CHANNEL_FAILURE, LOAD_CHANNEL_SUCCESS, 
+  LOAD_MULTICHANNEL_STARTED, LOAD_MULTICHANNEL_FAILURE, LOAD_MULTICHANNEL_SUCCESS, 
+  PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL,
 } from './types';
 
 import { setMarker } from './viewActions';
@@ -126,9 +128,9 @@ function doLoad(dispatch, getState, channelConfig, audioContext) {
     });
 }
 
-export const loadChannel = (({channelConfigs, channelSources, audioContext}) => {
+export const loadChannel = (({channels, channelSources, audioContext}) => {
   return (dispatch, getState) => {
-    channelConfigs.map((channelConfig) => {
+    channels.map((channelConfig) => {
       if (channelConfig.parts) {
         return doLoadMultiPart(dispatch, getState, channelConfig, audioContext);
       }

@@ -137,7 +137,7 @@ export default (state = initialState, action) => {
       const mergedPart = {...part, 
       	offset: Math.max(0, updatedOffset),
       };
-	  const mergedMoveChannelState = merge({},
+	    const mergedMoveChannelState = merge({},
         channel,
         {
         	byParts: {

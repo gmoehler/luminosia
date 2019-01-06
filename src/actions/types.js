@@ -10,6 +10,9 @@ export const PLAY_CHANNELS = "PLAY_CHANNELS";
 export const STOP_CHANNELS = "STOP_CHANNELS";
 export const MOVE_CHANNEL = "MOVE_CHANNEL";
 
+export const ADD_IMAGE = "ADD_IMAGE";
+export const REMOVE_IMAGE = "REMOVE_IMAGE";
+
 export const SELECT = "SELECT";
 export const SET_ZOOM_LEVEL = "SET_ZOOM_LEVEL";
 export const SET_CHANNEL_PLAY_STATE = "SET_CHANNEL_PLAY_STATE";
