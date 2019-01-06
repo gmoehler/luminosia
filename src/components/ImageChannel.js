@@ -29,6 +29,14 @@ const ImageMarker = styled.div`
   height: ${props => props.height}px;
 `;
 
+const InsertMarker = styled.div`
+  position: absolute;
+  background: ${props => props.theme.insertMarkerColor};
+  width: 1px;
+  left: ${props => props.insertMarkerPos}px;
+  height: ${props => props.height}px;
+`;
+
 const ImageSelection = styled.div`
   position: absolute;
   left: ${props => props.selection.from}px;
@@ -143,7 +151,7 @@ class Channel extends Component {
   }
 
   render() {
-    const {parts, imageHeight, scale, progress, cursorPos, selection, markers, theme, maxWidth} = this.props;
+    const {parts, imageHeight, scale, progress, cursorPos, selection, markers, insertMarker, theme, maxWidth} = this.props;
 
     // loop thru all images/parts
     const allImageCanvases = [];
@@ -202,6 +210,10 @@ class Channel extends Component {
       markers.map((marker) => <ImageMarker key={marker.id} className='Marker' markerPos={ marker.pos } theme={ theme } height={ imageHeight } />
       ) : null;
 
+    const insertMarkerElem = insertMarker ? 
+      <InsertMarker className='InsertMarker' insertMarkerPos= { insertMarker.pos } theme={ theme } height={ imageHeight }/>
+        : null;
+  
     return (
       <ImageChannelWrapper 
         className='ChannelWrapper' 
@@ -228,6 +240,8 @@ class Channel extends Component {
         { selectionElem }
         { cursorElem }
         { markerElems }
+        { insertMarkerElem }
+
       </ImageChannelWrapper>
       );
   }
@@ -239,6 +253,7 @@ Channel.defaultProps = {
     waveProgressBorderColor: 'rgb(255,255,255,1)', // transparent white
     cursorColor: 'red',
     markerColor: 'rgba(255,255, 0, 0.5)', // transparent yellow
+    insertMarkerColor: 'rgba(255,165, 0, 0.5)', // transparent orange
     selectionColor: 'rgba(0,0,255,0.5)',
     imageBackgroundColor: 'black',
   },
@@ -258,6 +273,8 @@ Channel.defaultProps = {
   selection: null,
   // positions of the markers in CSS pixels from the left of channel (null: do not draw)
   markers: [],
+  // positions of the insert marker in CSS pixels from the left of channel (null: do not draw)
+  insertMarker: null,
 };
 
 export default withTheme(Channel);

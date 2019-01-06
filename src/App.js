@@ -25,7 +25,7 @@ export default class App extends Component {
       <div className="App">
         <header className="App-header">
           <p>
-            Animation authoring demo
+            Animation authoring tool
           </p>
           <Wrapper>
             <ChannelControlContainer />

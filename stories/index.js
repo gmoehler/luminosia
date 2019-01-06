@@ -33,6 +33,7 @@ const theme = {
   imageBackgroundColor: 'black',
   cursorColor: 'red',
   markerColor: 'blue',
+  insertMarkerColor: 'orange',
   selectionColor: 'rgba(0,0,255,0.5)',
   timeColor: 'red',
 };
@@ -120,7 +121,8 @@ storiesOf('Channel', module)
   .add('BBC Waveform Peaks & devicePixelRatio & theming & markers.', () => (
     <ThemeProvider theme={theme}>
       <Channel peaks={data} length={length} bits={bits} scale={scale} progress={200} 
-        markers={[{id: "1", pos:220}, {id: "5", pos:270}]}>
+        markers={[{id: "1", pos:220}, {id: "5", pos:270}]}
+        insertMarker={{id: "1", pos:190}}>
       </Channel>
     </ThemeProvider>
   ))
@@ -152,13 +154,15 @@ storiesOf('Channel', module)
   ))
   .add('Image channel with image at offset 50 & factor 3 & markers.', () => (
     <ImageChannel id={"myImgChannel"} parts={imageChannel.parts} factor={3} scale={scale} 
-      markers={[{id: "1", pos:220}, {id: "5", pos:270}]} > </ImageChannel>
+      markers={[{id: "1", pos:220}, {id: "5", pos:270}]} 
+      insertMarker={{id: "1", pos:190}}> </ImageChannel>
   ))
   .add('Image channel with image at offset 50  & factor 3 & cursor, progress, selection & markers.', () => (
     <ImageChannel 
     id={"myImgChannel"} parts={imageChannel.parts} factor={3} scale={scale} 
     progress={200} cursorPos={150} selection={{from: 300, to: 450}} 
-	markers={[{id: "1", pos:220}, {id: "5", pos:270}]} > 
+    markers={[{id: "1", pos:220}, {id: "5", pos:270}]} 
+    insertMarker={{id: "1", pos:190}}> 
     </ImageChannel>
   ))
    .add('Image channel (time imput) with image at offset 50  & factor 3 & cursor, progress, selection & markers.', () => (
@@ -167,7 +171,8 @@ storiesOf('Channel', module)
     maxDuration={imageChannelInSecs.maxDuration}
     parts={imageChannelInSecs.parts} factor={3} scale={scale} 
     progress={1.5} cursorPos={3.0} selection={{from: 3.5, to: 4.0}} 
-	  markers={[{id: "1", pos: 2.2}, {id: "5", pos:2.7}]} > 
+    markers={[{id: "1", pos: 2.2}, {id: "5", pos:2.7}]} 
+    insertMarker={{id: "1", pos:190}}> 
     </ImageChannelInSecs>
   ))
   ;
