@@ -23,17 +23,9 @@ const ImageCursor = styled.div`
 
 const ImageMarker = styled.div`
   position: absolute;
-  background: ${props => props.theme.markerColor};
+  background: ${props => props.markerColor || props.theme.markerColor};
   width: 1px;
   left: ${props => props.markerPos}px;
-  height: ${props => props.height}px;
-`;
-
-const InsertMarker = styled.div`
-  position: absolute;
-  background: ${props => props.theme.insertMarkerColor};
-  width: 1px;
-  left: ${props => props.insertMarkerPos}px;
   height: ${props => props.height}px;
 `;
 
@@ -211,7 +203,7 @@ class Channel extends Component {
       ) : null;
 
     const insertMarkerElem = insertMarker ? 
-      <InsertMarker className='InsertMarker' insertMarkerPos= { insertMarker.pos } theme={ theme } height={ imageHeight }/>
+      <ImageMarker className='InsertMarker' markerPos= { insertMarker.pos } markerColor={theme.insertMarkerColor} theme={ theme } height={ imageHeight }/>
         : null;
   
     return (

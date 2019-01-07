@@ -22,17 +22,9 @@ const Cursor = styled.div`
 
 const Marker = styled.div`
   position: absolute;
-  background: ${props => props.theme.markerColor};
+  background: ${props => props.markerColor || props.theme.markerColor};
   width: 1px;
   left: ${props => props.offset + props.markerPos}px;
-  height: ${props => props.waveHeight}px;
-`;
-
-const InsertMarker = styled.div`
-  position: absolute;
-  background: ${props => props.theme.insertMarkerColor};
-  width: 1px;
-  left: ${props => props.offset + props.insertMarkerPos}px;
   height: ${props => props.waveHeight}px;
 `;
 
@@ -167,7 +159,7 @@ class Channel extends Component {
       ) : null;
 
     const insertMarkerElem = insertMarker ? 
-    <InsertMarker className='InsertMarker' insertMarkerPos= { insertMarker.pos } theme={ theme } waveHeight={ waveHeight } offset={offset}/>
+    <Marker className='InsertMarker' markerPos= { insertMarker.pos } markerColor={theme.insertMarkerColor} theme={ theme } waveHeight={ waveHeight } offset={offset}/>
       : null;
 
     return (
