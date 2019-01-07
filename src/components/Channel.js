@@ -113,9 +113,9 @@ class Channel extends Component {
 
   handleMouseEvent = (e, eventName) => {
     if (this.props.handleMouseEvent) {
-      const posX = getMouseEventPosition(e, "ChannelWrapper");
-        this.props.handleMouseEvent(posX, eventName);
-        return;
+      const pos = getMouseEventPosition(e, "ChannelWrapper");
+      this.props.handleMouseEvent(pos, eventName, e.timeStamp);
+      return;
     }
   }
 
@@ -126,7 +126,7 @@ class Channel extends Component {
   }
 
   render() {
-    const {length, waveHeight, scale, progress, cursorPos, selection, markers, insertMarker, theme, offset} = this.props;
+    const {length, waveHeight, scale, progress, cursorPos, selection, markers, theme, offset} = this.props;
 
     let totalWidth = length;
     let waveformCount = 0;
@@ -155,12 +155,11 @@ class Channel extends Component {
       
     const markerElems = markers && Array.isArray(markers) ?
       markers.map((marker) => 
-        <Marker className='Marker' key={marker.id} markerPos= { marker.pos } theme={ theme } waveHeight={ waveHeight } offset={offset}/>
+        <Marker className='Marker' key={marker.id} markerPos= { marker.pos } 
+          markerColor={marker.id === "insert" ? theme.insertMarkerColor : theme.markerColor} 
+          theme={ theme } waveHeight={ waveHeight } offset={offset}/>
       ) : null;
 
-    const insertMarkerElem = insertMarker ? 
-    <Marker className='InsertMarker' markerPos= { insertMarker.pos } markerColor={theme.insertMarkerColor} theme={ theme } waveHeight={ waveHeight } offset={offset}/>
-      : null;
 
     return (
       <ChannelWrapper className='ChannelWrapper' onMouseDown={ (e) => this.handleMouseEvent(e, "mouseDown") } onMouseUp={ (e) => this.handleMouseEvent(e, "mouseUp") } onMouseMove={ (e) => this.handleMouseEvent(e, "mouseMove") } onMouseLeave={ (e) => this.handleMouseEvent(e, "mouseLeave") }
@@ -173,7 +172,6 @@ class Channel extends Component {
         { selectionElem }
         { cursorElem }
         { markerElems }
-        { insertMarkerElem }
         
       </ChannelWrapper>
       );
@@ -209,8 +207,6 @@ Channel.defaultProps = {
   selection: null,
   // positions of the markers in CSS pixels from the left of channel (null: do not draw)
   markers: [],
-  // positions of the insert marker in CSS pixels from the left of channel (null: do not draw)
-  insertMarker: null,
 };
 
 export default withTheme(Channel);

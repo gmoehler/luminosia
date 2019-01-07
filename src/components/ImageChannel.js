@@ -121,7 +121,7 @@ class Channel extends Component {
     if (this.props.handleMouseEvent) {
       e.preventDefault();
       const pos = getMouseEventPosition(e, "ChannelWrapper", this.props.id);
-      this.props.handleMouseEvent(pos, eventName);
+      this.props.handleMouseEvent(pos, eventName, e.timeStamp);
       return;
     }
   }
@@ -143,7 +143,7 @@ class Channel extends Component {
   }
 
   render() {
-    const {parts, imageHeight, scale, progress, cursorPos, selection, markers, insertMarker, theme, maxWidth} = this.props;
+    const {parts, imageHeight, scale, progress, cursorPos, selection, markers, theme, maxWidth} = this.props;
 
     // loop thru all images/parts
     const allImageCanvases = [];
@@ -199,12 +199,10 @@ class Channel extends Component {
       : null;
 
     const markerElems = markers && Array.isArray(markers) ?
-      markers.map((marker) => <ImageMarker key={marker.id} className='Marker' markerPos={ marker.pos } theme={ theme } height={ imageHeight } />
+      markers.map((marker) => <ImageMarker key={marker.id} className='Marker' markerPos={ marker.pos } 
+      markerColor={marker.id === "insert" ? theme.insertMarkerColor : theme.markerColor} 
+      theme={ theme } height={ imageHeight } />
       ) : null;
-
-    const insertMarkerElem = insertMarker ? 
-      <ImageMarker className='InsertMarker' markerPos= { insertMarker.pos } markerColor={theme.insertMarkerColor} theme={ theme } height={ imageHeight }/>
-        : null;
   
     return (
       <ImageChannelWrapper 
@@ -232,7 +230,6 @@ class Channel extends Component {
         { selectionElem }
         { cursorElem }
         { markerElems }
-        { insertMarkerElem }
 
       </ImageChannelWrapper>
       );
@@ -265,8 +262,6 @@ Channel.defaultProps = {
   selection: null,
   // positions of the markers in CSS pixels from the left of channel (null: do not draw)
   markers: [],
-  // positions of the insert marker in CSS pixels from the left of channel (null: do not draw)
-  insertMarker: null,
 };
 
 export default withTheme(Channel);
