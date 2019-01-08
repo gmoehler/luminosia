@@ -127,7 +127,7 @@ class Channel extends Component {
       	timestamp: e.timeStamp,
       	src, // drag source path
       }
-      this.props.handleMouseEvent(eventInfo, eventName);
+      this.props.handleMouseEvent(eventName, eventInfo);
       return;
     }
   }

@@ -114,7 +114,13 @@ class Channel extends Component {
   handleMouseEvent = (e, eventName) => {
     if (this.props.handleMouseEvent) {
       const pos = getMouseEventPosition(e, "ChannelWrapper");
-      this.props.handleMouseEvent(pos, eventName, e.timeStamp);
+      const eventInfo = {
+      	...pos, // x pos, channelId, partId
+      	timestamp: e.timeStamp,
+      	// no drag source path
+      }
+      this.props.handleMouseEvent(eventName, eventInfo);
+
       return;
     }
   }

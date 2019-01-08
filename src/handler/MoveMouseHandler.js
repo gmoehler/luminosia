@@ -9,7 +9,7 @@ export default class MoveMouseHandler {
   }
 
   // if TimeToPixels HOC wraps the Channel then pos is in secs
-  handleMouseEvent = (evInfo, eventName) => {
+  handleMouseEvent = (eventName, evInfo) => {
     switch (eventName) {
 
       case "mouseDown":
