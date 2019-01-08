@@ -38,7 +38,7 @@ export function withPlay(WrappedComponent) {
         move: this.props.move,
         updateMarker: this.props.updateMarker,
         setMarker: this.props.setMarker,
-        addPart: this.props.addPart,
+        addPartAndMarkers: this.props.addPartAndMarkers,
     });
       // audio setup
       if (this.props.type === "audio") { 

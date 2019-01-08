@@ -1,4 +1,5 @@
-import {SELECT, SET_ZOOM_LEVEL, SET_MODE, SET_MARKER, UPDATE_MARKER} from '../actions/types';
+import { cloneDeep } from 'lodash';
+import {SELECT, SET_ZOOM_LEVEL, SET_MODE, SET_MARKER, UPDATE_MARKER, DELETE_MARKER} from '../actions/types';
 
 const initialState = {
   selection: {
@@ -32,6 +33,16 @@ export default(state = initialState, action) => {
             pos: action.payload.pos,
           }
         }
+      };
+
+    case DELETE_MARKER:
+      const markers = cloneDeep(state.markersById);
+      delete markers[action.payload.markerId];
+
+      return {
+        ...state,
+        markersById: 
+          markers
       };
 
     case UPDATE_MARKER:

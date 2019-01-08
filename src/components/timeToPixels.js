@@ -62,7 +62,7 @@ export function timeToPixels(WrappedComponent) {
 
         select={this.select}
         move={this.move}
-        handleMouseEvent={ (pos, event, timestamp) => this.handleMouseEvent(pos, event, timestamp, resolution) } 
+        handleMouseEvent={ (eventName, evInfo) => this.handleMouseEvent(eventName, evInfo, resolution) } 
 
         />;
       }

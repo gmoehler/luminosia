@@ -95,21 +95,21 @@ export default (state = initialState, action) => {
       };
 
     case ADD_PART:
-      const partId = state.byIds[action.payload.channelId].numParts + 1;
+      const partId = state.byIds[action.payload.channelId].lastPartId+1;
       return {
         ...state,
         byIds: {
           ...state.byIds,
           [action.payload.channelId]: {
             ...state.byIds[action.payload.channelId],
-            numParts: partId,
+            lastPartId: partId,
             byParts: {
               ...state.byIds[action.payload.channelId].byParts,
               [partId]: {
                 id: partId,
                 src: action.payload.src,
                 offset: action.payload.offset,
-                duration: 1,
+                duration: 1, // TODO: get real duration
               }
             }
           }
@@ -199,8 +199,16 @@ export const getallChannelsData = (state) => {
   return state.channel.byIds;
 }
 
-export const getChannelData = (state, source) => {
-  return state.channel.byIds[source];
+export const getChannelData = (state, channelId) => {
+  return state.channel.byIds[channelId];
+}
+
+export const getPart = (state, channelId, partId) => {
+  return state.channel.byIds[channelId].byParts[partId];
+}
+
+export const getLastPartId = (state, channelId) => {
+  return state.channel.byIds[channelId].lastPartId;
 }
 
 function allChannelsStopped(playState) {

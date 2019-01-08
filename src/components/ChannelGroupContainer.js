@@ -2,12 +2,16 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import ChannelGroup from './ChannelGroup'
-import { setChannelPlayState, moveChannel, addPart } from '../actions/channelActions'
+import { setChannelPlayState, moveChannel, addPartAndMarkers } from '../actions/channelActions'
 import { select, setMarker, updateMarker } from '../actions/viewActions'
-import { getallChannelsData, getMaxDuration } from '../reducers/channelReducer'
+import { getallChannelsData, getMaxDuration, getLastPartId } from '../reducers/channelReducer'
 import { getSelectionRange, getZoomLevel, getMode, getMarkers } from '../reducers/viewReducer'
 
 class ChannelGroupContainer extends Component {
+
+  getLastPartId = (channelId) => {
+    getLastPartId(this.props.currentState, channelId)
+  }
 
   render() {
 
@@ -41,7 +45,7 @@ const mapDispatchToProps = dispatch => ({
     markerId,
     incr
   })),
-  addPart: (channelId, src, offset) => dispatch(addPart({
+  addPartAndMarkers: (channelId, src, offset) => dispatch(addPartAndMarkers({
     channelId,
     src,
     offset
