@@ -9,20 +9,20 @@ export default class SelectionMouseHandler {
   }
 
   // if TimeToPixels HOC wraps the Channel then pos is in secs
-  handleMouseEvent = (pos, eventName, timestamp) => {
-    //console.log(pos, eventName);
+  handleMouseEvent = (evInfo, eventName) => {
+    //console.log(evInfo, eventName);
     switch (eventName) {
 
       case "dragEnter":
-      this.handleInsertMarker(pos, timestamp)
+      this.handleInsertMarker(evInfo)
       break;
 
       case "dragOver":
-      this.handleInsertMarker(pos, timestamp)
+      this.handleInsertMarker(evInfo)
       break;
 
       case "drop":
-      this.handleInsertImage(pos)
+      this.handleInsertImage(evInfo)
       break;
 
       default:
@@ -30,20 +30,20 @@ export default class SelectionMouseHandler {
     }
   }
 
-  handleInsertMarker = (pos, timestamp) => {
+  handleInsertMarker = (evInfo, timestamp) => {
     // only realize marker move after some time intervals and larger steps
     if (!this.prevPosX || 
-        (timestamp - this.prevTimestamp > 100 && Math.abs(pos.x - this.prevPosX) > 0.01)) { 
-      console.log(pos.x, " ", timestamp, "drag");
-      this.handlerFunctions.setMarker("insert", pos.x);
-      this.prevPosX = pos.x;
-      this.prevTimestamp = timestamp;
+        (evInfo.timestamp - this.prevTimestamp > 100 && Math.abs(evInfo.x - this.prevPosX) > 0.01)) { 
+      console.log(evInfo.x, " ", evInfo.timestamp, "drag");
+      this.handlerFunctions.setMarker("insert", evInfo.x);
+      this.prevPosX = evInfo.x;
+      this.prevTimestamp = evInfo.timestamp;
     }
   }
 
-  handleInsertImage = (pos) => {
-    console.log(pos.x, " drop");
-    this.handlerFunctions.addPart(pos.channelId, "src", pos.x);
+  handleInsertImage = (evInfo) => {
+    console.log(evInfo.x, " drop");
+    this.handlerFunctions.addPart(evInfo.channelId, evInfo.src, evInfo.x);
     this.prevPosX = null;
     this.prevTimestamp = 0;
   }

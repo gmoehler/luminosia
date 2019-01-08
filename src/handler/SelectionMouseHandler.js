@@ -8,23 +8,23 @@ export default class SelectionMouseHandler {
   }
 
   // if TimeToPixels HOC wraps the Channel then pos is in secs
-  handleMouseEvent = (pos, eventName) => {
+  handleMouseEvent = (evInfo, eventName) => {
     switch (eventName) {
 
       case "mouseDown":
-      this.handleSelectionFrom(pos);
+      this.handleSelectionFrom(evInfo);
       break;
 
       case "mouseMove":
-      this.handleSelectionTo(pos, false);
+      this.handleSelectionTo(evInfo, false);
       break;
 
       case "mouseUp":
-      this.handleSelectionTo(pos, true);
+      this.handleSelectionTo(evInfo, true);
       break;
 
       case "mouseLeave":
-      this.handleSelectionTo(pos, true);
+      this.handleSelectionTo(evInfo, true);
       break;
 
       default:
@@ -32,18 +32,18 @@ export default class SelectionMouseHandler {
     }
   }
 
-  handleSelectionFrom = (pos) => {
-    this.selectFromX = pos.x;
-    this.handlerFunctions.select(pos.x, pos.x);
+  handleSelectionFrom = (evInfo) => {
+    this.selectFromX = evInfo.x;
+    this.handlerFunctions.select(evInfo.x, evInfo.x);
   }
 
-  handleSelectionTo = (pos, finalizeSelection) => {
+  handleSelectionTo = (evInfo, finalizeSelection) => {
     if (this.selectFromX) { // only when mouse down has occured
       // console.log('selection to: ', x);
-      if (this.selectFromX < pos.x) {
-        this.handlerFunctions.select(this.selectFromX, pos.x);
+      if (this.selectFromX < evInfo.x) {
+        this.handlerFunctions.select(this.selectFromX, evInfo.x);
       } else {
-        this.handlerFunctions.select(pos.x, this.selectFromX);
+        this.handlerFunctions.select(evInfo.x, this.selectFromX);
       }
       if (finalizeSelection) {
         this.selectFromX = null; 
