@@ -121,6 +121,7 @@ class Channel extends Component {
     if (this.props.handleMouseEvent) {
       e.preventDefault();
       const pos = getMouseEventPosition(e, "ChannelWrapper", this.props.id);
+      const src = e.dataTransfer.getData("src");
       this.props.handleMouseEvent(pos, eventName, e.timeStamp);
       return;
     }

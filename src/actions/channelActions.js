@@ -3,7 +3,7 @@ import { merge } from 'lodash';
 
 import { LOAD_CHANNEL_STARTED, LOAD_CHANNEL_FAILURE, LOAD_CHANNEL_SUCCESS, 
   LOAD_MULTICHANNEL_STARTED, LOAD_MULTICHANNEL_FAILURE, LOAD_MULTICHANNEL_SUCCESS, 
-  PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL,
+  PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL, ADD_PART,
 } from './types';
 
 import { setMarker } from './viewActions';
@@ -61,7 +61,7 @@ function doLoadMultiPart(dispatch, getState, channelConfig, audioContext) {
   Promise.all(loadChannelPromises)
     .then((channelBuffers) => {
 
-      // organize result object
+      // organize result object read from file
       const normalizedBuffers = channelBuffers.reduce((res, buf) => {
 
         // buffer is only needed for duration because we load image again for canvas
@@ -80,11 +80,12 @@ function doLoadMultiPart(dispatch, getState, channelConfig, audioContext) {
         return res;
       }, {numParts: 0})
 
+      const reducedConfig = Object.assign({}, channelConfig);
+      reducedConfig.numParts =  normalizedParts.numParts;
+      delete reducedConfig.parts; // will be normalized with channelParts
+
       const channelParts = merge({}, normalizedBuffers, normalizedParts);
       delete channelParts.numParts; // delete intermediate value
-
-      const reducedConfig = Object.assign({}, channelConfig);
-      delete reducedConfig.parts; // will be normalized with channelParts
 
       dispatch(loadMultiChannelSuccess({
         channelConfig: reducedConfig,
@@ -137,6 +138,11 @@ export const loadChannel = (({channels, channelSources, audioContext}) => {
       return doLoad(dispatch, getState, channelConfig, audioContext);
     })
   }
+});
+
+export const addPart = partInfo => ({
+  type: ADD_PART,
+  payload: partInfo
 });
 
 // play related actions

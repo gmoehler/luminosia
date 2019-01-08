@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import ChannelGroup from './ChannelGroup'
-import { setChannelPlayState, moveChannel } from '../actions/channelActions'
+import { setChannelPlayState, moveChannel, addPart } from '../actions/channelActions'
 import { select, setMarker, updateMarker } from '../actions/viewActions'
 import { getallChannelsData, getMaxDuration } from '../reducers/channelReducer'
 import { getSelectionRange, getZoomLevel, getMode, getMarkers } from '../reducers/viewReducer'
@@ -40,6 +40,11 @@ const mapDispatchToProps = dispatch => ({
   updateMarker: (markerId, incr) => dispatch(updateMarker({
     markerId,
     incr
+  })),
+  addPart: (channelId, src, offset) => dispatch(addPart({
+    channelId,
+    src,
+    offset
   })),
   move: (channelId, partId, incr) => dispatch(moveChannel({
     channelId, 

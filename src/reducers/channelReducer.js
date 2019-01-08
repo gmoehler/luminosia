@@ -2,7 +2,7 @@ import { merge } from 'lodash';
 
 import { LOAD_CHANNEL_STARTED, LOAD_CHANNEL_SUCCESS, LOAD_CHANNEL_FAILURE, 
   LOAD_MULTICHANNEL_STARTED, LOAD_MULTICHANNEL_FAILURE, LOAD_MULTICHANNEL_SUCCESS, 
-  PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL } from '../actions/types';
+  PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL, ADD_PART } from '../actions/types';
 
 import { samplesToSeconds } from '../utils/conversions';
 
@@ -90,6 +90,28 @@ export default (state = initialState, action) => {
             loading: false,
             playState: "stopped",
             error: action.payload
+          }
+        }
+      };
+
+    case ADD_PART:
+      const partId = state.byIds[action.payload.channelId].numParts + 1;
+      return {
+        ...state,
+        byIds: {
+          ...state.byIds,
+          [action.payload.channelId]: {
+            ...state.byIds[action.payload.channelId],
+            numParts: partId,
+            byParts: {
+              ...state.byIds[action.payload.channelId].byParts,
+              [partId]: {
+                id: partId,
+                src: action.payload.src,
+                offset: action.payload.offset,
+                duration: 1,
+              }
+            }
           }
         }
       };

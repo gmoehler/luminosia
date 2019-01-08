@@ -22,7 +22,12 @@ export default class ImageList extends Component {
 
 		const imagesComponent = this.props.images
 			.map((img) => 
-				<Image key={ img.src } src={ img.src } />
+				<Image 
+					key={ img.src } 
+					src={ img.src } 
+					draggable
+					onDragStart={(e)=>e.dataTransfer.setData("src", img.src)} 
+				/>
 			);
 
     return (
