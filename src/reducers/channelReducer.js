@@ -1,8 +1,8 @@
-import { merge } from 'lodash';
+import { merge, cloneDeep } from 'lodash';
 
 import { LOAD_CHANNEL_STARTED, LOAD_CHANNEL_SUCCESS, LOAD_CHANNEL_FAILURE, 
   LOAD_MULTICHANNEL_STARTED, LOAD_MULTICHANNEL_FAILURE, LOAD_MULTICHANNEL_SUCCESS, 
-  PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL, ADD_PART } from '../actions/types';
+  PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL, ADD_PART, DELETE_PART } from '../actions/types';
 
 import { samplesToSeconds } from '../utils/conversions';
 
@@ -112,6 +112,23 @@ export default (state = initialState, action) => {
                 duration: 1, // TODO: get real duration
               }
             }
+          }
+        }
+      };
+
+    case DELETE_PART:
+      const parts = cloneDeep(state.byIds[action.payload.channelId]).byParts;
+      delete parts[action.payload.partId];
+
+      return {
+        ...state,
+        byIds: {
+          ...state.byIds,
+          [action.payload.channelId]: {
+            ...state.byIds[action.payload.channelId],
+            lastPartId: partId,
+            byParts: 
+              parts
           }
         }
       };

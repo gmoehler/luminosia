@@ -3,7 +3,8 @@ import { merge } from 'lodash';
 
 import { LOAD_CHANNEL_STARTED, LOAD_CHANNEL_FAILURE, LOAD_CHANNEL_SUCCESS, 
   LOAD_MULTICHANNEL_STARTED, LOAD_MULTICHANNEL_FAILURE, LOAD_MULTICHANNEL_SUCCESS, 
-  PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL, ADD_PART,
+  PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL, 
+  ADD_PART, DELETE_PART,
 } from './types';
 
 import { setMarker, deleteMarker } from './viewActions';
@@ -16,7 +17,6 @@ const loadChannelStarted = startInfo => ({
   type: LOAD_CHANNEL_STARTED,
   payload: startInfo
 });
-
 
 const loadChannelSuccess = channelInfo => ({
   type: LOAD_CHANNEL_SUCCESS,
