@@ -207,8 +207,22 @@ class Channel extends Component {
       : null;
 
     const markerElems = markers && Array.isArray(markers) ?
-      markers.map((marker) => <ImageMarker key={ marker.id } className='Marker' markerPos={ marker.pos } markerColor={ marker.id === "insert" ? theme.insertMarkerColor : theme.markerColor } theme={ theme } height={ imageHeight }
-                              />
+      markers.map((marker) => { 
+        let color = theme.markerColor;
+        if ( marker.type  === "insert" || marker.id  === "insert" ) {
+          color = theme.insertMarkerColor;
+        } else if ( marker.type  === "selected" ) {
+          color = theme.selectedMarkerColor;
+        }
+        return <ImageMarker 
+          key={ marker.id } 
+          className='Marker' 
+          markerPos={ marker.pos } 
+          markerColor={color} 
+          theme={ theme } 
+          height={ imageHeight }
+        />
+      }
       ) : null;
 
     return (
@@ -233,6 +247,7 @@ Channel.defaultProps = {
     cursorColor: 'red',
     markerColor: 'rgba(255,255, 0, 0.5)', // transparent yellow
     insertMarkerColor: 'rgba(255,165, 0, 0.5)', // transparent orange
+    selectedMarkerColor: 'rgba(255,165, 0, 1)', // orange
     selectionColor: 'rgba(0,0,255,0.5)',
     imageBackgroundColor: 'black',
   },

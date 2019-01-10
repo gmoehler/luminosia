@@ -12,7 +12,7 @@ export const STOP_CHANNELS = "STOP_CHANNELS";
 export const MOVE_CHANNEL = "MOVE_CHANNEL";
 export const ADD_PART = "ADD_PART";
 export const SELECT_PART = "SELECT_PART";
-export const DELETE_PART = "DELETE_PART";
+export const DELETE_PART = "DELETE_PART"; // not realized yet
 
 // image list actions
 export const ADD_IMAGE = "ADD_IMAGE";

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { loadChannel, playChannel, stopChannel } from '../actions/channelActions'
-import { getResolution, setMode, select, setResolution } from '../actions/viewActions'
+import { setMode, select, setResolution } from '../actions/viewActions'
 import ChannelControl from './ChannelControl';
 import { loadImageList } from '../actions/imageListActions';
 

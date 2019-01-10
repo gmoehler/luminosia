@@ -20,8 +20,8 @@ export default class ChannelControl extends Component {
         <button onClick={ this.props.zoomIn }>Zoom in</button>
         <button onClick={ this.props.zoomOut }>Zoom out</button>
         <select onChange={ this.props.setMode }>
-          <option value="selectionMode">Selection mode</option>
           <option value="moveMode">Move mode</option>
+          <option value="selectionMode">Selection mode</option>
         </select>
       </ChannelControlWrapper>
       );
