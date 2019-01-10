@@ -227,8 +227,14 @@ class Channel extends Component {
 
     return (
       <ImageChannelWrapper className='ChannelWrapper' onMouseDown={ (e) => this.handleMouseEvent(e, "mouseDown") } onMouseUp={ (e) => this.handleMouseEvent(e, "mouseUp") } onMouseMove={ (e) => this.handleMouseEvent(e, "mouseMove") } onMouseLeave={ (e) => this.handleMouseEvent(e, "mouseLeave") }
-        onDragEnter={ (e) => this.handleMouseEvent(e, "dragEnter") } onDragEnd={ (e) => this.handleMouseEvent(e, "dragEnd") } onDragExit={ (e) => this.handleMouseEvent(e, "dragExit") } onDragLeave={ (e) => this.handleMouseEvent(e, "dragLeave") } onDragOver={ (e) => this.handleMouseEvent(e, "dragOver") }
-        onDragStart={ (e) => this.handleMouseEvent(e, "dragStart") } onDrop={ (e) => this.handleMouseEvent(e, "drop") } cssWidth={ maxWidth } theme={ theme } height={ imageHeight }>
+        onDragEnter={ (e) => this.handleMouseEvent(e, "dragEnter") } 
+        onDragEnd={ (e) => this.handleMouseEvent(e, "dragEnd") } 
+        onDragExit={ (e) => this.handleMouseEvent(e, "dragExit") } onDragLeave={ (e) => this.handleMouseEvent(e, "dragLeave") } onDragOver={ (e) => this.handleMouseEvent(e, "dragOver") }
+        onDragStart={ (e) => this.handleMouseEvent(e, "dragStart") } 
+        onDrop={ (e) => this.handleMouseEvent(e, "drop") } 
+        onClick={ (e) => this.handleMouseEvent(e, "click") } 
+        cssWidth={ maxWidth } theme={ theme } height={ imageHeight }>
+        
         { allCanvasRefImages }
         { allImageCanvases }
         { progressElem }

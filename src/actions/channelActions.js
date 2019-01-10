@@ -4,7 +4,7 @@ import { merge } from 'lodash';
 import { LOAD_CHANNEL_STARTED, LOAD_CHANNEL_FAILURE, LOAD_CHANNEL_SUCCESS, 
   LOAD_MULTICHANNEL_STARTED, LOAD_MULTICHANNEL_FAILURE, LOAD_MULTICHANNEL_SUCCESS, 
   PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL, 
-  ADD_PART, SELECT_PART
+  ADD_PART
 } from './types';
 
 import { setMarker, deleteMarker } from './viewActions';
@@ -96,10 +96,14 @@ function doLoadMultiPart(dispatch, getState, channelConfig, audioContext) {
       Object.values(channelParts).forEach((part) => {
         dispatch(setMarker({
           markerId: `${channelConfig.id}-${part.id}-l`, 
-          pos: part.offset}))
+          pos: part.offset,
+          type: "normal"
+        }))
         dispatch(setMarker({
           markerId: `${channelConfig.id}-${part.id}-r`, 
-          pos: part.offset + part.duration}))
+          pos: part.offset + part.duration,
+          type: "normal"
+        }))
       })
     })
     .catch(err => {
@@ -147,10 +151,14 @@ export const addPartAndMarkers = (partInfo) => {
     const lastPartId = getLastPartId(getState(), partInfo.channelId);
     dispatch(setMarker({
       markerId: `${partInfo.channelId}-${lastPartId}-l`, 
-      pos: partInfo.offset}));
+      pos: partInfo.offset,
+      type: "normal"
+    }));
     dispatch(setMarker({
       markerId: `${partInfo.channelId}-${lastPartId}-r`, 
-      pos: partInfo.offset + partInfo.duration}));
+      pos: partInfo.offset + partInfo.duration,
+      type: "normal"
+    }));
     dispatch(deleteMarker({
       markerId: "insert"})); 
   }

@@ -11,7 +11,6 @@ export const PLAY_CHANNELS = "PLAY_CHANNELS";
 export const STOP_CHANNELS = "STOP_CHANNELS";
 export const MOVE_CHANNEL = "MOVE_CHANNEL";
 export const ADD_PART = "ADD_PART";
-export const SELECT_PART = "SELECT_PART";
 export const DELETE_PART = "DELETE_PART"; // not realized yet
 
 // image list actions
@@ -29,3 +28,4 @@ export const SET_MODE = "SET_MODE";
 export const SET_MARKER = "SET_MARKER";
 export const DELETE_MARKER = "DELETE_MARKER";
 export const UPDATE_MARKER = "UPDATE_MARKER";
+export const SET_SELECTED = "SET_SELECTED";
