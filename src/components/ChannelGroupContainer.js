@@ -5,7 +5,7 @@ import ChannelGroup from './ChannelGroup'
 import { setChannelPlayState, moveChannel, addPartAndMarkers } from '../actions/channelActions'
 import { select, setMarker, updateMarker } from '../actions/viewActions'
 import { getallChannelsData, getMaxDuration, getLastPartId } from '../reducers/channelReducer'
-import { getSelectionRange, getZoomLevel, getMode, getMarkers } from '../reducers/viewReducer'
+import { getSelectionRange, getResolution, getMode, getMarkers } from '../reducers/viewReducer'
 
 class ChannelGroupContainer extends Component {
 
@@ -25,7 +25,7 @@ const mapStateToProps = (state, props) => {
   return {
     allChannelsData: getallChannelsData(state),
     selection: getSelectionRange(state),
-    pixelsPerSecond: getZoomLevel(state),
+    resolution: getResolution(state),
     maxDuration: getMaxDuration(state),
     mode: getMode(state),
     markers: getMarkers(state),
@@ -52,7 +52,7 @@ const mapDispatchToProps = dispatch => ({
     duration,
   })),
   move: (channelId, partId, incr) => dispatch(moveChannel({
-    channelId, 
+    channelId,
     partId,
     incr
   })),

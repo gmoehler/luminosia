@@ -1,6 +1,8 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+
+import { secondsToPixels } from '../utils/conversions';
 
 const ImageListWrapper = styled.div`
 	display: flex;
@@ -16,18 +18,22 @@ const Image = styled.img`
 
 
 // contains multiple AudioChannels
-export default class ImageList extends Component {
+export default class ImageList extends PureComponent {
 
   render() {
 
-    const imagesComponent = this.props.images
+		const { images, resolution } = this.props;
+
+		const imagesComponent =  images
 			.map((img) => 
 			<Image 
 				key={ img.src } 
 				src={ img.src } 
 				draggable onDragStart={ (e) => {
 					e.dataTransfer.setData("src", img.src);
-					e.dataTransfer.setData("duration", img.duration)
+					// transfer duration in pixels since this is going to be consumed 
+					// in a Channel component which calculates in pixels
+					e.dataTransfer.setData("duration", secondsToPixels(img.duration, resolution)); 
 				}}
 				/>
     );
@@ -41,5 +47,6 @@ export default class ImageList extends Component {
 }
 
 ImageList.propTypes = {
-  images: PropTypes.array, // all images
+	images: PropTypes.object, // all images
+	resolution: PropTypes.number,
 }

@@ -107,7 +107,7 @@ export default (state = initialState, action) => {
                 id: partId,
                 src: action.payload.src,
                 offset: action.payload.offset,
-                duration: 1 // action.payload.duration, TODO: get duration information here
+                duration: action.payload.duration, 
               }
             }
           }

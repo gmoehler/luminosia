@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 import ImageList from './ImageList'
 import { getImageList } from '../reducers/imageListReducer';
+import { getResolution } from '../reducers/viewReducer';
 
 
 class ImageListContainer extends Component {
@@ -10,13 +11,14 @@ class ImageListContainer extends Component {
   render() {
 
     return (
-      <ImageList {...this.props} />);
+      <ImageList images={ this.props.images } resolution={ this.props.resolution } />);
   }
 }
 
 const mapStateToProps = (state, props) => {
   return {
     images: getImageList(state),
+    resolution: getResolution(state),
   }
 };
 

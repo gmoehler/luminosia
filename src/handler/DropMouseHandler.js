@@ -43,7 +43,7 @@ export default class SelectionMouseHandler {
 
   handleInsertImage = (evInfo) => {
     console.log(evInfo.x, " drop");
-    this.handlerFunctions.addPartAndMarkers(evInfo.channelId, evInfo.src, evInfo.duration);
+    this.handlerFunctions.addPartAndMarkers(evInfo.channelId, evInfo.src, evInfo.x, evInfo.duration);
     this.prevPosX = null;
     this.prevTimestamp = 0;
   }

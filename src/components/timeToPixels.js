@@ -15,17 +15,20 @@ export function timeToPixels(WrappedComponent) {
     handleMouseEvent = (eventName, evInfo, resolution) => {
       if (this.props.handleMouseEvent) {
         evInfo.x = pixelsToSeconds(evInfo.x, resolution);
+        evInfo.duration = pixelsToSeconds(evInfo.duration, resolution);
         this.props.handleMouseEvent(eventName, evInfo);
       }
     }
 
     render() {
 
-      const {resolution, 
+      const {
+        resolution, 
         offset , progress, cursorPos, selection, maxDuration, 
         parts, markers,
 		    select, move, handleMouseEvent,
-		    ...passthruProps} = this.props;
+        ...passthruProps
+      } = this.props;
 
       // channel offset only used for audio buffer which does not contain parts
       const offsetPx = offset ? secondsToPixels(offset, resolution) : 0;

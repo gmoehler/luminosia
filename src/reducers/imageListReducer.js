@@ -53,3 +53,7 @@ export default (state = initialState, action) => {
 export const getImageList = (state) => {
   return state.images.byId ? Object.values(state.images.byId) : [];
 }
+
+export const getImageSampleRate = (state) => {
+  return state.images.sampleRate;
+}

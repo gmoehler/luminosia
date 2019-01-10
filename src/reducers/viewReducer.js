@@ -1,5 +1,5 @@
 import { cloneDeep } from 'lodash';
-import { SELECT, SET_ZOOM_LEVEL, SET_MODE, SET_MARKER, UPDATE_MARKER, DELETE_MARKER } from '../actions/types';
+import { SELECT, SET_RESOLUTION, SET_MODE, SET_MARKER, UPDATE_MARKER, DELETE_MARKER } from '../actions/types';
 
 const initialState = {
   selection: {
@@ -7,7 +7,7 @@ const initialState = {
     to: null
   },
   markersById: {},
-  zoomLevel: 1000,
+  resolution: 1000,
   mode: "selectionMode",
 };
 
@@ -57,10 +57,10 @@ export default (state = initialState, action) => {
         }
       };
 
-    case SET_ZOOM_LEVEL:
+    case SET_RESOLUTION:
       return {
         ...state,
-        zoomLevel: action.payload
+        resolution: action.payload
       }
 
     case SET_MODE:
@@ -81,8 +81,8 @@ export const getSelectionRange = (state) => {
   }
 }
 
-export const getZoomLevel = (state) => {
-  return state.view.zoomLevel
+export const getResolution = (state) => {
+  return state.view.resolution
 }
 
 export const getMode = (state) => {

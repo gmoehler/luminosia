@@ -23,7 +23,7 @@ export const LOAD_IMAGELIST_FAILURE = "LOAD_IMAGELIST_FAILURE";
 
 // view actions
 export const SELECT = "SELECT";
-export const SET_ZOOM_LEVEL = "SET_ZOOM_LEVEL";
+export const SET_RESOLUTION = "SET_RESOLUTION";
 export const SET_CHANNEL_PLAY_STATE = "SET_CHANNEL_PLAY_STATE";
 export const SET_MODE = "SET_MODE";
 export const SET_MARKER = "SET_MARKER";
