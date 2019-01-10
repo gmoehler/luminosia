@@ -5,14 +5,20 @@ export default class MoveMouseHandler {
   constructor(handlerFunctions){
     this.handlerFunctions = handlerFunctions;
     this.moveFromX = null;
+    this.channelId = null;
     this.partId = null;
+    this.selected = false;
   }
 
   // if TimeToPixels HOC wraps the Channel then pos is in secs
   handleMouseEvent = (eventName, evInfo) => {
     switch (eventName) {
 
-      case "mouseDown":
+      case "click":
+      this.handleClick(evInfo);
+      break;
+
+	 case "mouseDown":
       this.handleMoveFrom(evInfo);
       break;
 
@@ -33,18 +39,53 @@ export default class MoveMouseHandler {
     }
   }
 
+  handleClick = (evInfo) => {
+    if (this.partId === evInfo.partId && 
+		this.channelId === evInfo.channelId ) {
+	    // toggle previously selected
+    	this.selected = !this.selected; 
+        this.updateMarkers();
+    } else {
+      if (this.selected && this.channelId && this.partId) {
+    	  //deselect previously selected part
+          this.selected = false;
+    	  this.updateMarkers();
+      }
+  	this.channelId = evInfo.channelId;
+  	this.partId = evInfo.partId;
+      this.selected = true;
+      this.updateMarkers();
+     }
+  }
+  
   handleMoveFrom = (evInfo) => {
+  	
+    if (this.selected && 
+         this.channelId && this.partId && 
+		 (this.partId !== evInfo.partId || 
+		  this.channelId !== evInfo.channelId)) {
+    	//deselect previously selected part
+        this.selected = false;
+    	this.updateMarkers();
+    }
+      
     this.moveFromX = evInfo.x;
     this.channelId = evInfo.channelId;
     this.partId = evInfo.partId;
 
-    // set type to selected
-    this.handlerFunctions.updateMarker(`${this.channelId}-${this.partId}-l`, 0, "selected");
-    this.handlerFunctions.updateMarker(`${this.channelId}-${this.partId}-r`, 0, "selected");
+    // set marker type to selected
+    this.selected = true;
+    this.updateMarkers();
+  }
+  
+  updateMarkers = ()  => {
+    const type = this.selected ? "selected" : "";
+    this.handlerFunctions.updateMarker(`${this.channelId}-${this.partId}-l`, 0, type);
+    this.handlerFunctions.updateMarker(`${this.channelId}-${this.partId}-r`, 0, type);
   }
 
   handleMoveTo = (evInfo, finalizeSelection) => {
-    if (this.moveFromX && this.partId) { 
+    if (this.moveFromX && this.partId && this.channelId) { 
       // only when mouse down has occured
       // console.log(`move from ${this.moveFromX} to ${x}`);
       const incrX = evInfo.x - this.moveFromX;
@@ -58,9 +99,7 @@ export default class MoveMouseHandler {
 
       if (finalizeSelection) {
 
-        // set type back to normal
-        this.handlerFunctions.updateMarker(`${this.channelId}-${this.partId}-l`, 0, "");
-        this.handlerFunctions.updateMarker(`${this.channelId}-${this.partId}-r`, 0, "");
+        // leave part selected
 
         this.xOrigin = null;
         this.moveFromX = null; 
