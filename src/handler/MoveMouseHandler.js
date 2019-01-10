@@ -9,23 +9,23 @@ export default class MoveMouseHandler {
   }
 
   // if TimeToPixels HOC wraps the Channel then pos is in secs
-  handleMouseEvent = (pos, eventName) => {
+  handleMouseEvent = (eventName, evInfo) => {
     switch (eventName) {
 
       case "mouseDown":
-      this.handleMoveFrom(pos);
+      this.handleMoveFrom(evInfo);
       break;
 
       case "mouseMove":
-      this.handleMoveTo(pos, false);
+      this.handleMoveTo(evInfo, false);
       break;
 
       case "mouseUp":
-      this.handleMoveTo(pos, true);
+      this.handleMoveTo(evInfo, true);
       break;
 
       case "mouseLeave":
-      this.handleMoveTo(pos, true);
+      this.handleMoveTo(evInfo, true);
       break;
 
       default:
@@ -33,20 +33,20 @@ export default class MoveMouseHandler {
     }
   }
 
-  handleMoveFrom = (pos) => {
-    this.moveFromX = pos.x;
-    this.channelId = pos.channelId;
-    this.partId = pos.partId;
+  handleMoveFrom = (evInfo) => {
+    this.moveFromX = evInfo.x;
+    this.channelId = evInfo.channelId;
+    this.partId = evInfo.partId;
   }
 
-  handleMoveTo = (pos, finalizeSelection) => {
+  handleMoveTo = (evInfo, finalizeSelection) => {
     if (this.moveFromX && this.partId) { 
       // only when mouse down has occured
       // console.log(`move from ${this.moveFromX} to ${x}`);
-      const incrX = pos.x - this.moveFromX;
+      const incrX = evInfo.x - this.moveFromX;
       if (Math.abs(incrX) > 0) {
         this.handlerFunctions.move(this.partId, incrX);
-        this.moveFromX = pos.x; 
+        this.moveFromX = evInfo.x; 
         // also move the markers
         this.handlerFunctions.updateMarker(`${this.channelId}-${this.partId}-l`, incrX);
         this.handlerFunctions.updateMarker(`${this.channelId}-${this.partId}-r`, incrX);

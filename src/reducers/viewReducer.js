@@ -1,4 +1,5 @@
-import {SELECT, SET_ZOOM_LEVEL, SET_MODE, SET_MARKER, UPDATE_MARKER} from '../actions/types';
+import { cloneDeep } from 'lodash';
+import { SELECT, SET_RESOLUTION, SET_MODE, SET_MARKER, UPDATE_MARKER, DELETE_MARKER } from '../actions/types';
 
 const initialState = {
   selection: {
@@ -6,13 +7,13 @@ const initialState = {
     to: null
   },
   markersById: {},
-  zoomLevel: 1000,
+  resolution: 1000,
   mode: "selectionMode",
 };
 
-export default(state = initialState, action) => {
+export default (state = initialState, action) => {
   switch (action.type) {
-    
+
     case SELECT:
       return {
         ...state,
@@ -27,11 +28,20 @@ export default(state = initialState, action) => {
         ...state,
         markersById: {
           ...state.markersById,
-          [action.payload.markerId] : {
+          [action.payload.markerId]: {
             id: action.payload.markerId,
             pos: action.payload.pos,
           }
         }
+      };
+
+    case DELETE_MARKER:
+      const markers = cloneDeep(state.markersById);
+      delete markers[action.payload.markerId];
+
+      return {
+        ...state,
+        markersById: markers
       };
 
     case UPDATE_MARKER:
@@ -40,20 +50,20 @@ export default(state = initialState, action) => {
         ...state,
         markersById: {
           ...state.markersById,
-          [action.payload.markerId] : {
+          [action.payload.markerId]: {
             id: action.payload.markerId,
             pos: currentPos + action.payload.incr,
           }
         }
       };
 
-    case SET_ZOOM_LEVEL:
+    case SET_RESOLUTION:
       return {
         ...state,
-        zoomLevel: action.payload
+        resolution: action.payload
       }
 
-      case SET_MODE:
+    case SET_MODE:
       return {
         ...state,
         mode: action.payload
@@ -65,14 +75,14 @@ export default(state = initialState, action) => {
 }
 
 export const getSelectionRange = (state) => {
-  return { 
-	from: state.view.selection.from,
-	to: state.view.selection.to,
-	}
+  return {
+    from: state.view.selection.from,
+    to: state.view.selection.to,
+  }
 }
 
-export const getZoomLevel = (state) => {
-  return state.view.zoomLevel
+export const getResolution = (state) => {
+  return state.view.resolution
 }
 
 export const getMode = (state) => {

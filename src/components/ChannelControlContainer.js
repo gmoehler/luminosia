@@ -1,17 +1,18 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { loadChannel, playChannel, stopChannel } from '../actions/channelActions'
-import { setZoomLevel, setMode, select } from '../actions/viewActions'
+import { getResolution, setMode, select, setResolution } from '../actions/viewActions'
 import ChannelControl from './ChannelControl';
+import { loadImageList } from '../actions/imageListActions';
 
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
 const audioContext = new window.AudioContext();
 
-//const zoomLevels = [6, 12, 24, 48, 96, 192, 384, 768, 1536, 3072, 6144]; // in pixels / sec
-const zoomLevels = [4000, 2000, 1000, 500, 250, 125, 80, 40, 20, 10, 5]; // in pixels / sec
-const defaultZoomLevelIdx = 6;
+const resolutions = [4000, 2000, 1000, 500, 250, 125, 80, 40, 20, 10, 5]; // in pixels / sec
+const defaultResolutionIdx = 6;
+const imageSampleRate = 100; // one image frame is 10ms
 
-const channelConfigs = [
+const channels = [
   {
     src: 'media/audio/Vocals30.mp3',
     name: 'Vocals',
@@ -31,73 +32,91 @@ const channelConfigs = [
     id: 'imgChannel1',
     name: 'Channel 1 with images',
     type: 'image',
-    sampleRate: 100, // one image frame is 10ms
+    sampleRate: imageSampleRate,
     parts: [{
       src: 'media/image/mostlyStripes.png',
       offset: 1.75,
       cuein: 0.5, // in secs
       cueout: 1.47, // in secs
     },
-    {
-      src: 'media/image/blueLine.png',
-      offset: 3.75,
-      cuein: 0.5, // in secs
-      cueout: 1.47, // in secs
-    }],  
+      {
+        src: 'media/image/blueLine.png',
+        offset: 3.75,
+        cuein: 0.5, // in secs
+        cueout: 1.47, // in secs
+      }],
   },
 ]
+
+const images = [
+  {
+    src: 'media/image/mostlyStripes.png'
+  },
+  {
+    src: 'media/image/blueLine.png'
+  },
+];
+
+/*
+const config = {
+  sampleRate: imageSampleRate, 
+  images,
+  channels,
+} */
 
 class ChannelControlContainer extends Component {
 
   constructor(props) {
     super(props);
-    this.zoomLevelIdx = defaultZoomLevelIdx;
+    this.resolutionIdx = defaultResolutionIdx;
   }
 
-  doLoadChannel = (event) => {
+  doLoad = (event) => {
     this.resetZoom();
+    this.props.loadImageListAction({
+      sampleRate: imageSampleRate,
+      images
+    });
     this.props.loadChannelAction({
-      channelConfigs,
+      channels,
       audioContext,
     });
   }
 
   resetZoom = () => {
-    this.zoomLevelIdx = defaultZoomLevelIdx;
-    this.props.setZoomAction(
-      zoomLevels[this.zoomLevelIdx]
+    this.resolutionIdx = defaultResolutionIdx;
+    this.props.setResolutionAction(
+      resolutions[this.resolutionIdx]
     )
   }
 
   zoomIn = () => {
-    this.zoomLevelIdx = Math.min(Math.max(parseInt(this.zoomLevelIdx) - 1, 0), zoomLevels.length - 1);
-    this.props.setZoomAction(
-      zoomLevels[this.zoomLevelIdx]
+    this.resolutionIdx = Math.min(Math.max(parseInt(this.resolutionIdx) - 1, 0), resolutions.length - 1);
+    this.props.setResolutionAction(
+      resolutions[this.resolutionIdx]
     )
   }
 
   zoomOut = () => {
-    this.zoomLevelIdx = Math.min(Math.max(parseInt(this.zoomLevelIdx) + 1, 0), zoomLevels.length - 1);
-    this.props.setZoomAction(
-      zoomLevels[this.zoomLevelIdx]
+    this.resolutionIdx = Math.min(Math.max(parseInt(this.resolutionIdx) + 1, 0), resolutions.length - 1);
+    this.props.setResolutionAction(
+      resolutions[this.resolutionIdx]
     )
   }
 
   setMode = (mode) => {
-    this.props.selectAction({from:null, to: null});
+    this.props.selectAction({
+      from: null,
+      to: null
+    });
     this.props.setModeAction(mode);
   }
 
   render() {
 
     return (
-      <ChannelControl 
-        loadChannel={ this.doLoadChannel } 
-        playChannel={ this.props.playChannelAction } 
-        stopChannel={ this.props.stopChannelAction } 
-        zoomIn={ this.zoomIn } 
-        zoomOut={ this.zoomOut }
-        setMode={ this.setMode } />
+      <ChannelControl load={ this.doLoad } loadImageList={ this.doImageList } playChannel={ this.props.playChannelAction } stopChannel={ this.props.stopChannelAction } zoomIn={ this.zoomIn }
+        zoomOut={ this.zoomOut } setMode={ this.setMode } />
       );
   }
 }
@@ -107,10 +126,11 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+  loadImageListAction: (spec) => dispatch(loadImageList(spec)),
   loadChannelAction: (spec) => dispatch(loadChannel(spec)),
   playChannelAction: () => dispatch(playChannel()),
   stopChannelAction: () => dispatch(stopChannel()),
-  setZoomAction: (zoomLevel) => dispatch(setZoomLevel(zoomLevel)),
+  setResolutionAction: (resolution) => dispatch(setResolution(resolution)),
   setModeAction: (modeEvent) => dispatch(setMode(modeEvent.target.value)),
   selectAction: (range) => dispatch(select(range))
 })

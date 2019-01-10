@@ -1,11 +1,15 @@
 import LoaderFactory from '../loader/LoaderFactory'
 import { merge } from 'lodash';
 
-import { LOAD_CHANNEL_STARTED, LOAD_CHANNEL_FAILURE, LOAD_CHANNEL_SUCCESS, LOAD_MULTICHANNEL_STARTED, LOAD_MULTICHANNEL_FAILURE, LOAD_MULTICHANNEL_SUCCESS, PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL,
+import { LOAD_CHANNEL_STARTED, LOAD_CHANNEL_FAILURE, LOAD_CHANNEL_SUCCESS, 
+  LOAD_MULTICHANNEL_STARTED, LOAD_MULTICHANNEL_FAILURE, LOAD_MULTICHANNEL_SUCCESS, 
+  PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL, 
+  ADD_PART, DELETE_PART,
 } from './types';
 
-import { setMarker } from './viewActions';
+import { setMarker, deleteMarker } from './viewActions';
 import { samplesToSeconds } from '../utils/conversions';
+import { getLastPartId, getPart } from '../reducers/channelReducer';
 
 // load channel async action
 
@@ -13,7 +17,6 @@ const loadChannelStarted = startInfo => ({
   type: LOAD_CHANNEL_STARTED,
   payload: startInfo
 });
-
 
 const loadChannelSuccess = channelInfo => ({
   type: LOAD_CHANNEL_SUCCESS,
@@ -59,7 +62,7 @@ function doLoadMultiPart(dispatch, getState, channelConfig, audioContext) {
   Promise.all(loadChannelPromises)
     .then((channelBuffers) => {
 
-      // organize result object
+      // organize result object read from file
       const normalizedBuffers = channelBuffers.reduce((res, buf) => {
 
         // buffer is only needed for duration because we load image again for canvas
@@ -70,7 +73,7 @@ function doLoadMultiPart(dispatch, getState, channelConfig, audioContext) {
         return res;
       }, {numParts: 0})
 
-	  // an icrementing integer is the part id used as key
+	    // an icrementing integer is the part id used as key
       const normalizedParts = channelConfig.parts.reduce((res, part) => {
         part.id = res.numParts;
         res[res.numParts] = part;
@@ -78,11 +81,12 @@ function doLoadMultiPart(dispatch, getState, channelConfig, audioContext) {
         return res;
       }, {numParts: 0})
 
+      const reducedConfig = Object.assign({}, channelConfig);
+      reducedConfig.lastPartId =  normalizedParts.numParts-1;
+      delete reducedConfig.parts; // will be normalized with channelParts
+
       const channelParts = merge({}, normalizedBuffers, normalizedParts);
       delete channelParts.numParts; // delete intermediate value
-
-      const reducedConfig = Object.assign({}, channelConfig);
-      delete reducedConfig.parts; // will be normalized with channelParts
 
       dispatch(loadMultiChannelSuccess({
         channelConfig: reducedConfig,
@@ -126,15 +130,35 @@ function doLoad(dispatch, getState, channelConfig, audioContext) {
     });
 }
 
-export const loadChannel = (({channelConfigs, channelSources, audioContext}) => {
+export const loadChannel = (({channels, audioContext}) => {
   return (dispatch, getState) => {
-    channelConfigs.map((channelConfig) => {
+    channels.map((channelConfig) => {
       if (channelConfig.parts) {
         return doLoadMultiPart(dispatch, getState, channelConfig, audioContext);
       }
       return doLoad(dispatch, getState, channelConfig, audioContext);
     })
   }
+});
+
+export const addPartAndMarkers = (partInfo) => {
+  return (dispatch, getState) => {
+    dispatch(addPart(partInfo))
+    const lastPartId = getLastPartId(getState(), partInfo.channelId);
+    dispatch(setMarker({
+      markerId: `${partInfo.channelId}-${lastPartId}-l`, 
+      pos: partInfo.offset}));
+    dispatch(setMarker({
+      markerId: `${partInfo.channelId}-${lastPartId}-r`, 
+      pos: partInfo.offset + partInfo.duration}));
+    dispatch(deleteMarker({
+      markerId: "insert"})); 
+  }
+}
+
+export const addPart = partInfo => ({
+  type: ADD_PART,
+  payload: partInfo
 });
 
 // play related actions

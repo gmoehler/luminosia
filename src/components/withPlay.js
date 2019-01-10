@@ -38,6 +38,7 @@ export function withPlay(WrappedComponent) {
         move: this.props.move,
         updateMarker: this.props.updateMarker,
         setMarker: this.props.setMarker,
+        addPartAndMarkers: this.props.addPartAndMarkers,
     });
       // audio setup
       if (this.props.type === "audio") { 
@@ -174,7 +175,7 @@ export function withPlay(WrappedComponent) {
       return <WrappedComponentInTime 
         {...passthruProps} 
         progress={ this.state.progress }
-        handleMouseEvent={ (pos, event) => this.mousehandler.handleMouseEvent(pos, event, this.props.resolution) } 
+        handleMouseEvent={ (eventName, evInfo) => this.mousehandler.handleMouseEvent(eventName, evInfo, this.props.resolution) } 
         factor={ this.props.resolution / sampleRate }  /* req only for images */
         peaks={ peaksDataMono } /* only for audio */
         bits={ bits } /* only for audio */

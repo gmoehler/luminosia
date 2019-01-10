@@ -10,10 +10,12 @@ App
 
   ChannelGroupContainer
     ChannelGroup
+      withPlay
+        time2pixels
+          Channel
      withPlay
-      Channel
-     withPlay
-      ImageChannel
+      time2pixels
+        ImageChannel
 ```
 
 Todos:

@@ -23,7 +23,7 @@ const ImageCursor = styled.div`
 
 const ImageMarker = styled.div`
   position: absolute;
-  background: ${props => props.theme.markerColor};
+  background: ${props => props.markerColor || props.theme.markerColor};
   width: 1px;
   left: ${props => props.markerPos}px;
   height: ${props => props.height}px;
@@ -119,8 +119,17 @@ class Channel extends Component {
 
   handleMouseEvent = (e, eventName) => {
     if (this.props.handleMouseEvent) {
+      e.preventDefault();
       const pos = getMouseEventPosition(e, "ChannelWrapper", this.props.id);
-      this.props.handleMouseEvent(pos, eventName);
+      const src = e.dataTransfer && e.dataTransfer.getData("src");
+      const duration = Number(e.dataTransfer && e.dataTransfer.getData("duration"));
+      const evInfo = {
+        ...pos, // x pos, channelId, partId
+        timestamp: e.timeStamp,
+        src, // drag source path
+        duration,
+      }
+      this.props.handleMouseEvent(eventName, evInfo);
       return;
     }
   }
@@ -198,20 +207,14 @@ class Channel extends Component {
       : null;
 
     const markerElems = markers && Array.isArray(markers) ?
-      markers.map((marker) => <ImageMarker key={marker.id} className='Marker' markerPos={ marker.pos } theme={ theme } height={ imageHeight } />
+      markers.map((marker) => <ImageMarker key={ marker.id } className='Marker' markerPos={ marker.pos } markerColor={ marker.id === "insert" ? theme.insertMarkerColor : theme.markerColor } theme={ theme } height={ imageHeight }
+                              />
       ) : null;
 
     return (
-      <ImageChannelWrapper 
-        className='ChannelWrapper' 
-        onMouseDown={ (e) => this.handleMouseEvent(e, "mouseDown") } 
-        onMouseUp={ (e) => this.handleMouseEvent(e, "mouseUp") } 
-        onMouseMove={ (e) => this.handleMouseEvent(e, "mouseMove") } 
-        onMouseLeave={ (e) => this.handleMouseEvent(e, "mouseLeave") }
-        cssWidth={ maxWidth } 
-        theme={ theme } 
-        height={ imageHeight }>
-        
+      <ImageChannelWrapper className='ChannelWrapper' onMouseDown={ (e) => this.handleMouseEvent(e, "mouseDown") } onMouseUp={ (e) => this.handleMouseEvent(e, "mouseUp") } onMouseMove={ (e) => this.handleMouseEvent(e, "mouseMove") } onMouseLeave={ (e) => this.handleMouseEvent(e, "mouseLeave") }
+        onDragEnter={ (e) => this.handleMouseEvent(e, "dragEnter") } onDragEnd={ (e) => this.handleMouseEvent(e, "dragEnd") } onDragExit={ (e) => this.handleMouseEvent(e, "dragExit") } onDragLeave={ (e) => this.handleMouseEvent(e, "dragLeave") } onDragOver={ (e) => this.handleMouseEvent(e, "dragOver") }
+        onDragStart={ (e) => this.handleMouseEvent(e, "dragStart") } onDrop={ (e) => this.handleMouseEvent(e, "drop") } cssWidth={ maxWidth } theme={ theme } height={ imageHeight }>
         { allCanvasRefImages }
         { allImageCanvases }
         { progressElem }
@@ -229,6 +232,7 @@ Channel.defaultProps = {
     waveProgressBorderColor: 'rgb(255,255,255,1)', // transparent white
     cursorColor: 'red',
     markerColor: 'rgba(255,255, 0, 0.5)', // transparent yellow
+    insertMarkerColor: 'rgba(255,165, 0, 0.5)', // transparent orange
     selectionColor: 'rgba(0,0,255,0.5)',
     imageBackgroundColor: 'black',
   },

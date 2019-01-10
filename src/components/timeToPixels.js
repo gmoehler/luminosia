@@ -12,20 +12,23 @@ import { secondsToPixels, pixelsToSeconds } from '../utils/conversions';
 export function timeToPixels(WrappedComponent) {
   class TimeToPixels extends PureComponent {
     
-    handleMouseEvent = (pos, eventName, resolution) => {
+    handleMouseEvent = (eventName, evInfo, resolution) => {
       if (this.props.handleMouseEvent) {
-        pos.x = pixelsToSeconds(pos.x, resolution);
-        this.props.handleMouseEvent(pos, eventName);
+        evInfo.x = pixelsToSeconds(evInfo.x, resolution);
+        evInfo.duration = pixelsToSeconds(evInfo.duration, resolution);
+        this.props.handleMouseEvent(eventName, evInfo);
       }
     }
 
     render() {
 
-      const {resolution, 
+      const {
+        resolution, 
         offset , progress, cursorPos, selection, maxDuration, 
         parts, markers,
 		    select, move, handleMouseEvent,
-		    ...passthruProps} = this.props;
+        ...passthruProps
+      } = this.props;
 
       // channel offset only used for audio buffer which does not contain parts
       const offsetPx = offset ? secondsToPixels(offset, resolution) : 0;
@@ -62,7 +65,7 @@ export function timeToPixels(WrappedComponent) {
 
         select={this.select}
         move={this.move}
-        handleMouseEvent={ (pos, event) => this.handleMouseEvent(pos, event, resolution) } 
+        handleMouseEvent={ (eventName, evInfo) => this.handleMouseEvent(eventName, evInfo, resolution) } 
 
         />;
       }

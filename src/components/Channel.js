@@ -22,7 +22,7 @@ const Cursor = styled.div`
 
 const Marker = styled.div`
   position: absolute;
-  background: ${props => props.theme.markerColor};
+  background: ${props => props.markerColor || props.theme.markerColor};
   width: 1px;
   left: ${props => props.offset + props.markerPos}px;
   height: ${props => props.waveHeight}px;
@@ -113,9 +113,15 @@ class Channel extends Component {
 
   handleMouseEvent = (e, eventName) => {
     if (this.props.handleMouseEvent) {
-      const posX = getMouseEventPosition(e, "ChannelWrapper");
-        this.props.handleMouseEvent(posX, eventName);
-        return;
+      const pos = getMouseEventPosition(e, "ChannelWrapper");
+      const eventInfo = {
+      	...pos, // x pos, channelId, partId
+      	timestamp: e.timeStamp,
+      	// no drag source path
+      }
+      this.props.handleMouseEvent(eventName, eventInfo);
+
+      return;
     }
   }
 
@@ -155,8 +161,11 @@ class Channel extends Component {
       
     const markerElems = markers && Array.isArray(markers) ?
       markers.map((marker) => 
-        <Marker className='Marker' key={marker.id} markerPos= { marker.pos } theme={ theme } waveHeight={ waveHeight } offset={offset}/>
+        <Marker className='Marker' key={marker.id} markerPos= { marker.pos } 
+          markerColor={marker.id === "insert" ? theme.insertMarkerColor : theme.markerColor} 
+          theme={ theme } waveHeight={ waveHeight } offset={offset}/>
       ) : null;
+
 
     return (
       <ChannelWrapper className='ChannelWrapper' onMouseDown={ (e) => this.handleMouseEvent(e, "mouseDown") } onMouseUp={ (e) => this.handleMouseEvent(e, "mouseUp") } onMouseMove={ (e) => this.handleMouseEvent(e, "mouseMove") } onMouseLeave={ (e) => this.handleMouseEvent(e, "mouseLeave") }
@@ -184,6 +193,7 @@ Channel.defaultProps = {
     waveProgressBorderColor: 'rgb(255,255,255)',
     cursorColor: 'red',
     markerColor: 'rgba(255,255, 0, 0.5)', // transparent yellow
+    insertMarkerColor: 'rgba(255,165, 0, 0.5)', // transparent orange
     selectionColor: 'rgba(0,0,255,0.5)',
   },
   // checking `window.devicePixelRatio` when drawing to canvas.
@@ -201,7 +211,7 @@ Channel.defaultProps = {
   cursorPos: null,
   // position of the selection in CSS pixels from the left of channel (not drawn on null)
   selection: null,
-    // positions of the markers in CSS pixels from the left of channel (null: do not draw)
+  // positions of the markers in CSS pixels from the left of channel (null: do not draw)
   markers: [],
 };
 
