@@ -45,7 +45,7 @@ export default (state = initialState, action) => {
       };
 
     case UPDATE_MARKER:
-      const currentPos = state.markersById[action.payload.markerId] && state.markersById[action.payload.markerId].pos;
+      const currentPos = state.markersById[action.payload.markerId] ? state.markersById[action.payload.markerId].pos : 0;
       return {
         ...state,
         markersById: {
@@ -53,6 +53,7 @@ export default (state = initialState, action) => {
           [action.payload.markerId]: {
             id: action.payload.markerId,
             pos: currentPos + action.payload.incr,
+            type: action.payload.type,
           }
         }
       };

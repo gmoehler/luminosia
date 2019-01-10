@@ -37,6 +37,10 @@ export default class MoveMouseHandler {
     this.moveFromX = evInfo.x;
     this.channelId = evInfo.channelId;
     this.partId = evInfo.partId;
+
+    // set type to selected
+    this.handlerFunctions.updateMarker(`${this.channelId}-${this.partId}-l`, 0, "selected");
+    this.handlerFunctions.updateMarker(`${this.channelId}-${this.partId}-r`, 0, "selected");
   }
 
   handleMoveTo = (evInfo, finalizeSelection) => {
@@ -48,18 +52,19 @@ export default class MoveMouseHandler {
         this.handlerFunctions.move(this.partId, incrX);
         this.moveFromX = evInfo.x; 
         // also move the markers
-        this.handlerFunctions.updateMarker(`${this.channelId}-${this.partId}-l`, incrX);
-        this.handlerFunctions.updateMarker(`${this.channelId}-${this.partId}-r`, incrX);
+        this.handlerFunctions.updateMarker(`${this.channelId}-${this.partId}-l`, incrX, "selected");
+        this.handlerFunctions.updateMarker(`${this.channelId}-${this.partId}-r`, incrX, "selected");
       }
 
       if (finalizeSelection) {
+
+        // set type back to normal
+        this.handlerFunctions.updateMarker(`${this.channelId}-${this.partId}-l`, 0, "");
+        this.handlerFunctions.updateMarker(`${this.channelId}-${this.partId}-r`, 0, "");
+
         this.xOrigin = null;
         this.moveFromX = null; 
         this.partId = null;
-
-        // TODO: clean markers after move?
-        // this.handlerFunctions.clearMarker(`${this.channelId}-${this.partId}-l`);
-        // this.handlerFunctions.clearMarker(`${this.channelId}-${this.partId}-r`);
       }
     }
   }
