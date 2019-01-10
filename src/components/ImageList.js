@@ -47,6 +47,6 @@ export default class ImageList extends PureComponent {
 }
 
 ImageList.propTypes = {
-	images: PropTypes.object, // all images
+	images: PropTypes.array, // all images
 	resolution: PropTypes.number,
 }

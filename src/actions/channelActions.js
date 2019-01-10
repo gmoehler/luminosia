@@ -4,12 +4,12 @@ import { merge } from 'lodash';
 import { LOAD_CHANNEL_STARTED, LOAD_CHANNEL_FAILURE, LOAD_CHANNEL_SUCCESS, 
   LOAD_MULTICHANNEL_STARTED, LOAD_MULTICHANNEL_FAILURE, LOAD_MULTICHANNEL_SUCCESS, 
   PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL, 
-  ADD_PART, DELETE_PART,
+  ADD_PART, SELECT_PART
 } from './types';
 
 import { setMarker, deleteMarker } from './viewActions';
 import { samplesToSeconds } from '../utils/conversions';
-import { getLastPartId, getPart } from '../reducers/channelReducer';
+import { getLastPartId } from '../reducers/channelReducer';
 
 // load channel async action
 

@@ -96,7 +96,7 @@ export default class ChannelGroup extends Component {
 }
 
 ChannelGroup.propTypes = {
-  allChannelsData: PropTypes.array, // data of all channels
+  allChannelsData: PropTypes.object, // data of all channels
   resolution: PropTypes.number,
   setChannelPlayState: PropTypes.func.isRequired,
   move: PropTypes.func.isRequired,

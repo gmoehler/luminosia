@@ -8,7 +8,7 @@ const initialState = {
   },
   markersById: {},
   resolution: 1000,
-  mode: "selectionMode",
+  mode: "moveMode",
 };
 
 export default (state = initialState, action) => {
