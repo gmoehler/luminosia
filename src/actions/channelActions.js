@@ -130,7 +130,7 @@ function doLoad(dispatch, getState, channelConfig, audioContext) {
     });
 }
 
-export const loadChannel = (({channels, channelSources, audioContext}) => {
+export const loadChannel = (({channels, audioContext}) => {
   return (dispatch, getState) => {
     channels.map((channelConfig) => {
       if (channelConfig.parts) {
@@ -145,13 +145,12 @@ export const addPartAndMarkers = (partInfo) => {
   return (dispatch, getState) => {
     dispatch(addPart(partInfo))
     const lastPartId = getLastPartId(getState(), partInfo.channelId);
-    const part = getPart(getState(), partInfo.channelId, lastPartId);
     dispatch(setMarker({
       markerId: `${partInfo.channelId}-${lastPartId}-l`, 
       pos: partInfo.offset}));
     dispatch(setMarker({
       markerId: `${partInfo.channelId}-${lastPartId}-r`, 
-      pos: partInfo.offset + part.duration}));
+      pos: partInfo.offset + partInfo.duration}));
     dispatch(deleteMarker({
       markerId: "insert"})); 
   }

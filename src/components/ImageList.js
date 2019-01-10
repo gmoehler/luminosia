@@ -20,23 +20,26 @@ export default class ImageList extends Component {
 
   render() {
 
-		const imagesComponent = this.props.images
+    const imagesComponent = this.props.images
 			.map((img) => 
-				<Image 
-					key={ img.src } 
-					src={ img.src } 
-					draggable
-					onDragStart={(e)=>e.dataTransfer.setData("src", img.src)} 
+			<Image 
+				key={ img.src } 
+				src={ img.src } 
+				draggable onDragStart={ (e) => {
+					e.dataTransfer.setData("src", img.src);
+					e.dataTransfer.setData("duration", img.duration)
+				}}
 				/>
-			);
+    );
 
     return (
-			<ImageListWrapper>
-				{imagesComponent}
+      <ImageListWrapper>
+        { imagesComponent }
       </ImageListWrapper>
-		)}
-	}
-
-  ImageList.propTypes = {
-		images: PropTypes.array, 		// all images
+    )
   }
+}
+
+ImageList.propTypes = {
+  images: PropTypes.array, // all images
+}

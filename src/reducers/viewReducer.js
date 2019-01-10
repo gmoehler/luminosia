@@ -1,5 +1,5 @@
 import { cloneDeep } from 'lodash';
-import {SELECT, SET_ZOOM_LEVEL, SET_MODE, SET_MARKER, UPDATE_MARKER, DELETE_MARKER} from '../actions/types';
+import { SELECT, SET_ZOOM_LEVEL, SET_MODE, SET_MARKER, UPDATE_MARKER, DELETE_MARKER } from '../actions/types';
 
 const initialState = {
   selection: {
@@ -11,9 +11,9 @@ const initialState = {
   mode: "selectionMode",
 };
 
-export default(state = initialState, action) => {
+export default (state = initialState, action) => {
   switch (action.type) {
-    
+
     case SELECT:
       return {
         ...state,
@@ -28,7 +28,7 @@ export default(state = initialState, action) => {
         ...state,
         markersById: {
           ...state.markersById,
-          [action.payload.markerId] : {
+          [action.payload.markerId]: {
             id: action.payload.markerId,
             pos: action.payload.pos,
           }
@@ -41,8 +41,7 @@ export default(state = initialState, action) => {
 
       return {
         ...state,
-        markersById: 
-          markers
+        markersById: markers
       };
 
     case UPDATE_MARKER:
@@ -51,7 +50,7 @@ export default(state = initialState, action) => {
         ...state,
         markersById: {
           ...state.markersById,
-          [action.payload.markerId] : {
+          [action.payload.markerId]: {
             id: action.payload.markerId,
             pos: currentPos + action.payload.incr,
           }
@@ -64,7 +63,7 @@ export default(state = initialState, action) => {
         zoomLevel: action.payload
       }
 
-      case SET_MODE:
+    case SET_MODE:
       return {
         ...state,
         mode: action.payload
@@ -76,10 +75,10 @@ export default(state = initialState, action) => {
 }
 
 export const getSelectionRange = (state) => {
-  return { 
-	from: state.view.selection.from,
-	to: state.view.selection.to,
-	}
+  return {
+    from: state.view.selection.from,
+    to: state.view.selection.to,
+  }
 }
 
 export const getZoomLevel = (state) => {

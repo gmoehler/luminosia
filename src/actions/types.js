@@ -17,6 +17,9 @@ export const DELETE_PART = "DELETE_PART";
 // image list actions
 export const ADD_IMAGE = "ADD_IMAGE";
 export const REMOVE_IMAGE = "REMOVE_IMAGE";
+export const LOAD_IMAGELIST_STARTED = "LOAD_IMAGELIST_STARTED";
+export const LOAD_IMAGELIST_SUCCESS = "LOAD_IMAGELIST_SUCCESS";
+export const LOAD_IMAGELIST_FAILURE = "LOAD_IMAGELIST_FAILURE";
 
 // view actions
 export const SELECT = "SELECT";
