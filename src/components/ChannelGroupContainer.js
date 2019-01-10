@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import ChannelGroup from './ChannelGroup'
 import { setChannelPlayState, moveChannel, addPartAndMarkers } from '../actions/channelActions'
-import { select, setMarker, updateMarker } from '../actions/viewActions'
+import { select, setMarker, updateMarker, selectPart } from '../actions/viewActions'
 import { getallChannelsData, getMaxDuration, getLastPartId } from '../reducers/channelReducer'
 import { getSelectionRange, getResolution, getMode, getMarkers } from '../reducers/viewReducer'
 
@@ -37,9 +37,10 @@ const mapDispatchToProps = dispatch => ({
     from,
     to
   })),
-  setMarker: (markerId, pos) => dispatch(setMarker({
+  setMarker: (markerId, pos, type) => dispatch(setMarker({
     markerId,
-    pos
+    pos,
+    type
   })),
   updateMarker: (markerId, incr, type) => dispatch(updateMarker({
     markerId,
@@ -57,6 +58,7 @@ const mapDispatchToProps = dispatch => ({
     partId,
     incr
   })),
+  selectPart: (partInfo) => dispatch(selectPart(partInfo)),
   setChannelPlayState: (channelId, playState) => dispatch(setChannelPlayState({
     channelId,
     playState

@@ -42,9 +42,10 @@ const setSelected = (partInfo) => ({
 });
 
 const updateMarkers = (dispatch, partInfo) => {
-    const type = partInfo.selected ? "selected" : "";
-    dispatch(updateMarker(`${partInfo.channelId}-${partInfo.partId}-l`, 0, type));
-    return dispatch(updateMarker(`${partInfo.channelId}-${partInfo.partId}-r`, 0, type));
+    const type = partInfo.selected ? "selected" : "normal";
+    const markerIdPrefix = `${partInfo.channelId}-${partInfo.partId}`;
+    dispatch(updateMarker({markerId: markerIdPrefix+"-l", incr: 0, type}));
+    return dispatch(updateMarker({markerId: markerIdPrefix+"-r", incr: 0, type}));
   }
 
 export const selectPart = ((partInfo) => {
@@ -52,7 +53,7 @@ export const selectPart = ((partInfo) => {
   	const curSelPart = getSelectedPart(getState());
   	// de-select markers of prev selected part
   	if (curSelPart && (curSelPart.channelId !== partInfo.channelId ||
-  		curSelPart.channelId !== partInfo.channelId)){
+  		curSelPart.partId !== partInfo.partId)){
   		curSelPart.selected = false;
   		updateMarkers(dispatch, curSelPart);
   	}

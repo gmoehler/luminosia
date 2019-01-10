@@ -40,48 +40,25 @@ export default class MoveMouseHandler {
   }
 
   handleClick = (evInfo) => {
-    if (this.partId === evInfo.partId && 
-		this.channelId === evInfo.channelId ) {
-	    // toggle previously selected
-    	this.selected = !this.selected; 
-        this.updateMarkers();
-    } else {
-      if (this.selected && this.channelId && this.partId) {
-    	  //deselect previously selected part
-          this.selected = false;
-    	  this.updateMarkers();
-      }
-  	this.channelId = evInfo.channelId;
-  	this.partId = evInfo.partId;
-      this.selected = true;
-      this.updateMarkers();
-     }
+
+    this.handlerFunctions.selectPart({
+      channelId: evInfo.channelId,
+      partId: evInfo.partId,
+      selected: evInfo.selected ? false: true  // toggle selected
+    });
   }
   
   handleMoveFrom = (evInfo) => {
-  	
-    if (this.selected && 
-         this.channelId && this.partId && 
-		 (this.partId !== evInfo.partId || 
-		  this.channelId !== evInfo.channelId)) {
-    	//deselect previously selected part
-        this.selected = false;
-    	this.updateMarkers();
-    }
-      
+
+    this.handlerFunctions.selectPart({
+      channelId: evInfo.channelId,
+      partId: evInfo.partId,
+      selected: true  // select
+    });
+
     this.moveFromX = evInfo.x;
     this.channelId = evInfo.channelId;
     this.partId = evInfo.partId;
-
-    // set marker type to selected
-    this.selected = true;
-    this.updateMarkers();
-  }
-  
-  updateMarkers = ()  => {
-    const type = this.selected ? "selected" : "";
-    this.handlerFunctions.updateMarker(`${this.channelId}-${this.partId}-l`, 0, type);
-    this.handlerFunctions.updateMarker(`${this.channelId}-${this.partId}-r`, 0, type);
   }
 
   handleMoveTo = (evInfo, finalizeSelection) => {
@@ -93,14 +70,12 @@ export default class MoveMouseHandler {
         this.handlerFunctions.move(this.partId, incrX);
         this.moveFromX = evInfo.x; 
         // also move the markers
-        this.handlerFunctions.updateMarker(`${this.channelId}-${this.partId}-l`, incrX, "selected");
-        this.handlerFunctions.updateMarker(`${this.channelId}-${this.partId}-r`, incrX, "selected");
+        this.handlerFunctions.updateMarker(`${this.channelId}-${this.partId}-l`, incrX); // type = null:
+        this.handlerFunctions.updateMarker(`${this.channelId}-${this.partId}-r`, incrX); // dont change type
       }
 
       if (finalizeSelection) {
-
-        // leave part selected
-
+        // leave part selected after move
         this.xOrigin = null;
         this.moveFromX = null; 
         this.partId = null;

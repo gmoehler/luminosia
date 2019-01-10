@@ -35,6 +35,7 @@ export default (state = initialState, action) => {
           [action.payload.markerId]: {
             id: action.payload.markerId,
             pos: action.payload.pos,
+            type: action.payload.type,
           }
         }
       };
@@ -50,7 +51,7 @@ export default (state = initialState, action) => {
 
     case UPDATE_MARKER:
       const currentPos = state.markersById[action.payload.markerId] ? state.markersById[action.payload.markerId].pos : 0;
-      const currentType = state.markersById[action.payload.markerId] ? state.markersById[action.payload.markerId].type : null;
+      const currentType = state.markersById[action.payload.markerId] ? state.markersById[action.payload.markerId].type : "normal";
       return {
         ...state,
         markersById: {
