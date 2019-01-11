@@ -18,7 +18,11 @@ export default class MoveMouseHandler {
       this.handleClick(evInfo);
       break;
 
-	 case "mouseDown":
+      case "keyPress":
+      this.handleKeyPress(evInfo);
+      break;
+
+	    case "mouseDown":
       this.handleMoveFrom(evInfo);
       break;
 
@@ -37,6 +41,14 @@ export default class MoveMouseHandler {
       default:
       break;
     }
+  }
+
+  handleKeyPress = (evInfo) => {
+
+    this.handlerFunctions.deletePart({
+      channelId: evInfo.channelId,
+      partId: evInfo.partId,
+    });
   }
 
   handleClick = (evInfo) => {
