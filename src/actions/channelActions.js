@@ -167,6 +167,17 @@ export const addPart = partInfo => ({
   payload: partInfo
 });
 
+export const deletePartAndMarkers = (partInfo) => {
+  return (dispatch, getState) => {
+    dispatch(deletePart(partInfo));
+    dispatch(deleteMarker({
+      markerId: `${partInfo.channelId}-${partInfo.partId}-l`}));
+    dispatch(deleteMarker({
+      markerId: `${partInfo.channelId}-${partInfo.partId}-r`}));
+  }
+}
+
+
 export const deletePart = partInfo => ({
   type: DELETE_PART,
   payload: partInfo

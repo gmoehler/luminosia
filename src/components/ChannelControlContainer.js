@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { loadChannel, playChannel, stopChannel, deletePart } from '../actions/channelActions'
+import { loadChannel, playChannel, stopChannel, deletePartAndMarkers } from '../actions/channelActions'
 import { setMode, select, setResolution } from '../actions/viewActions'
 import ChannelControl from './ChannelControl';
 import { loadImageList } from '../actions/imageListActions';
@@ -85,7 +85,7 @@ class ChannelControlContainer extends Component {
   }
   
   deleteSelectedPart = () => {
-    this.props.deletePartAction(this.props.selectedPart);
+    this.props.deletePartAndMarkers(this.props.selectedPart);
   }
 
   resetZoom = () => {
@@ -145,7 +145,7 @@ const mapDispatchToProps = dispatch => ({
   setResolutionAction: (resolution) => dispatch(setResolution(resolution)),
   setModeAction: (modeEvent) => dispatch(setMode(modeEvent.target.value)),
   selectAction: (range) => dispatch(select(range)),
-  deletePartAction: (part) => dispatch(deletePart(part)),
+  deletePartAndMarkersAction: (part) => dispatch(deletePartAndMarkers(part)),
 })
 
 
