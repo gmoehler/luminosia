@@ -44,11 +44,13 @@ export default class MoveMouseHandler {
   }
 
   handleKeyDown = (evInfo) => {
-
-    this.handlerFunctions.deletePart({
-      channelId: evInfo.channelId,
-      partId: evInfo.partId,
-    });
+  	
+  if(evInfo.key === "Delete" || evInfo.key === "Backspace" ) {
+      this.handlerFunctions.deletePart({
+        channelId: evInfo.channelId,
+        partId: evInfo.partId,
+      });
+    }
   }
 
   handleClick = (evInfo) => {
