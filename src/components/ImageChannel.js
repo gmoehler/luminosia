@@ -235,7 +235,7 @@ class Channel extends Component {
         onDragStart={ (e) => this.handleMouseEvent(e, "dragStart") } 
         onDrop={ (e) => this.handleMouseEvent(e, "drop") } 
         onClick={ (e) => this.handleMouseEvent(e, "click") } 
-        onKeyPress={ (e) => this.handleMouseEvent(e, "keyPress") } 
+        onKeyDown={ (e) => this.handleMouseEvent(e, "keyDown") } 
         cssWidth={ maxWidth } theme={ theme } height={ imageHeight }>
         
         { allCanvasRefImages }

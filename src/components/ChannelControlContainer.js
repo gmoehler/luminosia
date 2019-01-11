@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { loadChannel, playChannel, stopChannel } from '../actions/channelActions'
+import { loadChannel, playChannel, stopChannel, deletePart } from '../actions/channelActions'
 import { setMode, select, setResolution } from '../actions/viewActions'
 import ChannelControl from './ChannelControl';
 import { loadImageList } from '../actions/imageListActions';
+import { getSelectedPart } from '../reducers/viewReducer';
 
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
 const audioContext = new window.AudioContext();
@@ -82,6 +83,10 @@ class ChannelControlContainer extends Component {
       audioContext,
     });
   }
+  
+  deleteSelectedPart = () => {
+    this.props.deletePartAction(this.props.selectedPart);
+  }
 
   resetZoom = () => {
     this.resolutionIdx = defaultResolutionIdx;
@@ -115,14 +120,21 @@ class ChannelControlContainer extends Component {
   render() {
 
     return (
-      <ChannelControl load={ this.doLoad } loadImageList={ this.doImageList } playChannel={ this.props.playChannelAction } stopChannel={ this.props.stopChannelAction } zoomIn={ this.zoomIn }
-        zoomOut={ this.zoomOut } setMode={ this.setMode } />
+      <ChannelControl 
+		load={ this.doLoad } 
+		deleteSelectedPart ={this.deleteSelectedPart}
+		loadImageList={ this.doImageList } 
+		playChannel={ this.props.playChannelAction } 
+		stopChannel={ this.props.stopChannelAction } 
+		zoomIn={ this.zoomIn }
+        zoomOut={ this.zoomOut } 
+		setMode={ this.setMode } />
       );
   }
 }
 
 const mapStateToProps = state => ({
-  // no props for now
+  selectedPart: getSelectedPart(state)
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -132,7 +144,8 @@ const mapDispatchToProps = dispatch => ({
   stopChannelAction: () => dispatch(stopChannel()),
   setResolutionAction: (resolution) => dispatch(setResolution(resolution)),
   setModeAction: (modeEvent) => dispatch(setMode(modeEvent.target.value)),
-  selectAction: (range) => dispatch(select(range))
+  selectAction: (range) => dispatch(select(range)),
+  deletePartAction: (part) => dispatch(deletePart(part)),
 })
 
 
