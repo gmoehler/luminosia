@@ -7,7 +7,7 @@ import { LOAD_CHANNEL_STARTED, LOAD_CHANNEL_FAILURE, LOAD_CHANNEL_SUCCESS,
   ADD_PART, DELETE_PART
 } from './types';
 
-import { setMarker, deleteMarker, deselect } from './viewActions';
+import { setMarker, deleteMarker, deselect, selectPart } from './viewActions';
 import { samplesToSeconds } from '../utils/conversions';
 import { getLastPartId } from '../reducers/channelReducer';
 import { getSelectedPart } from '../reducers/viewReducer';
@@ -160,6 +160,12 @@ export const addPartAndMarkers = (partInfo) => {
     }));
     dispatch(deleteMarker({
       markerId: "insert"})); 
+      
+    // select the new part
+    const lastPart = {...partInfo};
+    lastPart.partId = lastPartId;
+    lastPart.selected = true;
+    dispatch(selectPart(lastPart));
   }
 }
 
@@ -171,12 +177,14 @@ export const addPart = partInfo => ({
 export const deleteSelectedPartAndMarkers = () => {
   return (dispatch, getState) => {
     const selPart = getSelectedPart(getState());
-    dispatch(deletePart(selPart));
-    dispatch(deleteMarker({
-      markerId: `${selPart.channelId}-${selPart.partId}-l`}));
-    dispatch(deleteMarker({
-      markerId: `${selPart.channelId}-${selPart.partId}-r`}));
-    dispatch(deselect());
+    if (selPart) {
+      dispatch(deletePart(selPart));
+      dispatch(deleteMarker({
+        markerId: `${selPart.channelId}-${selPart.partId}-l`}));
+      dispatch(deleteMarker({
+        markerId: `${selPart.channelId}-${selPart.partId}-r`}));
+      dispatch(deselect());
+    }
   }
 }
 
