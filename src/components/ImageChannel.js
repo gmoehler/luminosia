@@ -76,11 +76,16 @@ class Channel extends Component {
 
   componentDidMount() {
     this.draw();
+    document.addEventListener("keydown", (e) => this.handleMouseEvent(e, "keyDown"));
   }
 
   componentDidUpdate() {
     this.draw();
   }
+
+  componentWillUnmount() {
+    document.removeEventListener("keydown", (e) => this.handleMouseEvent(e, "keyDown"));
+  }   
 
   draw = () => {
     const {imageHeight, scale, factor} = this.props;
@@ -236,9 +241,9 @@ class Channel extends Component {
         onDragOver={ (e) => this.handleMouseEvent(e, "dragOver") }
         onDragStart={ (e) => this.handleMouseEvent(e, "dragStart") } 
         onDrop={ (e) => this.handleMouseEvent(e, "drop") } 
-        onClick={ (e) => this.handleMouseEvent(e, "click") } 
         onKeyDown={ (e) => this.handleMouseEvent(e, "keyDown") } 
-        cssWidth={ maxWidth } theme={ theme } height={ imageHeight }>
+        cssWidth={ maxWidth } theme={ theme } height={ imageHeight }
+        tabIndex={0}>
         
         { allCanvasRefImages }
         { allImageCanvases }

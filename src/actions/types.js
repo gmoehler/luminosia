@@ -29,3 +29,4 @@ export const SET_MARKER = "SET_MARKER";
 export const DELETE_MARKER = "DELETE_MARKER";
 export const UPDATE_MARKER = "UPDATE_MARKER";
 export const SET_SELECTED = "SET_SELECTED";
+export const DESELECT = "DESELECT";

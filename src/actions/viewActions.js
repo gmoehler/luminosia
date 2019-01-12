@@ -1,6 +1,6 @@
 import { SELECT, SET_RESOLUTION, SET_MODE, 
 	UPDATE_MARKER, SET_MARKER, DELETE_MARKER,
-	SET_SELECTED,
+	SET_SELECTED, DESELECT
 } from './types';
 
 import { getSelectedPart } from '../reducers/viewReducer';
@@ -41,25 +41,38 @@ const setSelected = (partInfo) => ({
   payload: partInfo
 });
 
-const updateMarkers = (dispatch, partInfo) => {
-    const type = partInfo.selected ? "selected" : "normal";
-    const markerIdPrefix = `${partInfo.channelId}-${partInfo.partId}`;
-    dispatch(updateMarker({markerId: markerIdPrefix+"-l", incr: 0, type}));
-    return dispatch(updateMarker({markerId: markerIdPrefix+"-r", incr: 0, type}));
-  }
+export const deselect = () => ({
+  type: DESELECT,
+});
+
+const updateMarkers = (dispatch, part) => {
+  const type = part.selected ? "selected" : "normal";
+  const markerIdPrefix = `${part.channelId}-${part.partId}`;
+  dispatch(updateMarker({markerId: markerIdPrefix+"-l", incr: 0, type}));
+  dispatch(updateMarker({markerId: markerIdPrefix+"-r", incr: 0, type}));
+}
 
 export const selectPart = ((partInfo) => {
   return (dispatch, getState) => {
-  	const curSelPart = getSelectedPart(getState());
-  	// de-select markers of prev selected part
-  	if (curSelPart && (curSelPart.channelId !== partInfo.channelId ||
-  		curSelPart.partId !== partInfo.partId)){
-  		curSelPart.selected = false;
-  		updateMarkers(dispatch, curSelPart);
-  	}
-  	// remember newly selected part
-  	dispatch(setSelected(partInfo));
-  	return updateMarkers(dispatch, partInfo) ;
+    const curSelPart = getSelectedPart(getState());
+    
+  	if (curSelPart) {
+      // de-select markers of currently selected part
+      const curUnselPart = {...curSelPart};
+      curUnselPart.selected = false;
+      updateMarkers(dispatch, curUnselPart);
+
+    // clicked on selected part to deselect
+    if (curSelPart.channelId === partInfo.channelId &&
+      curSelPart.partId === partInfo.partId){
+      dispatch(deselect());
+      return;
+    } 
+  } 
+
+  // clicked on unselected part
+  dispatch(setSelected(partInfo));
+  updateMarkers(dispatch, partInfo);
   }
 });
 

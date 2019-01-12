@@ -7,9 +7,10 @@ import { LOAD_CHANNEL_STARTED, LOAD_CHANNEL_FAILURE, LOAD_CHANNEL_SUCCESS,
   ADD_PART, DELETE_PART
 } from './types';
 
-import { setMarker, deleteMarker } from './viewActions';
+import { setMarker, deleteMarker, deselect } from './viewActions';
 import { samplesToSeconds } from '../utils/conversions';
 import { getLastPartId } from '../reducers/channelReducer';
+import { getSelectedPart } from '../reducers/viewReducer';
 
 // load channel async action
 
@@ -167,13 +168,15 @@ export const addPart = partInfo => ({
   payload: partInfo
 });
 
-export const deletePartAndMarkers = (partInfo) => {
+export const deleteSelectedPartAndMarkers = () => {
   return (dispatch, getState) => {
-    dispatch(deletePart(partInfo));
+    const selPart = getSelectedPart(getState());
+    dispatch(deletePart(selPart));
     dispatch(deleteMarker({
-      markerId: `${partInfo.channelId}-${partInfo.partId}-l`}));
+      markerId: `${selPart.channelId}-${selPart.partId}-l`}));
     dispatch(deleteMarker({
-      markerId: `${partInfo.channelId}-${partInfo.partId}-r`}));
+      markerId: `${selPart.channelId}-${selPart.partId}-r`}));
+    dispatch(deselect());
   }
 }
 

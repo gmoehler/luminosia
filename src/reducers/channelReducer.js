@@ -124,7 +124,6 @@ export default (state = initialState, action) => {
           ...state.byId,
           [action.payload.channelId]: {
             ...state.byId[action.payload.channelId],
-            lastPartId: partId,
             byParts: parts
           }
         }
