@@ -76,11 +76,16 @@ class Channel extends Component {
 
   componentDidMount() {
     this.draw();
+    document.addEventListener("keydown", (e) => this.handleMouseEvent(e, "keyDown"));
   }
 
   componentDidUpdate() {
     this.draw();
   }
+
+  componentWillUnmount() {
+    document.removeEventListener("keydown", (e) => this.handleMouseEvent(e, "keyDown"));
+  }   
 
   draw = () => {
     const {imageHeight, scale, factor} = this.props;
@@ -122,12 +127,14 @@ class Channel extends Component {
       e.preventDefault();
       const pos = getMouseEventPosition(e, "ChannelWrapper", this.props.id);
       const src = e.dataTransfer && e.dataTransfer.getData("src");
-      const duration = Number(e.dataTransfer && e.dataTransfer.getData("duration"));
+      const duration = e.dataTransfer && Number(e.dataTransfer.getData("duration"));
+      const key = e.key;
       const evInfo = {
         ...pos, // x pos, channelId, partId
         timestamp: e.timeStamp,
         src, // drag source path
         duration,
+        key,
       }
       this.props.handleMouseEvent(eventName, evInfo);
       return;
@@ -229,11 +236,14 @@ class Channel extends Component {
       <ImageChannelWrapper className='ChannelWrapper' onMouseDown={ (e) => this.handleMouseEvent(e, "mouseDown") } onMouseUp={ (e) => this.handleMouseEvent(e, "mouseUp") } onMouseMove={ (e) => this.handleMouseEvent(e, "mouseMove") } onMouseLeave={ (e) => this.handleMouseEvent(e, "mouseLeave") }
         onDragEnter={ (e) => this.handleMouseEvent(e, "dragEnter") } 
         onDragEnd={ (e) => this.handleMouseEvent(e, "dragEnd") } 
-        onDragExit={ (e) => this.handleMouseEvent(e, "dragExit") } onDragLeave={ (e) => this.handleMouseEvent(e, "dragLeave") } onDragOver={ (e) => this.handleMouseEvent(e, "dragOver") }
+        onDragExit={ (e) => this.handleMouseEvent(e, "dragExit") } 
+        onDragLeave={ (e) => this.handleMouseEvent(e, "dragLeave") } 
+        onDragOver={ (e) => this.handleMouseEvent(e, "dragOver") }
         onDragStart={ (e) => this.handleMouseEvent(e, "dragStart") } 
         onDrop={ (e) => this.handleMouseEvent(e, "drop") } 
-        onClick={ (e) => this.handleMouseEvent(e, "click") } 
-        cssWidth={ maxWidth } theme={ theme } height={ imageHeight }>
+        onKeyDown={ (e) => this.handleMouseEvent(e, "keyDown") } 
+        cssWidth={ maxWidth } theme={ theme } height={ imageHeight }
+        tabIndex={0}>
         
         { allCanvasRefImages }
         { allImageCanvases }

@@ -14,11 +14,12 @@ export default class MoveMouseHandler {
   handleMouseEvent = (eventName, evInfo) => {
     switch (eventName) {
 
-      case "click":
-      this.handleClick(evInfo);
+      case "keyDown":
+      this.handleKeyDown(evInfo);
       break;
 
-	 case "mouseDown":
+      // also handles click selection
+	    case "mouseDown":
       this.handleMoveFrom(evInfo);
       break;
 
@@ -39,17 +40,13 @@ export default class MoveMouseHandler {
     }
   }
 
-  handleClick = (evInfo) => {
-
-    this.handlerFunctions.selectPart({
-      channelId: evInfo.channelId,
-      partId: evInfo.partId,
-      selected: evInfo.selected ? false: true  // toggle selected
-    });
+  handleKeyDown = (evInfo) => {
+    if(evInfo.key === "Delete" || evInfo.key === "Backspace" ) {
+        this.handlerFunctions.deleteSelectedPartAndMarkers();
+    }
   }
   
   handleMoveFrom = (evInfo) => {
-
     this.handlerFunctions.selectPart({
       channelId: evInfo.channelId,
       partId: evInfo.partId,

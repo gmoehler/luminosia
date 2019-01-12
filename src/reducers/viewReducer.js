@@ -2,6 +2,7 @@ import { cloneDeep } from 'lodash';
 import { SELECT, SET_RESOLUTION, SET_MODE, 
   SET_MARKER, UPDATE_MARKER, DELETE_MARKER,
   SET_SELECTED,
+  DESELECT,
   } from '../actions/types';
 
 const initialState = {
@@ -81,6 +82,12 @@ export default (state = initialState, action) => {
       return {
         ...state,
         selectedPart: selPart
+      }
+
+    case DESELECT:
+      return {
+        ...state,
+        selectedPart: null
       }
 
     default:

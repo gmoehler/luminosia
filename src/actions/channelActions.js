@@ -4,12 +4,13 @@ import { merge } from 'lodash';
 import { LOAD_CHANNEL_STARTED, LOAD_CHANNEL_FAILURE, LOAD_CHANNEL_SUCCESS, 
   LOAD_MULTICHANNEL_STARTED, LOAD_MULTICHANNEL_FAILURE, LOAD_MULTICHANNEL_SUCCESS, 
   PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL, 
-  ADD_PART
+  ADD_PART, DELETE_PART
 } from './types';
 
-import { setMarker, deleteMarker } from './viewActions';
+import { setMarker, deleteMarker, deselect, selectPart } from './viewActions';
 import { samplesToSeconds } from '../utils/conversions';
 import { getLastPartId } from '../reducers/channelReducer';
+import { getSelectedPart } from '../reducers/viewReducer';
 
 // load channel async action
 
@@ -43,12 +44,10 @@ const loadMultiChannelFailure = errorInfo => ({
   payload: errorInfo
 });
 
-
 function loadChannelFromFile(channelSource, audioContext) {
   const loader = LoaderFactory.createLoader(channelSource, audioContext);
   return loader.load();
-}
-;
+};
 
 function doLoadMultiPart(dispatch, getState, channelConfig, audioContext) {
   dispatch(loadMultiChannelStarted({
@@ -161,6 +160,12 @@ export const addPartAndMarkers = (partInfo) => {
     }));
     dispatch(deleteMarker({
       markerId: "insert"})); 
+      
+    // select the new part
+    const lastPart = {...partInfo};
+    lastPart.partId = lastPartId;
+    lastPart.selected = true;
+    dispatch(selectPart(lastPart));
   }
 }
 
@@ -168,6 +173,27 @@ export const addPart = partInfo => ({
   type: ADD_PART,
   payload: partInfo
 });
+
+export const deleteSelectedPartAndMarkers = () => {
+  return (dispatch, getState) => {
+    const selPart = getSelectedPart(getState());
+    if (selPart) {
+      dispatch(deletePart(selPart));
+      dispatch(deleteMarker({
+        markerId: `${selPart.channelId}-${selPart.partId}-l`}));
+      dispatch(deleteMarker({
+        markerId: `${selPart.channelId}-${selPart.partId}-r`}));
+      dispatch(deselect());
+    }
+  }
+}
+
+
+export const deletePart = partInfo => ({
+  type: DELETE_PART,
+  payload: partInfo
+});
+
 
 // play related actions
 
