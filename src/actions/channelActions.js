@@ -142,6 +142,12 @@ export const downloadConfig = (() => {
   }
 })
 
+export const uploadConfig = (configFile) => {
+  return (dispatch, getState) => {
+    return console.log(configFile);
+  }
+};
+
 export const loadChannel = (({channels, audioContext}) => {
   return (dispatch, getState) => {
     channels.map((channelConfig) => {
