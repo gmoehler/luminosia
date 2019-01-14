@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { loadChannel, playChannel, stopChannel, deleteSelectedPartAndMarkers } from '../actions/channelActions'
+import { loadChannel, playChannel, stopChannel, deleteSelectedPartAndMarkers, downloadConfig } from '../actions/channelActions'
 import { setMode, select, setResolution } from '../actions/viewActions'
 import ChannelControl from './ChannelControl';
 import { loadImageList } from '../actions/imageListActions';
@@ -121,6 +121,7 @@ class ChannelControlContainer extends Component {
     return (
       <ChannelControl 
         load={ this.doLoad } 
+        downloadConfig={this.props.downloadConfigAction}
         deleteSelectedPart ={this.deleteSelectedPart}
         loadImageList={ this.doImageList } 
         playChannel={ this.props.playChannelAction } 
@@ -139,6 +140,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   loadImageListAction: (spec) => dispatch(loadImageList(spec)),
   loadChannelAction: (spec) => dispatch(loadChannel(spec)),
+  downloadConfigAction: () => dispatch(downloadConfig()),
   playChannelAction: () => dispatch(playChannel()),
   stopChannelAction: () => dispatch(stopChannel()),
   setResolutionAction: (resolution) => dispatch(setResolution(resolution)),

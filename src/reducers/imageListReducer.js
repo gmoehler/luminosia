@@ -57,3 +57,19 @@ export const getImageList = (state) => {
 export const getImageSampleRate = (state) => {
   return state.images.sampleRate;
 }
+
+// array of all images with certain fields filtered out
+export const getImageListConfig = (state) => {
+  const allowedProps = ["src"];
+  const images = state.images.byId ? Object.values(state.images.byId) : [];
+  return images.map((ch) => 
+    Object.keys(ch)
+      .filter(key => allowedProps.includes(key))
+      .reduce((obj, key) => {
+        return {
+          ...obj,
+          [key]: ch[key]
+        };
+      }, {}))
+    };
+

@@ -11,6 +11,8 @@ import { setMarker, deleteMarker, deselect, selectPart } from './viewActions';
 import { samplesToSeconds } from '../utils/conversions';
 import { getLastPartId } from '../reducers/channelReducer';
 import { getSelectedPart } from '../reducers/viewReducer';
+import { downloadTextfile } from '../utils/fileUtils';
+import { getConfig } from '../reducers/rootReducer';
 
 // load channel async action
 
@@ -132,6 +134,13 @@ function doLoad(dispatch, getState, channelConfig, audioContext) {
       }));
     });
 }
+
+export const downloadConfig = (() => {
+  return (dispatch, getState) => {
+    const config = getConfig(getState());
+    downloadTextfile("config.json", JSON.stringify(config));
+  }
+})
 
 export const loadChannel = (({channels, audioContext}) => {
   return (dispatch, getState) => {

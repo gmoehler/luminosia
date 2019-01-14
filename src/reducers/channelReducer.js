@@ -248,3 +248,18 @@ export const getMaxDuration = (state) => {
     Object.keys(state.channel.byId)
       .reduce((result, key) => Math.max(result, getDuration(state, key)), 0);
 }
+
+// array of all channels with a given list of keys
+export const getChannelsConfig = (state) => {
+  const allowedProps = ["id", "type", "name"];
+  const channels = state.channel.byId ? Object.values(state.channel.byId) : [];
+  return channels.map((ch) => 
+    Object.keys(ch)
+      .filter(key => allowedProps.includes(key))
+      .reduce((obj, key) => {
+        return {
+          ...obj,
+          [key]: ch[key]
+        };
+      }, {}))
+    };
