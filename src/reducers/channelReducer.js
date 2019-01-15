@@ -1,6 +1,7 @@
 import { merge, cloneDeep } from 'lodash';
 
-import { LOAD_CHANNEL_STARTED, LOAD_CHANNEL_SUCCESS, LOAD_CHANNEL_FAILURE, LOAD_MULTICHANNEL_STARTED, LOAD_MULTICHANNEL_FAILURE, LOAD_MULTICHANNEL_SUCCESS, PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL, ADD_PART, DELETE_PART } from '../actions/types';
+import { LOAD_CHANNEL_STARTED, LOAD_CHANNEL_SUCCESS, LOAD_CHANNEL_FAILURE, LOAD_MULTICHANNEL_STARTED, LOAD_MULTICHANNEL_FAILURE, LOAD_MULTICHANNEL_SUCCESS, UPLOAD_CONFIG_SUCCESS,
+  PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL, ADD_PART, DELETE_PART } from '../actions/types';
 
 import { samplesToSeconds } from '../utils/conversions';
 
@@ -89,6 +90,16 @@ export default (state = initialState, action) => {
             playState: "stopped",
             error: action.payload
           }
+        }
+      };
+
+    case UPLOAD_CONFIG_SUCCESS:
+      return {
+        ...state,
+        byId: {
+          ...state.byId,
+          [action.payload.id]: 
+            action.payload
         }
       };
 
@@ -249,17 +260,34 @@ export const getMaxDuration = (state) => {
       .reduce((result, key) => Math.max(result, getDuration(state, key)), 0);
 }
 
+// filter out 'allowedKeys' and keys of 'keysToArray'
+// convert value of keysToArray to array
+const filterObjectByKeys = (obj, allowedKeys, keysToArray) => {
+    return Object.keys(obj).filter(key => 
+        allowedKeys.includes(key) || Object.keys(keysToArray).includes(key))
+    .reduce((o, key) => {
+      if (allowedKeys.includes(key)) {
+        return {
+          ...o,
+          [key]: obj[key]
+        }
+      } else {
+        // new key is value of key in keysToArray
+        const newKey = keysToArray[key];
+        return {
+          ...o,
+          [newKey]: Object.values(obj[key])
+        }
+      }
+    }, {});
+}
+
 // array of all channels with a given list of keys
 export const getChannelsConfig = (state) => {
-  const allowedProps = ["id", "type", "name"];
+  const allowedProps = ["id", "type", "names", "src"];
+  const propsToArray = {"byParts": "parts"};
   const channels = state.channel.byId ? Object.values(state.channel.byId) : [];
-  return channels.map((ch) => 
-    Object.keys(ch)
-      .filter(key => allowedProps.includes(key))
-      .reduce((obj, key) => {
-        return {
-          ...obj,
-          [key]: ch[key]
-        };
-      }, {}))
-    };
+  return channels.map((ch) => {
+      return filterObjectByKeys(ch, allowedProps, propsToArray)
+    });
+};

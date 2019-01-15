@@ -12,7 +12,7 @@ export function downloadTextfile(filename, text) {
   document.body.removeChild(element);
 }
 
-export function readFile(file){
+export function readTextFile(file){
   return new Promise((resolve, reject) => {
     var fr = new FileReader();  
     fr.onload = () => {

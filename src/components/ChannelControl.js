@@ -35,8 +35,8 @@ export default class ChannelControl extends Component {
         </ChannelControlRow>
         <ChannelControlRow>
           <form onSubmit={this.uploadConfig}>
-            <input className="form-control"  ref={(ref) => { this.uploadInput = ref; }} type="file" />
-            <button className="btn btn-success" type>Upload config</button>
+            <input ref={(ref) => this.uploadInput = ref } type="file" />
+            <button>Upload config</button>
           </form>
         </ChannelControlRow>
         <ChannelControlRow>

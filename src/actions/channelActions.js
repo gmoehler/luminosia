@@ -12,7 +12,7 @@ import { setMarker, deleteMarker, deselect, selectPart } from './viewActions';
 import { samplesToSeconds } from '../utils/conversions';
 import { getLastPartId } from '../reducers/channelReducer';
 import { getSelectedPart } from '../reducers/viewReducer';
-import { downloadTextfile, readFile } from '../utils/fileUtils';
+import { downloadTextfile, readTextFile } from '../utils/fileUtils';
 import { getConfig } from '../reducers/rootReducer';
 
 // load channel async action
@@ -161,12 +161,13 @@ const uploadConfigFailure = errorInfo => ({
 export const uploadConfig = (configFile) => {
   return (dispatch, getState) => {
     dispatch(uploadConfigStarted());
-    console.log(configFile);
-    readFile(configFile)
+    console.log("Reading " + configFile.name  + "...");
+    readTextFile(configFile)
     	.then((data) => {
-    		console.log(data);
-    		console.log(JSON.parse(data));
-    		return dispatch(uploadConfigSuccess());
+        const dataObj = JSON.parse(data);
+        console.log(dataObj);
+        return dataObj.channels.map((channelData) => 
+    		 dispatch(uploadConfigSuccess(channelData)))
     	})
     .catch(err => {
       return dispatch(uploadConfigFailure({
