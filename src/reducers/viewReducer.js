@@ -1,5 +1,5 @@
 import { cloneDeep } from 'lodash';
-import { SELECT, SET_RESOLUTION, SET_MODE, 
+import { CLEAR_VIEW, SELECT, SET_RESOLUTION, SET_MODE, 
   SET_MARKER, UPDATE_MARKER, DELETE_MARKER,
   SET_SELECTED,
   DESELECT,
@@ -18,6 +18,9 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
+
+  case CLEAR_VIEW: 
+    return initialState;
 
     case SELECT:
       return {

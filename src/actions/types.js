@@ -1,6 +1,9 @@
 // action type constants
 
 // channel actions
+export const ADD_CHANNEL = "ADD_CHANNEL";
+export const CLEAR_CHANNELS = "CLEAR_CHANNELS";
+
 export const LOAD_CHANNEL_STARTED = "LOAD_CHANNEL_STARTED";
 export const LOAD_CHANNEL_SUCCESS = "LOAD_CHANNEL_SUCCESS";
 export const LOAD_CHANNEL_FAILURE = "LOAD_CHANNEL_FAILURE";
@@ -19,12 +22,14 @@ export const DELETE_PART = "DELETE_PART";
 
 // image list actions
 export const ADD_IMAGE = "ADD_IMAGE";
+export const CLEAR_IMAGELIST = "CLEAR_IMAGELIST";
 export const REMOVE_IMAGE = "REMOVE_IMAGE";
 export const LOAD_IMAGELIST_STARTED = "LOAD_IMAGELIST_STARTED";
 export const LOAD_IMAGELIST_SUCCESS = "LOAD_IMAGELIST_SUCCESS";
 export const LOAD_IMAGELIST_FAILURE = "LOAD_IMAGELIST_FAILURE";
 
 // view actions
+export const CLEAR_VIEW = "CLEAR_VIEW";
 export const SELECT = "SELECT";
 export const SET_RESOLUTION = "SET_RESOLUTION";
 export const SET_CHANNEL_PLAY_STATE = "SET_CHANNEL_PLAY_STATE";

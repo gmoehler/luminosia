@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { loadChannel, playChannel, stopChannel, deleteSelectedPartAndMarkers, 
-  downloadConfig, uploadConfig } from '../actions/channelActions'
+import { loadChannel, playChannel, stopChannel, deleteSelectedPartAndMarkers } from '../actions/channelActions'
+import { downloadConfig, uploadConfig } from '../actions/generalActions'
 import { setMode, select, setResolution } from '../actions/viewActions'
 import ChannelControl from './ChannelControl';
 import { loadImageList } from '../actions/imageListActions';
@@ -143,7 +143,7 @@ const mapDispatchToProps = dispatch => ({
   loadImageListAction: (spec) => dispatch(loadImageList(spec)),
   loadChannelAction: (spec) => dispatch(loadChannel(spec)),
   downloadConfigAction: () => dispatch(downloadConfig()),
-  uploadConfigAction: (configFile) => dispatch(uploadConfig(configFile)),
+  uploadConfigAction: (configFile) => dispatch(uploadConfig(configFile, audioContext)),
   playChannelAction: () => dispatch(playChannel()),
   stopChannelAction: () => dispatch(stopChannel()),
   setResolutionAction: (resolution) => dispatch(setResolution(resolution)),

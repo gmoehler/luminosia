@@ -1,6 +1,6 @@
 import { merge, cloneDeep } from 'lodash';
 
-import { LOAD_CHANNEL_STARTED, LOAD_CHANNEL_SUCCESS, LOAD_CHANNEL_FAILURE, LOAD_MULTICHANNEL_STARTED, LOAD_MULTICHANNEL_FAILURE, LOAD_MULTICHANNEL_SUCCESS, UPLOAD_CONFIG_SUCCESS,
+import { LOAD_CHANNEL_STARTED, LOAD_CHANNEL_SUCCESS, LOAD_CHANNEL_FAILURE, LOAD_MULTICHANNEL_STARTED, LOAD_MULTICHANNEL_FAILURE, LOAD_MULTICHANNEL_SUCCESS, ADD_CHANNEL, CLEAR_CHANNELS,
   PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL, ADD_PART, DELETE_PART } from '../actions/types';
 
 import { samplesToSeconds } from '../utils/conversions';
@@ -12,6 +12,21 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
+
+    case ADD_CHANNEL:
+    const id = action.payload.id ? action.payload.id : action.payload.src;
+      return {
+        ...state,
+        byId: {
+          ...state.byId,
+          [id]: 
+            action.payload
+        }
+      };
+
+    case CLEAR_CHANNELS:
+      return initialState;
+
     case LOAD_CHANNEL_STARTED:
       return {
         ...state,
@@ -90,16 +105,6 @@ export default (state = initialState, action) => {
             playState: "stopped",
             error: action.payload
           }
-        }
-      };
-
-    case UPLOAD_CONFIG_SUCCESS:
-      return {
-        ...state,
-        byId: {
-          ...state.byId,
-          [action.payload.id]: 
-            action.payload
         }
       };
 
@@ -284,7 +289,7 @@ const filterObjectByKeys = (obj, allowedKeys, keysToArray) => {
 
 // array of all channels with a given list of keys
 export const getChannelsConfig = (state) => {
-  const allowedProps = ["id", "type", "names", "src"];
+  const allowedProps = ["id", "type", "names", "src", "sampleRate"];
   const propsToArray = {"byParts": "parts"};
   const channels = state.channel.byId ? Object.values(state.channel.byId) : [];
   return channels.map((ch) => {
