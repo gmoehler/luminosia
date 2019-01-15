@@ -3,6 +3,7 @@ import { merge } from 'lodash';
 
 import { LOAD_CHANNEL_STARTED, LOAD_CHANNEL_FAILURE, LOAD_CHANNEL_SUCCESS, 
   LOAD_MULTICHANNEL_STARTED, LOAD_MULTICHANNEL_FAILURE, LOAD_MULTICHANNEL_SUCCESS, 
+  UPLOAD_CONFIG_STARTED, UPLOAD_CONFIG_SUCCESS, UPLOAD_CONFIG_FAILURE,
   PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL, 
   ADD_PART, DELETE_PART
 } from './types';
@@ -11,7 +12,7 @@ import { setMarker, deleteMarker, deselect, selectPart } from './viewActions';
 import { samplesToSeconds } from '../utils/conversions';
 import { getLastPartId } from '../reducers/channelReducer';
 import { getSelectedPart } from '../reducers/viewReducer';
-import { downloadTextfile } from '../utils/fileUtils';
+import { downloadTextfile, readFile } from '../utils/fileUtils';
 import { getConfig } from '../reducers/rootReducer';
 
 // load channel async action
@@ -142,11 +143,37 @@ export const downloadConfig = (() => {
   }
 })
 
+const uploadConfigStarted = startInfo => ({
+  type: UPLOAD_CONFIG_STARTED,
+  payload: startInfo
+});
+
+const uploadConfigSuccess = channelInfo => ({
+  type: UPLOAD_CONFIG_SUCCESS,
+  payload: channelInfo
+});
+
+const uploadConfigFailure = errorInfo => ({
+  type: UPLOAD_CONFIG_FAILURE,
+  payload: errorInfo
+});
+
 export const uploadConfig = (configFile) => {
   return (dispatch, getState) => {
-    return console.log(configFile);
-  }
-};
+    dispatch(uploadConfigStarted());
+    console.log(configFile);
+    readFile(configFile)
+    	.then((content) => {
+    		console.log(data);
+    		console.log(JSON.parse(data));
+    		return dispatch(uploadConfigSuccess());
+    	})
+    .catch(err => {
+      return dispatch(uploadConfigFailure({
+        err
+      }))
+   })
+}};
 
 export const loadChannel = (({channels, audioContext}) => {
   return (dispatch, getState) => {
