@@ -1,4 +1,3 @@
-import FileReader from 'FileReader'
 
 export function downloadTextfile(filename, text) {
   var element = document.createElement('a');
@@ -13,12 +12,12 @@ export function downloadTextfile(filename, text) {
   document.body.removeChild(element);
 }
 
-function readFile(file){
+export function readFile(file){
   return new Promise((resolve, reject) => {
     var fr = new FileReader();  
     fr.onload = () => {
       resolve(fr.result )
     };
-    fr.readAsText(file.blob);
+    fr.readAsText(file);
   });
 }

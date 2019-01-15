@@ -163,7 +163,7 @@ export const uploadConfig = (configFile) => {
     dispatch(uploadConfigStarted());
     console.log(configFile);
     readFile(configFile)
-    	.then((content) => {
+    	.then((data) => {
     		console.log(data);
     		console.log(JSON.parse(data));
     		return dispatch(uploadConfigSuccess());
