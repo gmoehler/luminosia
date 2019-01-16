@@ -11,6 +11,7 @@ const ImageListWrapper = styled.div`
 	overflow: auto;
 	white-space: nowrap;
 	padding: 20px 0;
+	background:  ${props => props.backgroundColor};
 `;
 
 const Image = styled.img`
@@ -19,6 +20,41 @@ const Image = styled.img`
 
 // contains multiple AudioChannels
 export default class ImageList extends PureComponent {
+	constructor(props) {
+    super(props);
+		this.state = {
+			dragging: false
+		};
+  }
+
+	handleMouseEvent = (e, eventName) => {
+		e.preventDefault();
+		e.stopPropagation();
+		if (eventName === "dragEnter") {
+			this.dragCounter++;			
+			this.setState({...this.state, dragging: true})
+		} else if (eventName === "dragLeave") {
+			this.dragCounter--;
+			if (this.dragCounter === 0) {
+				this.setState({...this.state, dragging: false});
+			}
+		} else if (eventName === "drop") {
+			this.setState({...this.state, dragging: false});
+			if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+				console.log(eventName);
+				const imageFile = e.dataTransfer.files[0];
+				var reader = new FileReader();
+				const that = this;
+    		reader.onload = function(e) {
+					that.setState({...that.state, imageFile: reader.result});
+					that.props.saveImageToStorage(reader.result, "theImage");
+    		}
+    		reader.readAsDataURL(imageFile);
+				// this.setState({...this.state, imageFile});
+				// this.props.saveImageToStorage(e.dataTransfer.files[0], "theImage");
+			}
+		}
+	}
 
   render() {
 
@@ -39,7 +75,16 @@ export default class ImageList extends PureComponent {
     );
 
     return (
-      <ImageListWrapper>
+			<ImageListWrapper
+			onDragEnter={ (e) => this.handleMouseEvent(e, "dragEnter") } 
+			onDragEnd={ (e) => this.handleMouseEvent(e, "dragEnd") } 
+			onDragExit={ (e) => this.handleMouseEvent(e, "dragExit") } 
+			onDragLeave={ (e) => this.handleMouseEvent(e, "dragLeave") } 
+			onDragOver={ (e) => this.handleMouseEvent(e, "dragOver") }
+			onDragStart={ (e) => this.handleMouseEvent(e, "dragStart") } 
+			onDrop={ (e) => this.handleMouseEvent(e, "drop") } 
+			backgroundColor={this.state.dragging ? "lightgrey" : "darkgrey"}>
+			<Image src={this.state.imageFile}></Image>
         { imagesComponent }
       </ImageListWrapper>
     )

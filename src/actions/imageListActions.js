@@ -2,6 +2,7 @@ import LoaderFactory from '../loader/LoaderFactory'
 
 import { ADD_IMAGE, CLEAR_IMAGELIST, REMOVE_IMAGE } from './types';
 import { samplesToSeconds } from '../utils/conversions';
+import { getBase64Image } from '../utils/fileUtils';
 
 
 export const addImage = (imageInfo) => ({
@@ -32,4 +33,14 @@ export function loadImage(imageInfo) {
   });
 }
 
+export function saveImageToStorage(imageFile, key) {
+  return (dispatch, getState) => {
+    // const imgData = getBase64Image(imageFile);
+    localStorage.setItem(key, imageFile);
+  }
+}
 
+export function loadImagefromStorage(key) {
+  var dataImage = localStorage.getItem(key);
+  return "data:image/png;base64," + dataImage;
+}

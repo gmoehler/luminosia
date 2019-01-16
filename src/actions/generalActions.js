@@ -1,7 +1,5 @@
 
-import { 
-  UPLOAD_CONFIG_STARTED, UPLOAD_CONFIG_SUCCESS, UPLOAD_CONFIG_FAILURE
-} from './types';
+import { UPLOAD_CONFIG_STARTED, UPLOAD_CONFIG_SUCCESS, UPLOAD_CONFIG_FAILURE} from './types';
 
 import { downloadTextfile, readTextFile } from '../utils/fileUtils';
 import { getConfig } from '../reducers/rootReducer';
@@ -30,24 +28,26 @@ const uploadConfigFailure = errorInfo => ({
 export const uploadConfigFile = (configFile, audioContext) => {
   return (dispatch, getState) => {
     dispatch(uploadConfigStarted());
-    console.log("Reading " + configFile.name  + "...");
+    console.log("Reading " + configFile.name + "...");
 
     return readTextFile(configFile)
       .then((data) => {
         const dataObj = JSON.parse(data);
         dispatch(uploadConfig(dataObj, audioContext));
       })
-      .then (dispatch(uploadConfigSuccess()))
+      .then(dispatch(uploadConfigSuccess()))
       .catch(err => {
         console.error(err);
-        return dispatch(uploadConfigFailure({ err }))
+        return dispatch(uploadConfigFailure({
+          err
+        }))
       })
   }
 }
 
 export const uploadConfig = (configData, audioContext) => {
   return (dispatch, getState) => {
-    
+
     console.log(configData);
     dispatch(clearView());
     dispatch(clearImageList());
@@ -55,7 +55,7 @@ export const uploadConfig = (configData, audioContext) => {
 
     // load all images
     const imageListPromises = configData.images.map((imageData) => 
-      loadImage(imageData) 
+      loadImage(imageData)
       .then((img) => dispatch(addImage(img))));
 
     return Promise.all(imageListPromises)
@@ -64,14 +64,15 @@ export const uploadConfig = (configData, audioContext) => {
         // load all channels
         const channelPromises = configData.channels.map((channelData) => 
           loadAChannel(channelData, audioContext, getState())
-          .then((channelInfo) =>  {
+          .then((channelInfo) => {
             dispatch(addChannel(channelInfo));
             dispatch(updateChannelMarkers(channelInfo));
-            }));
+          }));
 
         return Promise.all(channelPromises);
       })
-}};
+  }
+};
 
 
 export const downloadConfig = (() => {
