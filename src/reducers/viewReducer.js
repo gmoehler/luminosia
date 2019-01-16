@@ -11,7 +11,7 @@ const initialState = {
     to: null
   },
   markersById: {},
-  resolution: 1000,
+  resolution: 80,
   mode: "moveMode",
   selectedPart: null,
 };

@@ -93,9 +93,17 @@ function loadImageChannel(channelConfig, state) {
 }
 
 function loadWaveChannel(channelConfig, audioContext) {
-  return loadChannelFromFile(channelConfig.src, audioContext);
+  return loadChannelFromFile(channelConfig.src, audioContext)
+    .then((buf) => {
+      return {
+        type: "audio",
+        playState: "stopped",
+        sampleRate: buf.sampleRate,
+        buffer: buf,
+        ...channelConfig
+      }
+    })
 }
-
 
 function doLoadMultiPart(dispatch, getState, channelConfig, audioContext) {
   dispatch(loadMultiChannelStarted({
