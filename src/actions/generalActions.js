@@ -6,7 +6,7 @@ import {
 import { downloadTextfile, readTextFile } from '../utils/fileUtils';
 import { getConfig } from '../reducers/rootReducer';
 
-import { addChannel, clearChannels, loadAChannel} from './channelActions';
+import { addChannel, clearChannels, loadAChannel, updateChannelMarkers } from './channelActions';
 import { addImage, clearImageList, loadImage } from './imageListActions';
 import { clearView } from './viewActions';
 
@@ -51,7 +51,10 @@ export const uploadConfig = (configFile, audioContext) => {
             // load all channels
             const channelPromises = dataObj.channels.map((channelData) => 
               loadAChannel(channelData, audioContext, getState())
-              .then((channelInfo) =>  dispatch(addChannel(channelInfo))));
+              .then((channelInfo) =>  {
+				dispatch(addChannel(channelInfo)));
+				dispatch(updateChannelMarkers(channelInfo)));
+			  });
 
             return Promise.all(channelPromises)
               .then (dispatch(uploadConfigSuccess()));
