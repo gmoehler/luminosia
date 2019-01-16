@@ -29,7 +29,7 @@ export default class ChannelControl extends Component {
     return (
       <ChannelControlWrapper>
         <ChannelControlRow>
-        <button onClick={ this.props.load }>Init</button>
+        <button onClick={ this.props.init }>Init</button>
         <button onClick={ this.props.downloadConfig }>Download config</button>
         <button onClick={ this.props.deleteSelectedPart }>Delete selected</button>
         </ChannelControlRow>

@@ -1,18 +1,22 @@
 import { merge, cloneDeep } from 'lodash';
 
-import { LOAD_CHANNEL_STARTED, LOAD_CHANNEL_SUCCESS, LOAD_CHANNEL_FAILURE, LOAD_MULTICHANNEL_STARTED, LOAD_MULTICHANNEL_FAILURE, LOAD_MULTICHANNEL_SUCCESS, ADD_CHANNEL, CLEAR_CHANNELS,
+import { ADD_CHANNEL, CLEAR_CHANNELS,
   PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL, ADD_PART, DELETE_PART } from '../actions/types';
 
 import { samplesToSeconds } from '../utils/conversions';
 import { filterObjectByKeys } from '../utils/miscUtils';
 
-// TODO: improve this using a sub-reducer on the selected channel
+// TODO: improve this reducer using a sub-reducer on the selected channel
+
 const initialState = {
   byId: {}
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
+
+    case CLEAR_CHANNELS:
+      return initialState;
 
     case ADD_CHANNEL:
     const id = action.payload.id ? action.payload.id : action.payload.src;
@@ -22,90 +26,6 @@ export default (state = initialState, action) => {
           ...state.byId,
           [id]: 
             action.payload
-        }
-      };
-
-    case CLEAR_CHANNELS:
-      return initialState;
-
-    case LOAD_CHANNEL_STARTED:
-      return {
-        ...state,
-        byId: {
-          [action.payload.channelSource]: {
-            loading: true
-          }
-        }
-      };
-
-    case LOAD_CHANNEL_SUCCESS:
-      const channelSource = action.payload.channelConfig.src;
-      return {
-        ...state,
-        byId: {
-          ...state.byId,
-          [channelSource]: {
-            loading: false,
-            type: channelSource.endsWith(".png") ? "image" : "audio",
-            playState: "stopped",
-            sampleRate: action.payload.channelBuffer.sampleRate,
-            error: null,
-            buffer: action.payload.channelBuffer,
-            ...action.payload.channelConfig
-          }
-        }
-      };
-
-    case LOAD_CHANNEL_FAILURE:
-      return {
-        ...state,
-        byId: {
-          [action.payload.channelSource]: {
-            loading: false,
-            playState: "stopped",
-            error: action.payload
-          }
-        }
-      };
-
-    case LOAD_MULTICHANNEL_STARTED:
-      return {
-        ...state,
-        byId: {
-          [action.payload.channelId]: {
-            loading: true
-          }
-        }
-      };
-
-    case LOAD_MULTICHANNEL_SUCCESS:
-      const channelId = action.payload.channelConfig.id;
-      return {
-        ...state,
-        byId: {
-          ...state.byId,
-          [channelId]: {
-            loading: false,
-            type: "image",
-            playState: "stopped",
-            error: null,
-            ...action.payload.channelConfig,
-            byParts: {
-              ...action.payload.channelParts,
-            }
-          }
-        }
-      }
-
-    case LOAD_MULTICHANNEL_FAILURE:
-      return {
-        ...state,
-        byId: {
-          [action.payload.channelId]: {
-            loading: false,
-            playState: "stopped",
-            error: action.payload
-          }
         }
       };
 
@@ -164,7 +84,6 @@ export default (state = initialState, action) => {
       }
 
     case SET_CHANNEL_PLAY_STATE:
-
       const mergedChannelState = merge({},
         state.byId[action.payload.channelId],
         {
@@ -181,6 +100,7 @@ export default (state = initialState, action) => {
       }
 
     case MOVE_CHANNEL:
+      // not really implemented
       const channel = state.byId[action.payload.channelId];
       const part = channel.byParts[action.payload.partId];
       const currentOffset = part.offset;

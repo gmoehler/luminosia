@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { loadChannel, playChannel, stopChannel, deleteSelectedPartAndMarkers } from '../actions/channelActions'
+import { playChannel, stopChannel, deleteSelectedPartAndMarkers } from '../actions/channelActions'
 import { downloadConfig, uploadConfigFile, uploadConfig } from '../actions/generalActions'
 import { setMode, select, setResolution } from '../actions/viewActions'
 import ChannelControl from './ChannelControl';
-import { loadImageList } from '../actions/imageListActions';
 
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
 const audioContext = new window.AudioContext();
@@ -60,7 +59,7 @@ const images = [
   },
 ];
 
-const config = {
+const initConfig = {
   sampleRate: imageSampleRate, 
   images,
   channels,
@@ -73,19 +72,9 @@ class ChannelControlContainer extends Component {
     this.resolutionIdx = defaultResolutionIdx;
   }
 
-  doLoad = (event) => {
+  doInit = (event) => {
     this.resetZoom();
-    this.props.uploadConfigAction(config);
-    /*
-    this.props.loadImageListAction({
-      sampleRate: imageSampleRate,
-      images
-    });
-    this.props.loadChannelAction({
-      channels,
-      audioContext,
-    });
-    */
+    this.props.uploadConfigAction(initConfig);
   }
   
   deleteSelectedPart = () => {
@@ -125,11 +114,10 @@ class ChannelControlContainer extends Component {
 
     return (
       <ChannelControl 
-        load={ this.doLoad } 
+        init={ this.doInit } 
         downloadConfig={this.props.downloadConfigAction}
         uploadConfigFile={this.props.uploadConfigFileAction}
         deleteSelectedPart ={this.deleteSelectedPart}
-        loadImageList={ this.doImageList } 
         playChannel={ this.props.playChannelAction } 
         stopChannel={ this.props.stopChannelAction } 
         zoomIn={ this.zoomIn }
@@ -144,8 +132,6 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  loadImageListAction: (spec) => dispatch(loadImageList(spec)),
-  loadChannelAction: (spec) => dispatch(loadChannel(spec)),
   downloadConfigAction: () => dispatch(downloadConfig()),
   uploadConfigFileAction: (configFile) => dispatch(uploadConfigFile(configFile, audioContext)),
   uploadConfigAction: (config) => dispatch(uploadConfig(config, audioContext)),
