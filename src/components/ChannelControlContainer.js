@@ -40,12 +40,12 @@ const channels = [
       cuein: 0.5, // in secs
       cueout: 1.47, // in secs
     },
-      {
-        src: 'media/image/blueLine.png',
-        offset: 3.75,
-        cuein: 0.5, // in secs
-        cueout: 1.47, // in secs
-      }],
+    {
+      src: 'media/image/blueLine.png',
+      offset: 3.75,
+      cuein: 0.5, // in secs
+      cueout: 1.47, // in secs
+    }],
   },
 ]
 

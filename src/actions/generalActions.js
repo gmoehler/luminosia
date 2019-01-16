@@ -42,7 +42,7 @@ export const uploadConfig = (configFile, audioContext) => {
 
         // load all images
         const imageListPromises = dataObj.images.map((imageData) => 
-          loadImage(imageData.src,) 
+          loadImage(imageData) 
           .then((img) => dispatch(addImage(img))));
 
         return Promise.all(imageListPromises)

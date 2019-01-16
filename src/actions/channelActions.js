@@ -108,19 +108,19 @@ function loadWaveChannel(channelConfig, audioContext) {
 export const updateChannelMarkers = (channelInfo) => {
   return (dispatch, getState) => {
     
-    Object.keys(channelInfo.byParts).foEach((partId) => {
+    Object.keys(channelInfo.byParts).forEach((partId) => {
     
-    const part = channelInfo.byParts[partId];
-	dispatch(setMarker({
-      markerId: `${channelInfo.channelId}-${partId}-l`, 
-      pos: part.offset,
-      type: "normal"
-    }));
-    dispatch(setMarker({
-      markerId: `${channelInfo.channelId}-${partId}-r`, 
-      pos: part.offset + part.duration,
-      type: "normal"
-    }));
+      const part = channelInfo.byParts[partId];
+      dispatch(setMarker({
+          markerId: `${channelInfo.id}-${partId}-l`, 
+          pos: part.offset,
+          type: "normal"
+        }));
+        dispatch(setMarker({
+          markerId: `${channelInfo.id}-${partId}-r`, 
+          pos: part.offset + part.duration,
+          type: "normal"
+        }));
     });
   }
 }

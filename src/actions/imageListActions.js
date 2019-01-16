@@ -32,15 +32,16 @@ const loadImageListFailure = errorInfo => ({
   payload: errorInfo
 });
 
-function loadChannelFromFile(imageSrc) {
+function loadImageFromFile(imageSrc) {
   const loader = LoaderFactory.createLoader(imageSrc);
   return loader.load();
 };
 
-export function loadImage(imageSrc) {
-  return loadChannelFromFile(imageSrc)
+export function loadImage(imageInfo) {
+  return loadImageFromFile(imageInfo.src)
   .then((img) => {
-    img.duration = samplesToSeconds(img.width, img.sampleRate);
+    img.sampleRate = imageInfo.sampleRate;
+    img.duration = samplesToSeconds(img.width, imageInfo.sampleRate);
     return img
   });
 }
@@ -49,7 +50,7 @@ export const loadImageList = (({images, sampleRate}) => (dispatch) => {
   dispatch(loadImageListStarted());
 
   const loadImagesPromises = images
-    .map((fileConfig) => loadChannelFromFile(fileConfig.src));
+    .map((fileConfig) => loadImageFromFile(fileConfig.src));
 
 
   return Promise.all(loadImagesPromises)
@@ -57,6 +58,7 @@ export const loadImageList = (({images, sampleRate}) => (dispatch) => {
 
       const normalizedImages = {};
       imageBuffers.forEach((img) => {
+        img.sampleRate = sampleRate;
         img.duration = samplesToSeconds(img.width, sampleRate)
         normalizedImages[img.src] = img;
 
