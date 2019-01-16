@@ -52,9 +52,9 @@ export const uploadConfig = (configFile, audioContext) => {
             const channelPromises = dataObj.channels.map((channelData) => 
               loadAChannel(channelData, audioContext, getState())
               .then((channelInfo) =>  {
-				dispatch(addChannel(channelInfo)));
-				dispatch(updateChannelMarkers(channelInfo)));
-			  });
+				dispatch(addChannel(channelInfo));
+				dispatch(updateChannelMarkers(channelInfo));
+			  }));
 
             return Promise.all(channelPromises)
               .then (dispatch(uploadConfigSuccess()));

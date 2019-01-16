@@ -7,11 +7,11 @@ import { LOAD_CHANNEL_STARTED, LOAD_CHANNEL_FAILURE, LOAD_CHANNEL_SUCCESS,
   ADD_PART, DELETE_PART, ADD_CHANNEL, CLEAR_CHANNELS
 } from './types';
 
-import { setMarker, deleteMarker, deselect, selectPart, clearView } from './viewActions';
+import { setMarker, deleteMarker, deselect, selectPart } from './viewActions';
 import { samplesToSeconds } from '../utils/conversions';
 import { getLastPartId } from '../reducers/channelReducer';
 import { getSelectedPart } from '../reducers/viewReducer';
-import { getImageWidth, getImageDuration } from '../reducers/imageListReducer';
+import { getImageDuration } from '../reducers/imageListReducer';
 
 // load channel from config
 
@@ -121,7 +121,7 @@ export const updateChannelMarkers = (channelInfo) => {
       pos: part.offset + part.duration,
       type: "normal"
     }));
-    }
+    });
   }
 }
 
