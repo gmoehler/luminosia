@@ -27,44 +27,52 @@ const uploadConfigFailure = errorInfo => ({
   payload: errorInfo
 });
 
-export const uploadConfig = (configFile, audioContext) => {
+export const uploadConfigFile = (configFile, audioContext) => {
   return (dispatch, getState) => {
     dispatch(uploadConfigStarted());
     console.log("Reading " + configFile.name  + "...");
+
+    return readTextFile(configFile)
+      .then((data) => {
+        const dataObj = JSON.parse(data);
+        dispatch(uploadConfig(dataObj, audioContext));
+      })
+      .then (dispatch(uploadConfigSuccess()))
+      .catch(err => {
+        console.error(err);
+        return dispatch(uploadConfigFailure({ err }))
+      })
+  }
+}
+
+export const uploadConfig = (configData, audioContext) => {
+  return (dispatch, getState) => {
+    
+    console.log(configData);
     dispatch(clearView());
     dispatch(clearImageList());
     dispatch(clearChannels());
 
-    readTextFile(configFile)
-    	.then((data) => {
-        const dataObj = JSON.parse(data);
-        console.log(dataObj);
+    // load all images
+    const imageListPromises = configData.images.map((imageData) => 
+      loadImage(imageData) 
+      .then((img) => dispatch(addImage(img))));
 
-        // load all images
-        const imageListPromises = dataObj.images.map((imageData) => 
-          loadImage(imageData) 
-          .then((img) => dispatch(addImage(img))));
+    return Promise.all(imageListPromises)
+      .then(() => {
 
-        return Promise.all(imageListPromises)
-          .then(() => {
+        // load all channels
+        const channelPromises = configData.channels.map((channelData) => 
+          loadAChannel(channelData, audioContext, getState())
+          .then((channelInfo) =>  {
+            dispatch(addChannel(channelInfo));
+            dispatch(updateChannelMarkers(channelInfo));
+            }));
 
-            // load all channels
-            const channelPromises = dataObj.channels.map((channelData) => 
-              loadAChannel(channelData, audioContext, getState())
-              .then((channelInfo) =>  {
-				dispatch(addChannel(channelInfo));
-				dispatch(updateChannelMarkers(channelInfo));
-			  }));
-
-            return Promise.all(channelPromises)
-              .then (dispatch(uploadConfigSuccess()));
-        })})
-
-    .catch(err => {
-      console.error(err);
-      return dispatch(uploadConfigFailure({ err }))
-    })
+        return Promise.all(channelPromises);
+      })
 }};
+
 
 export const downloadConfig = (() => {
   return (dispatch, getState) => {

@@ -19,9 +19,9 @@ const ChannelControlRow = styled.div`
 
 export default class ChannelControl extends Component {
 
-  uploadConfig = (evt) => {
+  uploadConfigFile = (evt) => {
     evt.preventDefault();
-    this.props.uploadConfig(this.uploadInput.files[0]);
+    this.props.uploadConfigFile(this.uploadInput.files[0]);
   };
 
   render() {
@@ -29,12 +29,12 @@ export default class ChannelControl extends Component {
     return (
       <ChannelControlWrapper>
         <ChannelControlRow>
-        <button onClick={ this.props.load }>Load</button>
+        <button onClick={ this.props.load }>Init</button>
         <button onClick={ this.props.downloadConfig }>Download config</button>
         <button onClick={ this.props.deleteSelectedPart }>Delete selected</button>
         </ChannelControlRow>
         <ChannelControlRow>
-          <form onSubmit={this.uploadConfig}>
+          <form onSubmit={this.uploadConfigFile}>
             <input ref={(ref) => this.uploadInput = ref } type="file" />
             <button>Upload config</button>
           </form>
