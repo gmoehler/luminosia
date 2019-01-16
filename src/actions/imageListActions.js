@@ -37,10 +37,10 @@ function loadChannelFromFile(imageSrc) {
   return loader.load();
 };
 
-export function loadImage(imageSrc, sampleRate) {
+export function loadImage(imageSrc) {
   return loadChannelFromFile(imageSrc)
   .then((img) => {
-    img.duration = samplesToSeconds(img.width, sampleRate);
+    img.duration = samplesToSeconds(img.width, img.sampleRate);
     return img
   });
 }

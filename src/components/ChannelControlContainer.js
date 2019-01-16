@@ -51,10 +51,12 @@ const channels = [
 
 const images = [
   {
-    src: 'media/image/mostlyStripes.png'
+    src: 'media/image/mostlyStripes.png',
+    sampleRate: imageSampleRate,
   },
   {
-    src: 'media/image/blueLine.png'
+    src: 'media/image/blueLine.png',
+    sampleRate: imageSampleRate,
   },
 ];
 
