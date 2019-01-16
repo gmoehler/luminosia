@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { loadChannel, playChannel, stopChannel, deleteSelectedPartAndMarkers } from '../actions/channelActions'
+import { downloadConfig, uploadConfigFile, uploadConfig } from '../actions/generalActions'
 import { setMode, select, setResolution } from '../actions/viewActions'
 import ChannelControl from './ChannelControl';
 import { loadImageList } from '../actions/imageListActions';
@@ -39,30 +40,31 @@ const channels = [
       cuein: 0.5, // in secs
       cueout: 1.47, // in secs
     },
-      {
-        src: 'media/image/blueLine.png',
-        offset: 3.75,
-        cuein: 0.5, // in secs
-        cueout: 1.47, // in secs
-      }],
+    {
+      src: 'media/image/blueLine.png',
+      offset: 3.75,
+      cuein: 0.5, // in secs
+      cueout: 1.47, // in secs
+    }],
   },
 ]
 
 const images = [
   {
-    src: 'media/image/mostlyStripes.png'
+    src: 'media/image/mostlyStripes.png',
+    sampleRate: imageSampleRate,
   },
   {
-    src: 'media/image/blueLine.png'
+    src: 'media/image/blueLine.png',
+    sampleRate: imageSampleRate,
   },
 ];
 
-/*
 const config = {
   sampleRate: imageSampleRate, 
   images,
   channels,
-} */
+} 
 
 class ChannelControlContainer extends Component {
 
@@ -73,6 +75,8 @@ class ChannelControlContainer extends Component {
 
   doLoad = (event) => {
     this.resetZoom();
+    this.props.uploadConfigAction(config);
+    /*
     this.props.loadImageListAction({
       sampleRate: imageSampleRate,
       images
@@ -81,6 +85,7 @@ class ChannelControlContainer extends Component {
       channels,
       audioContext,
     });
+    */
   }
   
   deleteSelectedPart = () => {
@@ -121,6 +126,8 @@ class ChannelControlContainer extends Component {
     return (
       <ChannelControl 
         load={ this.doLoad } 
+        downloadConfig={this.props.downloadConfigAction}
+        uploadConfigFile={this.props.uploadConfigFileAction}
         deleteSelectedPart ={this.deleteSelectedPart}
         loadImageList={ this.doImageList } 
         playChannel={ this.props.playChannelAction } 
@@ -139,6 +146,9 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   loadImageListAction: (spec) => dispatch(loadImageList(spec)),
   loadChannelAction: (spec) => dispatch(loadChannel(spec)),
+  downloadConfigAction: () => dispatch(downloadConfig()),
+  uploadConfigFileAction: (configFile) => dispatch(uploadConfigFile(configFile, audioContext)),
+  uploadConfigAction: (config) => dispatch(uploadConfig(config, audioContext)),
   playChannelAction: () => dispatch(playChannel()),
   stopChannelAction: () => dispatch(stopChannel()),
   setResolutionAction: (resolution) => dispatch(setResolution(resolution)),

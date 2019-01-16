@@ -13,7 +13,7 @@ const Wrapper = styled.div`
   name: Wrapper
   display: flex;
   flex-direction: column;
-  justify-content: left;
+  justify-content: flex-start;
   padding: 20px;
 `;
 

@@ -1,9 +1,13 @@
 import { SELECT, SET_RESOLUTION, SET_MODE, 
 	UPDATE_MARKER, SET_MARKER, DELETE_MARKER,
-	SET_SELECTED, DESELECT
+	SET_SELECTED, DESELECT, CLEAR_VIEW
 } from './types';
 
 import { getSelectedPart } from '../reducers/viewReducer';
+
+export const clearView = () => ({
+  type: CLEAR_VIEW
+});
 
 export const select = (selectInfo) => ({
   type: SELECT,

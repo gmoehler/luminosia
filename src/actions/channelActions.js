@@ -4,15 +4,27 @@ import { merge } from 'lodash';
 import { LOAD_CHANNEL_STARTED, LOAD_CHANNEL_FAILURE, LOAD_CHANNEL_SUCCESS, 
   LOAD_MULTICHANNEL_STARTED, LOAD_MULTICHANNEL_FAILURE, LOAD_MULTICHANNEL_SUCCESS, 
   PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL, 
-  ADD_PART, DELETE_PART
+  ADD_PART, DELETE_PART, ADD_CHANNEL, CLEAR_CHANNELS
 } from './types';
 
 import { setMarker, deleteMarker, deselect, selectPart } from './viewActions';
 import { samplesToSeconds } from '../utils/conversions';
 import { getLastPartId } from '../reducers/channelReducer';
 import { getSelectedPart } from '../reducers/viewReducer';
+import { getImageDuration } from '../reducers/imageListReducer';
 
-// load channel async action
+// load channel from config
+
+export const addChannel = channelInfo => ({
+  type: ADD_CHANNEL,
+  payload: channelInfo
+});
+
+export const clearChannels = () => ({
+  type: CLEAR_CHANNELS
+});
+
+// load channels from files
 
 const loadChannelStarted = startInfo => ({
   type: LOAD_CHANNEL_STARTED,
@@ -48,6 +60,72 @@ function loadChannelFromFile(channelSource, audioContext) {
   const loader = LoaderFactory.createLoader(channelSource, audioContext);
   return loader.load();
 };
+
+export function loadAChannel(channelConfig, audioContext, state) {
+  if (channelConfig.type === "audio") {
+    return loadWaveChannel(channelConfig, audioContext);
+  }
+  return loadImageChannel(channelConfig, state);
+}
+
+function loadImageChannel(channelConfig, state) {
+
+  // first normalize the parts
+  // an icremented 'curid' is the part id used as key
+  const normalizedParts = channelConfig.parts ? channelConfig.parts.reduce((res, part) => {
+    part.id = res.curid;
+    part.duration = getImageDuration(state, part.src);
+    res[res.curid] = part;
+    res.curid++;
+    return res;
+  }, {curid: 0}) : null;
+
+  // incremented id no longer required
+  delete normalizedParts.curid;
+  delete channelConfig.parts;
+  channelConfig.lastPartId = Object.keys(normalizedParts).length - 1;
+  channelConfig.playState = "stopped";
+
+  return Promise.resolve({
+    ...channelConfig,
+    byParts: normalizedParts
+  })
+}
+
+function loadWaveChannel(channelConfig, audioContext) {
+  return loadChannelFromFile(channelConfig.src, audioContext)
+    .then((buf) => {
+      return {
+        type: "audio",
+        playState: "stopped",
+        sampleRate: buf.sampleRate,
+        buffer: buf,
+        ...channelConfig
+      }
+    })
+}
+
+export const updateChannelMarkers = (channelInfo) => {
+  return (dispatch, getState) => {
+    
+    if (channelInfo.byParts){
+      Object.keys(channelInfo.byParts).forEach((partId) => {
+      
+        const part = channelInfo.byParts[partId];
+        dispatch(setMarker({
+            markerId: `${channelInfo.id}-${partId}-l`, 
+            pos: part.offset,
+            type: "normal"
+          }));
+          dispatch(setMarker({
+            markerId: `${channelInfo.id}-${partId}-r`, 
+            pos: part.offset + part.duration,
+            type: "normal"
+          }));
+      });
+    }
+  }
+}
 
 function doLoadMultiPart(dispatch, getState, channelConfig, audioContext) {
   dispatch(loadMultiChannelStarted({

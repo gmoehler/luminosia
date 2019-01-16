@@ -1,11 +1,16 @@
 import { combineReducers } from 'redux';
 
-import channelReducer from './channelReducer';
+import imageListReducer,  { getImageListConfig } from './imageListReducer';
+import channelReducer,  { getChannelsConfig } from './channelReducer';
 import viewReducer from './viewReducer';
-import imageListReducer from './imageListReducer';
 
 export default combineReducers({
-    channel: channelReducer,
     images: imageListReducer,
+    channel: channelReducer,
     view: viewReducer
 });
+
+export const getConfig = (state) => ({
+    images: getImageListConfig(state), 
+    channels: getChannelsConfig(state)
+})
