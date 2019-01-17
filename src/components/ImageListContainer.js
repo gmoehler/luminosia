@@ -6,7 +6,7 @@ import { getImageList } from '../reducers/imageListReducer';
 import { getResolution } from '../reducers/viewReducer';
 import { saveImageToStorage, addImage } from '../actions/imageListActions';
 
-const defaultSampleRate = 100;
+export const defaultSampleRate = 100;
 
 class ImageListContainer extends Component {
 

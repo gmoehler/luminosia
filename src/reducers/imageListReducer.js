@@ -50,7 +50,7 @@ export const getImageDuration = (state, id) => {
 // array of all images with certain fields filtered out
 // to get essential parts for config download
 export const getImageListConfig = (state) => {
-  const allowedProps = ["src", "sampleRate"];
+  const allowedProps = ["src", "sampleRate", "id"];
   const images = state.images.byId ? Object.values(state.images.byId) : [];
   return images.map((ch) => 
     Object.keys(ch)

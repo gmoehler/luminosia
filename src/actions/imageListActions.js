@@ -3,6 +3,7 @@ import LoaderFactory from '../loader/LoaderFactory'
 import { ADD_IMAGE, CLEAR_IMAGELIST, REMOVE_IMAGE } from './types';
 import { samplesToSeconds } from '../utils/conversions';
 import { getBase64Image } from '../utils/fileUtils';
+import { defaultSampleRate } from '../components/ImageListContainer';
 
 
 export const addImage = (imageInfo) => ({
@@ -25,9 +26,13 @@ function loadImageFromFile(imageSrc) {
 };
 
 export function loadImage(imageInfo) {
+  if (imageInfo.src.includes("data:image")) {
+    imageInfo.sampleRate = imageInfo.sampleRate ? imageInfo.sampleRate : defaultSampleRate;
+    return imageInfo;
+  }
   return loadImageFromFile(imageInfo.src)
   .then((img) => {
-    img.sampleRate = imageInfo.sampleRate;
+    img.sampleRate = imageInfo.sampleRate ? imageInfo.sampleRate : defaultSampleRate;
     img.duration = samplesToSeconds(img.width, imageInfo.sampleRate);
     return img
   });
