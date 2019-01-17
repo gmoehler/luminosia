@@ -51,6 +51,14 @@ export function saveImageToStorage(image) {
   }
 }
 
-export function loadImagefromStorage(key) {
-  return localStorage.getItem(key);
+// load images from localstorage and add them to the store
+export function loadImagesfromStorage() {
+	return (dispatch, getState) => {
+		return Object.keys(localStorage)
+		  .filter((k) => k.startsWith("image_"))
+		  .reduce((res, key) => 
+			res.push(localStorage.getItem(key)), [])
+			  .forEach((img) =>
+				dispatch(addImage(img)));
+  }
 }

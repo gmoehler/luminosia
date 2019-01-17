@@ -32,6 +32,7 @@ export default class ChannelControl extends Component {
         <button onClick={ this.props.init }>Init</button>
         <button onClick={ this.props.downloadConfig }>Download config</button>
         <button onClick={ this.props.deleteSelectedPart }>Delete selected</button>
+        <button onClick={ this.props.loadImagesfromStorage }>Load images</button>
         </ChannelControlRow>
         <ChannelControlRow>
           <form onSubmit={this.uploadConfigFile}>

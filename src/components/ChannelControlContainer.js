@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { playChannel, stopChannel, deleteSelectedPartAndMarkers } from '../actions/channelActions'
 import { downloadConfig, uploadConfigFile, uploadConfig } from '../actions/generalActions'
 import { setMode, select, setResolution } from '../actions/viewActions'
+import { loadImagesfromStorage } from '../actions/imageListActions'
 import ChannelControl from './ChannelControl';
 
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -116,6 +117,7 @@ class ChannelControlContainer extends Component {
       <ChannelControl 
         init={ this.doInit } 
         downloadConfig={this.props.downloadConfigAction}
+        loadImagesfromStorage={this.props.loadImagesfromStorageAction}
         uploadConfigFile={this.props.uploadConfigFileAction}
         deleteSelectedPart ={this.deleteSelectedPart}
         playChannel={ this.props.playChannelAction } 
@@ -133,6 +135,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   downloadConfigAction: () => dispatch(downloadConfig()),
+  loadImagesfromStorageAction: () => dispatch(loadImagesfromStorage()),
   uploadConfigFileAction: (configFile) => dispatch(uploadConfigFile(configFile, audioContext)),
   uploadConfigAction: (config) => dispatch(uploadConfig(config, audioContext)),
   playChannelAction: () => dispatch(playChannel()),
