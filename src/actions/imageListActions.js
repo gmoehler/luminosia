@@ -2,7 +2,7 @@ import LoaderFactory from '../loader/LoaderFactory'
 
 import { ADD_IMAGE, CLEAR_IMAGELIST, REMOVE_IMAGE } from './types';
 import { samplesToSeconds } from '../utils/conversions';
-import { getBase64Image } from '../utils/fileUtils';
+import { filterObjectByKeys } from '../utils/miscUtils';
 import { defaultSampleRate } from '../components/ImageListContainer';
 
 
@@ -26,26 +26,31 @@ function loadImageFromFile(imageSrc) {
 };
 
 export function loadImage(imageInfo) {
-  if (imageInfo.src.includes("data:image")) {
-    imageInfo.sampleRate = imageInfo.sampleRate ? imageInfo.sampleRate : defaultSampleRate;
-    return Promise.resolve(imageInfo);
+  // base64 encoded images
+  if (imageInfo.src.startsWith("data:image")) {
+    // we assume everything is in the record
+	return Promise.resolve(imageInfo);
   }
+  // read file from server
   return loadImageFromFile(imageInfo.src)
   .then((img) => {
-    img.sampleRate = imageInfo.sampleRate ? imageInfo.sampleRate : defaultSampleRate;
-    img.duration = samplesToSeconds(img.width, imageInfo.sampleRate);
-    return img
+    const keys = ["src", "data", "width", "height"];
+    const basicImage = filterObjectByKeys (img, keys);
+    basicImage.sampleRate = imageInfo.sampleRate ? imageInfo.sampleRate : defaultSampleRate;
+    basicImage.duration = samplesToSeconds(img.width, imageInfo.sampleRate);
+    basicImage.id = basicImage.src;
+    return basicImage;
   });
 }
 
-export function saveImageToStorage(imageFile, key) {
+export function saveImageToStorage(image) {
   return (dispatch, getState) => {
-    // const imgData = getBase64Image(imageFile);
-    localStorage.setItem(key, imageFile);
+    const key = "image_" + image.id;
+    const imageStr = JSON.stringify(image);
+    localStorage.setItem(key, imageStr);
   }
 }
 
 export function loadImagefromStorage(key) {
-  var dataImage = localStorage.getItem(key);
-  return "data:image/png;base64," + dataImage;
+  return localStorage.getItem(key);
 }

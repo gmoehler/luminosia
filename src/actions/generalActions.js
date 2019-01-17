@@ -5,7 +5,7 @@ import { downloadTextfile, readTextFile } from '../utils/fileUtils';
 import { getConfig } from '../reducers/rootReducer';
 
 import { addChannel, clearChannels, loadAChannel, updateChannelMarkers } from './channelActions';
-import { addImage, clearImageList, loadImage } from './imageListActions';
+import { addImage, clearImageList, loadImage, saveImageToStorage } from './imageListActions';
 import { clearView } from './viewActions';
 
 // load channels and images from config
@@ -53,10 +53,13 @@ export const uploadConfig = (configData, audioContext) => {
     dispatch(clearImageList());
     dispatch(clearChannels());
 
-    // load all images
+    // load all images and save them to store
     const imageListPromises = configData.images.map((imageData) => 
       loadImage(imageData)
-      .then((img) => dispatch(addImage(img))));
+      .then((img) => {
+		dispatch(addImage(img));
+		dispatch(saveImageToStorage(img));
+	  }));
 
     return Promise.all(imageListPromises)
       .then(() => {

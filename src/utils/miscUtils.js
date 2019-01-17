@@ -1,6 +1,6 @@
 // filter out 'allowedKeys' and keys of 'keysToArray'
 // convert value of keysToArray to array
-export const filterObjectByKeys = (obj, allowedKeys, keysToArray) => {
+export const filterObjectByKeys = (obj, allowedKeys, keysToArray=[] ) => {
   return Object.keys(obj).filter(key => 
       allowedKeys.includes(key) || Object.keys(keysToArray).includes(key))
   .reduce((o, key) => {
