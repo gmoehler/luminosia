@@ -11,11 +11,12 @@ export default (state = initialState, action) => {
       return initialState;
 
     case ADD_IMAGE:
+      const id = action.payload.id ? action.payload.id : action.payload.src;
       return {
         ...state,
         byId: {
           ...state.byId,
-          [action.payload.src]: action.payload
+          [id]: action.payload
         }
       };
 

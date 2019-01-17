@@ -4,8 +4,9 @@ import { connect } from 'react-redux';
 import ImageList from './ImageList'
 import { getImageList } from '../reducers/imageListReducer';
 import { getResolution } from '../reducers/viewReducer';
-import { saveImageToStorage } from '../actions/imageListActions';
+import { saveImageToStorage, addImage } from '../actions/imageListActions';
 
+const defaultSampleRate = 100;
 
 class ImageListContainer extends Component {
 
@@ -13,9 +14,10 @@ class ImageListContainer extends Component {
 
     return (
       <ImageList 
-        saveImageToStorage ={this.props.saveImageToStorageAction}
+        addImage ={this.props.addImageAction}
         images={ this.props.images } 
         resolution={ this.props.resolution } 
+        sampleRate={defaultSampleRate}
       />);
   }
 }
@@ -28,6 +30,7 @@ const mapStateToProps = (state, props) => {
 };
 
 const mapDispatchToProps = dispatch => ({
+  addImageAction: (image) => dispatch(addImage(image)),
   saveImageToStorageAction: (imageFile, key) => dispatch(saveImageToStorage(imageFile, key)),
 })
 

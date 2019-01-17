@@ -2,19 +2,25 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
-import { secondsToPixels } from '../utils/conversions';
+import { secondsToPixels, samplesToSeconds } from '../utils/conversions';
 
 const ImageListWrapper = styled.div`
 	display: flex;
 	flex-direction: row;
 	width: 500px;
 	overflow: auto;
+	flex-wrap: wrap;
 	white-space: nowrap;
 	padding: 20px 0;
 	background:  ${props => props.backgroundColor};
 `;
 
-const Image = styled.img`
+const ImageInList = styled.img`
+	padding: 3px;
+`;
+
+const DropHereLabel = styled.label`
+	padding-left: 30px;
 `;
 
 
@@ -25,7 +31,7 @@ export default class ImageList extends PureComponent {
 		this.state = {
 			dragging: false
 		};
-  }
+	}
 
 	handleMouseEvent = (e, eventName) => {
 		e.preventDefault();
@@ -40,18 +46,29 @@ export default class ImageList extends PureComponent {
 			}
 		} else if (eventName === "drop") {
 			this.setState({...this.state, dragging: false});
+
+			// add load and add image to store
 			if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
 				console.log(eventName);
 				const imageFile = e.dataTransfer.files[0];
 				var reader = new FileReader();
+				var img = new Image();
 				const that = this;
+
     		reader.onload = function(e) {
-					that.setState({...that.state, imageFile: reader.result});
-					that.props.saveImageToStorage(reader.result, "theImage");
-    		}
+					img.src = reader.result;
+				}
+				img.onload = function() {
+					const newImage = {
+						width: img.width,
+						height: img.height,
+						src: reader.result,
+						id: imageFile.name,
+						duration: samplesToSeconds(img.width, that.props.sampleRate)
+					}
+					that.props.addImage(newImage);
+				};
     		reader.readAsDataURL(imageFile);
-				// this.setState({...this.state, imageFile});
-				// this.props.saveImageToStorage(e.dataTransfer.files[0], "theImage");
 			}
 		}
 	}
@@ -62,7 +79,7 @@ export default class ImageList extends PureComponent {
 
 		const imagesComponent =  images
 			.map((img) => 
-			<Image 
+			<ImageInList 
 				key={ img.src } 
 				src={ img.src } 
 				draggable onDragStart={ (e) => {
@@ -72,7 +89,10 @@ export default class ImageList extends PureComponent {
 					e.dataTransfer.setData("duration", secondsToPixels(img.duration, resolution)); 
 				}}
 				/>
-    );
+		);
+		
+		const dropHereLabel = images.length > 0 ? null : 
+			<DropHereLabel center> Drop your images here </DropHereLabel>
 
     return (
 			<ImageListWrapper
@@ -81,10 +101,9 @@ export default class ImageList extends PureComponent {
 			onDragExit={ (e) => this.handleMouseEvent(e, "dragExit") } 
 			onDragLeave={ (e) => this.handleMouseEvent(e, "dragLeave") } 
 			onDragOver={ (e) => this.handleMouseEvent(e, "dragOver") }
-			onDragStart={ (e) => this.handleMouseEvent(e, "dragStart") } 
 			onDrop={ (e) => this.handleMouseEvent(e, "drop") } 
 			backgroundColor={this.state.dragging ? "lightgrey" : "darkgrey"}>
-			<Image src={this.state.imageFile}></Image>
+				{ dropHereLabel }
         { imagesComponent }
       </ImageListWrapper>
     )
