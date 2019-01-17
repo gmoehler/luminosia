@@ -1,3 +1,4 @@
+import { cloneDeep } from 'lodash';
 import { CLEAR_IMAGELIST, ADD_IMAGE, REMOVE_IMAGE, } from '../actions/types';
 import { filterObjectByKeys } from '../utils/miscUtils';
 
@@ -22,12 +23,12 @@ export default (state = initialState, action) => {
       };
 
     case REMOVE_IMAGE:
+      const images = cloneDeep(state).byId;
+      delete images[action.payload.imageId];
+
       return {
         ...state,
-        byId: {
-          ...state.byId
-            .filter((img) => img.src !== action.src)
-        }
+        byId: images
       };
 
     default:

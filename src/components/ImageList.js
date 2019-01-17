@@ -16,7 +16,8 @@ const ImageListWrapper = styled.div`
 `;
 
 const ImageInList = styled.img`
-	padding: 3px;
+	margin: 3px;
+	border: 2px solid ${props => props.borderColor};
 `;
 
 const DropHereLabel = styled.label`
@@ -36,7 +37,14 @@ export default class ImageList extends PureComponent {
 	handleMouseEvent = (e, eventName) => {
 		e.preventDefault();
 		e.stopPropagation();
-		if (eventName === "dragEnter") {
+		if (eventName === "mouseUp"){
+			let el = e.target;
+			const imageId = el.getAttribute("data-imageid");
+			this.props.selectImage({
+				imageId,
+				selected: true
+			});
+		} else if (eventName === "dragEnter") {
 			this.dragCounter++;			
 			this.setState({...this.state, dragging: true})
 		} else if (eventName === "dragLeave") {
@@ -81,8 +89,11 @@ export default class ImageList extends PureComponent {
 		const imagesComponent =  images
 			.map((img) => 
 			<ImageInList 
-				key={ img.src } 
+				key={ img.id } 
 				src={ img.src } 
+				data-imageid={ img.id }
+				borderColor={this.props.selectedImage && img.id === this.props.selectedImage.imageId ? 
+					"white" : "transparent" }
 				draggable onDragStart={ (e) => {
 					e.dataTransfer.setData("src", img.src);
 					// transfer duration in pixels since this is going to be consumed 
@@ -97,6 +108,8 @@ export default class ImageList extends PureComponent {
 
     return (
 			<ImageListWrapper
+			onMouseUp={ (e) => this.handleMouseEvent(e, "mouseUp") } 
+
 			onDragEnter={ (e) => this.handleMouseEvent(e, "dragEnter") } 
 			onDragEnd={ (e) => this.handleMouseEvent(e, "dragEnd") } 
 			onDragExit={ (e) => this.handleMouseEvent(e, "dragExit") } 

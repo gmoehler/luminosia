@@ -4,10 +4,11 @@ import { PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL,
   ADD_PART, DELETE_PART, ADD_CHANNEL, CLEAR_CHANNELS
 } from './types';
 
-import { setMarker, deleteMarker, deselect, selectPart } from './viewActions';
+import { setMarker, deleteMarker, deselect, selectPartOrImage } from './viewActions';
 import { getLastPartId } from '../reducers/channelReducer';
-import { getSelectedPart } from '../reducers/viewReducer';
+import { getSelectedPart, getSelectedImage } from '../reducers/viewReducer';
 import { getImageDuration } from '../reducers/imageListReducer';
+import { removeImage } from './imageListActions';
 
 // load channel from config
 
@@ -112,7 +113,7 @@ export const addPartAndMarkers = (partInfo) => {
     const lastPart = {...partInfo};
     lastPart.partId = lastPartId;
     lastPart.selected = true;
-    dispatch(selectPart(lastPart));
+    dispatch(selectPartOrImage(lastPart));
   }
 }
 
@@ -124,6 +125,7 @@ export const addPart = partInfo => ({
 export const deleteSelectedPartAndMarkers = () => {
   return (dispatch, getState) => {
     const selPart = getSelectedPart(getState());
+    const selImage = getSelectedImage(getState());
     if (selPart) {
       dispatch(deletePart(selPart));
       dispatch(deleteMarker({
@@ -131,6 +133,9 @@ export const deleteSelectedPartAndMarkers = () => {
       dispatch(deleteMarker({
         markerId: `${selPart.channelId}-${selPart.partId}-r`}));
       dispatch(deselect());
+    }
+    if (selImage) {
+      dispatch(removeImage(selImage));
     }
   }
 }

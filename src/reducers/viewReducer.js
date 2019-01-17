@@ -13,7 +13,7 @@ const initialState = {
   markersById: {},
   resolution: 80,
   mode: "moveMode",
-  selectedPart: null,
+  selectedPartOrImage: null,
 };
 
 export default (state = initialState, action) => {
@@ -81,16 +81,16 @@ export default (state = initialState, action) => {
       }
       
     case SET_SELECTED:
-      const selPart = action.payload.selected ? action.payload : null;
+      const selPartOrImage = action.payload.selected ? action.payload : null;
       return {
         ...state,
-        selectedPart: selPart
+        selectedPartOrImage: selPartOrImage
       }
 
     case DESELECT:
       return {
         ...state,
-        selectedPart: null
+        selectedPartOrImage: null
       }
 
     default:
@@ -118,5 +118,17 @@ export const getMarkers = (state) => {
 }
 
 export const getSelectedPart = (state) => {
-  return state.view.selectedPart;
+  if (state.view.selectedPartOrImage && 
+    state.view.selectedPartOrImage.partId) {
+    return state.view.selectedPartOrImage;
+  }
+  return null;
+}
+
+export const getSelectedImage = (state) => {
+  if (state.view.selectedPartOrImage && 
+    state.view.selectedPartOrImage.imageId) {
+    return  state.view.selectedPartOrImage;
+  }
+  return null
 }

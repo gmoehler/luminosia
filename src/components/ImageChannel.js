@@ -233,7 +233,12 @@ class Channel extends Component {
       ) : null;
 
     return (
-      <ImageChannelWrapper className='ChannelWrapper' onMouseDown={ (e) => this.handleMouseEvent(e, "mouseDown") } onMouseUp={ (e) => this.handleMouseEvent(e, "mouseUp") } onMouseMove={ (e) => this.handleMouseEvent(e, "mouseMove") } onMouseLeave={ (e) => this.handleMouseEvent(e, "mouseLeave") }
+      <ImageChannelWrapper className='ChannelWrapper' 
+        onMouseDown={ (e) => this.handleMouseEvent(e, "mouseDown") } 
+        onMouseUp={ (e) => this.handleMouseEvent(e, "mouseUp") } 
+        onMouseMove={ (e) => this.handleMouseEvent(e, "mouseMove") } 
+        onMouseLeave={ (e) => this.handleMouseEvent(e, "mouseLeave") }
+
         onDragEnter={ (e) => this.handleMouseEvent(e, "dragEnter") } 
         onDragEnd={ (e) => this.handleMouseEvent(e, "dragEnd") } 
         onDragExit={ (e) => this.handleMouseEvent(e, "dragExit") } 
@@ -241,7 +246,9 @@ class Channel extends Component {
         onDragOver={ (e) => this.handleMouseEvent(e, "dragOver") }
         onDragStart={ (e) => this.handleMouseEvent(e, "dragStart") } 
         onDrop={ (e) => this.handleMouseEvent(e, "drop") } 
+
         onKeyDown={ (e) => this.handleMouseEvent(e, "keyDown") } 
+        
         cssWidth={ maxWidth } theme={ theme } height={ imageHeight }
         tabIndex={0}>
         
