@@ -1,4 +1,5 @@
 import { CLEAR_IMAGELIST, ADD_IMAGE, REMOVE_IMAGE, } from '../actions/types';
+import { filterObjectByKeys } from '../utils/miscUtils';
 
 const initialState = {
   byId: {},
@@ -47,19 +48,15 @@ export const getImageDuration = (state, id) => {
   return img ? img.duration : 0;
 }
 
-// array of all images with certain fields filtered out
-// to get essential parts for config download
+// array of all images with relevant fields filtered out
 export const getImageListConfig = (state) => {
-  const allowedProps = ["src", "sampleRate", "id"];
-  const images = state.images.byId ? Object.values(state.images.byId) : [];
-  return images.map((ch) => 
-    Object.keys(ch)
-      .filter(key => allowedProps.includes(key))
-      .reduce((obj, key) => {
-        return {
-          ...obj,
-          [key]: ch[key]
-        };
-      }, {}))
-    };
+  const allowedProps = ["src", "sampleRate", 
+    "id", "width", "height", "duration"];
+  
+  const images = state.images.byId ? 
+    Object.values(state.images.byId) : [];
+  
+  return images.map((img) => 
+    filterObjectByKeys(img, allowedProps));
 
+};

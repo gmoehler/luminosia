@@ -57,9 +57,9 @@ export const uploadConfig = (configData, audioContext) => {
     const imageListPromises = configData.images.map((imageData) => 
       loadImage(imageData)
       .then((img) => {
-		dispatch(addImage(img));
-		dispatch(saveImageToStorage(img));
-	  }));
+        dispatch(addImage(img));
+        dispatch(saveImageToStorage(img));
+      }));
 
     return Promise.all(imageListPromises)
       .then(() => {
@@ -76,7 +76,6 @@ export const uploadConfig = (configData, audioContext) => {
       })
   }
 };
-
 
 export const downloadConfig = (() => {
   return (dispatch, getState) => {
