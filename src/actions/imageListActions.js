@@ -28,7 +28,7 @@ function loadImageFromFile(imageSrc) {
 export function loadImage(imageInfo) {
   if (imageInfo.src.includes("data:image")) {
     imageInfo.sampleRate = imageInfo.sampleRate ? imageInfo.sampleRate : defaultSampleRate;
-    return imageInfo;
+    return Promise.resolve(imageInfo);
   }
   return loadImageFromFile(imageInfo.src)
   .then((img) => {
