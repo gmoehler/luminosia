@@ -41,8 +41,8 @@ export default class ChannelControl extends Component {
           </form>
         </ChannelControlRow>
         <ChannelControlRow>
-          <button onClick={ this.props.addChannel }>Add channel</button>
-          <button onClick={ this.props.deleteChannel }>Delete channel</button>
+          <button onClick={ this.props.addImageChannel }>Add image channel</button>
+          <button onClick={ this.props.deleteImageChannel }>Delete image channel</button>
         </ChannelControlRow>
         <ChannelControlRow>
         <button onClick={ this.props.playChannel }>Play</button>

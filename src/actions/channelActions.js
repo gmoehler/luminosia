@@ -17,6 +17,20 @@ export const addChannel = channelInfo => ({
   payload: channelInfo
 });
 
+export const addImageChannel = () => {
+  return (dispatch, getState) => {
+    dispatch(addChannel({}))
+  }
+};
+
+export const deleteImageChannel = () => {
+  return (dispatch, getState) => {
+    
+   
+  }
+};
+
+
 export const clearChannels = () => ({
   type: CLEAR_CHANNELS
 });
