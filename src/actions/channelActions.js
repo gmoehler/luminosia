@@ -9,6 +9,7 @@ import { getLastPartId } from '../reducers/channelReducer';
 import { getSelectedPart, getSelectedImage } from '../reducers/viewReducer';
 import { getImageDuration } from '../reducers/imageListReducer';
 import { removeImage } from './imageListActions';
+import { defaultSampleRate } from '../components/ImageListContainer';
 
 // load channel from config
 
@@ -19,14 +20,15 @@ export const addChannel = channelInfo => ({
 
 export const addImageChannel = () => {
   return (dispatch, getState) => {
-    dispatch(addChannel({}))
+    dispatch(addChannel({
+      sampleRate: defaultSampleRate,
+    }));
   }
 };
 
 export const deleteImageChannel = () => {
   return (dispatch, getState) => {
-    
-   
+   // TODO   
   }
 };
 
