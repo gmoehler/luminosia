@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { playChannel, stopChannel, deleteSelectedPartAndMarkers } from '../actions/channelActions'
+import { playChannel, stopChannel, deleteSelectedPartAndMarkers, addCannel, deleteChannel } from '../actions/channelActions'
 import { downloadConfig, uploadConfigFile, uploadConfig } from '../actions/generalActions'
 import { setMode, select, setResolution } from '../actions/viewActions'
 import { loadImagesfromStorage } from '../actions/imageListActions'
@@ -120,6 +120,8 @@ class ChannelControlContainer extends Component {
         loadImagesfromStorage={this.props.loadImagesfromStorageAction}
         uploadConfigFile={this.props.uploadConfigFileAction}
         deleteSelectedPart ={this.deleteSelectedPart}
+        addChannel={ this.props.addChannelAction } 
+        deleteChannel={ this.props.deleteChannelAction } 
         playChannel={ this.props.playChannelAction } 
         stopChannel={ this.props.stopChannelAction } 
         zoomIn={ this.zoomIn }
@@ -138,6 +140,8 @@ const mapDispatchToProps = dispatch => ({
   loadImagesfromStorageAction: () => dispatch(loadImagesfromStorage()),
   uploadConfigFileAction: (configFile) => dispatch(uploadConfigFile(configFile, audioContext)),
   uploadConfigAction: (config) => dispatch(uploadConfig(config, audioContext)),
+  addChannelAction: () => dispatch(addChannel()),
+  deleteChannelAction: () => dispatch(deleteChannel()),
   playChannelAction: () => dispatch(playChannel()),
   stopChannelAction: () => dispatch(stopChannel()),
   setResolutionAction: (resolution) => dispatch(setResolution(resolution)),
