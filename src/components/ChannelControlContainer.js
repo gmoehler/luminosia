@@ -30,7 +30,6 @@ const channels = [
     soloed: false,
   },
   {
-    id: 'imgChannel1',
     name: 'Channel 1 with images',
     type: 'image',
     sampleRate: imageSampleRate,
