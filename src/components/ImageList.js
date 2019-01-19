@@ -114,17 +114,18 @@ export default class ImageList extends PureComponent {
 
     return (
 			<ImageListWrapper
-			onMouseUp={ (e) => this.handleMouseEvent(e, "mouseUp") } 
+				onMouseUp={ (e) => this.handleMouseEvent(e, "mouseUp") } 
 
-			onDragEnter={ (e) => this.handleMouseEvent(e, "dragEnter") } 
-			onDragEnd={ (e) => this.handleMouseEvent(e, "dragEnd") } 
-			onDragExit={ (e) => this.handleMouseEvent(e, "dragExit") } 
-			onDragLeave={ (e) => this.handleMouseEvent(e, "dragLeave") } 
-			onDragOver={ (e) => this.handleMouseEvent(e, "dragOver") }
-			onDrop={ (e) => this.handleMouseEvent(e, "drop") } 
-			backgroundColor={this.state.dragging ? "lightgrey" : "darkgrey"}>
-				{ dropHereLabel }
-        { imagesComponent }
+				onDragEnter={ (e) => this.handleMouseEvent(e, "dragEnter") } 
+				onDragEnd={ (e) => this.handleMouseEvent(e, "dragEnd") } 
+				onDragExit={ (e) => this.handleMouseEvent(e, "dragExit") } 
+				onDragLeave={ (e) => this.handleMouseEvent(e, "dragLeave") } 
+				onDragOver={ (e) => this.handleMouseEvent(e, "dragOver") }
+				onDrop={ (e) => this.handleMouseEvent(e, "drop") } 
+				backgroundColor={this.state.dragging ? "lightgrey" : "darkgrey"}>
+					{ dropHereLabel }
+					{ imagesComponent }
+				<canvas id="exportCanvas"></canvas>
       </ImageListWrapper>
     )
   }
