@@ -47,7 +47,7 @@ export default class MoveMouseHandler {
   }
   
   handleMoveFrom = (evInfo) => {
-    this.handlerFunctions.selectPart({
+    this.handlerFunctions.selectPartOrImage({
       channelId: evInfo.channelId,
       partId: evInfo.partId,
       selected: true  // select

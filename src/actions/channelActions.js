@@ -1,13 +1,17 @@
 import LoaderFactory from '../loader/LoaderFactory'
 
 import { PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL, 
-  ADD_PART, DELETE_PART, ADD_CHANNEL, CLEAR_CHANNELS
+  ADD_PART, DELETE_PART, ADD_CHANNEL, CLEAR_CHANNELS, U, UPLOAD_AUDIO_STARTED, UPLOAD_AUDIO_SUCCESS, UPLOAD_AUDIO_FAILURE
 } from './types';
 
-import { setMarker, deleteMarker, deselect, selectPart } from './viewActions';
+import { setMarker, deleteMarker, deselect, selectPartOrImage } from './viewActions';
+
 import { getLastPartId } from '../reducers/channelReducer';
-import { getSelectedPart } from '../reducers/viewReducer';
+import { getSelectedPart, getSelectedImage } from '../reducers/viewReducer';
 import { getImageDuration } from '../reducers/imageListReducer';
+import { removeImage } from './imageListActions';
+import { defaultSampleRate } from '../components/ImageListContainer';
+import { readAudioFile } from '../utils/fileUtils';
 
 // load channel from config
 
@@ -16,8 +20,37 @@ export const addChannel = channelInfo => ({
   payload: channelInfo
 });
 
+export const addImageChannel = () => {
+  return (dispatch, getState) => {
+    dispatch(addChannel({
+      sampleRate: defaultSampleRate,
+    }));
+  }
+};
+
+export const deleteImageChannel = () => {
+  return (dispatch, getState) => {
+   // TODO   
+  }
+};
+
 export const clearChannels = () => ({
   type: CLEAR_CHANNELS
+});
+
+const uploadAudioStarted = startInfo => ({
+  type: UPLOAD_AUDIO_STARTED,
+  payload: startInfo
+});
+
+const uploadAudioSuccess = channelInfo => ({
+  type: UPLOAD_AUDIO_SUCCESS,
+  payload: channelInfo
+});
+
+const uploadAudioFailure = errorInfo => ({
+  type: UPLOAD_AUDIO_FAILURE,
+  payload: errorInfo
 });
 
 function loadChannelFromFile(channelSource, audioContext) {
@@ -25,6 +58,7 @@ function loadChannelFromFile(channelSource, audioContext) {
   return loader.load();
 };
 
+// load a channel based on a channel config
 export function loadAChannel(channelConfig, audioContext, state) {
   if (channelConfig.type === "audio") {
     return loadWaveChannel(channelConfig, audioContext);
@@ -56,6 +90,7 @@ function loadImageChannel(channelConfig, state) {
   })
 }
 
+// load wave channel from static content
 function loadWaveChannel(channelConfig, audioContext) {
   return loadChannelFromFile(channelConfig.src, audioContext)
     .then((buf) => {
@@ -67,6 +102,33 @@ function loadWaveChannel(channelConfig, audioContext) {
         ...channelConfig
       }
     })
+}
+
+export const uploadAudioFile = (audioFile, audioContext) => {
+  return (dispatch, getState) => {
+    dispatch(uploadAudioStarted());
+    console.log("Reading " + audioFile.name + "...");
+
+    return readAudioFile(audioFile, audioContext)
+      .then((audioBuffer) => {
+        const channelInfo = {
+          type: "audio",
+          playState: "stopped",
+          src: audioFile.name,
+          offset: 0,
+          sampleRate: audioBuffer.sampleRate,
+          buffer: audioBuffer
+        }
+        dispatch(addChannel(channelInfo)); 
+      })
+      .then(dispatch(uploadAudioSuccess()))
+      .catch(err => {
+        console.error(err);
+        return dispatch(uploadAudioFailure({
+          err
+        }))
+      })
+  }
 }
 
 export const updateChannelMarkers = (channelInfo) => {
@@ -112,7 +174,7 @@ export const addPartAndMarkers = (partInfo) => {
     const lastPart = {...partInfo};
     lastPart.partId = lastPartId;
     lastPart.selected = true;
-    dispatch(selectPart(lastPart));
+    dispatch(selectPartOrImage(lastPart));
   }
 }
 
@@ -124,6 +186,7 @@ export const addPart = partInfo => ({
 export const deleteSelectedPartAndMarkers = () => {
   return (dispatch, getState) => {
     const selPart = getSelectedPart(getState());
+    const selImage = getSelectedImage(getState());
     if (selPart) {
       dispatch(deletePart(selPart));
       dispatch(deleteMarker({
@@ -131,6 +194,9 @@ export const deleteSelectedPartAndMarkers = () => {
       dispatch(deleteMarker({
         markerId: `${selPart.channelId}-${selPart.partId}-r`}));
       dispatch(deselect());
+    }
+    if (selImage) {
+      dispatch(removeImage(selImage));
     }
   }
 }

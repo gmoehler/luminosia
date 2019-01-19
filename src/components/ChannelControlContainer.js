@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { playChannel, stopChannel, deleteSelectedPartAndMarkers } from '../actions/channelActions'
+import { playChannel, stopChannel, deleteSelectedPartAndMarkers, addImageChannel, deleteImageChannel, uploadAudioFile } from '../actions/channelActions'
+
 import { downloadConfig, uploadConfigFile, uploadConfig } from '../actions/generalActions'
 import { setMode, select, setResolution } from '../actions/viewActions'
+import { loadImagesfromStorage, saveImagesToStorage, clearImagesfromStorage, clearImageList } from '../actions/imageListActions'
 import ChannelControl from './ChannelControl';
 
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -29,7 +31,6 @@ const channels = [
     soloed: false,
   },
   {
-    id: 'imgChannel1',
     name: 'Channel 1 with images',
     type: 'image',
     sampleRate: imageSampleRate,
@@ -116,8 +117,15 @@ class ChannelControlContainer extends Component {
       <ChannelControl 
         init={ this.doInit } 
         downloadConfig={this.props.downloadConfigAction}
+        loadImagesfromStorage={this.props.loadImagesfromStorageAction}
+        saveImagesToStorage={this.props.saveImagestoStorageAction}
+        clearImageList={this.props.clearImageListAction}
+        clearImagesfromStorage={this.props.clearImagesfromStorageAction}
         uploadConfigFile={this.props.uploadConfigFileAction}
+        uploadAudioFile={this.props.uploadAudioFileAction}
         deleteSelectedPart ={this.deleteSelectedPart}
+        addImageChannel={ this.props.addImageChannelAction } 
+        deleteImageChannel={ this.props.deleteImageChannelAction } 
         playChannel={ this.props.playChannelAction } 
         stopChannel={ this.props.stopChannelAction } 
         zoomIn={ this.zoomIn }
@@ -133,8 +141,15 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   downloadConfigAction: () => dispatch(downloadConfig()),
+  loadImagesfromStorageAction: () => dispatch(loadImagesfromStorage()),
+  saveImagestoStorageAction: () => dispatch(saveImagesToStorage()),
+  clearImagesfromStorageAction: () => dispatch(clearImagesfromStorage()),
+  clearImageListAction: () => dispatch(clearImageList()),
   uploadConfigFileAction: (configFile) => dispatch(uploadConfigFile(configFile, audioContext)),
+  uploadAudioFileAction: (audioFile) => dispatch(uploadAudioFile(audioFile, audioContext)),
   uploadConfigAction: (config) => dispatch(uploadConfig(config, audioContext)),
+  addImageChannelAction: () => dispatch(addImageChannel()),
+  deleteImageChannelAction: () => dispatch(deleteImageChannel()),
   playChannelAction: () => dispatch(playChannel()),
   stopChannelAction: () => dispatch(stopChannel()),
   setResolutionAction: (resolution) => dispatch(setResolution(resolution)),

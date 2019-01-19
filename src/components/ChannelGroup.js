@@ -7,7 +7,7 @@ import ImageChannel from './ImageChannel';
 import { withPlay } from './withPlay'
 
 const ChannelGroupWrapper = styled.div`
-	width: 500px;
+	width: 800px;
 	overflow: auto;
 	white-space: nowrap;
 `;

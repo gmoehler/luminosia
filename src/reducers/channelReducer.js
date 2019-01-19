@@ -9,7 +9,8 @@ import { filterObjectByKeys } from '../utils/miscUtils';
 // TODO: improve this reducer using a sub-reducer on the selected channel
 
 const initialState = {
-  byId: {}
+  byId: {},
+  lastChannelId: -1
 };
 
 export default (state = initialState, action) => {
@@ -19,13 +20,18 @@ export default (state = initialState, action) => {
       return initialState;
 
     case ADD_CHANNEL:
-    const id = action.payload.id ? action.payload.id : action.payload.src;
+    const id = state.lastChannelId + 1;
+    const lastPartId = action.payload.lastPartId ? action.payload.lastPartId : -1;
       return {
         ...state,
+        lastChannelId: id,
         byId: {
           ...state.byId,
-          [id]: 
-            action.payload
+          [id]: {
+            ...action.payload,
+            id,
+            lastPartId,
+          }
         }
       };
 
@@ -162,9 +168,9 @@ export const getLastPartId = (state, channelId) => {
   return state.channel.byId[channelId].lastPartId;
 }
 
-function allChannelsStopped(playState) {
-  return Object.keys(playState.byId)
-    .reduce((result, key) => result && (playState.byId[key].playState === "stopped"),
+function allChannelsStopped(channelState) {
+  return Object.keys(channelState.byId)
+    .reduce((result, key) => result && (channelState.byId[key].type !== "audio" || channelState.byId[key].playState === "stopped"),
       true)
 }
 

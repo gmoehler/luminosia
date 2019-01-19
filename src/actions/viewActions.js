@@ -1,9 +1,6 @@
-import { SELECT, SET_RESOLUTION, SET_MODE, 
-	UPDATE_MARKER, SET_MARKER, DELETE_MARKER,
-	SET_SELECTED, DESELECT, CLEAR_VIEW
-} from './types';
+import { SELECT, SET_RESOLUTION, SET_MODE, UPDATE_MARKER, SET_MARKER, DELETE_MARKER, SET_SELECTED, DESELECT, CLEAR_VIEW} from './types';
 
-import { getSelectedPart } from '../reducers/viewReducer';
+import { getSelectedPart, getSelectedImage } from '../reducers/viewReducer';
 
 export const clearView = () => ({
   type: CLEAR_VIEW
@@ -52,32 +49,55 @@ export const deselect = () => ({
 const updateMarkers = (dispatch, part) => {
   const type = part.selected ? "selected" : "normal";
   const markerIdPrefix = `${part.channelId}-${part.partId}`;
-  dispatch(updateMarker({markerId: markerIdPrefix+"-l", incr: 0, type}));
-  dispatch(updateMarker({markerId: markerIdPrefix+"-r", incr: 0, type}));
+  dispatch(updateMarker({
+    markerId: markerIdPrefix + "-l",
+    incr: 0,
+    type
+  }));
+  dispatch(updateMarker({
+    markerId: markerIdPrefix + "-r",
+    incr: 0,
+    type
+  }));
 }
 
-export const selectPart = ((partInfo) => {
+// partinfo is channelld, partId and selected
+// imageinfo is imageId
+export const selectPartOrImage = ((partOrImageInfo) => {
   return (dispatch, getState) => {
     const curSelPart = getSelectedPart(getState());
-    
-  	if (curSelPart) {
+    const curSelImage = getSelectedImage(getState());
+
+    if (curSelPart) {
       // de-select markers of currently selected part
-      const curUnselPart = {...curSelPart};
+      const curUnselPart = {
+        ...curSelPart
+      };
       curUnselPart.selected = false;
       updateMarkers(dispatch, curUnselPart);
 
-    // clicked on selected part to deselect
-    if (curSelPart.channelId === partInfo.channelId &&
-      curSelPart.partId === partInfo.partId){
-      dispatch(deselect());
-      return;
-    } 
-  } 
+      // clicked on selected part to deselect
+      if (curSelPart.channelId === partOrImageInfo.channelId &&
+        curSelPart.partId === partOrImageInfo.partId) {
+        dispatch(deselect());
+        return;
+      }
+    }
 
-  // clicked on unselected part
-  dispatch(setSelected(partInfo));
-  updateMarkers(dispatch, partInfo);
+    if (curSelImage) {
+      // clicked on selected image to deselect
+      if (curSelImage.imageId === partOrImageInfo.imageId) {
+        dispatch(deselect());
+        return;
+      }
+    }
+
+
+    // clicked on unselected part
+    dispatch(setSelected(partOrImageInfo));
+    if (partOrImageInfo.partId) {
+      // for parts only
+      updateMarkers(dispatch, partOrImageInfo);
+    }
   }
 });
-
-

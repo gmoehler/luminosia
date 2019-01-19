@@ -2,6 +2,9 @@ import LoaderFactory from '../loader/LoaderFactory'
 
 import { ADD_IMAGE, CLEAR_IMAGELIST, REMOVE_IMAGE } from './types';
 import { samplesToSeconds } from '../utils/conversions';
+import { filterObjectByKeys } from '../utils/miscUtils';
+import { defaultSampleRate } from '../components/ImageListContainer';
+import { getImageList } from '../reducers/imageListReducer';
 
 
 export const addImage = (imageInfo) => ({
@@ -24,12 +27,56 @@ function loadImageFromFile(imageSrc) {
 };
 
 export function loadImage(imageInfo) {
+  // base64 encoded images
+  if (imageInfo.src.startsWith("data:image")) {
+    // we assume everything is in the record
+	return Promise.resolve(imageInfo);
+  }
+  // read file from server
   return loadImageFromFile(imageInfo.src)
   .then((img) => {
-    img.sampleRate = imageInfo.sampleRate;
-    img.duration = samplesToSeconds(img.width, imageInfo.sampleRate);
-    return img
+    const keys = ["src", "data", "width", "height"];
+    const basicImage = filterObjectByKeys (img, keys);
+    basicImage.sampleRate = imageInfo.sampleRate ? imageInfo.sampleRate : defaultSampleRate;
+    basicImage.duration = samplesToSeconds(img.width, imageInfo.sampleRate);
+    basicImage.id = basicImage.src;
+    return basicImage;
   });
 }
 
+export function saveImageToStorage(image) {
+    const key = "image_" + image.id;
+    const imageStr = JSON.stringify(image);
+    localStorage.setItem(key, imageStr);
+}
 
+export function saveImagesToStorage(image) {
+  return (dispatch, getState) => {
+    const images = getImageList(getState());
+    images.forEach((img) => saveImageToStorage(img));
+  }
+}
+
+// load images from localstorage and add them to the store
+export function loadImagesfromStorage() {
+	return (dispatch, getState) => {
+		return Object.keys(localStorage)
+		  .filter((k) => k.startsWith("image_"))
+		  .reduce((res, key) => {
+        const img = JSON.parse(localStorage.getItem(key));
+        res.push(img);
+        return res;
+      }, [])
+			    .forEach((img) =>
+				    dispatch(addImage(img)));
+  }
+}
+
+export function clearImagesfromStorage() {
+	return (dispatch, getState) => {
+		return Object.keys(localStorage)
+		  .filter((k) => k.startsWith("image_"))
+			  .forEach((img) =>
+				    localStorage.removeItem(img));
+  }
+}
