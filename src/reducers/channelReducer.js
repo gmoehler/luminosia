@@ -138,6 +138,8 @@ export default (state = initialState, action) => {
   }
 }
 
+// helper functions for reducer
+
 function mergePlayStateIntoToChannels(state, playState) {
   const channelPlayStatesStopped = Object.keys(state.byId)
     .map((key) => {
@@ -151,6 +153,14 @@ function mergePlayStateIntoToChannels(state, playState) {
   const mergedState = merge({}, state.byId, channelPlayStatesStopped);
   return mergedState;
 }
+
+function allChannelsStopped(channelState) {
+  return Object.keys(channelState.byId)
+    .reduce((result, key) => result && (channelState.byId[key].type !== "audio" || channelState.byId[key].playState === "stopped"),
+      true)
+}
+
+// state access functions
 
 export const getallChannelsData = (state) => {
   return state.channel.byId;
@@ -168,14 +178,8 @@ export const getLastPartId = (state, channelId) => {
   return state.channel.byId[channelId].lastPartId;
 }
 
-function allChannelsStopped(channelState) {
-  return Object.keys(channelState.byId)
-    .reduce((result, key) => result && (channelState.byId[key].type !== "audio" || channelState.byId[key].playState === "stopped"),
-      true)
-}
-
-function getDuration(state, id) {
-  const channelData = state.channel.byId[id];
+function getDuration(state, channelId) {
+  const channelData = state.channel.byId[channelId];
   const offset = channelData.offset ? channelData.offset : 0;
   if (channelData.type === "audio") {
     return channelData.buffer.duration
@@ -189,10 +193,12 @@ function getDuration(state, id) {
 export const getMaxDuration = (state) => {
   return state.channel.byId === {} ? 0 :
     Object.keys(state.channel.byId)
-      .reduce((result, key) => Math.max(result, getDuration(state, key)), 0);
+      .reduce((duration, channeld) => 
+        Math.max(duration, getDuration(state, channeld)), 0);
 }
 
-// array of all channels with a given list of keys
+// saving the config will return this channel information
+// array of all channels with a given list of keys (e.g. not including audio buffer)
 export const getChannelsConfig = (state) => {
   const allowedProps = ["id", "type", "names", "src", "sampleRate", "offset"];
   const propsToArray = {"byParts": "parts"};

@@ -79,12 +79,17 @@ export default class ChannelGroup extends Component {
 						/>);
         }
 
-        return (
-					<ImageChannelWithPlay 
-						{...channelProps} 
-						setChannelPlayState={ playState => this.props.setChannelPlayState(channelId, playState) } 
-						move={ (partId, incr) => this.props.move(channelId, partId, incr) } 
-					/>);
+        if (channelData.type === "image") {
+          return (
+            <ImageChannelWithPlay 
+              {...channelProps} 
+              setChannelPlayState={ playState => this.props.setChannelPlayState(channelId, playState) } 
+              move={ (partId, incr) => this.props.move(channelId, partId, incr) } 
+            />);
+        }
+        
+        return null;
+
       });
 
     return (

@@ -141,7 +141,6 @@ class Channel extends Component {
     }
   }
 
-
   createCanvasRef(i, c) {
     return (canvas) => {
       if (!this.canvases[i]) {
@@ -229,8 +228,7 @@ class Channel extends Component {
           theme={ theme } 
           height={ imageHeight }
         />
-      }
-      ) : null;
+      }) : null;
 
     return (
       <ImageChannelWrapper className='ChannelWrapper' 
