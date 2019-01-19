@@ -168,9 +168,9 @@ export const getLastPartId = (state, channelId) => {
   return state.channel.byId[channelId].lastPartId;
 }
 
-function allChannelsStopped(playState) {
-  return Object.keys(playState.byId)
-    .reduce((result, key) => result && (playState.byId[key].playState === "stopped"),
+function allChannelsStopped(channelState) {
+  return Object.keys(channelState.byId)
+    .reduce((result, key) => result && (channelState.byId[key].type !== "audio" || channelState.byId[key].playState === "stopped"),
       true)
 }
 

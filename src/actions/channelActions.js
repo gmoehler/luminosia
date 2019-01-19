@@ -1,7 +1,7 @@
 import LoaderFactory from '../loader/LoaderFactory'
 
 import { PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL, 
-  ADD_PART, DELETE_PART, ADD_CHANNEL, CLEAR_CHANNELS
+  ADD_PART, DELETE_PART, ADD_CHANNEL, CLEAR_CHANNELS, U, UPLOAD_AUDIO_STARTED, UPLOAD_AUDIO_SUCCESS, UPLOAD_AUDIO_FAILURE
 } from './types';
 
 import { setMarker, deleteMarker, deselect, selectPartOrImage } from './viewActions';
@@ -10,6 +10,7 @@ import { getSelectedPart, getSelectedImage } from '../reducers/viewReducer';
 import { getImageDuration } from '../reducers/imageListReducer';
 import { removeImage } from './imageListActions';
 import { defaultSampleRate } from '../components/ImageListContainer';
+import { readAudioFile } from '../utils/fileUtils';
 
 // load channel from config
 
@@ -32,9 +33,23 @@ export const deleteImageChannel = () => {
   }
 };
 
-
 export const clearChannels = () => ({
   type: CLEAR_CHANNELS
+});
+
+const uploadAudioStarted = startInfo => ({
+  type: UPLOAD_AUDIO_STARTED,
+  payload: startInfo
+});
+
+const uploadAudioSuccess = channelInfo => ({
+  type: UPLOAD_AUDIO_SUCCESS,
+  payload: channelInfo
+});
+
+const uploadAudioFailure = errorInfo => ({
+  type: UPLOAD_AUDIO_FAILURE,
+  payload: errorInfo
 });
 
 function loadChannelFromFile(channelSource, audioContext) {
@@ -42,6 +57,7 @@ function loadChannelFromFile(channelSource, audioContext) {
   return loader.load();
 };
 
+// load a channel based on a channel config
 export function loadAChannel(channelConfig, audioContext, state) {
   if (channelConfig.type === "audio") {
     return loadWaveChannel(channelConfig, audioContext);
@@ -73,6 +89,7 @@ function loadImageChannel(channelConfig, state) {
   })
 }
 
+// load wave channel from static content
 function loadWaveChannel(channelConfig, audioContext) {
   return loadChannelFromFile(channelConfig.src, audioContext)
     .then((buf) => {
@@ -84,6 +101,33 @@ function loadWaveChannel(channelConfig, audioContext) {
         ...channelConfig
       }
     })
+}
+
+export const uploadAudioFile = (audioFile, audioContext) => {
+  return (dispatch, getState) => {
+    dispatch(uploadAudioStarted());
+    console.log("Reading " + audioFile.name + "...");
+
+    return readAudioFile(audioFile, audioContext)
+      .then((audioBuffer) => {
+        const channelInfo = {
+          type: "audio",
+          playState: "stopped",
+          src: audioFile.name,
+          offset: 0,
+          sampleRate: audioBuffer.sampleRate,
+          buffer: audioBuffer
+        }
+        dispatch(addChannel(channelInfo)); 
+      })
+      .then(dispatch(uploadAudioSuccess()))
+      .catch(err => {
+        console.error(err);
+        return dispatch(uploadAudioFailure({
+          err
+        }))
+      })
+  }
 }
 
 export const updateChannelMarkers = (channelInfo) => {

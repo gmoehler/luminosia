@@ -64,7 +64,7 @@ const ImageChannelWrapper = styled.div`
   background: ${props => props.theme.imageBackgroundColor};
   width: ${props => props.cssWidth}px;
   height: ${props => props.height}px;
-  
+  border-top: 1px solid darkgray;
 `;
 
 class Channel extends Component {

@@ -34,6 +34,28 @@ export default class ImageList extends PureComponent {
 		};
 	}
 
+	loadImageAndAddToStore(fileName) {
+		var reader = new FileReader();
+		var img = new Image();
+		const that = this;
+
+		reader.onload = function(e) {
+			img.src = reader.result;
+		}
+		img.onload = function() {
+			const newImage = {
+				width: img.width,
+				height: img.height,
+				src: reader.result,
+				id: fileName.name,
+				sampleRate: that.props.sampleRate,
+				duration: samplesToSeconds(img.width, that.props.sampleRate)
+			}
+			that.props.addImage(newImage);
+		};
+		reader.readAsDataURL(fileName);
+	}
+
 	handleMouseEvent = (e, eventName) => {
 		e.preventDefault();
 		e.stopPropagation();
@@ -53,31 +75,15 @@ export default class ImageList extends PureComponent {
 				this.setState({...this.state, dragging: false});
 			}
 		} else if (eventName === "drop") {
+			// load images on drop
 			this.setState({...this.state, dragging: false});
 
-			// add load and add image to store
 			if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
 				console.log(eventName);
-				const imageFile = e.dataTransfer.files[0];
-				var reader = new FileReader();
-				var img = new Image();
-				const that = this;
-
-    		reader.onload = function(e) {
-					img.src = reader.result;
+				const fileList = e.dataTransfer.files;
+				for (var i = 0; i < fileList.length; i++) {
+					this.loadImageAndAddToStore(fileList[i]);
 				}
-				img.onload = function() {
-					const newImage = {
-						width: img.width,
-						height: img.height,
-						src: reader.result,
-						id: imageFile.name,
-						sampleRate: that.props.sampleRate,
-						duration: samplesToSeconds(img.width, that.props.sampleRate)
-					}
-					that.props.addImage(newImage);
-				};
-    		reader.readAsDataURL(imageFile);
 			}
 		}
 	}

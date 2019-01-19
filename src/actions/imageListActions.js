@@ -4,6 +4,7 @@ import { ADD_IMAGE, CLEAR_IMAGELIST, REMOVE_IMAGE } from './types';
 import { samplesToSeconds } from '../utils/conversions';
 import { filterObjectByKeys } from '../utils/miscUtils';
 import { defaultSampleRate } from '../components/ImageListContainer';
+import { getImageList } from '../reducers/imageListReducer';
 
 
 export const addImage = (imageInfo) => ({
@@ -44,10 +45,15 @@ export function loadImage(imageInfo) {
 }
 
 export function saveImageToStorage(image) {
-  return (dispatch, getState) => {
     const key = "image_" + image.id;
     const imageStr = JSON.stringify(image);
     localStorage.setItem(key, imageStr);
+}
+
+export function saveImagesToStorage(image) {
+  return (dispatch, getState) => {
+    const images = getImageList(getState());
+    images.forEach((img) => saveImageToStorage(img));
   }
 }
 
@@ -63,5 +69,14 @@ export function loadImagesfromStorage() {
       }, [])
 			    .forEach((img) =>
 				    dispatch(addImage(img)));
+  }
+}
+
+export function clearImagesfromStorage() {
+	return (dispatch, getState) => {
+		return Object.keys(localStorage)
+		  .filter((k) => k.startsWith("image_"))
+			  .forEach((img) =>
+				    localStorage.removeItem(img));
   }
 }

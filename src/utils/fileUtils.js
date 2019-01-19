@@ -22,6 +22,18 @@ export function readTextFile(file){
   });
 }
 
+export function readAudioFile(file, audioContext){
+  return new Promise((resolve, reject) => {
+    var fr = new FileReader();  
+    fr.onload = () => {
+      audioContext.decodeAudioData(fr.result)
+        .then ((decodedAudio) => resolve(decodedAudio));
+    };
+    fr.readAsArrayBuffer(file);
+  });
+}
+
+
 export function getBase64Image(img) {
   var canvas = document.createElement("canvas");
   canvas.width = img.width;
