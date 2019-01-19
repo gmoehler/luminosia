@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import styled, { withTheme } from 'styled-components';
 import { getMouseEventPosition } from '../utils/eventUtils';
 
@@ -259,6 +260,24 @@ class Channel extends Component {
       </ImageChannelWrapper>
       );
   }
+}
+
+Channel.propTypes = {
+	parts: PropTypes.arrayOf(
+		PropTypes.shape({
+      	id: PropTypes.string,
+          src: PropTypes.string,
+    	  offset: PropTypes.number,
+          duration:PropTypes.number,
+    	})),
+    imageHeight: PropTypes.number,
+    scale: PropTypes.number,
+    progress: PropTypes.oneOf(PropTypes.number, null),
+    cursorPos: PropTypes.oneOf(PropTypes.number, null),
+    selection: PropTypes.oneOf(PropTypes.number, null),
+	markers: PropTypes.arrayOf(PropTypes.object),
+	theme:PropTypes.object,
+    maxWidth:PropTypes.number,
 }
 
 Channel.defaultProps = {
