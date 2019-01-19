@@ -7,7 +7,7 @@ import { secondsToPixels, samplesToSeconds } from '../utils/conversions';
 const ImageListWrapper = styled.div`
 	display: flex;
 	flex-direction: row;
-	width: 500px;
+	width: 800px;
 	overflow: auto;
 	flex-wrap: wrap;
 	white-space: nowrap;
