@@ -5,6 +5,7 @@ import { PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL,
 } from './types';
 
 import { setMarker, deleteMarker, deselect, selectPartOrImage } from './viewActions';
+
 import { getLastPartId } from '../reducers/channelReducer';
 import { getSelectedPart, getSelectedImage } from '../reducers/viewReducer';
 import { getImageDuration } from '../reducers/imageListReducer';
