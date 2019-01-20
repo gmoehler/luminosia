@@ -4,9 +4,8 @@ import { UPLOAD_CONFIG_STARTED, UPLOAD_CONFIG_SUCCESS, UPLOAD_CONFIG_FAILURE } f
 import { downloadTextfile, readTextFile } from '../utils/fileUtils';
 import { getConfig } from '../reducers/rootReducer';
 
-import { addChannel, clearChannels, loadAChannel, updateChannelMarkers } from './channelActions';
-import { addImage, clearImageList, loadImage } from './imageListActions';
-import { clearView } from './viewActions';
+import { addChannel, loadAChannel, updateChannelMarkersForLastAddedChannel } from './channelActions';
+import { addImage, loadImage } from './imageListActions';
 import { getChannelData } from '../reducers/channelReducer';
 
 // load channels and images from config
@@ -67,7 +66,7 @@ export const uploadConfig = (configData, audioContext) => {
         const channelPromises = configData.channels.map((channelData) => loadAChannel(channelData, audioContext, getState())
           .then((channelInfo) => {
             dispatch(addChannel(channelInfo));
-            dispatch(updateChannelMarkers(channelInfo)); // TODO: channelInfo does not know the channel id here...
+            dispatch(updateChannelMarkersForLastAddedChannel(channelInfo)); // TODO: channelInfo does not know the channel id here...
           }));
 
         return Promise.all(channelPromises);

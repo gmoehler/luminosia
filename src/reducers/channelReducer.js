@@ -174,6 +174,10 @@ export const getPart = (state, channelId, partId) => {
   return state.channel.byId[channelId].byParts[partId];
 }
 
+export const getLastChannelId = (state) => {
+  return state.channel.lastChannelId;
+}
+
 export const getLastPartId = (state, channelId) => {
   return state.channel.byId[channelId].lastPartId;
 }
