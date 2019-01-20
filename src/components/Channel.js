@@ -140,7 +140,7 @@ class Channel extends Component {
     while (totalWidth > 0) {
       const currentWidth = Math.min(totalWidth, MAX_CANVAS_WIDTH);
       const waveform = <Waveform key={ `${length}-${waveformCount}` } cssWidth={ currentWidth } width={ currentWidth * scale } height={ waveHeight * scale } waveHeight={ waveHeight } ref={ this.createCanvasRef(waveformCount) }
-                       />
+      />
 
       waveforms.push(waveform);
       totalWidth -= currentWidth;

@@ -24,6 +24,7 @@ export const addImageChannel = () => {
   return (dispatch, getState) => {
     dispatch(addChannel({
       sampleRate: defaultSampleRate,
+      playState: "stopped",
     }));
   }
 };
@@ -72,7 +73,8 @@ function loadImageChannel(channelConfig, state) {
   // an icremented 'curid' is the part id used as key
   const normalizedParts = channelConfig.parts ? channelConfig.parts.reduce((res, part) => {
     part.id = res.curid;
-    part.duration = getImageDuration(state, part.src);
+    part.duration = part.duration ? 
+      part.duration : getImageDuration(state, part.src);
     res[res.curid] = part;
     res.curid++;
     return res;

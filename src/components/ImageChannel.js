@@ -265,19 +265,22 @@ class Channel extends Component {
 Channel.propTypes = {
 	parts: PropTypes.arrayOf(
 		PropTypes.shape({
-      	id: PropTypes.string,
-          src: PropTypes.string,
-    	  offset: PropTypes.number,
-          duration:PropTypes.number,
-    	})),
-    imageHeight: PropTypes.number,
-    scale: PropTypes.number,
-    progress: PropTypes.oneOf(PropTypes.number, null),
-    cursorPos: PropTypes.oneOf(PropTypes.number, null),
-    selection: PropTypes.oneOf(PropTypes.number, null),
+      	id: PropTypes.number.isRequired,
+        src: PropTypes.string.isRequired,
+    	  offset: PropTypes.number.isRequired,
+        duration:PropTypes.number.isRequired,
+    })),
+  imageHeight: PropTypes.number,
+  scale: PropTypes.number,
+  progress: PropTypes.number,
+  cursorPos: PropTypes.number, 
+  selection: PropTypes.exact({
+    from: PropTypes.number,
+    to: PropTypes.number 
+  }).isRequired,
 	markers: PropTypes.arrayOf(PropTypes.object),
 	theme:PropTypes.object,
-    maxWidth:PropTypes.number,
+  maxWidth:PropTypes.number,
 }
 
 Channel.defaultProps = {

@@ -50,9 +50,9 @@ export const uploadConfig = (configData, audioContext) => {
   return (dispatch, getState) => {
 
     console.log(configData);
-    dispatch(clearView());
-    dispatch(clearImageList());
-    dispatch(clearChannels());
+    // dispatch(clearView());
+    // dispatch(clearImageList());
+    // dispatch(clearChannels());
 
     // load all images and save them to store
     const imageListPromises = configData.images.map((imageData) => loadImage(imageData)
@@ -67,7 +67,7 @@ export const uploadConfig = (configData, audioContext) => {
         const channelPromises = configData.channels.map((channelData) => loadAChannel(channelData, audioContext, getState())
           .then((channelInfo) => {
             dispatch(addChannel(channelInfo));
-            dispatch(updateChannelMarkers(channelInfo));
+            dispatch(updateChannelMarkers(channelInfo)); // TODO: channelInfo does not know the channel id here...
           }));
 
         return Promise.all(channelPromises);

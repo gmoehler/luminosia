@@ -21,12 +21,12 @@ export default class ChannelControl extends Component {
 
   uploadConfigFile = (evt) => {
     evt.preventDefault();
-    this.props.uploadConfigFile(this.uploadInput.files[0]);
+    this.props.uploadConfigFile(this.uploadConfigFileInput.files[0]);
   };
 
   uploadAudioFile = (evt) => {
     evt.preventDefault();
-    this.props.uploadAudioFile(this.uploadInput.files[0]);
+    this.props.uploadAudioFile(this.uploadAudioFileInput.files[0]);
   };
 
   render() {
@@ -35,7 +35,7 @@ export default class ChannelControl extends Component {
       <ChannelControlWrapper>
         <ChannelControlRow>
           <form onSubmit={this.uploadAudioFile}>
-            <input ref={(ref) => this.uploadInput = ref } type="file" />
+            <input ref={(ref) => this.uploadAudioFileInput = ref } type="file" />
             <button>Upload audio</button>
           </form>
         </ChannelControlRow>
@@ -52,7 +52,7 @@ export default class ChannelControl extends Component {
       </ChannelControlRow>
       <ChannelControlRow>
         <form onSubmit={this.uploadConfigFile}>
-          <input ref={(ref) => this.uploadInput = ref } type="file" />
+          <input ref={(ref) => this.uploadConfigFileInput = ref } type="file" />
           <button>Upload config</button>
         </form>
       </ChannelControlRow>

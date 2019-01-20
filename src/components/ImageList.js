@@ -10,7 +10,6 @@ const ImageListWrapper = styled.div`
 	width: 800px;
 	overflow: auto;
 	flex-wrap: wrap;
-	white-space: nowrap;
 	padding: 20px 0;
 	background:  ${props => props.backgroundColor};
 `;
@@ -125,7 +124,6 @@ export default class ImageList extends PureComponent {
 				backgroundColor={this.state.dragging ? "lightgrey" : "darkgrey"}>
 					{ dropHereLabel }
 					{ imagesComponent }
-				<canvas id="exportCanvas"></canvas>
       </ImageListWrapper>
     )
   }
