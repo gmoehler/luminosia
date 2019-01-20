@@ -94,6 +94,7 @@ export default class ImageList extends PureComponent {
 		const imagesComponent =  images
 			.map((img) => 
 			<ImageInList 
+				id={ img.id } 	
 				key={ img.id } 
 				src={ img.src } 
 				data-imageid={ img.id }
@@ -101,6 +102,7 @@ export default class ImageList extends PureComponent {
 					"white" : "transparent" }
 				draggable onDragStart={ (e) => {
 					e.dataTransfer.setData("src", img.src);
+					e.dataTransfer.setData("imageid", img.id);
 					// transfer duration in pixels since this is going to be consumed 
 					// in a Channel component which calculates in pixels
 					e.dataTransfer.setData("duration", secondsToPixels(img.duration, resolution)); 

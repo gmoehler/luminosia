@@ -81,13 +81,17 @@ export const downloadConfig = (() => {
   }
 })
 
-export const exportchannelImage = (channelId) => {
+export const exportImageChannel = (channelId) => {
   return (dispatch, getState) => {
-    const data = getChannelData(getState(), channelId)
-    Object.keys(data.partId).forEach((data) => {
-      var canvas = document.getElementById("exportCanvas");
-        var img = document.getElementById('mergePic1');
-    canvas.drawImage(img, 0, 0);
-    })
+    const data = getChannelData(getState(), channelId);
+    if (data && data.byParts) {
+      Object.keys(data.byParts).forEach((partId) => {
+        const part = data.byParts[partId];
+        var canvas = document.getElementById("imageExportCanvas");
+        const cc = canvas.getContext('2d');
+        var img = document.getElementById(part.imageId);
+        cc.drawImage(img, 0, 0);
+      })
+    }
   }
 }

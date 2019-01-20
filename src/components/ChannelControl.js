@@ -41,6 +41,7 @@ export default class ChannelControl extends Component {
         </ChannelControlRow>
         <ChannelControlRow>
           <button onClick={ this.props.addImageChannel }>Add image channel</button>
+          <button onClick={ this.props.exportImageChannel }>Export image channel</button>
           <button onClick={ this.props.deleteImageChannel }>Delete image channel</button>
         </ChannelControlRow>
         <ChannelControlRow>

@@ -49,6 +49,7 @@ export default (state = initialState, action) => {
               [partId]: {
                 id: partId,
                 src: action.payload.src,
+                imageId: action.payload.imageId,
                 offset: action.payload.offset,
                 duration: action.payload.duration, 
               }

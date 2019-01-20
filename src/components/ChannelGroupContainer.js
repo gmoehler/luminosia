@@ -47,8 +47,9 @@ const mapDispatchToProps = dispatch => ({
     incr,
     type
   })),
-  addPartAndMarkers: (channelId, src, offset, duration) => dispatch(addPartAndMarkers({
+  addPartAndMarkers: (channelId, imageId, src, offset, duration) => dispatch(addPartAndMarkers({
     channelId,
+    imageId,
     src,
     offset,
     duration,

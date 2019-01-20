@@ -128,12 +128,14 @@ class Channel extends Component {
       e.preventDefault();
       const pos = getMouseEventPosition(e, "ChannelWrapper", this.props.id);
       const src = e.dataTransfer && e.dataTransfer.getData("src");
+      const imageId = e.dataTransfer && e.dataTransfer.getData("imageid");
       const duration = e.dataTransfer && Number(e.dataTransfer.getData("duration"));
       const key = e.key;
       const evInfo = {
         ...pos, // x pos, channelId, partId
         timestamp: e.timeStamp,
         src, // drag source path
+        imageId,
         duration,
         key,
       }

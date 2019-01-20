@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { playChannel, stopChannel, deleteSelectedPartAndMarkers, addImageChannel, deleteImageChannel, uploadAudioFile } from '../actions/channelActions'
 
-import { downloadConfig, uploadConfigFile, uploadConfig } from '../actions/generalActions'
+import { downloadConfig, uploadConfigFile, uploadConfig, exportImageChannel } from '../actions/generalActions'
 import { setMode, select, setResolution } from '../actions/viewActions'
 import { loadImagesfromStorage, saveImagesToStorage, clearImagesfromStorage, clearImageList } from '../actions/imageListActions'
 import ChannelControl from './ChannelControl';
@@ -125,6 +125,7 @@ class ChannelControlContainer extends Component {
         uploadAudioFile={this.props.uploadAudioFileAction}
         deleteSelectedPart ={this.deleteSelectedPart}
         addImageChannel={ this.props.addImageChannelAction } 
+        exportImageChannel={ this.props.exportImageChannelAction }
         deleteImageChannel={ this.props.deleteImageChannelAction } 
         playChannel={ this.props.playChannelAction } 
         stopChannel={ this.props.stopChannelAction } 
@@ -149,6 +150,7 @@ const mapDispatchToProps = dispatch => ({
   uploadAudioFileAction: (audioFile) => dispatch(uploadAudioFile(audioFile, audioContext)),
   uploadConfigAction: (config) => dispatch(uploadConfig(config, audioContext)),
   addImageChannelAction: () => dispatch(addImageChannel()),
+  exportImageChannelAction: (channelId) => dispatch(exportImageChannel(0)),
   deleteImageChannelAction: () => dispatch(deleteImageChannel()),
   playChannelAction: () => dispatch(playChannel()),
   stopChannelAction: () => dispatch(stopChannel()),
