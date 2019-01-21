@@ -10,7 +10,6 @@ const ImageListWrapper = styled.div`
 	width: 800px;
 	overflow: auto;
 	flex-wrap: wrap;
-	white-space: nowrap;
 	padding: 20px 0;
 	background:  ${props => props.backgroundColor};
 `;
@@ -95,6 +94,7 @@ export default class ImageList extends PureComponent {
 		const imagesComponent =  images
 			.map((img) => 
 			<ImageInList 
+				id={ img.id } 	
 				key={ img.id } 
 				src={ img.src } 
 				data-imageid={ img.id }
@@ -102,6 +102,7 @@ export default class ImageList extends PureComponent {
 					"white" : "transparent" }
 				draggable onDragStart={ (e) => {
 					e.dataTransfer.setData("src", img.src);
+					e.dataTransfer.setData("imageid", img.id);
 					// transfer duration in pixels since this is going to be consumed 
 					// in a Channel component which calculates in pixels
 					e.dataTransfer.setData("duration", secondsToPixels(img.duration, resolution)); 
@@ -114,17 +115,17 @@ export default class ImageList extends PureComponent {
 
     return (
 			<ImageListWrapper
-			onMouseUp={ (e) => this.handleMouseEvent(e, "mouseUp") } 
+				onMouseUp={ (e) => this.handleMouseEvent(e, "mouseUp") } 
 
-			onDragEnter={ (e) => this.handleMouseEvent(e, "dragEnter") } 
-			onDragEnd={ (e) => this.handleMouseEvent(e, "dragEnd") } 
-			onDragExit={ (e) => this.handleMouseEvent(e, "dragExit") } 
-			onDragLeave={ (e) => this.handleMouseEvent(e, "dragLeave") } 
-			onDragOver={ (e) => this.handleMouseEvent(e, "dragOver") }
-			onDrop={ (e) => this.handleMouseEvent(e, "drop") } 
-			backgroundColor={this.state.dragging ? "lightgrey" : "darkgrey"}>
-				{ dropHereLabel }
-        { imagesComponent }
+				onDragEnter={ (e) => this.handleMouseEvent(e, "dragEnter") } 
+				onDragEnd={ (e) => this.handleMouseEvent(e, "dragEnd") } 
+				onDragExit={ (e) => this.handleMouseEvent(e, "dragExit") } 
+				onDragLeave={ (e) => this.handleMouseEvent(e, "dragLeave") } 
+				onDragOver={ (e) => this.handleMouseEvent(e, "dragOver") }
+				onDrop={ (e) => this.handleMouseEvent(e, "drop") } 
+				backgroundColor={this.state.dragging ? "lightgrey" : "darkgrey"}>
+					{ dropHereLabel }
+					{ imagesComponent }
       </ImageListWrapper>
     )
   }

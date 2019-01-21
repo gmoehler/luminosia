@@ -13,9 +13,9 @@ App
       withPlay
         time2pixels
           Channel
-     withPlay
-      time2pixels
-        ImageChannel
+      withPlay
+        time2pixels
+          ImageChannel
 ```
 
 Todos:

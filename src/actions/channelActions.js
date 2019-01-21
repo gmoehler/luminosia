@@ -1,12 +1,12 @@
 import LoaderFactory from '../loader/LoaderFactory'
 
 import { PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL, 
-  ADD_PART, DELETE_PART, ADD_CHANNEL, CLEAR_CHANNELS, UPLOAD_AUDIO_STARTED, UPLOAD_AUDIO_SUCCESS, UPLOAD_AUDIO_FAILURE
+  ADD_PART, DELETE_PART, ADD_CHANNEL, CLEAR_CHANNELS, UPLOAD_AUDIO_STARTED, UPLOAD_AUDIO_SUCCESS, UPLOAD_AUDIO_FAILURE, DELETE_CHANNEL
 } from './types';
 
 import { setMarker, deleteMarker, deselect, selectPartOrImage } from './viewActions';
 
-import { getLastPartId } from '../reducers/channelReducer';
+import { getLastPartId, getLastChannelId } from '../reducers/channelReducer';
 import { getSelectedPart, getSelectedImage } from '../reducers/viewReducer';
 import { getImageDuration } from '../reducers/imageListReducer';
 import { removeImage } from './imageListActions';
@@ -23,16 +23,17 @@ export const addChannel = channelInfo => ({
 export const addImageChannel = () => {
   return (dispatch, getState) => {
     dispatch(addChannel({
+      type: "image",
       sampleRate: defaultSampleRate,
+      playState: "stopped",
     }));
   }
 };
 
-export const deleteImageChannel = () => {
-  return (dispatch, getState) => {
-   // TODO   
-  }
-};
+export const deleteChannel = channelInfo => ({
+  type: DELETE_CHANNEL,
+  payload: channelInfo
+});
 
 export const clearChannels = () => ({
   type: CLEAR_CHANNELS
@@ -72,7 +73,8 @@ function loadImageChannel(channelConfig, state) {
   // an icremented 'curid' is the part id used as key
   const normalizedParts = channelConfig.parts ? channelConfig.parts.reduce((res, part) => {
     part.id = res.curid;
-    part.duration = getImageDuration(state, part.src);
+    part.duration = part.duration ? 
+      part.duration : getImageDuration(state, part.src);
     res[res.curid] = part;
     res.curid++;
     return res;
@@ -131,20 +133,24 @@ export const uploadAudioFile = (audioFile, audioContext) => {
   }
 }
 
-export const updateChannelMarkers = (channelInfo) => {
+// since we do not get the channel id this only works for the channel that was
+// last added
+export const updateChannelMarkersForLastAddedChannel = (channelInfo) => {
   return (dispatch, getState) => {
     
     if (channelInfo.byParts){
+      const channelId = getLastChannelId(getState());
+
       Object.keys(channelInfo.byParts).forEach((partId) => {
       
         const part = channelInfo.byParts[partId];
         dispatch(setMarker({
-            markerId: `${channelInfo.id}-${partId}-l`, 
+            markerId: `${channelId}-${partId}-l`, 
             pos: part.offset,
             type: "normal"
           }));
           dispatch(setMarker({
-            markerId: `${channelInfo.id}-${partId}-r`, 
+            markerId: `${channelId}-${partId}-r`, 
             pos: part.offset + part.duration,
             type: "normal"
           }));

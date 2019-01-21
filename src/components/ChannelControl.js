@@ -18,30 +18,53 @@ const ChannelControlRow = styled.div`
 
 
 export default class ChannelControl extends Component {
+  constructor(props) {
+    super(props);
+    this.selectedChannelId = null;
+  }
 
   uploadConfigFile = (evt) => {
     evt.preventDefault();
-    this.props.uploadConfigFile(this.uploadInput.files[0]);
+    this.props.uploadConfigFile(this.uploadConfigFileInput.files[0]);
   };
 
   uploadAudioFile = (evt) => {
     evt.preventDefault();
-    this.props.uploadAudioFile(this.uploadInput.files[0]);
+    this.props.uploadAudioFile(this.uploadAudioFileInput.files[0]);
   };
 
   render() {
+
+    const channelSelection = this.props.channelIds.map((channelId) => 
+      <option key={channelId} value={channelId}>{channelId}</option>
+    )
+
+    if (this.selectedChannelId) {
+      if (this.props.channelIds && !this.props.channelIds.includes(this.selectedChannelId)){
+        this.selectedChannelId = this.props.channelIds[0];
+      }
+    } else {
+      this.selectedChannelId =this.props.channelIds ? this.props.channelIds[0] : null;
+    }
 
     return (
       <ChannelControlWrapper>
         <ChannelControlRow>
           <form onSubmit={this.uploadAudioFile}>
-            <input ref={(ref) => this.uploadInput = ref } type="file" />
+            <input ref={(ref) => this.uploadAudioFileInput = ref } type="file" />
             <button>Upload audio</button>
           </form>
         </ChannelControlRow>
         <ChannelControlRow>
-          <button onClick={ this.props.addImageChannel }>Add image channel</button>
-          <button onClick={ this.props.deleteImageChannel }>Delete image channel</button>
+          <button onClick={ this.props.addImageChannel }>
+          Add image channel
+          </button>
+          <select 
+            onChange={(e) => this.selectedChannelId= e.target.value}>
+            {channelSelection}
+          </select>
+          <button onClick={ () => this.props.exportImageChannel(this.selectedChannelId) }>Export image channel</button>
+          <button onClick={ () => this.props.deleteChannel(this.selectedChannelId) }>Delete image channel</button>
         </ChannelControlRow>
         <ChannelControlRow>
         <button onClick={ this.props.downloadConfig }>Download config</button>
@@ -52,7 +75,7 @@ export default class ChannelControl extends Component {
       </ChannelControlRow>
       <ChannelControlRow>
         <form onSubmit={this.uploadConfigFile}>
-          <input ref={(ref) => this.uploadInput = ref } type="file" />
+          <input ref={(ref) => this.uploadConfigFileInput = ref } type="file" />
           <button>Upload config</button>
         </form>
       </ChannelControlRow>

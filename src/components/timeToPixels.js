@@ -37,7 +37,7 @@ export function timeToPixels(WrappedComponent) {
         from: selection.from ? secondsToPixels(selection.from, resolution) - offsetPx: null,
         to: selection.to ? secondsToPixels(selection.to, resolution) - offsetPx: null
       } : null;
-      const cursorPosPx = selection.from ? secondsToPixels(selection.from, resolution) - offsetPx: null;
+      const cursorPosPx = selection && selection.from ? secondsToPixels(selection.from, resolution) - offsetPx: null;
       const maxWidthPx = maxDuration ? secondsToPixels(maxDuration, resolution) : null;
       const partsPx = parts ? cloneDeep(parts) : [];
 	    partsPx.forEach(part => {
@@ -79,7 +79,7 @@ export function timeToPixels(WrappedComponent) {
     cursorPos: PropTypes.number,
     selection: PropTypes.object,
     maxDuration: PropTypes.number.isRequired,
-    parts: PropTypes.array.isRequired,
+    parts: PropTypes.array,
     
     handleMouseEvent: PropTypes.func,
   }

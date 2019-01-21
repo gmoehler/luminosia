@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import styled, { withTheme } from 'styled-components';
 import { getMouseEventPosition } from '../utils/eventUtils';
 
@@ -127,12 +128,14 @@ class Channel extends Component {
       e.preventDefault();
       const pos = getMouseEventPosition(e, "ChannelWrapper", this.props.id);
       const src = e.dataTransfer && e.dataTransfer.getData("src");
+      const imageId = e.dataTransfer && e.dataTransfer.getData("imageid");
       const duration = e.dataTransfer && Number(e.dataTransfer.getData("duration"));
       const key = e.key;
       const evInfo = {
         ...pos, // x pos, channelId, partId
         timestamp: e.timeStamp,
         src, // drag source path
+        imageId,
         duration,
         key,
       }
@@ -140,7 +143,6 @@ class Channel extends Component {
       return;
     }
   }
-
 
   createCanvasRef(i, c) {
     return (canvas) => {
@@ -229,8 +231,7 @@ class Channel extends Component {
           theme={ theme } 
           height={ imageHeight }
         />
-      }
-      ) : null;
+      }) : null;
 
     return (
       <ImageChannelWrapper className='ChannelWrapper' 
@@ -261,6 +262,27 @@ class Channel extends Component {
       </ImageChannelWrapper>
       );
   }
+}
+
+Channel.propTypes = {
+	parts: PropTypes.arrayOf(
+		PropTypes.shape({
+      	id: PropTypes.number.isRequired,
+        src: PropTypes.string.isRequired,
+    	  offset: PropTypes.number.isRequired,
+        duration:PropTypes.number.isRequired,
+    })),
+  imageHeight: PropTypes.number,
+  scale: PropTypes.number,
+  progress: PropTypes.number,
+  cursorPos: PropTypes.number, 
+  selection: PropTypes.exact({
+    from: PropTypes.number,
+    to: PropTypes.number 
+  }).isRequired,
+	markers: PropTypes.arrayOf(PropTypes.object),
+	theme:PropTypes.object,
+  maxWidth:PropTypes.number,
 }
 
 Channel.defaultProps = {

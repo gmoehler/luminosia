@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import Channel from './Channel';
 import ImageChannel from './ImageChannel';
 import { withPlay } from './withPlay'
+import ImageExporter from './ImageExporter';
 
 const ChannelGroupWrapper = styled.div`
 	width: 800px;
@@ -80,15 +81,18 @@ export default class ChannelGroup extends Component {
         }
 
         return (
-					<ImageChannelWithPlay 
-						{...channelProps} 
-						setChannelPlayState={ playState => this.props.setChannelPlayState(channelId, playState) } 
-						move={ (partId, incr) => this.props.move(channelId, partId, incr) } 
-					/>);
+          <ImageChannelWithPlay 
+            {...channelProps} 
+            setChannelPlayState={ playState => this.props.setChannelPlayState(channelId, playState) } 
+            move={ (partId, incr) => this.props.move(channelId, partId, incr) } 
+          />);
+
+
       });
 
     return (
       <ChannelGroupWrapper>
+        <ImageExporter />
         { channelComponents }
       </ChannelGroupWrapper>
     )

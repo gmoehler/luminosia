@@ -1,7 +1,15 @@
 
 export function downloadTextfile(filename, text) {
+  downloadFile(filename, 'data:application/json;charset=utf-8,' + encodeURIComponent(text));
+}
+
+export function downloadImagefile(filename, imageUrl) {
+  downloadFile(filename, imageUrl);
+}
+
+export function downloadFile(filename, src) {
   var element = document.createElement('a');
-  element.setAttribute('href', 'data:application/json;charset=utf-8,' + encodeURIComponent(text));
+  element.setAttribute('href', src);
   element.setAttribute('download', filename);
 
   element.style.display = 'none';
@@ -11,6 +19,7 @@ export function downloadTextfile(filename, text) {
 
   document.body.removeChild(element);
 }
+
 
 export function readTextFile(file){
   return new Promise((resolve, reject) => {

@@ -7,6 +7,7 @@ export const UPLOAD_CONFIG_FAILURE = "UPLOAD_CONFIG_FAILURE";
 
 // channel actions
 export const ADD_CHANNEL = "ADD_CHANNEL";
+export const DELETE_CHANNEL = "DELETE_CHANNEL";
 export const CLEAR_CHANNELS = "CLEAR_CHANNELS";
 
 export const UPLOAD_AUDIO_STARTED = "UPLOAD_AUDIO_STARTED";

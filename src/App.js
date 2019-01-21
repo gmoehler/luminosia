@@ -7,7 +7,6 @@ import ChannelGroupContainer from './components/ChannelGroupContainer';
 
 import './App.css';
 
-
 const Wrapper = styled.div`
   displayName: 'Wrapper'
   name: Wrapper
