@@ -1,12 +1,13 @@
 
 import { UPLOAD_CONFIG_STARTED, UPLOAD_CONFIG_SUCCESS, UPLOAD_CONFIG_FAILURE } from './types';
 
-import { downloadTextfile, readTextFile } from '../utils/fileUtils';
+import { downloadTextfile, readTextFile, downloadImagefile } from '../utils/fileUtils';
 import { getConfig } from '../reducers/rootReducer';
 
 import { addChannel, loadAChannel, updateChannelMarkersForLastAddedChannel } from './channelActions';
 import { addImage, loadImage } from './imageListActions';
-import { getChannelData } from '../reducers/channelReducer';
+import { getChannelData, getMaxDuration } from '../reducers/channelReducer';
+import { secondsToSamples } from '../utils/conversions';
 
 // load channels and images from config
 
@@ -85,13 +86,26 @@ export const exportImageChannel = (channelId) => {
   return (dispatch, getState) => {
     const data = getChannelData(getState(), channelId);
     if (data && data.byParts) {
+      const maxDuration = getMaxDuration(getState());
+      const canvas = document.getElementById("imageExportCanvas");
+      canvas.height = 30;
+      canvas.width =  secondsToSamples(maxDuration, data.sampleRate);
+
+      const cc = canvas.getContext('2d');
+      cc.fillStyle = "black";
+      cc.fillRect(0,0, canvas.width, canvas.height);
+
       Object.keys(data.byParts).forEach((partId) => {
+
         const part = data.byParts[partId];
-        var canvas = document.getElementById("imageExportCanvas");
-        const cc = canvas.getContext('2d');
-        var img = document.getElementById(part.imageId);
-        cc.drawImage(img, 0, 0);
+        const img = document.getElementById(part.imageId);
+        const offsetPx = part.offset ? secondsToSamples(part.offset, data.sampleRate) : 0;
+        const widthPx = part.duration ? secondsToSamples(part.duration, data.sampleRate) : 0;
+        cc.drawImage(img, 0, 0, widthPx, 30,  offsetPx, 0, widthPx, 30);
       })
+    
+      var resultImage    = canvas.toDataURL("image/png");
+      downloadImagefile(`result-${channelId}.png`, resultImage);
     }
   }
 }

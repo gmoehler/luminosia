@@ -1,7 +1,7 @@
 import LoaderFactory from '../loader/LoaderFactory'
 
 import { PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL, 
-  ADD_PART, DELETE_PART, ADD_CHANNEL, CLEAR_CHANNELS, UPLOAD_AUDIO_STARTED, UPLOAD_AUDIO_SUCCESS, UPLOAD_AUDIO_FAILURE
+  ADD_PART, DELETE_PART, ADD_CHANNEL, CLEAR_CHANNELS, UPLOAD_AUDIO_STARTED, UPLOAD_AUDIO_SUCCESS, UPLOAD_AUDIO_FAILURE, DELETE_CHANNEL
 } from './types';
 
 import { setMarker, deleteMarker, deselect, selectPartOrImage } from './viewActions';
@@ -30,11 +30,10 @@ export const addImageChannel = () => {
   }
 };
 
-export const deleteImageChannel = () => {
-  return (dispatch, getState) => {
-   // TODO   
-  }
-};
+export const deleteChannel = channelInfo => ({
+  type: DELETE_CHANNEL,
+  payload: channelInfo
+});
 
 export const clearChannels = () => ({
   type: CLEAR_CHANNELS

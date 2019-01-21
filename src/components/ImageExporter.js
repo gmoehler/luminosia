@@ -3,12 +3,13 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 const ImageExporterWrapper = styled.div`
-	background:  ${props => props.backgroundColor};
+	width: 800px;
 `;
 
 const ImageExporterCanvas = styled.canvas`
-	width: 100px;
 	height: 30px;
+	overflow: auto;
+	flex-wrap: wrap;
 `;
 
 
@@ -23,7 +24,6 @@ export default class ImageExporter extends PureComponent {
 
   render() {
 
-		// const { channelData, maxDuration } = this.props;
 
     return (
 			<ImageExporterWrapper>

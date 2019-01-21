@@ -6,8 +6,6 @@ import ImageListContainer from './components/ImageListContainer';
 import ChannelGroupContainer from './components/ChannelGroupContainer';
 
 import './App.css';
-import ImageExporter from './components/ImageExporter';
-
 
 const Wrapper = styled.div`
   displayName: 'Wrapper'
@@ -31,7 +29,6 @@ export default class App extends Component {
           <Wrapper>
             <ChannelControlContainer />
             <ImageListContainer />
-            <ImageExporter/>
             <ChannelGroupContainer />
           </Wrapper>
         </header>

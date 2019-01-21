@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import Channel from './Channel';
 import ImageChannel from './ImageChannel';
 import { withPlay } from './withPlay'
+import ImageExporter from './ImageExporter';
 
 const ChannelGroupWrapper = styled.div`
 	width: 800px;
@@ -91,6 +92,7 @@ export default class ChannelGroup extends Component {
 
     return (
       <ChannelGroupWrapper>
+        <ImageExporter />
         { channelComponents }
       </ChannelGroupWrapper>
     )
