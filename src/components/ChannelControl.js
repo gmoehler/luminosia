@@ -1,5 +1,11 @@
 import React, { Component } from 'react';
 import styled /*, { withTheme } */ from 'styled-components';
+import Button from '@material-ui/core/Button';
+import { Tooltip, IconButton, Icon, withStyles } from '@material-ui/core';
+import AddIcon from '@material-ui/icons/Add';
+import DeleteIcon from '@material-ui/icons/Delete';
+import GetAppIcon from '@material-ui/icons/GetApp';
+import QueueMusic from '@material-ui/icons/QueueMusic';
 
 const ChannelControlWrapper = styled.div`
   display: flex
@@ -16,7 +22,6 @@ const ChannelControlRow = styled.div`
   padding: 6px;
 `;
 
-
 export default class ChannelControl extends Component {
   constructor(props) {
     super(props);
@@ -30,7 +35,7 @@ export default class ChannelControl extends Component {
 
   uploadAudioFile = (evt) => {
     evt.preventDefault();
-    this.props.uploadAudioFile(this.uploadAudioFileInput.files[0]);
+    this.props.uploadAudioFile(evt.target.files[0]);
   };
 
   render() {
@@ -50,41 +55,53 @@ export default class ChannelControl extends Component {
     return (
       <ChannelControlWrapper>
         <ChannelControlRow>
-          <form onSubmit={this.uploadAudioFile}>
-            <input ref={(ref) => this.uploadAudioFileInput = ref } type="file" />
-            <button>Upload audio</button>
-          </form>
-        </ChannelControlRow>
-        <ChannelControlRow>
-          <button onClick={ this.props.addImageChannel }>
-          Add image channel
-          </button>
+          <label> Channel actions:</label>
+          <input type="file" ref={(fileUpload) => this.fileUpload = fileUpload }
+            hidden onChange={this.uploadAudioFile} width={0} />
+          <Tooltip title="Load audio">
+            <IconButton  color="primary" onClick={() => this.fileUpload.click()}>
+              <QueueMusic />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Add image channel">
+            <IconButton color="primary" onClick={ this.props.addImageChannel }>
+              <AddIcon/>
+            </IconButton>
+          </Tooltip>
           <select 
             onChange={(e) => this.selectedChannelId= e.target.value}>
             {channelSelection}
           </select>
-          <button onClick={ () => this.props.exportImageChannel(this.selectedChannelId) }>Export image channel</button>
-          <button onClick={ () => this.props.deleteChannel(this.selectedChannelId) }>Delete image channel</button>
+          <Tooltip title="Export image channel">
+            <IconButton color="primary" onClick={ () => this.props.exportImageChannel(this.selectedChannelId) }>
+              <GetAppIcon/>
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Delete image channel">
+          <IconButton color="primary" onClick={ () => this.props.deleteChannel(this.selectedChannelId) }>
+              <DeleteIcon/>
+          </IconButton>
+          </Tooltip>
         </ChannelControlRow>
         <ChannelControlRow>
-        <button onClick={ this.props.downloadConfig }>Download config</button>
-        <button onClick={ this.props.saveImagesToStorage }>Save images</button>
-        <button onClick={ this.props.loadImagesfromStorage }>Restore images</button>
-        <button onClick={ this.props.clearImageList }>Clear images</button>
-        <button onClick={ this.props.clearImagesfromStorage }>Clear store</button>
+        <Button color="primary" onClick={ this.props.downloadConfig }>Download config</Button>
+        <Button color="primary" onClick={ this.props.saveImagesToStorage }>Save images</Button>
+        <Button color="primary" onClick={ this.props.loadImagesfromStorage }>Restore images</Button>
+        <Button color="primary" onClick={ this.props.clearImageList }>Clear images</Button>
+        <Button color="primary" onClick={ this.props.clearImagesfromStorage }>Clear store</Button>
       </ChannelControlRow>
       <ChannelControlRow>
         <form onSubmit={this.uploadConfigFile}>
           <input ref={(ref) => this.uploadConfigFileInput = ref } type="file" />
-          <button>Upload config</button>
+          <Button color="primary">Upload config</Button>
         </form>
       </ChannelControlRow>
       <ChannelControlRow>
-        <button onClick={ this.props.playChannel }>Play</button>
-        <button onClick={ this.props.stopChannel }>Stop</button>
-        <button onClick={ this.props.deleteSelectedPart }>Delete selected</button>
-        <button onClick={ this.props.zoomIn }>Zoom in</button>
-        <button onClick={ this.props.zoomOut }>Zoom out</button>
+        <Button color="primary" onClick={ this.props.playChannel }>Play</Button>
+        <Button color="primary" onClick={ this.props.stopChannel }>Stop</Button>
+        <Button color="primary" onClick={ this.props.deleteSelectedPart }>Delete selected</Button>
+        <Button color="primary" onClick={ this.props.zoomIn }>Zoom in</Button>
+        <Button color="primary" onClick={ this.props.zoomOut }>Zoom out</Button>
         <select onChange={ this.props.setMode }>
           <option value="moveMode">Move mode</option>
           <option value="selectionMode">Selection mode</option>
