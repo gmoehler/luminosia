@@ -13,10 +13,6 @@ import ZoomOutIcon from '@material-ui/icons/ZoomOut';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import StopIcon from '@material-ui/icons/Stop';
 import DownloadChannelIcon from '@material-ui/icons/LowPriority';
-import RestoreImagesIcon from '@material-ui/icons/CloudDownload';
-import SaveImagesIcon from '@material-ui/icons/CloudUpload';
-import ClearStoreIcon from '@material-ui/icons/CloudOff';
-import ClearImagesIcon from '@material-ui/icons/Clear';
 
 const ChannelControlWrapper = styled.div`
   display: flex
@@ -139,27 +135,6 @@ export class ChannelControl extends Component {
           <Tooltip title="Load show">
             <IconButton  color="inherit" onClick={() => this.showUpload.click()}>
               <UploadConfigIcon />
-            </IconButton>
-          </Tooltip>
-
-          <Tooltip title="Restore images from store">
-            <IconButton color="inherit" onClick={ this.props.loadImagesfromStorage }>
-              <RestoreImagesIcon/>
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Save images to store">
-            <IconButton color="inherit" onClick={ this.props.saveImagesToStorage }>
-              <SaveImagesIcon/>
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Clear store">
-            <IconButton color="inherit" onClick={ this.props.clearImagesfromStorage }>
-              <ClearStoreIcon/>
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Clear images">
-            <IconButton color="inherit" onClick={ this.props.clearImageList }>
-              <ClearImagesIcon/>
             </IconButton>
           </Tooltip>
 

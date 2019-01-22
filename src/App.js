@@ -6,24 +6,19 @@ import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import BurstModeIcon from '@material-ui/icons/BurstMode';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
 
 import ChannelControlContainer from './components/ChannelControlContainer';
+import ImageControlContainer from './components/ImageControlContainer';
 import ImageListContainer from './components/ImageListContainer';
 import ChannelGroupContainer from './components/ChannelGroupContainer';
 
-const drawerWidth = 240;
+const drawerWidth = 400;
 
 const styles = theme => ({
   root: {
@@ -69,7 +64,7 @@ const styles = theme => ({
     alignItems: 'center',
     padding: '0 8px',
     ...theme.mixins.toolbar,
-    justifyContent: 'flex-start',
+    justifyContent: 'space-between',
   },
   content: {
     flexGrow: 1,
@@ -121,7 +116,7 @@ class App extends React.Component {
             <Typography variant="h6" color="inherit" className={ classes.title } noWrap>
               Animation Authoring
             </Typography>
-            <ChannelControlContainer />
+            <ChannelControlContainer/>
             <div  className={classes.grow}></div>
             <IconButton color="inherit" aria-label="Open drawer" onClick={ this.handleDrawerOpen } className={ classNames(classes.menuButton, open && classes.hide) }>
             <BurstModeIcon />
@@ -132,8 +127,7 @@ class App extends React.Component {
                             [classes.contentShift]: open,
                           }) }>
           <div className={ classes.drawerHeader } />
-          <ImageListContainer />
-          <ChannelGroupContainer />
+          <ChannelGroupContainer  drawerWidth={open ? drawerWidth : 0} />
         </main>
         <Drawer className={ classes.drawer } variant="persistent" anchor="right" open={ open } 
           classes={ {paper: classes.drawerPaper,} }>
@@ -141,18 +135,10 @@ class App extends React.Component {
             <IconButton onClick={ this.handleDrawerClose }>
               { theme.direction === 'rtl' ? <ChevronLeftIcon /> : <ChevronRightIcon /> }
             </IconButton>
+            <ImageControlContainer/>
           </div>
           <Divider />
-          <List>
-            { ['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-                <ListItem button key={ text }>
-                  <ListItemIcon>
-                    { index % 2 === 0 ? <InboxIcon /> : <MailIcon /> }
-                  </ListItemIcon>
-                  <ListItemText primary={ text } />
-                </ListItem>
-              )) }
-          </List>
+          <ImageListContainer />
           <Divider />
 
         </Drawer>

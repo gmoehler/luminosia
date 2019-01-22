@@ -7,15 +7,18 @@ import { secondsToPixels, samplesToSeconds } from '../utils/conversions';
 const ImageListWrapper = styled.div`
 	display: flex;
 	flex-direction: row;
-	width: calc(95vw);
+	align-content: flex-start;
+	width: 100%;
+	height: 100%;
 	overflow: auto;
 	flex-wrap: wrap;
-	padding: 20px 0;
+	padding: 20px 8px;
 	background:  ${props => props.backgroundColor};
 `;
 
 const ImageInList = styled.img`
 	margin: 3px;
+	max-height: 30px;
 	border: 2px solid ${props => props.borderColor};
 `;
 
@@ -123,7 +126,7 @@ export default class ImageList extends PureComponent {
 				onDragLeave={ (e) => this.handleMouseEvent(e, "dragLeave") } 
 				onDragOver={ (e) => this.handleMouseEvent(e, "dragOver") }
 				onDrop={ (e) => this.handleMouseEvent(e, "drop") } 
-				backgroundColor={this.state.dragging ? "lightgrey" : "darkgrey"}>
+				backgroundColor={this.state.dragging ? "darkgrey" : "white"}>
 					{ dropHereLabel }
 					{ imagesComponent }
       </ImageListWrapper>

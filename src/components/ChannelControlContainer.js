@@ -4,7 +4,6 @@ import { playChannel, stopChannel, deleteSelectedPartAndMarkers, addImageChannel
 
 import { downloadConfig, uploadConfigFile, uploadConfig, exportImageChannel } from '../actions/generalActions'
 import { setMode, select, setResolution } from '../actions/viewActions'
-import { loadImagesfromStorage, saveImagesToStorage, clearImagesfromStorage, clearImageList } from '../actions/imageListActions'
 import ChannelControl from './ChannelControl';
 import { getChannelIds, hasAudioChannel, allChannelsStopped } from '../reducers/channelReducer';
 import { getSelectedImage, getSelectedPart } from '../reducers/viewReducer';
@@ -119,10 +118,6 @@ class ChannelControlContainer extends Component {
       <ChannelControl 
         init={ this.doInit } 
         downloadConfig={this.props.downloadConfigAction}
-        loadImagesfromStorage={this.props.loadImagesfromStorageAction}
-        saveImagesToStorage={this.props.saveImagestoStorageAction}
-        clearImageList={this.props.clearImageListAction}
-        clearImagesfromStorage={this.props.clearImagesfromStorageAction}
         uploadConfigFile={this.props.uploadConfigFileAction}
         uploadAudioFile={this.props.uploadAudioFileAction}
         deleteSelectedPart ={this.deleteSelectedPart}
@@ -152,10 +147,6 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   downloadConfigAction: () => dispatch(downloadConfig()),
-  loadImagesfromStorageAction: () => dispatch(loadImagesfromStorage()),
-  saveImagestoStorageAction: () => dispatch(saveImagesToStorage()),
-  clearImagesfromStorageAction: () => dispatch(clearImagesfromStorage()),
-  clearImageListAction: () => dispatch(clearImageList()),
   uploadConfigFileAction: (configFile) => dispatch(uploadConfigFile(configFile, audioContext)),
   uploadAudioFileAction: (audioFile) => dispatch(uploadAudioFile(audioFile, audioContext)),
   uploadConfigAction: (config) => dispatch(uploadConfig(config, audioContext)),
