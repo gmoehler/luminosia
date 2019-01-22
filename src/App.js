@@ -17,6 +17,7 @@ import ChannelControlContainer from './components/ChannelControlContainer';
 import ImageControlContainer from './components/ImageControlContainer';
 import ImageListContainer from './components/ImageListContainer';
 import ChannelGroupContainer from './components/ChannelGroupContainer';
+import { Tooltip } from '@material-ui/core';
 
 const drawerWidth = 400;
 
@@ -118,9 +119,11 @@ class App extends React.Component {
             </Typography>
             <ChannelControlContainer/>
             <div  className={classes.grow}></div>
-            <IconButton color="inherit" aria-label="Open drawer" onClick={ this.handleDrawerOpen } className={ classNames(classes.menuButton, open && classes.hide) }>
-            <BurstModeIcon />
-          </IconButton>
+            <Tooltip title="Work with images">
+              <IconButton color="inherit" aria-label="Open drawer" onClick={ this.handleDrawerOpen } className={ classNames(classes.menuButton, open && classes.hide) }>
+              <BurstModeIcon />
+            </IconButton>
+            </Tooltip>
           </Toolbar>
         </AppBar>
         <main className={ classNames(classes.content, {
@@ -132,15 +135,14 @@ class App extends React.Component {
         <Drawer className={ classes.drawer } variant="persistent" anchor="right" open={ open } 
           classes={ {paper: classes.drawerPaper,} }>
           <div className={ classes.drawerHeader }>
-            <IconButton onClick={ this.handleDrawerClose }>
-              { theme.direction === 'rtl' ? <ChevronLeftIcon /> : <ChevronRightIcon /> }
-            </IconButton>
+              <IconButton onClick={ this.handleDrawerClose }>
+                { theme.direction === 'rtl' ? <ChevronLeftIcon /> : <ChevronRightIcon /> }
+              </IconButton>
             <ImageControlContainer/>
           </div>
           <Divider />
           <ImageListContainer />
           <Divider />
-
         </Drawer>
       </div>
       );

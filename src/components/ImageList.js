@@ -8,12 +8,14 @@ const ImageListWrapper = styled.div`
 	display: flex;
 	flex-direction: row;
 	align-content: flex-start;
-	width: 100%;
+	width: calc(100% - 16px);
 	height: 100%;
 	overflow: auto;
 	flex-wrap: wrap;
-	padding: 20px 8px;
+	margin: 20px 8px;
 	background:  ${props => props.backgroundColor};
+	border: 1px dashed ${props => props.borderColor}; 
+	border-radius: 10px;
 `;
 
 const ImageInList = styled.img`
@@ -23,6 +25,7 @@ const ImageInList = styled.img`
 `;
 
 const DropHereLabel = styled.label`
+	padding-top: 40px;
 	padding-left: 30px;
 `;
 
@@ -118,6 +121,7 @@ export default class ImageList extends PureComponent {
 
     return (
 			<ImageListWrapper
+				borderColor={images.length > 0 ? "tranparent" : "black"}
 				onMouseUp={ (e) => this.handleMouseEvent(e, "mouseUp") } 
 
 				onDragEnter={ (e) => this.handleMouseEvent(e, "dragEnter") } 
