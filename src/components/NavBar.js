@@ -123,7 +123,7 @@ class NavBar extends React.Component {
             <Typography variant="h6" color="inherit" className={ classes.title } noWrap>
               Animation Authoring
             </Typography>
-            
+            <ChannelControlContainer />
             <div  className={classes.grow}></div>
             <IconButton color="inherit" aria-label="Open drawer" onClick={ this.handleDrawerOpen } className={ classNames(classes.menuButton, open && classes.hide) }>
             <BurstModeIcon />
@@ -134,7 +134,6 @@ class NavBar extends React.Component {
                             [classes.contentShift]: open,
                           }) }>
           <div className={ classes.drawerHeader } />
-            <ChannelControlContainer />
             <ImageListContainer />
             <ChannelGroupContainer />
         </main>
