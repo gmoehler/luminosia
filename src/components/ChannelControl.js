@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styled /*, { withTheme } */ from 'styled-components';
-import Button from '@material-ui/core/Button';
-import { Tooltip, IconButton, Typography, } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
+import { Tooltip, IconButton, Typography, FormControl, InputLabel, Select, MenuItem, } from '@material-ui/core';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 import DeleteIcon from '@material-ui/icons/Delete';
 import DeleteChannelIcon from '@material-ui/icons/DeleteSweep';
@@ -21,22 +21,36 @@ import ClearImagesIcon from '@material-ui/icons/Clear';
 const ChannelControlWrapper = styled.div`
   display: flex
   justify-content: center;
-  flex-direction: column;
+  flex-direction: row;
   margin: 0;
-  padding: 20px;
+  padding: 0 20px;
 `;
 
-const ChannelControlRow = styled.div`
-  display: flex
-  justify-content: center;
-  margin: 0;
-  padding: 6px;
-`;
+const styles = theme => ({
+  root: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+  formControl: {
+    margin: theme.spacing.unit,
+    minWidth: 120,
+  },
+  selectEmpty: {
+    marginTop: theme.spacing.unit * 2,
+  },
+});
 
-export default class ChannelControl extends Component {
+
+export class ChannelControl extends Component {
+  
   constructor(props) {
     super(props);
     this.selectedChannelId = null;
+    this.state = {
+      age: '',
+      name: 'hai',
+      labelWidth: 0,
+    };
   }
 
   uploadConfigFile = (evt) => {
@@ -49,11 +63,22 @@ export default class ChannelControl extends Component {
     this.props.uploadAudioFile(evt.target.files[0]);
   };
 
+  handleChange = event => {
+    this.setState({ [event.target.name]: event.target.value });
+  };
+
   render() {
+
+    const { classes } = this.props;
 
     const channelSelection = this.props.channelIds.map((channelId) => 
       <option key={channelId} value={channelId}>{channelId}</option>
     )
+
+    const channelSelection2 = this.props.channelIds.map((channelId) => 
+    <MenuItem key={channelId} value={channelId}>{channelId}</MenuItem>
+    )
+
 
     if (this.selectedChannelId) {
       if (this.props.channelIds && !this.props.channelIds.includes(this.selectedChannelId)){
@@ -65,7 +90,6 @@ export default class ChannelControl extends Component {
 
     return (
       <ChannelControlWrapper>
-        <ChannelControlRow>
           <input 
             type="file" 
             accept="audio/*"
@@ -84,6 +108,20 @@ export default class ChannelControl extends Component {
               <PlaylistAddIcon/>
             </IconButton>
           </Tooltip>
+
+          <FormControl className={classes.formControl}>
+          <InputLabel htmlFor="age-simple">Channel</InputLabel>
+          <Select
+            value={this.state.age}
+            onChange={this.handleChange}
+            inputProps={{
+              name: 'age',
+              id: 'age-simple',
+            }}
+          >
+           { channelSelection2 }
+          </Select>
+        </FormControl>
 
           <select 
             onChange={(e) => this.selectedChannelId= e.target.value}>
@@ -167,13 +205,14 @@ export default class ChannelControl extends Component {
             <ZoomOutIcon/>
           </IconButton>
         </Tooltip>
-
-
-        </ChannelControlRow>
       </ChannelControlWrapper>
       );
   }
 }
+
+export default withStyles(styles, {
+  withTheme: true
+})(ChannelControl);
 
 /*
         <select onChange={ this.props.setMode }>
