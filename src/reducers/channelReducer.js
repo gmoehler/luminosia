@@ -92,10 +92,10 @@ export default (state = initialState, action) => {
       };
 
     case PLAY_CHANNELS:
-      if (allChannelsStopped(state)) {
+      if (_hasAudioChannel(state) && _allChannelsStopped(state)) {
         return {
           ...state,
-          byId: allChannelsStopped(state) && mergePlayStateIntoToChannels(state, "playing")
+          byId: _allChannelsStopped(state) && mergePlayStateIntoToChannels(state, "playing")
         }
       }
       return {
@@ -173,13 +173,27 @@ function mergePlayStateIntoToChannels(state, playState) {
   return mergedState;
 }
 
-function allChannelsStopped(channelState) {
+function _hasAudioChannel(channelState) {
+  return Object.keys(channelState.byId)
+    .reduce((result, key) => result || channelState.byId[key].type === "audio" ,
+      false)
+}
+
+function _allChannelsStopped(channelState) {
   return Object.keys(channelState.byId)
     .reduce((result, key) => result && (channelState.byId[key].type !== "audio" || channelState.byId[key].playState === "stopped"),
       true)
 }
 
 // state access functions
+
+export function hasAudioChannel(state) {
+  return _hasAudioChannel(state.channel);
+}
+
+export function allChannelsStopped(state) {
+  return (_allChannelsStopped(state.channel));
+}
 
 export const getallChannelsData = (state) => {
   return state.channel.byId;

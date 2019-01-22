@@ -6,7 +6,8 @@ import { downloadConfig, uploadConfigFile, uploadConfig, exportImageChannel } fr
 import { setMode, select, setResolution } from '../actions/viewActions'
 import { loadImagesfromStorage, saveImagesToStorage, clearImagesfromStorage, clearImageList } from '../actions/imageListActions'
 import ChannelControl from './ChannelControl';
-import { getChannelIds } from '../reducers/channelReducer';
+import { getChannelIds, hasAudioChannel, allChannelsStopped } from '../reducers/channelReducer';
+import { getSelectedImage, getSelectedPart } from '../reducers/viewReducer';
 
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
 const audioContext = new window.AudioContext();
@@ -133,13 +134,20 @@ class ChannelControlContainer extends Component {
         stopChannel={ this.props.stopChannelAction } 
         zoomIn={ this.zoomIn }
         zoomOut={ this.zoomOut } 
-        setMode={ this.setMode } />
+        setMode={ this.setMode } 
+        selectedImageOrPart={this.props.selectedImageOrPart}
+        enablePlay={this.props.enablePlay}  
+        enableStop={this.props.enableStop}  
+      />
       );
   }
 }
 
 const mapStateToProps = state => ({
-   channelIds: getChannelIds(state)
+   channelIds: getChannelIds(state),
+   selectedImageOrPart: getSelectedImage(state) || getSelectedPart(state),
+   enablePlay: hasAudioChannel(state) && allChannelsStopped(state),
+   enableStop: hasAudioChannel(state) && !allChannelsStopped(state),
 });
 
 const mapDispatchToProps = dispatch => ({

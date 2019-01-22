@@ -101,7 +101,6 @@ export class ChannelControl extends Component {
               value={this.state.channelId}
               onChange={this.handleChange}
               inputProps={{
-                color: 'white',
                 name: 'channelId',
                 id: 'channelId-select',
               }}
@@ -110,13 +109,15 @@ export class ChannelControl extends Component {
             </Select>
           </FormControl>
 
-          <Tooltip title="Export image channel">
+          <Tooltip title="Export image channel"
+            disabled={!this.state.channelId} >
             <IconButton color="inherit" onClick={ () => this.props.exportImageChannel(this.state.channelId) }>
               <DownloadChannelIcon/>
             </IconButton>
           </Tooltip>
 
-          <Tooltip title="Delete image channel">
+          <Tooltip title="Delete image channel"
+            disabled={!this.state.channelId} >
             <IconButton color="inherit" onClick={ () => this.props.deleteChannel(this.state.channelId) }>
               <DeleteChannelIcon/>
             </IconButton>
@@ -141,14 +142,14 @@ export class ChannelControl extends Component {
             </IconButton>
           </Tooltip>
 
-          <Tooltip title="Save images to store">
-            <IconButton color="inherit" onClick={ this.props.saveImagesToStorage }>
-              <SaveImagesIcon/>
-            </IconButton>
-          </Tooltip>
           <Tooltip title="Restore images from store">
             <IconButton color="inherit" onClick={ this.props.loadImagesfromStorage }>
               <RestoreImagesIcon/>
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Save images to store">
+            <IconButton color="inherit" onClick={ this.props.saveImagesToStorage }>
+              <SaveImagesIcon/>
             </IconButton>
           </Tooltip>
           <Tooltip title="Clear store">
@@ -162,18 +163,21 @@ export class ChannelControl extends Component {
             </IconButton>
           </Tooltip>
 
-        <Tooltip title="Play">
+        <Tooltip title="Play"
+          disabled={!this.props.enablePlay} >
           <IconButton color="inherit" onClick={ this.props.playChannel }>
             <PlayArrowIcon/>
           </IconButton>
         </Tooltip>
-        <Tooltip title="Stop">
+        <Tooltip title="Stop"
+          disabled={!this.props.enableStop} >
           <IconButton color="inherit" onClick={ this.props.stopChannel }>
             <StopIcon/>
           </IconButton>
         </Tooltip>
         <Tooltip title="Delete selected">
-          <IconButton color="inherit" onClick={ this.props.deleteSelectedPart }>
+          <IconButton disabled={!this.props.selectedImageOrPart} 
+            color="inherit" onClick={ this.props.deleteSelectedPart }>
             <DeleteIcon/>
           </IconButton>
         </Tooltip>

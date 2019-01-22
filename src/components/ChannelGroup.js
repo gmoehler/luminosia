@@ -8,7 +8,7 @@ import { withPlay } from './withPlay'
 import ImageExporter from './ImageExporter';
 
 const ChannelGroupWrapper = styled.div`
-	width: 800px;
+	width: calc(95vw);
 	overflow: auto;
 	white-space: nowrap;
 `;
