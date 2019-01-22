@@ -2,10 +2,12 @@ import React, { Component } from 'react';
 import styled /*, { withTheme } */ from 'styled-components';
 import Button from '@material-ui/core/Button';
 import { Tooltip, IconButton, } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
+import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 import DeleteIcon from '@material-ui/icons/Delete';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import QueueMusic from '@material-ui/icons/QueueMusic';
+import ZoomInIcon from '@material-ui/icons/ZoomIn';
+import ZoomOutIcon from '@material-ui/icons/ZoomOut';
 
 const ChannelControlWrapper = styled.div`
   display: flex
@@ -70,7 +72,7 @@ export default class ChannelControl extends Component {
           </Tooltip>
           <Tooltip title="Add image channel">
             <IconButton color="primary" onClick={ this.props.addImageChannel }>
-              <AddIcon/>
+              <PlaylistAddIcon/>
             </IconButton>
           </Tooltip>
           <select 
@@ -105,7 +107,12 @@ export default class ChannelControl extends Component {
         <Button color="primary" onClick={ this.props.playChannel }>Play</Button>
         <Button color="primary" onClick={ this.props.stopChannel }>Stop</Button>
         <Button color="primary" onClick={ this.props.deleteSelectedPart }>Delete selected</Button>
-        <Button color="primary" onClick={ this.props.zoomIn }>Zoom in</Button>
+          <Tooltip title="Zoom in">
+          <IconButton color="primary" onClick={ () => this.props.zoomIn(this.selectedChannelId) }>
+              <ZoomInIcon/>
+          </IconButton>
+          </Tooltip>
+
         <Button color="primary" onClick={ this.props.zoomOut }>Zoom out</Button>
         <select onChange={ this.props.setMode }>
           <option value="moveMode">Move mode</option>
