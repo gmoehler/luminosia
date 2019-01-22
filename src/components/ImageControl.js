@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styled /*, { withTheme } */ from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
-import { Tooltip, IconButton, MenuItem, } from '@material-ui/core';
+import { Tooltip, IconButton, } from '@material-ui/core';
 
 import RestoreImagesIcon from '@material-ui/icons/CloudDownload';
 import SaveImagesIcon from '@material-ui/icons/CloudUpload';

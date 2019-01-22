@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styled /*, { withTheme } */ from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
-import { Tooltip, IconButton, Typography, FormControl, InputLabel, Select, MenuItem, } from '@material-ui/core';
+import { Tooltip, IconButton, FormControl, InputLabel, Select, MenuItem, } from '@material-ui/core';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 import DeleteIcon from '@material-ui/icons/Delete';
 import DeleteChannelIcon from '@material-ui/icons/DeleteSweep';
