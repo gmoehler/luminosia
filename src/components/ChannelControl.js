@@ -28,16 +28,12 @@ const ChannelControlWrapper = styled.div`
 
 const styles = theme => ({
   root: {
-    display: 'flex',
-    flexWrap: 'wrap',
+    color: 'white',
   },
   formControl: {
     margin: theme.spacing.unit,
-    minWidth: 120,
-  },
-  selectEmpty: {
-    marginTop: theme.spacing.unit * 2,
-  },
+    minWidth: 80,
+  }
 });
 
 
@@ -45,11 +41,8 @@ export class ChannelControl extends Component {
   
   constructor(props) {
     super(props);
-    this.selectedChannelId = null;
     this.state = {
-      age: '',
-      name: 'hai',
-      labelWidth: 0,
+      channelId: "",
     };
   }
 
@@ -67,26 +60,19 @@ export class ChannelControl extends Component {
     this.setState({ [event.target.name]: event.target.value });
   };
 
+  componentDidUpdate() {
+    if (this.state.channelId && !this.props.channelIds.includes(this.state.channelId)){
+      this.setState({channelId: this.props.channelIds[0]});
+    }
+  }
+
   render() {
 
     const { classes } = this.props;
 
-    const channelSelection = this.props.channelIds.map((channelId) => 
-      <option key={channelId} value={channelId}>{channelId}</option>
+    const channelSelections = this.props.channelIds.map((channelId) => 
+      <MenuItem key={channelId} value={channelId}>{channelId}</MenuItem>
     )
-
-    const channelSelection2 = this.props.channelIds.map((channelId) => 
-    <MenuItem key={channelId} value={channelId}>{channelId}</MenuItem>
-    )
-
-
-    if (this.selectedChannelId) {
-      if (this.props.channelIds && !this.props.channelIds.includes(this.selectedChannelId)){
-        this.selectedChannelId = this.props.channelIds[0];
-      }
-    } else {
-      this.selectedChannelId =this.props.channelIds ? this.props.channelIds[0] : null;
-    }
 
     return (
       <ChannelControlWrapper>
@@ -109,33 +95,29 @@ export class ChannelControl extends Component {
             </IconButton>
           </Tooltip>
 
-          <FormControl className={classes.formControl}>
-          <InputLabel htmlFor="age-simple">Channel</InputLabel>
-          <Select
-            value={this.state.age}
-            onChange={this.handleChange}
-            inputProps={{
-              name: 'age',
-              id: 'age-simple',
-            }}
-          >
-           { channelSelection2 }
-          </Select>
-        </FormControl>
-
-          <select 
-            onChange={(e) => this.selectedChannelId= e.target.value}>
-            {channelSelection}
-          </select>
+          <FormControl color="inherit" className={classes.formControl}>
+            <InputLabel htmlFor="channelId-select">Channel</InputLabel>
+            <Select 
+              value={this.state.channelId}
+              onChange={this.handleChange}
+              inputProps={{
+                color: 'white',
+                name: 'channelId',
+                id: 'channelId-select',
+              }}
+            >
+              {channelSelections}
+            </Select>
+          </FormControl>
 
           <Tooltip title="Export image channel">
-            <IconButton color="inherit" onClick={ () => this.props.exportImageChannel(this.selectedChannelId) }>
+            <IconButton color="inherit" onClick={ () => this.props.exportImageChannel(this.state.channelId) }>
               <DownloadChannelIcon/>
             </IconButton>
           </Tooltip>
 
           <Tooltip title="Delete image channel">
-            <IconButton color="inherit" onClick={ () => this.props.deleteChannel(this.selectedChannelId) }>
+            <IconButton color="inherit" onClick={ () => this.props.deleteChannel(this.state.channelId) }>
               <DeleteChannelIcon/>
             </IconButton>
           </Tooltip>
