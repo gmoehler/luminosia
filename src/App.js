@@ -4,6 +4,8 @@ import styled /*, { withTheme } */ from 'styled-components';
 import ChannelControlContainer from './components/ChannelControlContainer';
 import ImageListContainer from './components/ImageListContainer';
 import ChannelGroupContainer from './components/ChannelGroupContainer';
+import NavBar from './components/NavBar';
+import classNames from 'classnames';
 
 import './App.css';
 
@@ -22,16 +24,7 @@ export default class App extends Component {
 
     return (
       <div className="App">
-        <header className="App-header">
-          <p>
-            Animation authoring tool
-          </p>
-          <Wrapper>
-            <ChannelControlContainer />
-            <ImageListContainer />
-            <ChannelGroupContainer />
-          </Wrapper>
-        </header>
+        <NavBar/>
       </div>
       );
 
