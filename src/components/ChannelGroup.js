@@ -8,7 +8,8 @@ import { withPlay } from './withPlay'
 import ImageExporter from './ImageExporter';
 
 const ChannelGroupWrapper = styled.div`
-	width: 800px;
+  width:  calc(95vw - ${props => props.drawerWidth}px);
+  transition: width .1s;
 	overflow: auto;
 	white-space: nowrap;
 `;
@@ -91,7 +92,8 @@ export default class ChannelGroup extends Component {
       });
 
     return (
-      <ChannelGroupWrapper>
+      <ChannelGroupWrapper
+        drawerWidth={this.props.drawerWidth || 0}>
         <ImageExporter />
         { channelComponents }
       </ChannelGroupWrapper>
@@ -104,4 +106,5 @@ ChannelGroup.propTypes = {
   resolution: PropTypes.number,
   setChannelPlayState: PropTypes.func.isRequired,
   move: PropTypes.func.isRequired,
+  drawerWidth: PropTypes.number.isRequired,
 }

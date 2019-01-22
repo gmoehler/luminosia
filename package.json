@@ -5,6 +5,8 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.6",
     "@fortawesome/free-solid-svg-icons": "^5.4.1",
     "@fortawesome/react-fontawesome": "^0.1.3",
+    "@material-ui/core": "3.9.0",
+    "@material-ui/icons": "3.0.2",
     "fade-maker": "^1.0.3",
     "i": "^0.3.6",
     "input-range-scss": "^1.5.1",

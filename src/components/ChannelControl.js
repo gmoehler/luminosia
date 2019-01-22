@@ -1,98 +1,185 @@
 import React, { Component } from 'react';
 import styled /*, { withTheme } */ from 'styled-components';
+import { withStyles } from '@material-ui/core/styles';
+import { Tooltip, IconButton, FormControl, InputLabel, Select, MenuItem, } from '@material-ui/core';
+import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
+import DeleteIcon from '@material-ui/icons/Delete';
+import DeleteChannelIcon from '@material-ui/icons/DeleteSweep';
+import DownloadConfigIcon from '@material-ui/icons/GetApp';
+import UploadConfigIcon from '@material-ui/icons/Publish';
+import UploadAudioChannelIcon from '@material-ui/icons/QueueMusic';
+import ZoomInIcon from '@material-ui/icons/ZoomIn';
+import ZoomOutIcon from '@material-ui/icons/ZoomOut';
+import PlayArrowIcon from '@material-ui/icons/PlayArrow';
+import StopIcon from '@material-ui/icons/Stop';
+import DownloadChannelIcon from '@material-ui/icons/LowPriority';
 
 const ChannelControlWrapper = styled.div`
   display: flex
   justify-content: center;
-  flex-direction: column;
+  flex-direction: row;
   margin: 0;
-  padding: 20px;
+  padding: 0 20px;
 `;
 
-const ChannelControlRow = styled.div`
-  display: flex
-  justify-content: center;
-  margin: 0;
-  padding: 6px;
-`;
+const styles = theme => ({
+  root: {
+    color: 'white',
+  },
+  formControl: {
+    margin: theme.spacing.unit,
+    minWidth: 80,
+  }
+});
 
 
-export default class ChannelControl extends Component {
+export class ChannelControl extends Component {
+  
   constructor(props) {
     super(props);
-    this.selectedChannelId = null;
+    this.state = {
+      channelId: "",
+    };
   }
 
   uploadConfigFile = (evt) => {
     evt.preventDefault();
-    this.props.uploadConfigFile(this.uploadConfigFileInput.files[0]);
+    this.props.uploadConfigFile(evt.target.files[0]);
   };
 
   uploadAudioFile = (evt) => {
     evt.preventDefault();
-    this.props.uploadAudioFile(this.uploadAudioFileInput.files[0]);
+    this.props.uploadAudioFile(evt.target.files[0]);
   };
+
+  handleChange = event => {
+    this.setState({ [event.target.name]: event.target.value });
+  };
+
+  componentDidUpdate() {
+    if (this.state.channelId && !this.props.channelIds.includes(this.state.channelId)){
+      this.setState({channelId: this.props.channelIds[0]});
+    }
+  }
 
   render() {
 
-    const channelSelection = this.props.channelIds.map((channelId) => 
-      <option key={channelId} value={channelId}>{channelId}</option>
-    )
+    const { classes } = this.props;
 
-    if (this.selectedChannelId) {
-      if (this.props.channelIds && !this.props.channelIds.includes(this.selectedChannelId)){
-        this.selectedChannelId = this.props.channelIds[0];
-      }
-    } else {
-      this.selectedChannelId =this.props.channelIds ? this.props.channelIds[0] : null;
-    }
+    const channelSelections = this.props.channelIds.map((channelId) => 
+      <MenuItem key={channelId} value={channelId}>{channelId}</MenuItem>
+    )
 
     return (
       <ChannelControlWrapper>
-        <ChannelControlRow>
-          <form onSubmit={this.uploadAudioFile}>
-            <input ref={(ref) => this.uploadAudioFileInput = ref } type="file" />
-            <button>Upload audio</button>
-          </form>
-        </ChannelControlRow>
-        <ChannelControlRow>
-          <button onClick={ this.props.addImageChannel }>
-          Add image channel
-          </button>
-          <select 
-            onChange={(e) => this.selectedChannelId= e.target.value}>
-            {channelSelection}
-          </select>
-          <button onClick={ () => this.props.exportImageChannel(this.selectedChannelId) }>Export image channel</button>
-          <button onClick={ () => this.props.deleteChannel(this.selectedChannelId) }>Delete image channel</button>
-        </ChannelControlRow>
-        <ChannelControlRow>
-        <button onClick={ this.props.downloadConfig }>Download config</button>
-        <button onClick={ this.props.saveImagesToStorage }>Save images</button>
-        <button onClick={ this.props.loadImagesfromStorage }>Restore images</button>
-        <button onClick={ this.props.clearImageList }>Clear images</button>
-        <button onClick={ this.props.clearImagesfromStorage }>Clear store</button>
-      </ChannelControlRow>
-      <ChannelControlRow>
-        <form onSubmit={this.uploadConfigFile}>
-          <input ref={(ref) => this.uploadConfigFileInput = ref } type="file" />
-          <button>Upload config</button>
-        </form>
-      </ChannelControlRow>
-      <ChannelControlRow>
-        <button onClick={ this.props.playChannel }>Play</button>
-        <button onClick={ this.props.stopChannel }>Stop</button>
-        <button onClick={ this.props.deleteSelectedPart }>Delete selected</button>
-        <button onClick={ this.props.zoomIn }>Zoom in</button>
-        <button onClick={ this.props.zoomOut }>Zoom out</button>
-        <select onChange={ this.props.setMode }>
-          <option value="moveMode">Move mode</option>
-          <option value="selectionMode">Selection mode</option>
-        </select>
-        </ChannelControlRow>
+          <input 
+            type="file" 
+            accept="audio/*"
+            hidden 
+            ref={(fileUpload) => this.fileUpload = fileUpload }
+            onChange={this.uploadAudioFile} width={0} 
+          />
+          <Tooltip title="Load audio">
+            <IconButton  color="inherit" onClick={() => this.fileUpload.click()}>
+              <UploadAudioChannelIcon />
+            </IconButton>
+          </Tooltip>
+
+          <Tooltip title="Add image channel">
+            <IconButton color="inherit" onClick={ this.props.addImageChannel }>
+              <PlaylistAddIcon/>
+            </IconButton>
+          </Tooltip>
+
+          <FormControl color="inherit" className={classes.formControl}>
+            <InputLabel htmlFor="channelId-select">Channel</InputLabel>
+            <Select 
+              value={this.state.channelId}
+              onChange={this.handleChange}
+              inputProps={{
+                name: 'channelId',
+                id: 'channelId-select',
+              }}
+            >
+              {channelSelections}
+            </Select>
+          </FormControl>
+
+          <Tooltip title="Export image channel"
+            disabled={!this.state.channelId} >
+            <IconButton color="inherit" onClick={ () => this.props.exportImageChannel(this.state.channelId) }>
+              <DownloadChannelIcon/>
+            </IconButton>
+          </Tooltip>
+
+          <Tooltip title="Delete image channel"
+            disabled={!this.state.channelId} >
+            <IconButton color="inherit" onClick={ () => this.props.deleteChannel(this.state.channelId) }>
+              <DeleteChannelIcon/>
+            </IconButton>
+          </Tooltip>
+
+
+          <Tooltip title="Download show">
+            <IconButton color="inherit" onClick={ this.props.downloadConfig }>
+              <DownloadConfigIcon/>
+            </IconButton>
+          </Tooltip>
+
+          <input 
+            type="file" 
+            hidden 
+            ref={(showUpload) => this.showUpload = showUpload }
+            onChange={this.uploadConfigFile} width={0} 
+          />
+          <Tooltip title="Load show">
+            <IconButton  color="inherit" onClick={() => this.showUpload.click()}>
+              <UploadConfigIcon />
+            </IconButton>
+          </Tooltip>
+
+        <Tooltip title="Play"
+          disabled={!this.props.enablePlay} >
+          <IconButton color="inherit" onClick={ this.props.playChannel }>
+            <PlayArrowIcon/>
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Stop"
+          disabled={!this.props.enableStop} >
+          <IconButton color="inherit" onClick={ this.props.stopChannel }>
+            <StopIcon/>
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Delete selected">
+          <IconButton disabled={!this.props.selectedImageOrPart} 
+            color="inherit" onClick={ this.props.deleteSelectedPart }>
+            <DeleteIcon/>
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Zoom in">
+          <IconButton color="inherit" onClick={ this.props.zoomIn }>
+            <ZoomInIcon/>
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Zoom out">
+          <IconButton color="inherit" onClick={ this.props.zoomOut }>
+            <ZoomOutIcon/>
+          </IconButton>
+        </Tooltip>
       </ChannelControlWrapper>
       );
   }
 }
+
+export default withStyles(styles, {
+  withTheme: true
+})(ChannelControl);
+
+/*
+        <select onChange={ this.props.setMode }>
+          <option value="moveMode">Move mode</option>
+          <option value="selectionMode">Selection mode</option>
+        </select>
+        */
 
 // export const ChannelControlWithTheme = withTheme(ChannelControl);

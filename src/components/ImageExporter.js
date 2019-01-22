@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 const ImageExporterWrapper = styled.div`
-	width: 800px;
+	width: calc(95vw);
 `;
 
 const ImageExporterCanvas = styled.canvas`
@@ -11,7 +11,6 @@ const ImageExporterCanvas = styled.canvas`
 	overflow: auto;
 	flex-wrap: wrap;
 `;
-
 
 export default class ImageExporter extends PureComponent {
 	constructor(props) {

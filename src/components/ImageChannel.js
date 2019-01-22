@@ -131,6 +131,7 @@ class Channel extends Component {
       const imageId = e.dataTransfer && e.dataTransfer.getData("imageid");
       const duration = e.dataTransfer && Number(e.dataTransfer.getData("duration"));
       const key = e.key;
+      const shiftKey = e.shiftKey;
       const evInfo = {
         ...pos, // x pos, channelId, partId
         timestamp: e.timeStamp,
@@ -138,6 +139,7 @@ class Channel extends Component {
         imageId,
         duration,
         key,
+        shiftKey,
       }
       this.props.handleMouseEvent(eventName, evInfo);
       return;
