@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styled /*, { withTheme } */ from 'styled-components';
 import Button from '@material-ui/core/Button';
-import { Tooltip, IconButton, Icon, withStyles } from '@material-ui/core';
+import { Tooltip, IconButton, } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import GetAppIcon from '@material-ui/icons/GetApp';
@@ -56,8 +56,13 @@ export default class ChannelControl extends Component {
       <ChannelControlWrapper>
         <ChannelControlRow>
           <label> Channel actions:</label>
-          <input type="file" ref={(fileUpload) => this.fileUpload = fileUpload }
-            hidden onChange={this.uploadAudioFile} width={0} />
+          <input 
+            type="file" 
+            accept="audio/*"
+            hidden 
+            ref={(fileUpload) => this.fileUpload = fileUpload }
+            onChange={this.uploadAudioFile} width={0} 
+          />
           <Tooltip title="Load audio">
             <IconButton  color="primary" onClick={() => this.fileUpload.click()}>
               <QueueMusic />
