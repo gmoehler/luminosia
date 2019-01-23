@@ -14,7 +14,7 @@ const ImageListWrapper = styled.div`
 	flex-wrap: wrap;
 	margin: 20px 8px;
 	background:  ${props => props.backgroundColor};
-	border: 1px dashed ${props => props.borderColor}; 
+	border: 3px dashed ${props => props.borderColor}; 
 	border-radius: 10px;
 `;
 
@@ -25,15 +25,21 @@ const ImageInList = styled.img`
 `;
 
 const DropHereLabel = styled.label`
-	padding-top: 40px;
-	padding-left: 30px;
+	width: 100%;
+	padding-top: 80px;
+	text-align: center;
+	justify-content: center;
+	font-size: 14pt;
+	font-weight: 600;
+	color: darkgrey;
 `;
 
 
 // contains multiple AudioChannels
 export default class ImageList extends PureComponent {
 	constructor(props) {
-    super(props);
+		super(props);
+		this.dragCounter = 0;
 		this.state = {
 			dragging: false
 		};
@@ -76,12 +82,14 @@ export default class ImageList extends PureComponent {
 			this.setState({...this.state, dragging: true})
 		} else if (eventName === "dragLeave") {
 			this.dragCounter--;
-			if (this.dragCounter === 0) {
+			if (this.dragCounter <= 0) {
 				this.setState({...this.state, dragging: false});
+				this.dragCounter = 0;
 			}
 		} else if (eventName === "drop") {
 			// load images on drop
 			this.setState({...this.state, dragging: false});
+			this.dragCounter = 0;
 
 			if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
 				console.log(eventName);
@@ -121,7 +129,7 @@ export default class ImageList extends PureComponent {
 
     return (
 			<ImageListWrapper
-				borderColor={images.length > 0 ? "tranparent" : "black"}
+				borderColor={images.length > 0 ? "tranparent" : "darkgrey"}
 				onMouseUp={ (e) => this.handleMouseEvent(e, "mouseUp") } 
 
 				onDragEnter={ (e) => this.handleMouseEvent(e, "dragEnter") } 
