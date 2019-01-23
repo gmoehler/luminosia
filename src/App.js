@@ -18,6 +18,8 @@ import ImageControlContainer from './components/ImageControlContainer';
 import ImageListContainer from './components/ImageListContainer';
 import ChannelGroupContainer from './components/ChannelGroupContainer';
 import { Tooltip } from '@material-ui/core';
+import AnimationPane from './components/AnimationPane';
+import ImageExporter from './components/ImageExporter';
 
 const drawerWidth = 400;
 
@@ -130,7 +132,9 @@ class App extends React.Component {
                             [classes.contentShift]: open,
                           }) }>
           <div className={ classes.drawerHeader } />
+          <AnimationPane drawerWidth={open ? drawerWidth : 0} />
           <ChannelGroupContainer  drawerWidth={open ? drawerWidth : 0} />
+          <ImageExporter drawerWidth={open ? drawerWidth : 0} />
         </main>
         <Drawer className={ classes.drawer } variant="persistent" anchor="right" open={ open } 
           classes={ {paper: classes.drawerPaper,} }>

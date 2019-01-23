@@ -271,7 +271,7 @@ Channel.propTypes = {
 		PropTypes.shape({
       	id: PropTypes.number.isRequired,
         src: PropTypes.string.isRequired,
-    	  offset: PropTypes.number.isRequired,
+    	  offset: PropTypes.number, // might be zero
         duration:PropTypes.number.isRequired,
     })),
   imageHeight: PropTypes.number,

@@ -5,7 +5,6 @@ import styled from 'styled-components';
 import Channel from './Channel';
 import ImageChannel from './ImageChannel';
 import { withPlay } from './withPlay'
-import ImageExporter from './ImageExporter';
 
 const ChannelGroupWrapper = styled.div`
   width:  calc(95vw - ${props => props.drawerWidth}px);
@@ -94,7 +93,6 @@ export default class ChannelGroup extends Component {
     return (
       <ChannelGroupWrapper
         drawerWidth={this.props.drawerWidth || 0}>
-        <ImageExporter />
         { channelComponents }
       </ChannelGroupWrapper>
     )
