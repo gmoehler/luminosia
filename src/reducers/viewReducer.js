@@ -15,6 +15,7 @@ const initialState = {
   resolution: 80,
   mode: "moveMode",
   selectedPartOrImage: null,
+  currentFrame: null,
 };
 
 export default (state = initialState, action) => {
@@ -138,4 +139,8 @@ export const getSelectedImage = (state) => {
     return  state.view.selectedPartOrImage;
   }
   return null
+}
+
+export const getCurrentFrame = (state, channelId) => {
+  return state.view.currentFrame;
 }

@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 const AnimationPaneWrapper = styled.div`
@@ -11,7 +12,39 @@ const ImageExporterCanvas = styled.canvas`
 	height: 150px;
 `;
 
-export default class AnimationPane extends Component {
+export default class AnimationPane extends PureComponent {
+
+
+	drawCircle(cc, color, radius) {
+		cc.beginPath();
+		cc.fillStyle = color;
+		cc.arc(80, 50, radius, 0, 0.5 * Math.PI * 2, true);
+		cc.closePath();
+		cc.fill();
+	}
+
+	draw() {
+		const d = this.props.currentFrame;
+		if (d){
+			const canvas = document.getElementById("animationPaneCanvas");
+			const cc = canvas.getContext('2d');
+
+			for (let i=29; i>0; i--){
+				const startIdx = i*4;
+				const color = `rgba(${d[startIdx]},${d[startIdx+1]},${d[startIdx+2]},255)`
+				this.drawCircle(cc, color, i);
+			}
+		}
+	}
+	
+
+	componentDidMount() {
+    this.draw();
+  }
+
+  componentDidUpdate() {
+    this.draw();
+  }
 
   render() {
 
@@ -21,5 +54,11 @@ export default class AnimationPane extends Component {
 						id = "animationPaneCanvas" />
       </AnimationPaneWrapper>
     )
-  }
+	}
+
+
+}
+
+AnimationPane.propTypes = {
+	currentFrame: PropTypes.arrayOf(PropTypes.number),
 }

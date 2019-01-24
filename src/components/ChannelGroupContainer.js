@@ -6,6 +6,7 @@ import { setChannelPlayState, moveChannel, addPartAndMarkers, deleteSelectedPart
 import { select, setMarker, updateMarker, selectPartOrImage } from '../actions/viewActions'
 import { getallChannelsData, getMaxDuration, getLastPartId } from '../reducers/channelReducer'
 import { getSelectionRange, getResolution, getMode, getMarkers } from '../reducers/viewReducer'
+import { updateCurrentImageFrame } from '../actions/generalActions';
 
 class ChannelGroupContainer extends Component {
 
@@ -64,6 +65,9 @@ const mapDispatchToProps = dispatch => ({
   setChannelPlayState: (channelId, playState) => dispatch(setChannelPlayState({
     channelId,
     playState
+  })),
+  updateCurrentImageFrame: (channelId, time, sampleRate) => dispatch(updateCurrentImageFrame({
+    channelId, time, sampleRate
   })),
 })
 

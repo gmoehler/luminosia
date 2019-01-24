@@ -20,6 +20,7 @@ import ChannelGroupContainer from './components/ChannelGroupContainer';
 import { Tooltip } from '@material-ui/core';
 import AnimationPane from './components/AnimationPane';
 import ImageExporter from './components/ImageExporter';
+import AnimationPaneContainer from './components/AnimationPaneContainer';
 
 const drawerWidth = 400;
 
@@ -132,7 +133,7 @@ class App extends React.Component {
                             [classes.contentShift]: open,
                           }) }>
           <div className={ classes.drawerHeader } />
-          <AnimationPane drawerWidth={open ? drawerWidth : 0} />
+          <AnimationPaneContainer drawerWidth={open ? drawerWidth : 0} />
           <ChannelGroupContainer  drawerWidth={open ? drawerWidth : 0} />
           <ImageExporter drawerWidth={open ? drawerWidth : 0} />
         </main>

@@ -13,7 +13,6 @@ import ZoomOutIcon from '@material-ui/icons/ZoomOut';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import StopIcon from '@material-ui/icons/Stop';
 import DownloadChannelIcon from '@material-ui/icons/LowPriority';
-import AnimateIcon from '@material-ui/icons/PlayCircleOutline';
 
 const ChannelControlWrapper = styled.div`
   display: flex
@@ -117,12 +116,6 @@ export class ChannelControl extends Component {
             disabled={!this.state.channelId} >
             <IconButton color="inherit" onClick={ () => this.props.deleteChannel(this.state.channelId) }>
               <DeleteChannelIcon/>
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Animate"
-            disabled={!this.state.channelId} >
-            <IconButton color="inherit" onClick={ () => this.props.animate(this.state.channelId) }>
-              <AnimateIcon/>
             </IconButton>
           </Tooltip>
 

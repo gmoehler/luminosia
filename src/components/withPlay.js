@@ -130,7 +130,9 @@ export function withPlay(WrappedComponent) {
         progress: currentTimeInSecs
       })
       
-      this.props.setAnimationTime(currentTimeInSecs);
+      if (this.props.type === "image") {
+        this.props.setAnimationTime(currentTimeInSecs);
+      }
 
       if (currentTimeInSecs < this.animateEndAt) {
         this.animationRequest = window.requestAnimationFrame(this.animateProgress);
