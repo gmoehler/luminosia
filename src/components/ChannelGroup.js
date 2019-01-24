@@ -72,7 +72,7 @@ export default class ChannelGroup extends Component {
           buffer: channelData && channelData.buffer,
           parts: channelData.byParts ? Object.values(channelData.byParts) : [],
           scale: windowPixelRatio,
-          setAnimationTime: (time) => this.props.updateCurrentImageFrame(id, time, sampleRate),
+          setAnimationTime: (time) => this.props.updateCurrentImageFrame(channelId, time, sampleRate),
         }
 
         if (channelData.type === "audio") {

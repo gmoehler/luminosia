@@ -159,7 +159,7 @@ export const updateCurrentImageFrame = ((channelId, time, sampleRate) => {
       dispatch(setCurrentImageFrame({
       	channelId,
       	data: imgData.data,
-      }
+      }));
     }
   }
 })

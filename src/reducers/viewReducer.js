@@ -3,6 +3,7 @@ import { CLEAR_VIEW, SELECT, SET_RESOLUTION, SET_MODE,
   SET_MARKER, UPDATE_MARKER, DELETE_MARKER,
   SET_SELECTED,
   DESELECT,
+  CURRENT_IMAGE_FRAME,
   } from '../actions/types';
 
 const initialState = {
@@ -93,10 +94,10 @@ export default (state = initialState, action) => {
         selectedPartOrImage: null
       };
       
-      case CURRENT_IMAGE_FRAME:
+    case CURRENT_IMAGE_FRAME:
         return {
         	...state,
-            currentFrame: action.payload.data;
+            currentFrame: action.payload.data
         }
 
     default:
