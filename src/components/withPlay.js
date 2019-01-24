@@ -129,6 +129,8 @@ export function withPlay(WrappedComponent) {
         ...this.state,
         progress: currentTimeInSecs
       })
+      
+      this.props.setAnimationTime(currentTimeInSecs);
 
       if (currentTimeInSecs < this.animateEndAt) {
         this.animationRequest = window.requestAnimationFrame(this.animateProgress);
@@ -203,6 +205,7 @@ export function withPlay(WrappedComponent) {
     mode: PropTypes.oneOf(['selectionMode', 'moveMode']).isRequired,
     parts: PropTypes.array,
     maxDuration: PropTypes.number,
+    setAnimationTime: PropTypes.func.isRequired,
   }
 
   withPlay.displayName = `WithSubscription(${getDisplayName(WrappedComponent)})`;

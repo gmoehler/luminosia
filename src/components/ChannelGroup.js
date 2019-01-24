@@ -22,6 +22,8 @@ const ImageChannelWithPlay = withPlay(ImageChannel);
 // contains multiple AudioChannels
 export default class ChannelGroup extends Component {
 
+  
+  
   render() {
 
     // no data: nothing to do
@@ -70,6 +72,7 @@ export default class ChannelGroup extends Component {
           buffer: channelData && channelData.buffer,
           parts: channelData.byParts ? Object.values(channelData.byParts) : [],
           scale: windowPixelRatio,
+          setAnimationTime: (time) => this.props.updateCurrentImageFrame(id, time, sampleRate),
         }
 
         if (channelData.type === "audio") {

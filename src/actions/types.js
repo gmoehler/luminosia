@@ -36,3 +36,4 @@ export const DELETE_MARKER = "DELETE_MARKER";
 export const UPDATE_MARKER = "UPDATE_MARKER";
 export const SET_SELECTED = "SET_SELECTED";
 export const DESELECT = "DESELECT";
+export const CURRENT_IMAGE_FRAME = "CURRENT_IMAGE_FRAME";

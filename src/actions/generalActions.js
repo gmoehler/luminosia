@@ -5,6 +5,7 @@ import { downloadTextfile, readTextFile, downloadImagefile } from '../utils/file
 import { getConfig } from '../reducers/rootReducer';
 
 import { addChannel, loadAChannel, updateChannelMarkersForLastAddedChannel } from './channelActions';
+import { setCurrentImageFrame } from './viewActions';
 import { addImage, loadImage } from './imageListActions';
 import { getChannelData, getMaxDuration } from '../reducers/channelReducer';
 import { secondsToSamples } from '../utils/conversions';
@@ -146,4 +147,19 @@ export const animate = (channelId) => {
   }
 }
 
+export const updateCurrentImageFrame = ((channelId, time, sampleRate) => {
+  return (dispatch, getState) => {
+  	// todo: get channel spec image
+    const exportCanvas = document.getElementById("imageExportCanvas");
+    if (exportCanvas) {
+      const exportCc = exportCanvas.getContext('2d');
+      const idx = secondsToSamples(time, sampleRate);
+      const imgData = exportCc.getImageData(idx, 0, 1, 30);
 
+      dispatch(setCurrentImageFrame({
+      	channelId,
+      	data: imgData.data,
+      }
+    }
+  }
+})

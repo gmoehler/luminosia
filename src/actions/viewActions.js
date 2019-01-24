@@ -101,3 +101,8 @@ export const selectPartOrImage = ((partOrImageInfo) => {
     }
   }
 });
+
+export const setCurrentImageFrame = currentInfo => ({
+  type: CURRENT_IMAGE_FRAME,
+  payload: currentInfo
+});

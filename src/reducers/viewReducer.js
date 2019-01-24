@@ -91,7 +91,13 @@ export default (state = initialState, action) => {
       return {
         ...state,
         selectedPartOrImage: null
-      }
+      };
+      
+      case CURRENT_IMAGE_FRAME:
+        return {
+        	...state,
+            currentFrame: action.payload.data;
+        }
 
     default:
       return state
