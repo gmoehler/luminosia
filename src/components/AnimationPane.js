@@ -13,6 +13,9 @@ const ImageExporterCanvas = styled.canvas`
 `;
 
 export default class AnimationPane extends PureComponent {
+	constructor(props) {
+		
+	}
 
 
 	drawCircle(cc, color, radius) {
@@ -25,8 +28,9 @@ export default class AnimationPane extends PureComponent {
 	}
 
 	draw() {
-		const d = this.props.currentFrame;
+		const d = this.props.current.data;
 		if (d){
+			const t = this.props.current.playTime;
 			const canvas = document.getElementById("animationPaneCanvas");
 			const cc = canvas.getContext('2d');
 
@@ -61,5 +65,8 @@ export default class AnimationPane extends PureComponent {
 }
 
 AnimationPane.propTypes = {
-	currentFrame: PropTypes.arrayOf(PropTypes.number),
+	current: {PropTypes.shape({
+		data: PropTypes.arrayOf(PropTypes.number),
+		playTime: PropTypes.number,
+		}),
 }

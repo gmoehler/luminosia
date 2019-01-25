@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import AnimationPane from './AnimationPane';
-import { getCurrentFrame } from '../reducers/viewReducer';
+import { getCurrent } from '../reducers/viewReducer';
 
 class AnimationPaneContainer extends Component {
 
@@ -17,7 +17,7 @@ class AnimationPaneContainer extends Component {
 }
 
 const mapStateToProps = state => ({
-  currentFrame: getCurrentFrame(state),
+  current: getCurrent(state),
 });
 
 const mapDispatchToProps = dispatch => ({

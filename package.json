@@ -1,6 +1,7 @@
 {
   "name": "react-waveform-playlist",
   "version": "0.1.0",
+  "homepage": "https://gmoehler.github.io/react-waveform-playlist",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.6",
     "@fortawesome/free-solid-svg-icons": "^5.4.1",
@@ -8,6 +9,7 @@
     "@material-ui/core": "3.9.0",
     "@material-ui/icons": "3.0.2",
     "fade-maker": "^1.0.3",
+    "gh-pages": "2.0.1",
     "i": "^0.3.6",
     "input-range-scss": "^1.5.1",
     "npm": "^6.4.1",
@@ -26,6 +28,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "storybook": "start-storybook -p 9001 -c .storybook"
   },
   "eslintConfig": {
