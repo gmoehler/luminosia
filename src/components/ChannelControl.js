@@ -139,7 +139,7 @@ export class ChannelControl extends Component {
 
         <Tooltip title="Play"
           disabled={!this.props.enablePlay} >
-          <IconButton color="inherit" onClick={ this.props.playChannel }>
+          <IconButton color="inherit" onClick={ () => this.props.playChannelAndImage(this.state.channelId) }>
             <PlayArrowIcon/>
           </IconButton>
         </Tooltip>

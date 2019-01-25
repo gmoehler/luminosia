@@ -18,7 +18,6 @@ import ImageControlContainer from './components/ImageControlContainer';
 import ImageListContainer from './components/ImageListContainer';
 import ChannelGroupContainer from './components/ChannelGroupContainer';
 import { Tooltip } from '@material-ui/core';
-import AnimationPane from './components/AnimationPane';
 import ImageExporter from './components/ImageExporter';
 import AnimationPaneContainer from './components/AnimationPaneContainer';
 

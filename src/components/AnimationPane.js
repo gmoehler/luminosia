@@ -18,7 +18,8 @@ export default class AnimationPane extends PureComponent {
 	drawCircle(cc, color, radius) {
 		cc.beginPath();
 		cc.fillStyle = color;
-		cc.arc(80, 50, radius, 0, 0.5 * Math.PI * 2, true);
+		cc.arc(80, 80, 2*radius, 0, Math.PI * 2, true);
+		cc.arc(80, 80, 2*radius+1, 0, Math.PI * 2, true);
 		cc.closePath();
 		cc.fill();
 	}

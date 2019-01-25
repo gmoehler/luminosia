@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 const ImageExporterWrapper = styled.div`
 	width:  calc(95vw - ${props => props.drawerWidth}px);
+	overflow: auto;
 `;
 
 const ImageExporterCanvas = styled.canvas`
@@ -23,7 +24,7 @@ export default class ImageExporter extends PureComponent {
   render() {
 
     return (
-			<ImageExporterWrapper>
+			<ImageExporterWrapper drawerWidth = {this.props.drawerWidth}>
 					<ImageExporterCanvas 
 						id = "imageExportCanvas" />
       </ImageExporterWrapper>
