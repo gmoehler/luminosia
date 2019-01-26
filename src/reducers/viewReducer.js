@@ -100,7 +100,7 @@ export default (state = initialState, action) => {
         	...state,
         	currentById: {
             ...state.currentById,
-            	[channelId]: {
+            	[action.payload.channelId]: {
                 ...action.payload,
             }
           }
