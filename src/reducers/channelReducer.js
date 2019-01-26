@@ -1,7 +1,7 @@
 import { merge, cloneDeep } from 'lodash';
 
-import { ADD_CHANNEL, CLEAR_CHANNELS,
-  PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL, ADD_PART, DELETE_PART, DELETE_CHANNEL } from '../actions/types';
+import { ADD_CHANNEL, CLEAR_CHANNELS, PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE,
+  MOVE_CHANNEL, ADD_PART, DELETE_PART, DELETE_CHANNEL, SELECT_CHANNEL, DESELECT_CHANNEL } from '../actions/types';
 
 import { filterObjectByKeys } from '../utils/miscUtils';
 
@@ -28,31 +28,56 @@ export default (state = initialState, action) => {
       if (!duration) {
         duration = 10; // set a default start duration of 10s
       }
-        return {
-          ...state,
-          lastChannelId: id,
-          byId: {
-            ...state.byId,
-            [id]: {
-              ...action.payload,
-              id,
-              lastPartId,
-              duration,
-            }
+      return {
+        ...state,
+        lastChannelId: id,
+        byId: {
+          ...state.byId,
+          [id]: {
+            ...action.payload,
+            id,
+            lastPartId,
+            duration,
+            selected: false,
           }
-        };
+        }
+      };
 
     case DELETE_CHANNEL:
       const channels = cloneDeep(state.byId);
       delete channels[action.payload];
-        return {
-          ...state,
-          byId: channels
+      return {
+        ...state,
+        byId: channels
+      }
+
+    case SELECT_CHANNEL:
+    return {
+      ...state,
+      byId: {
+        ...state.byId,
+        [action.payload]: {
+          ...state.byId[action.payload],
+          selected: true
         }
+      }
+    };
+
+    case DESELECT_CHANNEL:
+    return {
+      ...state,
+      byId: {
+        ...state.byId,
+        [action.payload]: {
+          ...state.byId[action.payload],
+          selected: false
+        }
+      }
+    };
 
     case ADD_PART:
       const partId = state.byId[action.payload.channelId].lastPartId + 1;
-      const maxDuration = Math.max(state.byId[action.payload.channelId].duration, 
+      const maxDuration = Math.max(state.byId[action.payload.channelId].duration,
         action.payload.offset + action.payload.duration);
       return {
         ...state,
@@ -69,7 +94,7 @@ export default (state = initialState, action) => {
                 src: action.payload.src,
                 imageId: action.payload.imageId,
                 offset: action.payload.offset,
-                duration: action.payload.duration, 
+                duration: action.payload.duration,
               }
             }
           }
@@ -175,7 +200,8 @@ function mergePlayStateIntoToChannels(state, playState) {
 
 function _hasAudioChannel(channelState) {
   return Object.keys(channelState.byId)
-    .reduce((result, key) => result || channelState.byId[key].type === "audio" ,
+    .reduce((result, key) => result || 
+      channelState.byId[key].type === "audio",
       false)
 }
 
@@ -236,9 +262,17 @@ export const getMaxDuration = (state) => {
 // array of all channels with a given list of keys (e.g. not including audio buffer)
 export const getChannelsConfig = (state) => {
   const allowedProps = ["type", "names", "src", "sampleRate", "offset"];
-  const propsToArray = {"byParts": "parts"};
+  const propsToArray = {
+    "byParts": "parts"
+  };
   const channels = state.channel.byId ? Object.values(state.channel.byId) : [];
   return channels.map((ch) => {
-      return filterObjectByKeys(ch, allowedProps, propsToArray)
-    });
+    return filterObjectByKeys(ch, allowedProps, propsToArray)
+  });
 };
+
+export const getSelectedChannels = (state) => {
+    return Object.values(state.channel.byId)
+      .filter((channel) => channel.selected)
+      .map((channel) => channel.id);
+}

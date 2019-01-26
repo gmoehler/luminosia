@@ -36,8 +36,9 @@ export default class AnimationPane extends PureComponent {
 	}
 
 	draw() {
-		const d = this.props.current.data;
-		if (d){
+		const curArray = Object.values(this.props.current);
+		if (curArray.length>0){
+			const d = curArray[0].data;
 			const t = this.props.current.playTime;
 			const toRad = 2* Math.PI * t * this.state.rotationSpeed / this.state.sampleRate;
 			

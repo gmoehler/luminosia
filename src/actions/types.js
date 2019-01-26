@@ -9,6 +9,8 @@ export const UPLOAD_CONFIG_FAILURE = "UPLOAD_CONFIG_FAILURE";
 export const ADD_CHANNEL = "ADD_CHANNEL";
 export const DELETE_CHANNEL = "DELETE_CHANNEL";
 export const CLEAR_CHANNELS = "CLEAR_CHANNELS";
+export const SELECT_CHANNEL = "SELECT_CHANNEL";
+export const DESELECT_CHANNEL = "DESELECT_CHANNEL";
 
 export const UPLOAD_AUDIO_STARTED = "UPLOAD_AUDIO_STARTED";
 export const UPLOAD_AUDIO_SUCCESS = "UPLOAD_AUDIO_SUCCESS";
@@ -18,7 +20,7 @@ export const PLAY_CHANNELS = "PLAY_CHANNELS";
 export const STOP_CHANNELS = "STOP_CHANNELS";
 export const MOVE_CHANNEL = "MOVE_CHANNEL";
 export const ADD_PART = "ADD_PART";
-export const DELETE_PART = "DELETE_PART"; 
+export const DELETE_PART = "DELETE_PART";
 
 // image list actions
 export const ADD_IMAGE = "ADD_IMAGE";
@@ -34,6 +36,6 @@ export const SET_MODE = "SET_MODE";
 export const SET_MARKER = "SET_MARKER";
 export const DELETE_MARKER = "DELETE_MARKER";
 export const UPDATE_MARKER = "UPDATE_MARKER";
-export const SET_SELECTED = "SET_SELECTED";
-export const DESELECT = "DESELECT";
+export const SELECT_PART_OR_IMAGE = "SELECT_PART_OR_IMAGE";
+export const DESELECT_PART_OR_IMAGE = "DESELECT_PART_OR_IMAGE";
 export const CURRENT_IMAGE_FRAME = "CURRENT_IMAGE_FRAME";

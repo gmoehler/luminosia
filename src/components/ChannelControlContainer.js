@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { stopChannel, deleteSelectedPartAndMarkers, addImageChannel, uploadAudioFile, deleteChannel, playChannelAndImage } from '../actions/channelActions'
+import { stopChannel, deleteSelectedPartAndMarkers, addImageChannel, uploadAudioFile, deleteChannel, playChannelAndImage, selectChannel, deselectChannel } from '../actions/channelActions'
 
 import { downloadConfig, uploadConfigFile, uploadConfig, exportImageChannel } from '../actions/generalActions'
 import { setMode, select, setResolution } from '../actions/viewActions'
@@ -133,6 +133,8 @@ class ChannelControlContainer extends Component {
         selectedImageOrPart={this.props.selectedImageOrPart}
         enablePlay={this.props.enablePlay}  
         enableStop={this.props.enableStop} 
+        selectChannel={this.props.selectChannelAction}
+        deselectChannel={this.props.deselectChannelAction}
       />
       );
   }
@@ -159,6 +161,8 @@ const mapDispatchToProps = dispatch => ({
   setModeAction: (modeEvent) => dispatch(setMode(modeEvent.target.value)),
   selectAction: (range) => dispatch(select(range)),
   deleteSelectedPartAndMarkers: () => dispatch(deleteSelectedPartAndMarkers()),
+  selectChannelAction: (channelId) => dispatch(selectChannel(channelId)),
+  deselectChannelAction: (channelId) => dispatch(deselectChannel(channelId)),
 })
 
 

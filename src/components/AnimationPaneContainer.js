@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 
 import AnimationPane from './AnimationPane';
 import { getCurrent } from '../reducers/viewReducer';
+import { getSelectedChannels } from '../reducers/channelReducer';
+
 
 class AnimationPaneContainer extends Component {
 
@@ -18,6 +20,7 @@ class AnimationPaneContainer extends Component {
 
 const mapStateToProps = state => ({
   current: getCurrent(state),
+  selectedChannels: getSelectedChannels(state),
 });
 
 const mapDispatchToProps = dispatch => ({
