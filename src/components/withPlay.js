@@ -92,7 +92,7 @@ export function withPlay(WrappedComponent) {
         const trackDelay = startAt - actOffset < 0 ? actOffset - startAt : 0;
         const trackEndAt = actEndAt - actOffset;
 
-        // remeber for progress offset
+        // remember for progress offset
         this.animateStartAt = actStartAt;
         this.animateEndAt = endAt - startAt < 0.1 ?
           this.props.maxDuration + actOffset : trackEndAt + actOffset;
