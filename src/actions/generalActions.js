@@ -136,3 +136,28 @@ export const updateCurrentImageFrame = (updateInfo => {
     }
   }
 });
+
+// get image data from export canvas within an interval
+// assuming all selected channels are on the canvas
+// to acoid retreiving the same frame twice
+// we use ceil on the start idx and floor on the end idx
+export const getChannelExportData = ((fromTime, toTime, sampleRate) => {
+    const exportCanvas = document.getElementById("imageExportCanvas");
+  if (exportCanvas) {
+    const exportCc = exportCanvas.getContext('2d');
+    const fromIdx = secondsToSamples(fromTime, sampleRate);
+    const toIdx = secondsToSamples(toTime, sampleRate, false); // floor
+    const width = toIdx-fromIdx;
+    return {
+      width,
+      height: exportCanvas.height,
+      data: exportCc.getImageData(fromIdx, 0, width, 30),
+    };
+  }
+  return {
+    width: 0,
+    height: 0,
+    data: [],
+  };
+});
+

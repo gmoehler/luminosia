@@ -5,8 +5,9 @@ export function samplesToSeconds(samples, sampleRate) {
   return samples / sampleRate;
 }
 
-export function secondsToSamples(seconds, sampleRate) {
-  return Math.ceil(seconds * sampleRate);
+export function secondsToSamples(seconds, sampleRate, toCeil = true) {
+  return toCeil ? 
+    Math.ceil(seconds * sampleRate) : Math.floor(seconds * sampleRate);
 }
 
 export function samplesToPixels(samples, resolution, sampleRate) {
@@ -23,4 +24,16 @@ export function pixelsToSeconds(pixels, resolution) {
 
 export function secondsToPixels(seconds, resolution) {
   return Math.ceil(seconds * resolution);
+}
+
+export function secondsToRad(seconds,  rotationSpeed) {
+  // do not exceed full circle
+  const factor =  (seconds * rotationSpeed ) % 1;
+  return 2* Math.PI * factor;
+}
+
+export function samplesToRad(samples, sampleRate, rotationSpeed) {
+  // do not exceed full circle
+  const factor =  (samples * rotationSpeed / sampleRate ) % 1;
+  return 2* Math.PI * factor;
 }
