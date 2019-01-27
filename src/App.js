@@ -117,7 +117,7 @@ class App extends React.Component {
           >
           <Toolbar disableGutters={ !open }>
             <Typography variant="h6" color="inherit" className={ classes.title } noWrap>
-              Animation Authoring
+              Luminosia
             </Typography>
             <ChannelControlContainer/>
             <div  className={classes.grow}></div>

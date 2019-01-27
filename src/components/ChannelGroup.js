@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import Channel from './Channel';
 import ImageChannel from './ImageChannel';
 import { withPlay } from './withPlay'
+import { withEventHandler } from './withEventHandler';
 
 const ChannelGroupWrapper = styled.div`
   width:  calc(95vw - ${props => props.drawerWidth}px);
