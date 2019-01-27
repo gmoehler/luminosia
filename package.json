@@ -1,7 +1,7 @@
 {
   "name": "react-waveform-playlist",
   "version": "0.1.0",
-  "homepage": "https://gmoehler.github.io/react-waveform-playlist",
+  "homepage": "https://gmoehler.github.io/luminosia",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.6",
     "@fortawesome/free-solid-svg-icons": "^5.4.1",
