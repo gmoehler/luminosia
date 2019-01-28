@@ -52,8 +52,13 @@ export class ChannelControl extends Component {
     this.props.uploadAudioFile(evt.target.files[0]);
   };
 
-  handleChange = event => {
-    this.setState({ [event.target.name]: event.target.value });
+  handleChannelSelectionChange = event => {
+    const channelId = event.target.value;
+    if (this.state[event.target.name]) {
+      this.props.deselectChannel(this.state[event.target.name]);
+    }
+    this.props.selectChannel(channelId);
+    this.setState({ [event.target.name]: channelId });
   };
 
   componentDidUpdate() {
@@ -95,7 +100,7 @@ export class ChannelControl extends Component {
             <InputLabel htmlFor="channelId-select">Channel</InputLabel>
             <Select 
               value={this.state.channelId}
-              onChange={this.handleChange}
+              onChange={this.handleChannelSelectionChange}
               inputProps={{
                 name: 'channelId',
                 id: 'channelId-select',
@@ -119,7 +124,6 @@ export class ChannelControl extends Component {
             </IconButton>
           </Tooltip>
 
-
           <Tooltip title="Download show">
             <IconButton color="inherit" onClick={ this.props.downloadConfig }>
               <DownloadConfigIcon/>
@@ -140,10 +144,11 @@ export class ChannelControl extends Component {
 
         <Tooltip title="Play"
           disabled={!this.props.enablePlay} >
-          <IconButton color="inherit" onClick={ this.props.playChannel }>
+          <IconButton color="inherit" onClick={ () => this.props.playChannelAndImage(this.state.channelId) }>
             <PlayArrowIcon/>
           </IconButton>
         </Tooltip>
+
         <Tooltip title="Stop"
           disabled={!this.props.enableStop} >
           <IconButton color="inherit" onClick={ this.props.stopChannel }>

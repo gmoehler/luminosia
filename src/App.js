@@ -18,6 +18,8 @@ import ImageControlContainer from './components/ImageControlContainer';
 import ImageListContainer from './components/ImageListContainer';
 import ChannelGroupContainer from './components/ChannelGroupContainer';
 import { Tooltip } from '@material-ui/core';
+import ImageExporter from './components/ImageExporter';
+import AnimationPaneContainer from './components/AnimationPaneContainer';
 
 const drawerWidth = 400;
 
@@ -115,7 +117,7 @@ class App extends React.Component {
           >
           <Toolbar disableGutters={ !open }>
             <Typography variant="h6" color="inherit" className={ classes.title } noWrap>
-              Animation Authoring
+              Luminosia Studio
             </Typography>
             <ChannelControlContainer/>
             <div  className={classes.grow}></div>
@@ -130,7 +132,9 @@ class App extends React.Component {
                             [classes.contentShift]: open,
                           }) }>
           <div className={ classes.drawerHeader } />
+          <AnimationPaneContainer drawerWidth={open ? drawerWidth : 0} />
           <ChannelGroupContainer  drawerWidth={open ? drawerWidth : 0} />
+          <ImageExporter drawerWidth={open ? drawerWidth : 0} />
         </main>
         <Drawer className={ classes.drawer } variant="persistent" anchor="right" open={ open } 
           classes={ {paper: classes.drawerPaper,} }>

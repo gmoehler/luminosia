@@ -5,7 +5,8 @@ import styled from 'styled-components';
 import Channel from './Channel';
 import ImageChannel from './ImageChannel';
 import { withPlay } from './withPlay'
-import ImageExporter from './ImageExporter';
+import { withEventHandler } from './withEventHandler';
+import { timeToPixels } from './timeToPixels';
 
 const ChannelGroupWrapper = styled.div`
   width:  calc(95vw - ${props => props.drawerWidth}px);
@@ -17,12 +18,14 @@ const ChannelGroupWrapper = styled.div`
 const windowPixelRatio = window.devicePixelRatio;
 
 // add play functionality to audio channels
-const AudioChannelWithPlay = withPlay(Channel);
-const ImageChannelWithPlay = withPlay(ImageChannel);
+const AudioChannelWithPlay = withEventHandler(withPlay(timeToPixels(Channel)));
+const ImageChannelWithPlay = withEventHandler(withPlay(timeToPixels(ImageChannel)));
 
 // contains multiple AudioChannels
 export default class ChannelGroup extends Component {
 
+  
+  
   render() {
 
     // no data: nothing to do
@@ -94,7 +97,6 @@ export default class ChannelGroup extends Component {
     return (
       <ChannelGroupWrapper
         drawerWidth={this.props.drawerWidth || 0}>
-        <ImageExporter />
         { channelComponents }
       </ChannelGroupWrapper>
     )

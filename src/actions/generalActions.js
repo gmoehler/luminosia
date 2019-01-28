@@ -5,6 +5,7 @@ import { downloadTextfile, readTextFile, downloadImagefile } from '../utils/file
 import { getConfig } from '../reducers/rootReducer';
 
 import { addChannel, loadAChannel, updateChannelMarkersForLastAddedChannel } from './channelActions';
+import { setCurrentImageFrame } from './viewActions';
 import { addImage, loadImage } from './imageListActions';
 import { getChannelData, getMaxDuration } from '../reducers/channelReducer';
 import { secondsToSamples } from '../utils/conversions';
@@ -82,7 +83,7 @@ export const downloadConfig = (() => {
   }
 })
 
-export const exportImageChannel = (channelId) => {
+export const drawExportImage = (channelId) => {
   return (dispatch, getState) => {
     const data = getChannelData(getState(), channelId);
     if (data && data.byParts) {
@@ -103,9 +104,40 @@ export const exportImageChannel = (channelId) => {
         const widthPx = part.duration ? secondsToSamples(part.duration, data.sampleRate) : 0;
         cc.drawImage(img, 0, 0, widthPx, 30,  offsetPx, 0, widthPx, 30);
       })
-    
-      var resultImage    = canvas.toDataURL("image/png");
+    }
+  }
+}
+
+export const exportImageChannel = (channelId) => {
+  return (dispatch, getState) => {
+    dispatch(drawExportImage(channelId));
+    const canvas = document.getElementById("imageExportCanvas");
+    const resultImage = canvas.toDataURL("image/png");
+    if (resultImage) {
       downloadImagefile(`result-${channelId}.png`, resultImage);
     }
   }
 }
+
+// get image data from export canvas within an interval
+// assuming all selected channels are on the canvas
+// to acoid retreiving the same frame twice
+// we use ceil on the start idx and floor on the end idx
+export const getChannelExportData = ((fromTime, toTime, sampleRate) => {
+    const exportCanvas = document.getElementById("imageExportCanvas");
+  if (exportCanvas) {
+    const exportCc = exportCanvas.getContext('2d');
+    const fromIdx = secondsToSamples(fromTime, sampleRate);
+    const toIdx = secondsToSamples(toTime, sampleRate, false); // floor
+    const width = toIdx-fromIdx;
+    if (width > 0) {
+      return exportCc.getImageData(fromIdx, 0, width, 30);
+    }
+  }
+  return {
+    width: 0,
+    height: 0,
+    data: [],
+  };
+});
+

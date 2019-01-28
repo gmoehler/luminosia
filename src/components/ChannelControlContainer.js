@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { playChannel, stopChannel, deleteSelectedPartAndMarkers, addImageChannel, uploadAudioFile, deleteChannel } from '../actions/channelActions'
+import { stopChannel, deleteSelectedPartAndMarkers, addImageChannel, uploadAudioFile, deleteChannel, playChannelAndImage, selectChannel, deselectChannel } from '../actions/channelActions'
 
 import { downloadConfig, uploadConfigFile, uploadConfig, exportImageChannel } from '../actions/generalActions'
 import { setMode, select, setResolution } from '../actions/viewActions'
 import ChannelControl from './ChannelControl';
-import { getChannelIds, hasAudioChannel, allChannelsStopped } from '../reducers/channelReducer';
+import { getChannelIds, allChannelsStopped } from '../reducers/channelReducer';
 import { getSelectedImage, getSelectedPart } from '../reducers/viewReducer';
 
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -125,14 +125,16 @@ class ChannelControlContainer extends Component {
         addImageChannel={ this.props.addImageChannelAction } 
         exportImageChannel={ this.props.exportImageChannelAction }
         deleteChannel={ this.props.deleteChannelAction } 
-        playChannel={ this.props.playChannelAction } 
+        playChannelAndImage={ this.props.playChannelAndImageAction } 
         stopChannel={ this.props.stopChannelAction } 
         zoomIn={ this.zoomIn }
         zoomOut={ this.zoomOut } 
         setMode={ this.setMode } 
         selectedImageOrPart={this.props.selectedImageOrPart}
         enablePlay={this.props.enablePlay}  
-        enableStop={this.props.enableStop}  
+        enableStop={this.props.enableStop} 
+        selectChannel={this.props.selectChannelAction}
+        deselectChannel={this.props.deselectChannelAction}
       />
       );
   }
@@ -141,8 +143,8 @@ class ChannelControlContainer extends Component {
 const mapStateToProps = state => ({
    channelIds: getChannelIds(state),
    selectedImageOrPart: getSelectedImage(state) || getSelectedPart(state),
-   enablePlay: hasAudioChannel(state) && allChannelsStopped(state),
-   enableStop: hasAudioChannel(state) && !allChannelsStopped(state),
+   enablePlay: getChannelIds(state).length > 0 && allChannelsStopped(state),
+   enableStop: getChannelIds(state).length && !allChannelsStopped(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -153,12 +155,14 @@ const mapDispatchToProps = dispatch => ({
   addImageChannelAction: () => dispatch(addImageChannel()),
   exportImageChannelAction: (channelId) => dispatch(exportImageChannel(channelId)),
   deleteChannelAction: (channelId) => dispatch(deleteChannel(channelId)),
-  playChannelAction: () => dispatch(playChannel()),
+  playChannelAndImageAction: (channelId) => dispatch(playChannelAndImage(channelId)),
   stopChannelAction: () => dispatch(stopChannel()),
   setResolutionAction: (resolution) => dispatch(setResolution(resolution)),
   setModeAction: (modeEvent) => dispatch(setMode(modeEvent.target.value)),
   selectAction: (range) => dispatch(select(range)),
   deleteSelectedPartAndMarkers: () => dispatch(deleteSelectedPartAndMarkers()),
+  selectChannelAction: (channelId) => dispatch(selectChannel(channelId)),
+  deselectChannelAction: (channelId) => dispatch(deselectChannel(channelId)),
 })
 
 

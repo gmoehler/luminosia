@@ -1,7 +1,7 @@
 import LoaderFactory from '../loader/LoaderFactory'
 
 import { PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL, 
-  ADD_PART, DELETE_PART, ADD_CHANNEL, CLEAR_CHANNELS, UPLOAD_AUDIO_STARTED, UPLOAD_AUDIO_SUCCESS, UPLOAD_AUDIO_FAILURE, DELETE_CHANNEL
+  ADD_PART, DELETE_PART, ADD_CHANNEL, CLEAR_CHANNELS, UPLOAD_AUDIO_STARTED, UPLOAD_AUDIO_SUCCESS, UPLOAD_AUDIO_FAILURE, DELETE_CHANNEL, SELECT_CHANNEL, DESELECT_CHANNEL
 } from './types';
 
 import { setMarker, deleteMarker, deselect, selectPartOrImage } from './viewActions';
@@ -12,6 +12,7 @@ import { getImageDuration } from '../reducers/imageListReducer';
 import { removeImage } from './imageListActions';
 import { defaultSampleRate } from '../components/ImageListContainer';
 import { readAudioFile } from '../utils/fileUtils';
+import { drawExportImage } from './generalActions';
 
 // load channel from config
 
@@ -38,6 +39,17 @@ export const deleteChannel = channelInfo => ({
 export const clearChannels = () => ({
   type: CLEAR_CHANNELS
 });
+
+export const selectChannel = (channelInfo) => ({
+  type: SELECT_CHANNEL,
+  payload: channelInfo
+});
+
+export const deselectChannel = (channelInfo) => ({
+  type: DESELECT_CHANNEL,
+  payload: channelInfo
+});
+
 
 const uploadAudioStarted = startInfo => ({
   type: UPLOAD_AUDIO_STARTED,
@@ -219,6 +231,13 @@ export const deletePart = partInfo => ({
 export const playChannel = () => ({
   type: PLAY_CHANNELS
 });
+
+export const playChannelAndImage = (channelId) => {
+  return (dispatch, getState) => {
+    dispatch(drawExportImage(channelId));
+    dispatch(playChannel());
+  }
+}
 
 export const stopChannel = () => ({
   type: STOP_CHANNELS

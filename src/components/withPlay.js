@@ -1,7 +1,7 @@
 /* 
   HOC to support audio/image playing for one channel 
   also updates play progress in channel 
-  and delegates mouse events to mouse handler
+  and generates the waveform based on the audio data
 */
 
 import React, { PureComponent } from 'react';
@@ -10,13 +10,9 @@ import extractPeaks from 'webaudio-peaks';
 import memoize from 'memoize-one';
 
 import Playout from '../player/Playout';
-import MouseHandler from '../handler/MouseHandler';
-import { timeToPixels } from './timeToPixels';
-
 
 export function withPlay(WrappedComponent) {
 
-  const WrappedComponentInTime = timeToPixels(WrappedComponent);
 
   class WithPlay extends PureComponent {
 
@@ -25,23 +21,12 @@ export function withPlay(WrappedComponent) {
       this.animationStartTime = null; // start time of progress animation timer, null means not playing
       this.playStartAt = 0; // start of current play
       this.playEndAt = 0; // end of current play
-      this.mousehandler = null;
       this.state = {
         progress: null, // play progress in secs
       };
     }
 
     componentDidMount() {
-      // mouse handler setup
-      this.mousehandler = new MouseHandler({
-        select: this.props.select,
-        move: this.props.move,
-        updateMarker: this.props.updateMarker,
-        setMarker: this.props.setMarker,
-        addPartAndMarkers: this.props.addPartAndMarkers,
-        selectPartOrImage: this.props.selectPartOrImage,
-        deleteSelectedPartAndMarkers: this.props.deleteSelectedPartAndMarkers,
-      });
       // audio setup
       if (this.props.type === "audio") {
         this.playout = null;
@@ -92,7 +77,7 @@ export function withPlay(WrappedComponent) {
         const trackDelay = startAt - actOffset < 0 ? actOffset - startAt : 0;
         const trackEndAt = actEndAt - actOffset;
 
-        // remeber for progress offset
+        // remember for progress offset
         this.animateStartAt = actStartAt;
         this.animateEndAt = endAt - startAt < 0.1 ?
           this.props.maxDuration + actOffset : trackEndAt + actOffset;
@@ -117,10 +102,12 @@ export function withPlay(WrappedComponent) {
     }
 
     animateProgress = (timestamp) => {
+
       if (!this.animationStartTime) {
         this.animationStartTime = timestamp;
       //TODO: sync with playout time
       }
+
 
       const duration = timestamp - this.animationStartTime;
       const currentTimeInSecs = this.animateStartAt + duration / 1000.0;
@@ -162,14 +149,10 @@ export function withPlay(WrappedComponent) {
 
     render() {
 
-      const {buffer, mode, sampleRate, ...passthruProps} = this.props;
-
-      if (this.mousehandler) {
-        this.mousehandler.setMode(mode);
-      }
+      const {buffer, mode, ...passthruProps} = this.props;
 
       // memoized audio peak data
-      const {data, length, bits} = buffer ? this.doExtractPeaks(buffer, sampleRate / this.props.resolution, 16)
+      const {data, length, bits} = buffer ? this.doExtractPeaks(buffer, this.props.sampleRate / this.props.resolution, 16)
         : {
           data: [],
           length: 0,
@@ -178,12 +161,11 @@ export function withPlay(WrappedComponent) {
       const peaksDataMono = Array.isArray(data) ? data[0] : []; // only one channel for now
 
       // time to pixel conversion is done in HOC TimeToPixel
-      return <WrappedComponentInTime 
+      return <WrappedComponent 
         {...passthruProps} 
         progress={ this.state.progress } 
-        handleMouseEvent={ (eventName, evInfo) => 
-          this.mousehandler.handleMouseEvent(eventName, evInfo, this.props.resolution) } 
-        factor={ this.props.resolution / sampleRate } /* req only for images*/ 
+        handleMouseEvent={this.props.handleMouseEvent } 
+        factor={ this.props.resolution / this.props.sampleRate } /* req only for images*/ 
         peaks={ peaksDataMono } /* only for audio */ 
         bits={ bits } /* only for audio */ 
         length={ length } /* only for audio */ />;
@@ -192,15 +174,15 @@ export function withPlay(WrappedComponent) {
   ;
 
   WithPlay.propTypes = {
+    type: PropTypes.oneOf(["audio", "image", "animation"]),
     sampleRate: PropTypes.number.isRequired,
     resolution: PropTypes.number.isRequired,
     playState: PropTypes.oneOf(['stopped', 'playing']).isRequired,
-    selection: PropTypes.object.isRequired,
-    select: PropTypes.func.isRequired,
+    selection: PropTypes.exact({
+      from: PropTypes.number,
+      to: PropTypes.number,
+    }),
     setChannelPlayState: PropTypes.func.isRequired,
-    setMarker: PropTypes.func.isRequired,
-    updateMarker: PropTypes.func.isRequired,
-    mode: PropTypes.oneOf(['selectionMode', 'moveMode']).isRequired,
     parts: PropTypes.array,
     maxDuration: PropTypes.number,
   }

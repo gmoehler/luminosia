@@ -1,4 +1,4 @@
-import { SELECT, SET_RESOLUTION, SET_MODE, UPDATE_MARKER, SET_MARKER, DELETE_MARKER, SET_SELECTED, DESELECT, CLEAR_VIEW} from './types';
+import { SELECT, SET_RESOLUTION, SET_MODE, UPDATE_MARKER, SET_MARKER, DELETE_MARKER, SELECT_PART_OR_IMAGE, DESELECT_PART_OR_IMAGE, CLEAR_VIEW, CURRENT_IMAGE_FRAME } from './types';
 
 import { getSelectedPart, getSelectedImage } from '../reducers/viewReducer';
 
@@ -38,12 +38,12 @@ export const updateMarker = (markerInfo) => ({
 });
 
 const setSelected = (partInfo) => ({
-  type: SET_SELECTED,
+  type: SELECT_PART_OR_IMAGE,
   payload: partInfo
 });
 
 export const deselect = () => ({
-  type: DESELECT,
+  type: DESELECT_PART_OR_IMAGE,
 });
 
 const updateMarkers = (dispatch, part) => {
@@ -100,4 +100,9 @@ export const selectPartOrImage = ((partOrImageInfo) => {
       updateMarkers(dispatch, partOrImageInfo);
     }
   }
+});
+
+export const setCurrentImageFrame = currentInfo => ({
+  type: CURRENT_IMAGE_FRAME,
+  payload: currentInfo
 });
