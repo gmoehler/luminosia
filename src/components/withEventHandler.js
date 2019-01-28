@@ -5,14 +5,14 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import MouseHandler from '../handler/MouseHandler';
-import { withPlay } from './withPlay';
 
 export function withEventHandler(WrappedComponent) {
 
-
   class WithEventHandler extends PureComponent {
-
-    // const WrappedComponentWithPlay = withPlay(WrappedComponent);
+    constructor(props) {
+      super(props);
+      this.mousehandler = null;
+    }
 
     componentDidMount() {
       // mouse handler setup
@@ -29,12 +29,12 @@ export function withEventHandler(WrappedComponent) {
 
     render() {
 
-      // const {
-        // mode, 
-        // select, move, updateMarker, setMarker, 
-        // addPartAndMarkers, selectPartOrImage, 
-        // deleteSelectedPartAndMarkers,
-        //...passthruProps} = this.props;
+      const {
+        mode, 
+        select, move, updateMarker, setMarker, 
+        addPartAndMarkers, selectPartOrImage, 
+        deleteSelectedPartAndMarkers,
+        ...passthruProps } = this.props;
         
         if (this.mousehandler) {
         this.mousehandler.setMode(this.props.mode);
@@ -42,7 +42,7 @@ export function withEventHandler(WrappedComponent) {
 
 
       return <WrappedComponent
-        {...this.props} 
+        {...passthruProps} 
         handleMouseEvent={ (eventName, evInfo) => 
           this.mousehandler.handleMouseEvent(eventName, evInfo, this.props.resolution) } 
         />
@@ -58,5 +58,7 @@ export function withEventHandler(WrappedComponent) {
     selectPartOrImage: PropTypes.func.isRequired,
     deleteSelectedPartAndMarkers: PropTypes.func.isRequired,
   }
+
+  return WithEventHandler;
 
 }

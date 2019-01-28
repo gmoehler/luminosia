@@ -1,7 +1,6 @@
 /* 
   HOC to support audio/image playing for one channel 
   also updates play progress in channel 
-  and delegates mouse events to mouse handler
 */
 
 import React, { PureComponent } from 'react';
@@ -10,13 +9,9 @@ import extractPeaks from 'webaudio-peaks';
 import memoize from 'memoize-one';
 
 import Playout from '../player/Playout';
-import MouseHandler from '../handler/MouseHandler';
-import { timeToPixels } from './timeToPixels';
-
 
 export function withPlay(WrappedComponent) {
 
-  const WrappedComponentInTime = timeToPixels(WrappedComponent);
 
   class WithPlay extends PureComponent {
 
@@ -25,23 +20,12 @@ export function withPlay(WrappedComponent) {
       this.animationStartTime = null; // start time of progress animation timer, null means not playing
       this.playStartAt = 0; // start of current play
       this.playEndAt = 0; // end of current play
-      this.mousehandler = null;
       this.state = {
         progress: null, // play progress in secs
       };
     }
 
     componentDidMount() {
-      // mouse handler setup
-      this.mousehandler = new MouseHandler({
-        select: this.props.select,
-        move: this.props.move,
-        updateMarker: this.props.updateMarker,
-        setMarker: this.props.setMarker,
-        addPartAndMarkers: this.props.addPartAndMarkers,
-        selectPartOrImage: this.props.selectPartOrImage,
-        deleteSelectedPartAndMarkers: this.props.deleteSelectedPartAndMarkers,
-      });
       // audio setup
       if (this.props.type === "audio") {
         this.playout = null;
@@ -168,10 +152,6 @@ export function withPlay(WrappedComponent) {
 
       const {buffer, mode, sampleRate, ...passthruProps} = this.props;
 
-      if (this.mousehandler) {
-        this.mousehandler.setMode(mode);
-      }
-
       // memoized audio peak data
       const {data, length, bits} = buffer ? this.doExtractPeaks(buffer, sampleRate / this.props.resolution, 16)
         : {
@@ -182,11 +162,10 @@ export function withPlay(WrappedComponent) {
       const peaksDataMono = Array.isArray(data) ? data[0] : []; // only one channel for now
 
       // time to pixel conversion is done in HOC TimeToPixel
-      return <WrappedComponentInTime 
+      return <WrappedComponent 
         {...passthruProps} 
         progress={ this.state.progress } 
-        handleMouseEvent={ (eventName, evInfo) => 
-          this.mousehandler.handleMouseEvent(eventName, evInfo, this.props.resolution) } 
+        handleMouseEvent={this.props.handleMouseEvent } 
         factor={ this.props.resolution / sampleRate } /* req only for images*/ 
         peaks={ peaksDataMono } /* only for audio */ 
         bits={ bits } /* only for audio */ 
