@@ -1,8 +1,7 @@
 import { cloneDeep } from 'lodash';
 import { CLEAR_VIEW, SELECT, SET_RESOLUTION, SET_MODE, 
     SET_MARKER, UPDATE_MARKER, DELETE_MARKER, 
-    SELECT_PART_OR_IMAGE, DESELECT_PART_OR_IMAGE, 
-    CURRENT_IMAGE_FRAME,
+    SELECT_PART_OR_IMAGE, DESELECT_PART_OR_IMAGE
 } from '../actions/types';
 
 const initialState = {
