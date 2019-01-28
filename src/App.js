@@ -20,6 +20,7 @@ import ChannelGroupContainer from './components/ChannelGroupContainer';
 import { Tooltip } from '@material-ui/core';
 import ImageExporter from './components/ImageExporter';
 import AnimationPaneContainer from './components/AnimationPaneContainer';
+import ChannelSelectorContainer from './components/ChannelSelectorContainer';
 
 const drawerWidth = 400;
 
@@ -85,6 +86,10 @@ const styles = theme => ({
     }),
     marginRight: 0,
   },
+  channelPane: {
+    display: 'flex',
+    flexDirection: 'row',
+  }
 });
 
 class App extends React.Component {
@@ -133,7 +138,10 @@ class App extends React.Component {
                           }) }>
           <div className={ classes.drawerHeader } />
           <AnimationPaneContainer drawerWidth={open ? drawerWidth : 0} />
-          <ChannelGroupContainer  drawerWidth={open ? drawerWidth : 0} />
+          <div className={classes.channelPane}>
+            <ChannelSelectorContainer/>
+            <ChannelGroupContainer  drawerWidth={open ? drawerWidth  + 60 : 60} />
+          </div>
           <ImageExporter drawerWidth={open ? drawerWidth : 0} />
         </main>
         <Drawer className={ classes.drawer } variant="persistent" anchor="right" open={ open } 

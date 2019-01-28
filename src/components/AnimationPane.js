@@ -40,14 +40,15 @@ export default class AnimationPane extends PureComponent {
 
 		const t = this.props.progress;
 		if (t && t > 0) {
+			// get the part of the image that happened during the last update interval
 			const expData = getChannelExportData(this.prevTime, t, this.props.sampleRate);
-			const d = expData.data;
 
 			const canvas = document.getElementById("animationPaneCanvas");
 			// canvas.height = 2* (2*this.innerRadius + 60) + 20;
 			const cc = canvas.getContext('2d');
 
 			const oneSampleRad  = samplesToRad(1, this.props.sampleRate, this.state.rotationSpeed);
+			const d = expData.data;
 
 			// TODO if height is higher than 30 assume multiple channels
 

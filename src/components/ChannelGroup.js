@@ -38,8 +38,8 @@ export default class ChannelGroup extends Component {
       .sort((k1, k2) => {
         const data1 = this.props.allChannelsData[k1];
         const data2 = this.props.allChannelsData[k2];
-        const str1 = data1.type + data1.src;
-        const str2 = data2.type + data2.src;
+        const str1 = data1.type + data1.id;
+        const str2 = data2.type + data2.id;
         if (str1 < str2) {
           return -1;
         } else if (str2 > str1) {

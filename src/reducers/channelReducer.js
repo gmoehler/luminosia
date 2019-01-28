@@ -225,6 +225,14 @@ export const getallChannelsData = (state) => {
   return state.channel.byId;
 }
 
+export const getAllChannelsOverview = (state) => {
+  return Object.values(state.channel.byId)
+    .map((channel) => ({
+      id: channel.id,
+      type: channel.type
+    }));
+}
+
 export const getChannelData = (state, channelId) => {
   return state.channel.byId[channelId];
 }
