@@ -94,17 +94,6 @@ export default (state = initialState, action) => {
         selectedPartOrImage: null
       };
 
-    case CURRENT_IMAGE_FRAME:
-      return {
-        ...state,
-        currentById: {
-          ...state.currentById,
-          [action.payload.channelId]: {
-            ...action.payload,
-          }
-        }
-      };
-
     default:
       return state
   }

@@ -5,7 +5,6 @@ import { downloadTextfile, readTextFile, downloadImagefile } from '../utils/file
 import { getConfig } from '../reducers/rootReducer';
 
 import { addChannel, loadAChannel, updateChannelMarkersForLastAddedChannel } from './channelActions';
-import { setCurrentImageFrame } from './viewActions';
 import { addImage, loadImage } from './imageListActions';
 import { getChannelData, getMaxDuration } from '../reducers/channelReducer';
 import { secondsToSamples } from '../utils/conversions';
