@@ -74,7 +74,6 @@ export default class ChannelGroup extends Component {
           buffer: channelData && channelData.buffer,
           parts: channelData.byParts ? Object.values(channelData.byParts) : [],
           scale: windowPixelRatio,
-          setAnimationTime: (time) => this.props.updateCurrentImageFrame(channelId, time, sampleRate),
         }
 
         if (channelData.type === "audio") {
@@ -110,5 +109,4 @@ ChannelGroup.propTypes = {
   setChannelPlayState: PropTypes.func.isRequired,
   move: PropTypes.func.isRequired,
   drawerWidth: PropTypes.number.isRequired,
-  updateCurrentImageFrame: PropTypes.func.isRequired,
 }

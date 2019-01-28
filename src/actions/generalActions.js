@@ -119,24 +119,6 @@ export const exportImageChannel = (channelId) => {
   }
 }
 
-export const updateCurrentImageFrame = (updateInfo => {
-  return (dispatch, getState) => {
-  	// todo: get channel spec image
-    const exportCanvas = document.getElementById("imageExportCanvas");
-    if (exportCanvas) {
-      const exportCc = exportCanvas.getContext('2d');
-      const idx = secondsToSamples(updateInfo.time, updateInfo.sampleRate);
-      const imgData = exportCc.getImageData(idx, 0, 1, 30);
-
-      dispatch(setCurrentImageFrame({
-      	channelId: updateInfo.channelId,
-        data: imgData.data,
-        playTime: updateInfo.time,
-      }));
-    }
-  }
-});
-
 // get image data from export canvas within an interval
 // assuming all selected channels are on the canvas
 // to acoid retreiving the same frame twice
@@ -148,11 +130,9 @@ export const getChannelExportData = ((fromTime, toTime, sampleRate) => {
     const fromIdx = secondsToSamples(fromTime, sampleRate);
     const toIdx = secondsToSamples(toTime, sampleRate, false); // floor
     const width = toIdx-fromIdx;
-    return {
-      width,
-      height: exportCanvas.height,
-      data: exportCc.getImageData(fromIdx, 0, width, 30),
-    };
+    if (width > 0) {
+      return exportCc.getImageData(fromIdx, 0, width, 30);
+    }
   }
   return {
     width: 0,

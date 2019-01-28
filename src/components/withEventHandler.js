@@ -35,7 +35,6 @@ export function withEventHandler(WrappedComponent) {
         this.mousehandler.setMode(this.props.mode);
       }
 
-
       return <WrappedComponent {...passthruProps} handleMouseEvent={ (eventName, evInfo) => this.mousehandler.handleMouseEvent(eventName, evInfo, this.props.resolution) } />
     }
   }

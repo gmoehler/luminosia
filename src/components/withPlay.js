@@ -1,6 +1,7 @@
 /* 
   HOC to support audio/image playing for one channel 
   also updates play progress in channel 
+  and generates the waveform based on the audio data
 */
 
 import React, { PureComponent } from 'react';
@@ -101,10 +102,12 @@ export function withPlay(WrappedComponent) {
     }
 
     animateProgress = (timestamp) => {
+
       if (!this.animationStartTime) {
         this.animationStartTime = timestamp;
       //TODO: sync with playout time
       }
+
 
       const duration = timestamp - this.animationStartTime;
       const currentTimeInSecs = this.animateStartAt + duration / 1000.0;
@@ -113,10 +116,6 @@ export function withPlay(WrappedComponent) {
         ...this.state,
         progress: currentTimeInSecs
       })
-      
-      if (this.props.type === "image") {
-        this.props.setAnimationTime(currentTimeInSecs);
-      }
 
       if (currentTimeInSecs < this.animateEndAt) {
         this.animationRequest = window.requestAnimationFrame(this.animateProgress);
@@ -150,10 +149,10 @@ export function withPlay(WrappedComponent) {
 
     render() {
 
-      const {buffer, mode, sampleRate, ...passthruProps} = this.props;
+      const {buffer, mode, ...passthruProps} = this.props;
 
       // memoized audio peak data
-      const {data, length, bits} = buffer ? this.doExtractPeaks(buffer, sampleRate / this.props.resolution, 16)
+      const {data, length, bits} = buffer ? this.doExtractPeaks(buffer, this.props.sampleRate / this.props.resolution, 16)
         : {
           data: [],
           length: 0,
@@ -166,7 +165,7 @@ export function withPlay(WrappedComponent) {
         {...passthruProps} 
         progress={ this.state.progress } 
         handleMouseEvent={this.props.handleMouseEvent } 
-        factor={ this.props.resolution / sampleRate } /* req only for images*/ 
+        factor={ this.props.resolution / this.props.sampleRate } /* req only for images*/ 
         peaks={ peaksDataMono } /* only for audio */ 
         bits={ bits } /* only for audio */ 
         length={ length } /* only for audio */ />;
@@ -175,14 +174,17 @@ export function withPlay(WrappedComponent) {
   ;
 
   WithPlay.propTypes = {
+    type: PropTypes.oneOf(["audio", "image", "animation"]),
     sampleRate: PropTypes.number.isRequired,
     resolution: PropTypes.number.isRequired,
     playState: PropTypes.oneOf(['stopped', 'playing']).isRequired,
-    selection: PropTypes.object.isRequired,
+    selection: PropTypes.exact({
+      from: PropTypes.number,
+      to: PropTypes.number,
+    }),
     setChannelPlayState: PropTypes.func.isRequired,
     parts: PropTypes.array,
     maxDuration: PropTypes.number,
-    setAnimationTime: PropTypes.func.isRequired,
   }
 
   withPlay.displayName = `WithSubscription(${getDisplayName(WrappedComponent)})`;
