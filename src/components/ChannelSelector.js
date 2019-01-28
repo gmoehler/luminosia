@@ -20,12 +20,17 @@ const styles = () => ({
 
 class CustomizedSwitches extends React.Component {
   state = {
-    checkedA: true,
-    checkedB: true,
+    // channel{ID} = {is deselected}
   };
 
-  handleChange = name => event => {
-    this.setState({ [name]: event.target.checked });
+  handleChange = id => event => {
+    const deselected = !event.target.checked
+    this.setState({ [id]: deselected });
+    if (deselected){
+      this.props.deselectChannel(id);
+    } else {
+      this.props.selectChannel(id);
+    }
   };
 
   render() {
@@ -45,12 +50,12 @@ class CustomizedSwitches extends React.Component {
       })
       .map((channel) => 
         <FormControlLabel
+          key={channel.id}
           className={ classes.switchWrapper }
           control={
-            <Switch
-              checked={this.state.checkedA}
-              onChange={this.handleChange('checkedA')}
-              value="checkedA"
+            <Switch disabled={channel.type === "audio"}
+              checked={!this.state[channel.id]}
+              onChange={this.handleChange(channel.id)}
             />
           }
         />
