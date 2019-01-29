@@ -6,7 +6,7 @@ import { PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL,
 
 import { setMarker, deleteMarker, deselect, selectPartOrImage } from './viewActions';
 
-import { getLastPartId, getLastChannelId } from '../reducers/channelReducer';
+import { getLastPartId, getLastChannelId, getSelectedChannelIds } from '../reducers/channelReducer';
 import { getSelectedPart, getSelectedImage } from '../reducers/viewReducer';
 import { getImageDuration } from '../reducers/imageListReducer';
 import { removeImage } from './imageListActions';
@@ -232,9 +232,10 @@ export const playChannel = () => ({
   type: PLAY_CHANNELS
 });
 
-export const playChannelAndImage = (channelId) => {
+export const playChannelAndImage = () => {
   return (dispatch, getState) => {
-    dispatch(drawExportImage(channelId));
+    getSelectedChannelIds.map((channelId, idx) => 
+      dispatch(drawExportImage(channelId, idx)))
     dispatch(playChannel());
   }
 }

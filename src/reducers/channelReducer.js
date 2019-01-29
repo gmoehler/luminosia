@@ -290,7 +290,7 @@ export const getChannelsConfig = (state) => {
   });
 };
 
-export const getSelectedChannels = (state) => {
+export const getSelectedChannelIds = (state) => {
     return Object.values(state.channel.byId)
       .filter((channel) => channel.selected)
       .map((channel) => channel.id);

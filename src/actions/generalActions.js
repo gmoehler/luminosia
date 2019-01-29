@@ -82,7 +82,7 @@ export const downloadConfig = (() => {
   }
 })
 
-export const drawExportImage = (channelId) => {
+export const drawExportImage = (channelId, idx) => {
   return (dispatch, getState) => {
     const data = getChannelData(getState(), channelId);
     if (data && data.byParts) {
@@ -101,7 +101,7 @@ export const drawExportImage = (channelId) => {
         const img = document.getElementById(part.imageId);
         const offsetPx = part.offset ? secondsToSamples(part.offset, data.sampleRate) : 0;
         const widthPx = part.duration ? secondsToSamples(part.duration, data.sampleRate) : 0;
-        cc.drawImage(img, 0, 0, widthPx, 30,  offsetPx, 0, widthPx, 30);
+        cc.drawImage(img, 0, idx*30, widthPx, 30,  offsetPx, 0, widthPx, 30);
       })
     }
   }

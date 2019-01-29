@@ -38,7 +38,7 @@ export default class ChannelGroup extends Component {
       .map((channelData) => {
 
         const {resolution, ...passthruProps} = this.props;
-        const channelId = channelData.channelId;
+        const channelId = channelData.id;
 
         if (channelData.loading) {
           return null;
