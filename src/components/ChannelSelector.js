@@ -38,16 +38,6 @@ class CustomizedSwitches extends React.Component {
 
     const switches = this.props.channelOverview
     // [{id: 2, type:"image"},{id: 1, type:"audio"},{id: 0, type:"image"}]
-      .sort((k1, k2) => {
-        const str1 = k1.type + k1.id;
-        const str2 = k2.type + k2.id;
-        if (str1 < str2) {
-          return -1;
-        } else if (str2 > str1) {
-          return 1;
-        }
-        return 0;
-      })
       .map((channel) => 
         <FormControlLabel
           key={channel.id}

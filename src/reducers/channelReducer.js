@@ -221,12 +221,23 @@ export function allChannelsStopped(state) {
   return (_allChannelsStopped(state.channel));
 }
 
-export const getallChannelsData = (state) => {
-  return state.channel.byId;
+// channel data sorted by type and id
+export const getAllChannelsData = (state) => {
+  return Object.values(state.channel.byId)
+  .sort((ch1, ch2) => {
+    const str1 = ch1.type + ch1.id;
+    const str2 = ch2.type + ch2.id;
+    if (str1 < str2) {
+      return -1;
+    } else if (str2 > str1) {
+      return 1;
+    }
+    return 0;
+  })
 }
 
 export const getAllChannelsOverview = (state) => {
-  return Object.values(state.channel.byId)
+  return getAllChannelsData(state)
     .map((channel) => ({
       id: channel.id,
       type: channel.type
