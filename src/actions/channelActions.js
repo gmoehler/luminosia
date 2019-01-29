@@ -6,7 +6,7 @@ import { PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL,
 
 import { setMarker, deleteMarker, deselect, selectPartOrImage } from './viewActions';
 
-import { getLastPartId, getLastChannelId, getSelectedChannelIds } from '../reducers/channelReducer';
+import { getLastPartId, getLastChannelId, getSelectedChannelIds, getMaxDuration } from '../reducers/channelReducer';
 import { getSelectedPart, getSelectedImage } from '../reducers/viewReducer';
 import { getImageDuration } from '../reducers/imageListReducer';
 import { removeImage } from './imageListActions';
@@ -23,10 +23,13 @@ export const addChannel = channelInfo => ({
 
 export const addImageChannel = () => {
   return (dispatch, getState) => {
+    const duration = Math.max(10, getMaxDuration(getState()));
     dispatch(addChannel({
       type: "image",
       sampleRate: defaultSampleRate,
       playState: "stopped",
+      selected: true,
+      duration,
     }));
   }
 };
@@ -131,7 +134,9 @@ export const uploadAudioFile = (audioFile, audioContext) => {
           src: audioFile.name,
           offset: 0,
           sampleRate: audioBuffer.sampleRate,
-          buffer: audioBuffer
+          buffer: audioBuffer,
+          duration: audioBuffer.duration,
+          selected: true,
         }
         dispatch(addChannel(channelInfo)); 
       })
@@ -218,7 +223,6 @@ export const deleteSelectedPartAndMarkers = () => {
     }
   }
 }
-
 
 export const deletePart = partInfo => ({
   type: DELETE_PART,

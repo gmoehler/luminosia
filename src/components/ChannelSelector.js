@@ -24,12 +24,12 @@ class CustomizedSwitches extends React.Component {
   };
 
   handleChange = id => event => {
-    const deselected = !event.target.checked
-    this.setState({ [id]: deselected });
-    if (deselected){
-      this.props.deselectChannel(id);
-    } else {
+    const selected = event.target.checked
+    //this.setState({ [id]: deselected });
+    if (selected){
       this.props.selectChannel(id);
+    } else {
+      this.props.deselectChannel(id);
     }
   };
 
@@ -44,7 +44,7 @@ class CustomizedSwitches extends React.Component {
           className={ classes.switchWrapper }
           control={
             <Switch disabled={channel.type === "audio"}
-              checked={!this.state[channel.id]}
+              checked={channel.selected}
               onChange={this.handleChange(channel.id)}
             />
           }

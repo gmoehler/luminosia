@@ -21,13 +21,13 @@ export default (state = initialState, action) => {
     case ADD_CHANNEL:
       const id = state.lastChannelId + 1;
       const lastPartId = action.payload.lastPartId >= 0 ? action.payload.lastPartId : -1;
-      let duration = action.payload.duration;
+      /* let duration = action.payload.duration;
       if (!duration && action.payload.type === "audio" && action.payload.buffer) {
         duration = action.payload.buffer.duration;
       }
       if (!duration) {
-        duration = 10; // set a default start duration of 10s
-      }
+        duration = 10; 
+      } */
       return {
         ...state,
         lastChannelId: id,
@@ -37,8 +37,6 @@ export default (state = initialState, action) => {
             ...action.payload,
             id,
             lastPartId,
-            duration,
-            selected: false,
           }
         }
       };
@@ -240,7 +238,8 @@ export const getAllChannelsOverview = (state) => {
   return getAllChannelsData(state)
     .map((channel) => ({
       id: channel.id,
-      type: channel.type
+      type: channel.type,
+      selected: channel.selected,
     }));
 }
 
