@@ -12,7 +12,7 @@ import { getImageDuration } from '../reducers/imageListReducer';
 import { removeImage } from './imageListActions';
 import { defaultSampleRate } from '../components/ImageListContainer';
 import { readAudioFile } from '../utils/fileUtils';
-import { drawExportImage } from './generalActions';
+import { drawExportImage, clearExportImage } from './generalActions';
 
 // load channel from config
 
@@ -238,7 +238,9 @@ export const playChannel = () => ({
 
 export const playChannelAndImage = () => {
   return (dispatch, getState) => {
-    getSelectedChannelIds.map((channelId, idx) => 
+    const selectedImageChannels = getSelectedChannelIds(getState(), "image");
+    dispatch(clearExportImage(selectedImageChannels.length));
+    selectedImageChannels.map((channelId, idx) => 
       dispatch(drawExportImage(channelId, idx)))
     dispatch(playChannel());
   }

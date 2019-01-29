@@ -82,18 +82,27 @@ export const downloadConfig = (() => {
   }
 })
 
-export const drawExportImage = (channelId, idx) => {
+export const clearExportImage = (numChannels) => {
   return (dispatch, getState) => {
-    const data = getChannelData(getState(), channelId);
-    if (data && data.byParts) {
+    if (numChannels) {
       const maxDuration = getMaxDuration(getState());
       const canvas = document.getElementById("imageExportCanvas");
-      canvas.height = 30;
-      canvas.width =  secondsToSamples(maxDuration, data.sampleRate);
+      canvas.height = numChannels * 30;
+      canvas.width =  secondsToSamples(maxDuration, 100); // TODO: actual sample rate
 
       const cc = canvas.getContext('2d');
       cc.fillStyle = "black";
       cc.fillRect(0,0, canvas.width, canvas.height);
+    }
+  }
+}
+
+export const drawExportImage = (channelId, idx) => {
+  return (dispatch, getState) => {
+    const data = getChannelData(getState(), channelId);
+    if (data && data.byParts) {
+      const canvas = document.getElementById("imageExportCanvas");
+      const cc = canvas.getContext('2d');
 
       Object.keys(data.byParts).forEach((partId) => {
 
