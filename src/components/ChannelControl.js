@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import styled /*, { withTheme } */ from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
-import { Tooltip, IconButton, FormControl, InputLabel, Select, MenuItem, } from '@material-ui/core';
+import { Tooltip, IconButton, MenuItem, } from '@material-ui/core';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 import DeleteIcon from '@material-ui/icons/Delete';
-import DeleteChannelIcon from '@material-ui/icons/DeleteSweep';
 import DownloadConfigIcon from '@material-ui/icons/GetApp';
 import UploadConfigIcon from '@material-ui/icons/Publish';
 import UploadAudioChannelIcon from '@material-ui/icons/QueueMusic';
@@ -12,7 +11,6 @@ import ZoomInIcon from '@material-ui/icons/ZoomIn';
 import ZoomOutIcon from '@material-ui/icons/ZoomOut';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import StopIcon from '@material-ui/icons/Stop';
-import DownloadChannelIcon from '@material-ui/icons/LowPriority';
 
 const ChannelControlWrapper = styled.div`
   display: flex
@@ -96,34 +94,6 @@ export class ChannelControl extends Component {
             </IconButton>
           </Tooltip>
 
-          <FormControl color="inherit" className={classes.formControl}>
-            <InputLabel htmlFor="channelId-select">Channel</InputLabel>
-            <Select 
-              value={this.state.channelId}
-              onChange={this.handleChannelSelectionChange}
-              inputProps={{
-                name: 'channelId',
-                id: 'channelId-select',
-              }}
-            >
-              {channelSelections}
-            </Select>
-          </FormControl>
-
-          <Tooltip title="Export image channel"
-            disabled={!this.state.channelId} >
-            <IconButton color="inherit" onClick={ () => this.props.exportImageChannel(this.state.channelId) }>
-              <DownloadChannelIcon/>
-            </IconButton>
-          </Tooltip>
-
-          <Tooltip title="Delete image channel"
-            disabled={!this.state.channelId} >
-            <IconButton color="inherit" onClick={ () => this.props.deleteChannel(this.state.channelId) }>
-              <DeleteChannelIcon/>
-            </IconButton>
-          </Tooltip>
-
           <Tooltip title="Download show">
             <IconButton color="inherit" onClick={ this.props.downloadConfig }>
               <DownloadConfigIcon/>
@@ -155,12 +125,7 @@ export class ChannelControl extends Component {
             <StopIcon/>
           </IconButton>
         </Tooltip>
-        <Tooltip title="Delete selected">
-          <IconButton disabled={!this.props.selectedImageOrPart} 
-            color="inherit" onClick={ this.props.deleteSelectedPart }>
-            <DeleteIcon/>
-          </IconButton>
-        </Tooltip>
+
         <Tooltip title="Zoom in">
           <IconButton color="inherit" onClick={ this.props.zoomIn }>
             <ZoomInIcon/>
@@ -171,6 +136,12 @@ export class ChannelControl extends Component {
             <ZoomOutIcon/>
           </IconButton>
         </Tooltip>
+        <Tooltip title="Delete selected">
+        <IconButton disabled={!this.props.selectedImageOrPart} 
+          color="inherit" onClick={ this.props.deleteSelectedPart }>
+          <DeleteIcon/>
+        </IconButton>
+      </Tooltip>
       </ChannelControlWrapper>
       );
   }

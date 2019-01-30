@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled /*, { withTheme } */ from 'styled-components';
+import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -10,31 +10,27 @@ import {indigo } from '@material-ui/core/colors/indigo';
 import DownloadChannelIcon from '@material-ui/icons/SaveAlt';
 import DeleteChannelIcon from '@material-ui/icons/DeleteForever';
 
-const ChannelControlWrapper = styled.div`
-  display: flex
-  justify-content: space-between;
-  flex-direction: column;
-  margin: 0;
-  padding: 0;
-  width: 90;
-  background: #3f51b5;
-  height: 90;
-`;
-
-const LowerIcons = styled.div`
-  display: flex;
-  flex-direction: row;
-  margin: 0;
-`;
-
 const styles = () => ({
+  channelControlWrapper: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    flexDirection: 'column',
+    margin: 0,
+    padding: 0,
+    background: 'darkgrey',
+    height: '90px',
+    width: '72px',
+  },
+  wrapperSelected: {
+    background: '#3f51b5',
+  },
   switchWrapper: {
     display: 'flex',
     justifyContent: 'flex-end',
     margin: 0,
     padding: 0,
   },
-  switch: {
+  icon: {
     fill: 'white',
   },
   button: {
@@ -43,8 +39,10 @@ const styles = () => ({
   },
   lowerIcons: {
   	display: 'flex',
-  	flexDirection: 'row',
-  	margin: 0,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    margin: '0 9px 12px 9px',
+    fill: 'white',
   }
 });
 
@@ -64,36 +62,41 @@ class CustomizedSwitches extends React.Component {
 
     const switches = this.props.channelOverview
       .map((channel) => 
-        <ChannelControlWrapper background = {indigo}>
+        <div className={ classNames(
+          classes.channelControlWrapper,
+          channel.selected && classes.wrapperSelected)}
+          background = {indigo}>
           <FormControlLabel
             key={channel.id}
             className={ classes.switchWrapper }
             control={
-              <Switch disabled={channel.type === "audio"}
-                checked={channel.selected}
-                onChange={this.handleChange(channel.id)}
-              />
+              <Tooltip title={channel.selected?"Mute":"Unmute"}>
+                <Switch disabled={channel.type === "audio"}
+                  checked={channel.selected}
+                  onChange={this.handleChange(channel.id)}
+                />
+                </Tooltip>
             }
           />
           <div className={ classes.lowerIcons }>
           <Tooltip title="Export image channel">
-            <IconButton color="inherit" 
+            <IconButton 
               className={ classes.button }
               onClick={ () => this.props.exportImageChannel(channel.id) }>
-              <DownloadChannelIcon/>
+              <DownloadChannelIcon className={classes.icon}/>
             </IconButton>
             </Tooltip>
 
           <Tooltip title="Delete image channel">
-            <IconButton color="inherit" 
+            <IconButton 
               className={ classes.button }
               onClick={ () => this.props.deleteChannel(channel.id) }>
-              <DeleteChannelIcon/>
+              <DeleteChannelIcon className={classes.icon}/>
             </IconButton>
           </Tooltip>
           </div>
 
-        </ChannelControlWrapper>
+        </div>
       );
 
     return (

@@ -65,7 +65,7 @@ const ImageChannelWrapper = styled.div`
   background: ${props => props.theme.imageBackgroundColor};
   width: ${props => props.cssWidth}px;
   height: ${props => props.height}px;
-  border-top: 1px solid darkgray;
+  border: 1px solid ${props => props.borderColor};
 `;
 
 class Channel extends Component {
@@ -162,7 +162,8 @@ class Channel extends Component {
   }
 
   render() {
-    const {parts, imageHeight, scale, progress, cursorPos, selection, markers, theme, maxWidth} = this.props;
+    const {parts, imageHeight, scale, progress, cursorPos, 
+      selection, markers, theme, maxWidth, selected} = this.props;
 
     // loop thru all images/parts
     const allImageCanvases = [];
@@ -253,7 +254,8 @@ class Channel extends Component {
         onKeyDown={ (e) => this.handleMouseEvent(e, "keyDown") } 
         
         cssWidth={ maxWidth } theme={ theme } height={ imageHeight }
-        tabIndex={0}>
+        tabIndex={0}
+        borderColor={selected ? theme.borderColorSelected : theme.borderColor}>
         
         { allCanvasRefImages }
         { allImageCanvases }
@@ -297,6 +299,8 @@ Channel.defaultProps = {
     selectedMarkerColor: 'rgba(255,165, 0, 1)', // orange
     selectionColor: 'rgba(0,0,255,0.5)',
     imageBackgroundColor: 'black',
+    borderColorSelected: '#3f51b5',
+    borderColor: 'darkgrey',
   },
   factor: 1,
   // checking `window.devicePixelRatio` when drawing to canvas.

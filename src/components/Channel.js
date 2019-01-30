@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import styled, { withTheme } from 'styled-components';
 import { getMouseEventPosition } from '../utils/eventUtils';
+import { lightBlue } from '@material-ui/core/colors';
 
 const MAX_CANVAS_WIDTH = 1000;
 
@@ -58,8 +59,9 @@ const ChannelWrapper = styled.div`
   margin: 0;
   padding: 0;
   background: ${props => props.theme.waveOutlineColor};
-  width: ${props => props.cssWidth}px;
+  width: ${props => props.cssWidth + 2}px;
   height: ${props => props.waveHeight}px;
+  border: 1px solid ${props => props.borderColor}; 
 `;
 
 class Channel extends Component {
@@ -132,7 +134,8 @@ class Channel extends Component {
   }
 
   render() {
-    const {length, waveHeight, scale, progress, cursorPos, selection, markers, theme, offset} = this.props;
+    const {length, waveHeight, scale, progress, cursorPos, 
+      selection, markers, theme, offset, selected} = this.props;
 
     let totalWidth = length;
     let waveformCount = 0;
@@ -178,10 +181,22 @@ class Channel extends Component {
       }
       ) : null;
 
+    const borderColor = selected ? theme.borderColorSelected : theme.borderColor;
 
     return (
-      <ChannelWrapper className='ChannelWrapper' onMouseDown={ (e) => this.handleMouseEvent(e, "mouseDown") } onMouseUp={ (e) => this.handleMouseEvent(e, "mouseUp") } onMouseMove={ (e) => this.handleMouseEvent(e, "mouseMove") } onMouseLeave={ (e) => this.handleMouseEvent(e, "mouseLeave") }
-        cssWidth={ length } theme={ theme } waveHeight={ waveHeight }>
+      <ChannelWrapper 
+        className='ChannelWrapper' 
+        onMouseDown={ (e) => this.handleMouseEvent(e, "mouseDown") } 
+        onMouseUp={ (e) => this.handleMouseEvent(e, "mouseUp") } 
+        onMouseMove={ (e) => this.handleMouseEvent(e, "mouseMove") } 
+        onMouseLeave={ (e) => this.handleMouseEvent(e, "mouseLeave") }
+
+        cssWidth={ length } 
+        theme={ theme } 
+        waveHeight={ waveHeight }
+
+        borderColor={borderColor}>
+
         <WaveformCanvases className='WaveformCanvases' theme={ theme } offset={offset} >
           { waveforms }
         </WaveformCanvases>
@@ -208,6 +223,8 @@ Channel.defaultProps = {
     insertMarkerColor: 'rgba(255,165, 0, 0.5)', // transparent orange
     selectedMarkerColor: 'rgba(255,165, 0, 1)', // orange
     selectionColor: 'rgba(0,0,255,0.5)',
+    borderColorSelected: '#3f51b5',
+    borderColor: 'darkgrey',
   },
   // checking `window.devicePixelRatio` when drawing to canvas.
   scale: 1,
