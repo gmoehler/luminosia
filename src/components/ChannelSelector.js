@@ -12,12 +12,13 @@ import DeleteChannelIcon from '@material-ui/icons/DeleteSweep';
 
 const ChannelControlWrapper = styled.div`
   display: flex
-  justify-content: center;
+  justify-content: space-between;
   flex-direction: column;
   margin: 0;
   padding: 0;
   width: 62;
   background: #3f51b5;
+  height: 90;
 `;
 
 const styles = () => ({
