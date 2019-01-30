@@ -139,7 +139,7 @@ export const getChannelExportData = ((fromTime, toTime, sampleRate) => {
     const toIdx = secondsToSamples(toTime, sampleRate, false); // floor
     const width = toIdx-fromIdx;
     if (width > 0) {
-      return exportCc.getImageData(fromIdx, 0, width, 30);
+      return exportCc.getImageData(fromIdx, 0, width, exportCanvas.height);
     }
   }
   return {

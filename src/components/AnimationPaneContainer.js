@@ -22,7 +22,11 @@ class AnimationPaneContainer extends Component {
   render() {
 
     return (
-      <AnimationPaneWithPlay sampleRate={ 100 } resolution={ 2 } type="animation" setChannelPlayState={ this.setChannelPlayState } {...this.props}
+      <AnimationPaneWithPlay 
+        sampleRate={ 100 } 
+        resolution={ 2 } 
+        type="animation" 
+        setChannelPlayState={ this.setChannelPlayState } {...this.props}
       />
       );
   }
@@ -31,7 +35,7 @@ class AnimationPaneContainer extends Component {
 const mapStateToProps = state => ({
   playState: allChannelsStopped(state) ? "stopped" : "playing",
   current: getCurrent(state),
-  selectedChannels: getSelectedChannelIds(state),
+  selectedChannels: getSelectedChannelIds(state, "image"),
   selection: getSelectionRange(state),
   maxDuration: getMaxDuration(state),
 });
