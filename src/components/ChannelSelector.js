@@ -7,8 +7,8 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import { Tooltip, IconButton } from '@material-ui/core';
 import {indigo } from '@material-ui/core/colors/indigo';
-import DownloadChannelIcon from '@material-ui/icons/LowPriority';
-import DeleteChannelIcon from '@material-ui/icons/DeleteSweep';
+import DownloadChannelIcon from '@material-ui/icons/SaveAlt';
+import DeleteChannelIcon from '@material-ui/icons/DeleteForever';
 
 const ChannelControlWrapper = styled.div`
   display: flex
@@ -16,9 +16,15 @@ const ChannelControlWrapper = styled.div`
   flex-direction: column;
   margin: 0;
   padding: 0;
-  width: 62;
+  width: 90;
   background: #3f51b5;
   height: 90;
+`;
+
+const LowerIcons = styled.div`
+  display: flex;
+  flex-direction: row;
+  margin: 0;
 `;
 
 const styles = () => ({
@@ -29,11 +35,16 @@ const styles = () => ({
     padding: 0,
   },
   switch: {
-    transform: 'rotate(-90deg)'
+    fill: 'white',
   },
   button: {
     padding: 0,
     margin: 0,
+  },
+  lowerIcons: {
+  	display: 'flex',
+  	flexDirection: 'row',
+  	margin: 0,
   }
 });
 
@@ -64,6 +75,7 @@ class CustomizedSwitches extends React.Component {
               />
             }
           />
+          <div className={ classes.lowerIcons }>
           <Tooltip title="Export image channel">
             <IconButton color="inherit" 
               className={ classes.button }
@@ -79,6 +91,7 @@ class CustomizedSwitches extends React.Component {
               <DeleteChannelIcon/>
             </IconButton>
           </Tooltip>
+          </div>
 
         </ChannelControlWrapper>
       );
