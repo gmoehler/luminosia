@@ -29,31 +29,17 @@ export default class ChannelGroup extends Component {
   render() {
 
     // no data: nothing to do
-    if (!Object.keys(this.props.allChannelsData).length) {
+    if (!this.props.allChannelsData.length) {
       return null;
     }
 
-    // we have data: audio first, image second, then by source
-    const keys = Object.keys(this.props.allChannelsData)
-      .sort((k1, k2) => {
-        const data1 = this.props.allChannelsData[k1];
-        const data2 = this.props.allChannelsData[k2];
-        const str1 = data1.type + data1.src;
-        const str2 = data2.type + data2.src;
-        if (str1 < str2) {
-          return -1;
-        } else if (str2 > str1) {
-          return 1;
-        }
-        return 0;
-      })
-    const channelComponents = keys
-      .map((channelId) => {
+    // we have data sorted by type and id
+    const channelComponents = this.props.allChannelsData
+      .map((channelData) => {
 
-        // get channel data
-        const {allChannelsData, resolution, ...passthruProps} = this.props;
+        const {resolution, ...passthruProps} = this.props;
+        const channelId = channelData.id;
 
-        const channelData = allChannelsData[channelId];
         if (channelData.loading) {
           return null;
         }
@@ -69,6 +55,7 @@ export default class ChannelGroup extends Component {
           type: channelData.type,
           playState: channelData.playState,
           offset: channelData.offset,
+          selected: channelData.selected,
           sampleRate,
           resolution,
           buffer: channelData && channelData.buffer,
@@ -104,7 +91,7 @@ export default class ChannelGroup extends Component {
 }
 
 ChannelGroup.propTypes = {
-  allChannelsData: PropTypes.object, // data of all channels
+  allChannelsData: PropTypes.array, // data of all channels
   resolution: PropTypes.number,
   setChannelPlayState: PropTypes.func.isRequired,
   move: PropTypes.func.isRequired,

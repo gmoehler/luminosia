@@ -7,7 +7,6 @@ const ImageExporterWrapper = styled.div`
 `;
 
 const ImageExporterCanvas = styled.canvas`
-	height: 30px;
 	overflow: auto;
 	flex-wrap: wrap;
 `;

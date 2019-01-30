@@ -21,13 +21,13 @@ export default (state = initialState, action) => {
     case ADD_CHANNEL:
       const id = state.lastChannelId + 1;
       const lastPartId = action.payload.lastPartId >= 0 ? action.payload.lastPartId : -1;
-      let duration = action.payload.duration;
+      /* let duration = action.payload.duration;
       if (!duration && action.payload.type === "audio" && action.payload.buffer) {
         duration = action.payload.buffer.duration;
       }
       if (!duration) {
-        duration = 10; // set a default start duration of 10s
-      }
+        duration = 10; 
+      } */
       return {
         ...state,
         lastChannelId: id,
@@ -37,8 +37,6 @@ export default (state = initialState, action) => {
             ...action.payload,
             id,
             lastPartId,
-            duration,
-            selected: false,
           }
         }
       };
@@ -221,8 +219,28 @@ export function allChannelsStopped(state) {
   return (_allChannelsStopped(state.channel));
 }
 
-export const getallChannelsData = (state) => {
-  return state.channel.byId;
+// channel data sorted by type and id
+export const getAllChannelsData = (state) => {
+  return Object.values(state.channel.byId)
+  .sort((ch1, ch2) => {
+    const str1 = ch1.type + ch1.id;
+    const str2 = ch2.type + ch2.id;
+    if (str1 < str2) {
+      return -1;
+    } else if (str2 > str1) {
+      return 1;
+    }
+    return 0;
+  })
+}
+
+export const getAllChannelsOverview = (state) => {
+  return getAllChannelsData(state)
+    .map((channel) => ({
+      id: channel.id,
+      type: channel.type,
+      selected: channel.selected,
+    }));
 }
 
 export const getChannelData = (state, channelId) => {
@@ -261,7 +279,7 @@ export const getMaxDuration = (state) => {
 // saving the config will return this channel information
 // array of all channels with a given list of keys (e.g. not including audio buffer)
 export const getChannelsConfig = (state) => {
-  const allowedProps = ["type", "names", "src", "sampleRate", "offset"];
+  const allowedProps = ["type", "names", "src", "sampleRate", "offset", "selected", "duration"];
   const propsToArray = {
     "byParts": "parts"
   };
@@ -271,8 +289,8 @@ export const getChannelsConfig = (state) => {
   });
 };
 
-export const getSelectedChannels = (state) => {
+export const getSelectedChannelIds = (state, type) => {
     return Object.values(state.channel.byId)
-      .filter((channel) => channel.selected)
+      .filter((channel) => channel.selected && (!type || channel.type === type))
       .map((channel) => channel.id);
 }
