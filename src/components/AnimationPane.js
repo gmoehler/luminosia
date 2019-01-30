@@ -34,7 +34,6 @@ export default class AnimationPane extends PureComponent {
 		const centerY = this.margin + largestRadius;
 
 		cc.beginPath();
-		// 2 arcs because of double size
 		cc.arc(centerX , centerY, resolution*radius, fromRad, toRad, false);
 		cc.strokeStyle = color;
 		cc.lineWidth = 2;
@@ -45,10 +44,9 @@ export default class AnimationPane extends PureComponent {
 
 		const {progress, sampleRate, selectedChannels } = this.props;
 
-		const t = progress;
-		if (t && t > 0) {
+		if (progress && progress > 0) {
 			// get the part of the image that happened during the last update interval
-			const expData = getChannelExportData(this.prevTime, t, sampleRate);
+			const expData = getChannelExportData(this.prevTime, progress, sampleRate);
 
 			const canvas = document.getElementById("animationPaneCanvas");
 			// canvas.height = 2* (2*this.innerRadius + 60) + 20;
@@ -74,7 +72,7 @@ export default class AnimationPane extends PureComponent {
 					}
 					this.prevRad = toRad;
 			}
-			this.prevTime = t;
+			this.prevTime = progress;
 	}
 }
 	
@@ -88,18 +86,17 @@ export default class AnimationPane extends PureComponent {
 
   render() {
 
+		const {drawerWidth, selectedChannels, resolution} = this.props;
     return (
 			<AnimationPaneWrapper
-					drawerWidth = {this.props.drawerWidth}>
+					drawerWidth = {drawerWidth}>
 					<AnimationCanvas 
 						id = "animationPaneCanvas" 
-						canvasHeight = {2*(2*this.innerRadius + 60) + 20}
-						width = {this.props.selectedChannels.length * this.props.resolution * 80}/>
+						height = {resolution * 80}
+						width = {selectedChannels.length * resolution * 80}/>
       </AnimationPaneWrapper>
     )
 	}
-
-
 }
 
 AnimationPane.propTypes = {

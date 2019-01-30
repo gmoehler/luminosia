@@ -140,7 +140,7 @@ class App extends React.Component {
           <AnimationPaneContainer drawerWidth={open ? drawerWidth : 0} />
           <div className={classes.channelPane}>
             <ChannelSelectorContainer/>
-            <ChannelGroupContainer  drawerWidth={open ? drawerWidth  + 60 : 60} />
+            <ChannelGroupContainer  drawerWidth={open ? drawerWidth  + 62 : 62} />
           </div>
           <ImageExporter drawerWidth={open ? drawerWidth : 0} />
         </main>
