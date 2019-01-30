@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styled /*, { withTheme } */ from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
-import { Tooltip, IconButton, MenuItem, } from '@material-ui/core';
+import { Tooltip, IconButton } from '@material-ui/core';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 import DeleteIcon from '@material-ui/icons/Delete';
 import DownloadConfigIcon from '@material-ui/icons/GetApp';
@@ -66,12 +66,6 @@ export class ChannelControl extends Component {
   }
 
   render() {
-
-    const { classes } = this.props;
-
-    const channelSelections = this.props.channelIds.map((channelId) => 
-      <MenuItem key={channelId} value={channelId}>{channelId}</MenuItem>
-    )
 
     return (
       <ChannelControlWrapper>

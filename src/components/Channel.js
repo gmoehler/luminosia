@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import styled, { withTheme } from 'styled-components';
 import { getMouseEventPosition } from '../utils/eventUtils';
-import { lightBlue } from '@material-ui/core/colors';
 
 const MAX_CANVAS_WIDTH = 1000;
 
