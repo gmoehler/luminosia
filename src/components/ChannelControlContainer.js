@@ -13,70 +13,12 @@ const audioContext = new window.AudioContext();
 
 const resolutions = [4000, 2000, 1000, 500, 250, 125, 80, 40, 20, 10, 5]; // in pixels / sec
 const defaultResolutionIdx = 6;
-const imageSampleRate = 100; // one image frame is 10ms
-
-const channels = [
-  {
-    src: 'media/audio/Vocals30.mp3',
-    name: 'Vocals',
-    type: 'audio',
-    offset: 2.0,
-    cuein: 5.918,
-    cueout: 14.5,
-  },
-  {
-    src: 'media/audio/BassDrums30.mp3',
-    name: 'Drums',
-    type: 'audio',
-    offset: 2.2,
-    soloed: false,
-  },
-  {
-    name: 'Channel 1 with images',
-    type: 'image',
-    sampleRate: imageSampleRate,
-    parts: [{
-      src: 'media/image/mostlyStripes.png',
-      offset: 1.75,
-      cuein: 0.5, // in secs
-      cueout: 1.47, // in secs
-    },
-    {
-      src: 'media/image/blueLine.png',
-      offset: 3.75,
-      cuein: 0.5, // in secs
-      cueout: 1.47, // in secs
-    }],
-  },
-]
-
-const images = [
-  {
-    src: 'media/image/mostlyStripes.png',
-    sampleRate: imageSampleRate,
-  },
-  {
-    src: 'media/image/blueLine.png',
-    sampleRate: imageSampleRate,
-  },
-];
-
-const initConfig = {
-  sampleRate: imageSampleRate, 
-  images,
-  channels,
-} 
 
 class ChannelControlContainer extends Component {
 
   constructor(props) {
     super(props);
     this.resolutionIdx = defaultResolutionIdx;
-  }
-
-  doInit = (event) => {
-    this.resetZoom();
-    this.props.uploadConfigAction(initConfig);
   }
   
   deleteSelectedPart = () => {

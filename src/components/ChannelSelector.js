@@ -62,12 +62,12 @@ class CustomizedSwitches extends React.Component {
 
     const switches = this.props.channelOverview
       .map((channel) => 
-        <div className={ classNames(
+        <div key={channel.id}
+          className={ classNames(
           classes.channelControlWrapper,
           channel.selected && classes.wrapperSelected)}
           background = {indigo}>
           <FormControlLabel
-            key={channel.id}
             className={ classes.switchWrapper }
             control={
               <Tooltip title={channel.selected?"Mute":"Unmute"}>
