@@ -9,7 +9,7 @@ import { getChannelIds, allChannelsStopped } from '../reducers/channelReducer';
 import { getSelectedImage, getSelectedPart } from '../reducers/viewReducer';
 
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
-const audioContext = new window.AudioContext();
+const audioContext = window.AudioContext && new window.AudioContext();
 
 const resolutions = [4000, 2000, 1000, 500, 250, 125, 80, 40, 20, 10, 5]; // in pixels / sec
 const defaultResolutionIdx = 6;
