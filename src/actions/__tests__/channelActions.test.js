@@ -41,4 +41,55 @@ describe('actions', () => {
 
   });
 
+  it('should delete a channel', () => {
+    const expectedAction = {
+      type: types.DELETE_CHANNEL,
+      payload: 2
+    }
+    expect(actions.deleteChannel(2)).toEqual(expectedAction)
+  });
+
+  it('should clear all channels', () => {
+    const expectedAction = {
+      type: types.CLEAR_CHANNELS
+    }
+    expect(actions.clearChannels()).toEqual(expectedAction)
+  });
+
+  it('should select a channel', () => {
+    const expectedAction = {
+      type: types.SELECT_CHANNEL,
+      payload: 2
+    }
+    expect(actions.selectChannel(2)).toEqual(expectedAction)
+  });
+
+  it('should deselect a channel', () => {
+    const expectedAction = {
+      type: types.DESELECT_CHANNEL,
+      payload: 2
+    }
+    expect(actions.deselectChannel(2)).toEqual(expectedAction)
+  });
+
+
+it('should upload an audio file and create channel', () => {
+    const expectedAction = {
+        type: types.ADD_CHANNEL,
+        payload: initialImageChannel
+    }
+    const store = mockStore({
+      channel: {
+        byId: {},
+        lastChannelId: -1
+      }
+    });
+    store.dispatch(actions.createImageChannel());
+    const acts = store.getActions();
+    expect(acts[0]).toEqual(expectedAction);
+
+  });
+
+
+
 })

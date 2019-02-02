@@ -66,8 +66,10 @@ export const uploadConfig = (configData, audioContext) => {
         // load all channels
         const channelPromises = configData.channels.map((channelData) => loadAChannel(channelData, audioContext, getState())
           .then((channelInfo) => {
-            dispatch(addChannel(channelInfo));
-            dispatch(updateChannelMarkersForLastAddedChannel(channelInfo)); // TODO: channelInfo does not know the channel id here...
+            if (channelInfo) { // audio channels are not loaded yet
+              dispatch(addChannel(channelInfo));
+              dispatch(updateChannelMarkersForLastAddedChannel(channelInfo)); // TODO: channelInfo does not know the channel id here...
+            }
           }));
 
         return Promise.all(channelPromises);
@@ -82,6 +84,7 @@ export const downloadConfig = (() => {
   }
 })
 
+// clear export image section (make black) 
 export const clearExportImage = (numChannels) => {
   return (dispatch, getState) => {
     if (numChannels) {
@@ -97,6 +100,7 @@ export const clearExportImage = (numChannels) => {
   }
 }
 
+// draw a channel to the export at position idx
 export const drawExportImage = (channelId, idx) => {
   return (dispatch, getState) => {
     const data = getChannelData(getState(), channelId);
@@ -116,6 +120,7 @@ export const drawExportImage = (channelId, idx) => {
   }
 }
 
+// export one channel
 export const exportImageChannel = (channelId) => {
   return (dispatch, getState) => {
     dispatch(drawExportImage(channelId));
@@ -127,7 +132,7 @@ export const exportImageChannel = (channelId) => {
   }
 }
 
-// get image data from export canvas within an interval
+// during animation: get image data from export canvas within an interval
 // assuming all selected channels are on the canvas
 // to acoid retreiving the same frame twice
 // we use ceil on the start idx and floor on the end idx

@@ -1,5 +1,3 @@
-import LoaderFactory from '../loader/LoaderFactory'
-
 import { PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL, 
   ADD_PART, DELETE_PART, ADD_CHANNEL, CLEAR_CHANNELS, UPLOAD_AUDIO_STARTED, UPLOAD_AUDIO_SUCCESS, UPLOAD_AUDIO_FAILURE, DELETE_CHANNEL, SELECT_CHANNEL, DESELECT_CHANNEL
 } from './types';
@@ -56,7 +54,6 @@ export const deselectChannel = (channelInfo) => ({
   payload: channelInfo
 });
 
-
 const uploadAudioStarted = startInfo => ({
   type: UPLOAD_AUDIO_STARTED,
   payload: startInfo
@@ -72,15 +69,10 @@ const uploadAudioFailure = errorInfo => ({
   payload: errorInfo
 });
 
-function loadChannelFromFile(channelSource, audioContext) {
-  const loader = LoaderFactory.createLoader(channelSource, audioContext);
-  return loader.load();
-};
-
-// load a channel based on a channel config
+// helper function (no action): load a channel based on a channel config
 export function loadAChannel(channelConfig, audioContext, state) {
   if (channelConfig.type === "audio") {
-    return loadWaveChannel(channelConfig, audioContext);
+    return Promise.resolve(); // audio channels are curr. not loaded from config
   }
   return loadImageChannel(channelConfig, state);
 }
@@ -110,20 +102,7 @@ function loadImageChannel(channelConfig, state) {
   })
 }
 
-// load wave channel from static content
-function loadWaveChannel(channelConfig, audioContext) {
-  return loadChannelFromFile(channelConfig.src, audioContext)
-    .then((buf) => {
-      return {
-        type: "audio",
-        playState: "stopped",
-        sampleRate: buf.sampleRate,
-        buffer: buf,
-        ...channelConfig
-      }
-    })
-}
-
+// load audio file to studio
 export const uploadAudioFile = (audioFile, audioContext) => {
   return (dispatch, getState) => {
     dispatch(uploadAudioStarted());
@@ -194,7 +173,8 @@ export const addPartAndMarkers = (partInfo) => {
       type: "normal"
     }));
     dispatch(deleteMarker({
-      markerId: "insert"})); 
+      markerId: "insert" 
+    })); 
       
     // select the new part
     const lastPart = {...partInfo};
