@@ -35,7 +35,7 @@ const styles = theme => ({
 });
 
 export class ChannelControl extends Component {
-  
+
   constructor(props) {
     super(props);
     this.state = {
@@ -59,12 +59,16 @@ export class ChannelControl extends Component {
       this.props.deselectChannel(this.state[event.target.name]);
     }
     this.props.selectChannel(channelId);
-    this.setState({ [event.target.name]: channelId });
+    this.setState({
+      [event.target.name]: channelId
+    });
   };
 
   componentDidUpdate() {
-    if (this.state.channelId && !this.props.channelIds.includes(this.state.channelId)){
-      this.setState({channelId: this.props.channelIds[0]});
+    if (this.state.channelId && !this.props.channelIds.includes(this.state.channelId)) {
+      this.setState({
+        channelId: this.props.channelIds[0]
+      });
     }
   }
 
@@ -72,81 +76,59 @@ export class ChannelControl extends Component {
 
     return (
       <ChannelControlWrapper>
-        <div style={{margin: "0 10px"}}>
-        <input 
-          type="file" 
-          accept="audio/*"
-          hidden 
-          ref={(fileUpload) => this.fileUpload = fileUpload }
-          onChange={this.uploadAudioFile} width={0} 
-        />
-        <Tooltip title="Load audio">
-          <IconButton  color="inherit" onClick={() => this.fileUpload.click()}>
-            <UploadAudioChannelIcon />
-          </IconButton>
-        </Tooltip>
-
-        <Tooltip title="Add image channel">
-          <IconButton color="inherit" onClick={ this.props.addImageChannel }>
-            <PlaylistAddIcon/>
-          </IconButton>
-        </Tooltip>
-
-        <Tooltip title="Load show">
-          <IconButton  color="inherit" onClick={() => this.showUpload.click()}>
-            <UploadConfigIcon />
-          </IconButton>
-        </Tooltip>
-        <input 
-          type="file" 
-          hidden 
-          ref={(showUpload) => this.showUpload = showUpload }
-          onChange={this.uploadConfigFile} width={0} 
-        />
-        
-        <Tooltip title="Download show">
-          <IconButton color="inherit" onClick={ this.props.downloadConfig }>
-            <DownloadConfigIcon/>
-          </IconButton>
-        </Tooltip>
-
+        <div style={ { margin: "0 10px" } }>
+          <input type="file" accept="audio/*" hidden ref={ (fileUpload) => this.fileUpload = fileUpload } onChange={ this.uploadAudioFile } width={ 0 } />
+          <Tooltip title="Load audio">
+            <IconButton color="inherit" onClick={ () => this.fileUpload.click() }>
+              <UploadAudioChannelIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Add image channel">
+            <IconButton color="inherit" onClick={ this.props.createImageChannel }>
+              <PlaylistAddIcon/>
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Load show">
+            <IconButton color="inherit" onClick={ () => this.showUpload.click() }>
+              <UploadConfigIcon />
+            </IconButton>
+          </Tooltip>
+          <input type="file" hidden ref={ (showUpload) => this.showUpload = showUpload } onChange={ this.uploadConfigFile } width={ 0 } />
+          <Tooltip title="Download show">
+            <IconButton color="inherit" onClick={ this.props.downloadConfig }>
+              <DownloadConfigIcon/>
+            </IconButton>
+          </Tooltip>
         </div>
-        <div style={{margin: "0 10px"}}>
-
-        <Tooltip title="Play"
-          disabled={!this.props.enablePlay} >
-          <IconButton color="inherit" onClick={ () => this.props.playChannelAndImage(this.state.channelId) }>
-            <PlayArrowIcon/>
-          </IconButton>
-        </Tooltip>
-
-        <Tooltip title="Stop"
-          disabled={!this.props.enableStop} >
-          <IconButton color="inherit" onClick={ this.props.stopChannel }>
-            <StopIcon/>
-          </IconButton>
-        </Tooltip>
-
+        <div style={ { margin: "0 10px" } }>
+          <Tooltip title="Play" disabled={ !this.props.enablePlay }>
+            <IconButton color="inherit" onClick={ () => this.props.playChannelAndImage(this.state.channelId) }>
+              <PlayArrowIcon/>
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Stop" disabled={ !this.props.enableStop }>
+            <IconButton color="inherit" onClick={ this.props.stopChannel }>
+              <StopIcon/>
+            </IconButton>
+          </Tooltip>
         </div>
-        <div style={{margin: "0 10px"}}>
-
-        <Tooltip title="Zoom in">
-          <IconButton color="inherit" onClick={ this.props.zoomIn }>
-            <ZoomInIcon/>
-          </IconButton>
-        </Tooltip>
-        <Tooltip title="Zoom out">
-          <IconButton color="inherit" onClick={ this.props.zoomOut }>
-            <ZoomOutIcon/>
-          </IconButton>
-        </Tooltip>
-        <Tooltip title="Delete selected">
-        <IconButton disabled={!this.props.selectedImageOrPart} 
-          color="inherit" onClick={ this.props.deleteSelectedPart }>
-          <DeleteIcon/>
-        </IconButton>
-      </Tooltip>
-      </div>
+        <div style={ { margin: "0 10px" } }>
+          <Tooltip title="Zoom in">
+            <IconButton color="inherit" onClick={ this.props.zoomIn }>
+              <ZoomInIcon/>
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Zoom out">
+            <IconButton color="inherit" onClick={ this.props.zoomOut }>
+              <ZoomOutIcon/>
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Delete selected">
+            <IconButton disabled={ !this.props.selectedImageOrPart } color="inherit" onClick={ this.props.deleteSelectedPart }>
+              <DeleteIcon/>
+            </IconButton>
+          </Tooltip>
+        </div>
       </ChannelControlWrapper>
       );
   }

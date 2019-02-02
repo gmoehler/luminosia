@@ -21,14 +21,17 @@ export const addChannel = channelInfo => ({
   payload: channelInfo
 });
 
-export const addImageChannel = () => {
+// create an empty image channel
+export const createImageChannel = () => {
   return (dispatch, getState) => {
+    // we extend the duration to the longest channel
     const duration = Math.max(10, getMaxDuration(getState()));
+    // add required fields
     dispatch(addChannel({
       type: "image",
       sampleRate: defaultSampleRate,
-      playState: "stopped",
       selected: true,
+      playState: "stopped",
       duration,
     }));
   }
