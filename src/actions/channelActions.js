@@ -55,13 +55,11 @@ export const deselectChannel = (channelInfo) => ({
 });
 
 const uploadAudioStarted = startInfo => ({
-  type: UPLOAD_AUDIO_STARTED,
-  payload: startInfo
+  type: UPLOAD_AUDIO_STARTED
 });
 
 const uploadAudioSuccess = channelInfo => ({
-  type: UPLOAD_AUDIO_SUCCESS,
-  payload: channelInfo
+  type: UPLOAD_AUDIO_SUCCESS
 });
 
 const uploadAudioFailure = errorInfo => ({
@@ -120,9 +118,11 @@ export const uploadAudioFile = (audioFile, audioContext) => {
           duration: audioBuffer.duration,
           selected: true,
         }
+        console.log(channelInfo);
         dispatch(addChannel(channelInfo)); 
+        dispatch(uploadAudioSuccess());
+        console.log("done");
       })
-      .then(dispatch(uploadAudioSuccess()))
       .catch(err => {
         console.error(err);
         return dispatch(uploadAudioFailure({
