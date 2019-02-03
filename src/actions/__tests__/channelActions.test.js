@@ -75,7 +75,7 @@ describe('actions', () => {
 
 it('should upload an audio file and create channel', () => {
     const expectedAction = {
-        type: types.ADD_CHANNEL,
+        type: types.UPLOAD_AUDIO_STARTED,
         payload: initialImageChannel
     }
     const store = mockStore({
@@ -84,7 +84,7 @@ it('should upload an audio file and create channel', () => {
         lastChannelId: -1
       }
     });
-    store.dispatch(actions.createImageChannel());
+    store.dispatch(actions.uploadAudioFile());
     const acts = store.getActions();
     expect(acts[0]).toEqual(expectedAction);
 
