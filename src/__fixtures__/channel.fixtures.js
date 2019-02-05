@@ -44,7 +44,7 @@ export const imageChannelState = {
         duration: 21.21,
         selected: true,
         lastPartId: 1,
-        byParts: {
+        byPartId: {
           1: {
             offset: 3.3,
             duration: 11.21,

@@ -1,6 +1,4 @@
-import { PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL, 
-  ADD_PART, DELETE_PART, ADD_CHANNEL, CLEAR_CHANNELS, UPLOAD_AUDIO_STARTED, UPLOAD_AUDIO_SUCCESS, UPLOAD_AUDIO_FAILURE, DELETE_CHANNEL, SELECT_CHANNEL, DESELECT_CHANNEL
-} from './types';
+import { PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL, ADD_PART, DELETE_PART, ADD_CHANNEL, CLEAR_CHANNELS, UPLOAD_AUDIO_STARTED, UPLOAD_AUDIO_SUCCESS, UPLOAD_AUDIO_FAILURE, DELETE_CHANNEL, SELECT_CHANNEL, DESELECT_CHANNEL} from './types';
 
 import { setMarker, deleteMarker, deselect, selectPartOrImage } from './viewActions';
 
@@ -98,7 +96,7 @@ function loadImageChannel(channelConfig, state) {
 
   return Promise.resolve({
     ...channelConfig,
-    byParts: normalizedParts
+    byPartId: normalizedParts
   })
 }
 
@@ -141,9 +139,9 @@ export const updateChannelMarkersForLastAddedChannel = () => {
     if (lastChannel) {
       const channelId = lastChannel.channelId;
 
-      Object.keys(lastChannel.byParts).forEach((partId) => {
+      Object.keys(lastChannel.byPartId).forEach((partId) => {
 
-        const part = lastChannel.byParts[partId];
+        const part = lastChannel.byPartId[partId];
         dispatch(setMarker({
           markerId: `${channelId}-${partId}-l`,
           pos: part.offset,

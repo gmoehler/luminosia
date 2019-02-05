@@ -24,8 +24,8 @@ const ImageChannelWithPlay = withEventHandler(withPlay(timeToPixels(ImageChannel
 // contains multiple AudioChannels
 export default class ChannelGroup extends Component {
 
-  
-  
+
+
   render() {
 
     // no data: nothing to do
@@ -59,31 +59,23 @@ export default class ChannelGroup extends Component {
           sampleRate,
           resolution,
           buffer: channelData && channelData.buffer,
-          parts: channelData.byParts ? Object.values(channelData.byParts) : [],
+          parts: channelData.byPartId ? Object.values(channelData.byPartId) : [],
           scale: windowPixelRatio,
         }
 
         if (channelData.type === "audio") {
           return (
-						<AudioChannelWithPlay 
-							{...channelProps} 
-							setChannelPlayState={ playState => this.props.setChannelPlayState(channelId, playState) } 
-						/>);
+            <AudioChannelWithPlay {...channelProps} setChannelPlayState={ playState => this.props.setChannelPlayState(channelId, playState) } />);
         }
 
         return (
-          <ImageChannelWithPlay 
-            {...channelProps} 
-            setChannelPlayState={ playState => this.props.setChannelPlayState(channelId, playState) } 
-            move={ (partId, incr) => this.props.move(channelId, partId, incr) } 
-          />);
+          <ImageChannelWithPlay {...channelProps} setChannelPlayState={ playState => this.props.setChannelPlayState(channelId, playState) } move={ (partId, incr) => this.props.move(channelId, partId, incr) } />);
 
 
       });
 
     return (
-      <ChannelGroupWrapper
-        drawerWidth={this.props.drawerWidth || 0}>
+      <ChannelGroupWrapper drawerWidth={ this.props.drawerWidth || 0 }>
         { channelComponents }
       </ChannelGroupWrapper>
     )

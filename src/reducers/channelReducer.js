@@ -1,7 +1,6 @@
 import { merge, cloneDeep } from 'lodash';
 
-import { ADD_CHANNEL, CLEAR_CHANNELS, PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE,
-  MOVE_CHANNEL, ADD_PART, DELETE_PART, DELETE_CHANNEL, SELECT_CHANNEL, DESELECT_CHANNEL } from '../actions/types';
+import { ADD_CHANNEL, CLEAR_CHANNELS, PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL, ADD_PART, DELETE_PART, DELETE_CHANNEL, SELECT_CHANNEL, DESELECT_CHANNEL } from '../actions/types';
 
 import { filterObjectByKeys } from '../utils/miscUtils';
 
@@ -50,28 +49,28 @@ export default (state = initialState, action) => {
       }
 
     case SELECT_CHANNEL:
-    return {
-      ...state,
-      byChannelId: {
-        ...state.byChannelId,
-        [action.payload]: {
-          ...state.byChannelId[action.payload],
-          selected: true
+      return {
+        ...state,
+        byChannelId: {
+          ...state.byChannelId,
+          [action.payload]: {
+            ...state.byChannelId[action.payload],
+            selected: true
+          }
         }
-      }
-    };
+      };
 
     case DESELECT_CHANNEL:
-    return {
-      ...state,
-      byChannelId: {
-        ...state.byChannelId,
-        [action.payload]: {
-          ...state.byChannelId[action.payload],
-          selected: false
+      return {
+        ...state,
+        byChannelId: {
+          ...state.byChannelId,
+          [action.payload]: {
+            ...state.byChannelId[action.payload],
+            selected: false
+          }
         }
-      }
-    };
+      };
 
     case ADD_PART:
       const partId = state.byChannelId[action.payload.channelId].lastPartId + 1;
@@ -85,8 +84,8 @@ export default (state = initialState, action) => {
             ...state.byChannelId[action.payload.channelId],
             lastPartId: partId,
             duration: maxDuration,
-            byParts: {
-              ...state.byChannelId[action.payload.channelId].byParts,
+            byPartId: {
+              ...state.byChannelId[action.payload.channelId].byPartId,
               [partId]: {
                 partId,
                 src: action.payload.src,
@@ -100,7 +99,7 @@ export default (state = initialState, action) => {
       };
 
     case DELETE_PART:
-      const parts = cloneDeep(state.byChannelId[action.payload.channelId]).byParts;
+      const parts = cloneDeep(state.byChannelId[action.payload.channelId]).byPartId;
       delete parts[action.payload.partId];
 
       return {
@@ -109,7 +108,7 @@ export default (state = initialState, action) => {
           ...state.byChannelId,
           [action.payload.channelId]: {
             ...state.byChannelId[action.payload.channelId],
-            byParts: parts
+            byPartId: parts
           }
         }
       };
@@ -150,7 +149,7 @@ export default (state = initialState, action) => {
     case MOVE_CHANNEL:
       // not really implemented
       const channel = state.byChannelId[action.payload.channelId];
-      const part = channel.byParts[action.payload.partId];
+      const part = channel.byPartId[action.payload.partId];
       const currentOffset = part.offset;
       const offsetIncr = action.payload.incr;
       const updatedOffset = currentOffset ? currentOffset + offsetIncr : offsetIncr;
@@ -161,7 +160,7 @@ export default (state = initialState, action) => {
       const mergedMoveChannelState = merge({},
         channel,
         {
-          byParts: {
+          byPartId: {
             [action.payload.partId]: mergedPart
           }
         }
@@ -198,7 +197,7 @@ function mergePlayStateIntoToChannels(state, playState) {
 
 function _hasAudioChannel(channelState) {
   return Object.keys(channelState.byChannelId)
-    .reduce((result, key) => result || 
+    .reduce((result, key) => result ||
       channelState.byChannelId[key].type === "audio",
       false)
 }
@@ -222,16 +221,16 @@ export function allChannelsStopped(state) {
 // channel data sorted by type and id
 export const getAllChannelsData = (state) => {
   return Object.values(state.channel.byChannelId)
-  .sort((ch1, ch2) => {
-    const str1 = ch1.type + ch1.channelId;
-    const str2 = ch2.type + ch2.channelId;
-    if (str1 < str2) {
-      return -1;
-    } else if (str2 > str1) {
-      return 1;
-    }
-    return 0;
-  })
+    .sort((ch1, ch2) => {
+      const str1 = ch1.type + ch1.channelId;
+      const str2 = ch2.type + ch2.channelId;
+      if (str1 < str2) {
+        return -1;
+      } else if (str2 > str1) {
+        return 1;
+      }
+      return 0;
+    })
 }
 
 export const getAllChannelsOverview = (state) => {
@@ -252,7 +251,7 @@ export const getChannelIds = (state) => {
 }
 
 export const getPart = (state, channelId, partId) => {
-  return state.channel.byChannelId[channelId].byParts[partId];
+  return state.channel.byChannelId[channelId].byPartId[partId];
 }
 
 export const getLastChannelId = (state) => {
@@ -277,8 +276,7 @@ function getDuration(state, channelId) {
 export const getMaxDuration = (state) => {
   return state.channel.byChannelId === {} ? 0 :
     Object.keys(state.channel.byChannelId)
-      .reduce((duration, channeld) => 
-        Math.max(duration, getDuration(state, channeld)), 0);
+      .reduce((duration, channeld) => Math.max(duration, getDuration(state, channeld)), 0);
 }
 
 // saving the config will return this channel information
@@ -286,7 +284,7 @@ export const getMaxDuration = (state) => {
 export const getChannelsConfig = (state) => {
   const allowedProps = ["type", "names", "src", "sampleRate", "offset", "selected", "duration"];
   const propsToArray = {
-    "byParts": "parts"
+    "byPartId": "parts"
   };
   const channels = state.channel.byChannelId ? Object.values(state.channel.byChannelId) : [];
   return channels.map((ch) => {
@@ -295,7 +293,7 @@ export const getChannelsConfig = (state) => {
 };
 
 export const getSelectedChannelIds = (state, type) => {
-    return Object.values(state.channel.byChannelId)
-      .filter((channel) => channel.selected && (!type || channel.type === type))
-      .map((channel) => channel.channelId);
+  return Object.values(state.channel.byChannelId)
+    .filter((channel) => channel.selected && (!type || channel.type === type))
+    .map((channel) => channel.channelId);
 }

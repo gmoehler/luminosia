@@ -104,13 +104,13 @@ export const clearExportImage = (numChannels) => {
 export const drawExportImage = (channelId, idx) => {
   return (dispatch, getState) => {
     const data = getChannelData(getState(), channelId);
-    if (data && data.byParts) {
+    if (data && data.byPartId) {
       const canvas = document.getElementById("imageExportCanvas");
       const cc = canvas.getContext('2d');
 
-      Object.keys(data.byParts).forEach((partId) => {
+      Object.keys(data.byPartId).forEach((partId) => {
 
-        const part = data.byParts[partId];
+        const part = data.byPartId[partId];
         const img = document.getElementById(part.partId);
         const offsetPx = part.offset ? secondsToSamples(part.offset, data.sampleRate) : 0;
         const widthPx = part.duration ? secondsToSamples(part.duration, data.sampleRate) : 0;
