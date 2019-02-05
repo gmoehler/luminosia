@@ -26,7 +26,7 @@ export function loadImage(imageInfo) {
 }
 
 export function saveImageToStorage(image) {
-    const key = "image_" + image.id;
+    const key = "image_" + image.imageId;
     const imageStr = JSON.stringify(image);
     localStorage.setItem(key, imageStr);
 }

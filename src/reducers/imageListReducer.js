@@ -13,12 +13,12 @@ export default (state = initialState, action) => {
       return initialState;
 
     case ADD_IMAGE:
-      const id = action.payload.id ? action.payload.id : action.payload.src;
+      const imageId = action.payload.imageId ? action.payload.imageId : action.payload.src;
       return {
         ...state,
         byId: {
           ...state.byId,
-          [id]: action.payload
+          [imageId]: action.payload
         }
       };
 
@@ -44,15 +44,15 @@ export const getImageSampleRate = (state) => {
   return state.images.sampleRate;
 }
 
-export const getImageDuration = (state, id) => {
-  const img = state.images.byId[id];
+export const getImageDuration = (state, imageId) => {
+  const img = state.images.byId[imageId];
   return img ? img.duration : 0;
 }
 
 // array of all images with relevant fields filtered out
 export const getImageListConfig = (state) => {
   const allowedProps = ["src", "sampleRate", 
-    "id", "width", "height", "duration"];
+    "imageId", "width", "height", "duration"];
   
   const images = state.images.byId ? 
     Object.values(state.images.byId) : [];

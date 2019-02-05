@@ -164,14 +164,14 @@ class Channel extends Component {
     const markerElems = markers && Array.isArray(markers) ?
       markers.map((marker) => {
         let color = theme.markerColor;
-        if ( marker.type  === "insert" || marker.id  === "insert" ) {
+        if ( marker.type  === "insert" || marker.markerId  === "insert" ) {
           color = theme.insertMarkerColor;
         } else if ( marker.type  === "selected" ) {
           color = theme.selectedMarkerColor;
         }
         return <Marker 
           className='Marker' 
-          key={marker.id} 
+          key={marker.markerId} 
           markerPos= { marker.pos } 
           markerColor={color} 
           theme={ theme } 

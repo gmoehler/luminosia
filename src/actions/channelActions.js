@@ -80,7 +80,7 @@ function loadImageChannel(channelConfig, state) {
   // first normalize the parts
   // an icremented 'curid' is the part id used as key
   const normalizedParts = channelConfig.parts ? channelConfig.parts.reduce((res, part) => {
-    part.id = res.curid;
+    part.partId = res.curid;
     part.duration = part.duration ?
       part.duration : getImageDuration(state, part.src);
     res[res.curid] = part;
@@ -139,7 +139,7 @@ export const updateChannelMarkersForLastAddedChannel = () => {
 
     const lastChannel = getLastChannel(getState());
     if (lastChannel) {
-      const channelId = lastChannel.id;
+      const channelId = lastChannel.channelId;
 
       Object.keys(lastChannel.byParts).forEach((partId) => {
 

@@ -126,7 +126,7 @@ class Channel extends Component {
   handleMouseEvent = (e, eventName) => {
     if (this.props.handleMouseEvent) {
       e.preventDefault();
-      const pos = getMouseEventPosition(e, "ChannelWrapper", this.props.id);
+      const pos = getMouseEventPosition(e, "ChannelWrapper", this.props.channelId);
       const src = e.dataTransfer && e.dataTransfer.getData("src");
       const imageId = e.dataTransfer && e.dataTransfer.getData("imageid");
       const duration = e.dataTransfer && Number(e.dataTransfer.getData("duration"));
@@ -175,7 +175,7 @@ class Channel extends Component {
 
       parts.forEach((part) => {
 
-        const {id, src, offset, duration} = {
+        const {partId, src, offset, duration} = {
           ...part
         };
 
@@ -187,7 +187,7 @@ class Channel extends Component {
         while (totalWidth > 0) {
           const currentWidth = Math.min(totalWidth, MAX_CANVAS_WIDTH);
           const canvasImage = (
-          <ImageCanvas key={ String(id) + "-" + String(canvasCount) } cssWidth={ currentWidth } width={ currentWidth * scale } height={ imageHeight } ref={ this.createCanvasRef(id, canvasCount) } data-partid={ id }
+          <ImageCanvas key={ String(partId) + "-" + String(canvasCount) } cssWidth={ currentWidth } width={ currentWidth * scale } height={ imageHeight } ref={ this.createCanvasRef(partId, canvasCount) } data-partid={ partId }
           />
           )
 
@@ -196,12 +196,12 @@ class Channel extends Component {
           canvasCount += 1;
         }
         allImageCanvases.push(
-          <ImageCanvases key={ id } className='ImageCanvases' theme={ theme } offset={ offset }>
+          <ImageCanvases key={ partId } className='ImageCanvases' theme={ theme } offset={ offset }>
             { canvasImages }
           </ImageCanvases>
         );
         allCanvasRefImages.push(
-          <CanvasRefImage key={ id } src={ src } className="hidden" ref={ this.createImageRef(id) } />
+          <CanvasRefImage key={ partId } src={ src } className="hidden" ref={ this.createImageRef(partId) } />
         )
       });
     }
@@ -221,13 +221,13 @@ class Channel extends Component {
     const markerElems = markers && Array.isArray(markers) ?
       markers.map((marker) => { 
         let color = theme.markerColor;
-        if ( marker.type  === "insert" || marker.id  === "insert" ) {
+        if ( marker.type  === "insert" || marker.markerId  === "insert" ) {
           color = theme.insertMarkerColor;
         } else if ( marker.type  === "selected" ) {
           color = theme.selectedMarkerColor;
         }
         return <ImageMarker 
-          key={ marker.id } 
+          key={ marker.markerId } 
           className='Marker' 
           markerPos={ marker.pos } 
           markerColor={color} 
@@ -271,7 +271,7 @@ class Channel extends Component {
 Channel.propTypes = {
 	parts: PropTypes.arrayOf(
 		PropTypes.shape({
-      	id: PropTypes.number.isRequired,
+      	partId: PropTypes.number.isRequired,
         src: PropTypes.string.isRequired,
     	  offset: PropTypes.number, // might be zero
         duration:PropTypes.number.isRequired,

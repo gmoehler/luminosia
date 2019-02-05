@@ -48,12 +48,12 @@ const styles = () => ({
 
 class CustomizedSwitches extends React.Component {
 
-  handleChange = id => event => {
+  handleChange = channelId => event => {
     const selected = event.target.checked
     if (selected){
-      this.props.selectChannel(id);
+      this.props.selectChannel(channelId);
     } else {
-      this.props.deselectChannel(id);
+      this.props.deselectChannel(channelId);
     }
   };
 
@@ -62,7 +62,7 @@ class CustomizedSwitches extends React.Component {
 
     const switches = this.props.channelOverview
       .map((channel) => 
-        <div key={channel.id}
+        <div key={channel.channelId}
           className={ classNames(
           classes.channelControlWrapper,
           channel.selected && classes.wrapperSelected)}
@@ -73,7 +73,7 @@ class CustomizedSwitches extends React.Component {
               <Tooltip title={channel.selected?"Mute":"Unmute"}>
                 <Switch disabled={channel.type === "audio"}
                   checked={channel.selected}
-                  onChange={this.handleChange(channel.id)}
+                  onChange={this.handleChange(channel.channelId)}
                 />
                 </Tooltip>
             }
@@ -82,7 +82,7 @@ class CustomizedSwitches extends React.Component {
           <Tooltip title="Export image channel">
             <IconButton 
               className={ classes.button }
-              onClick={ () => this.props.exportImageChannel(channel.id) }>
+              onClick={ () => this.props.exportImageChannel(channel.channelId) }>
               <DownloadChannelIcon className={classes.icon}/>
             </IconButton>
             </Tooltip>
@@ -90,7 +90,7 @@ class CustomizedSwitches extends React.Component {
           <Tooltip title="Delete image channel">
             <IconButton 
               className={ classes.button }
-              onClick={ () => this.props.deleteChannel(channel.id) }>
+              onClick={ () => this.props.deleteChannel(channel.channelId) }>
               <DeleteChannelIcon className={classes.icon}/>
             </IconButton>
           </Tooltip>

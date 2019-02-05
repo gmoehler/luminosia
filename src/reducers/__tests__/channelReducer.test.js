@@ -22,7 +22,7 @@ describe('channel reducer', () => {
       byId: {
         0: {
           ...audioChannelPayload,
-          id: 0,
+          channelId: 0,
           lastPartId: -1,
         }
       },
@@ -41,7 +41,7 @@ describe('channel reducer', () => {
       byId: {
         0: {
           ...imageChannelPayload,
-          id: 0,
+          channelId: 0,
           lastPartId: -1, // update is done by action not reducer
         }
       },

@@ -19,7 +19,7 @@ export default (state = initialState, action) => {
       return initialState;
 
     case ADD_CHANNEL:
-      const id = state.lastChannelId + 1;
+      const channelId = state.lastChannelId + 1;
       const lastPartId = action.payload.lastPartId && action.payload.lastPartId >= 0 ? action.payload.lastPartId : -1;
       /* let duration = action.payload.duration;
       if (!duration && action.payload.type === "audio" && action.payload.buffer) {
@@ -30,12 +30,12 @@ export default (state = initialState, action) => {
       } */
       return {
         ...state,
-        lastChannelId: id,
+        lastChannelId: channelId,
         byId: {
           ...state.byId,
-          [id]: {
+          [channelId]: {
             ...action.payload,
-            id,
+            channelId,
             lastPartId,
           }
         }
@@ -88,7 +88,7 @@ export default (state = initialState, action) => {
             byParts: {
               ...state.byId[action.payload.channelId].byParts,
               [partId]: {
-                id: partId,
+                partId,
                 src: action.payload.src,
                 imageId: action.payload.imageId,
                 offset: action.payload.offset,
@@ -223,8 +223,8 @@ export function allChannelsStopped(state) {
 export const getAllChannelsData = (state) => {
   return Object.values(state.channel.byId)
   .sort((ch1, ch2) => {
-    const str1 = ch1.type + ch1.id;
-    const str2 = ch2.type + ch2.id;
+    const str1 = ch1.type + ch1.channelId;
+    const str2 = ch2.type + ch2.channelId;
     if (str1 < str2) {
       return -1;
     } else if (str2 > str1) {
@@ -237,7 +237,7 @@ export const getAllChannelsData = (state) => {
 export const getAllChannelsOverview = (state) => {
   return getAllChannelsData(state)
     .map((channel) => ({
-      id: channel.id,
+      channelId: channel.channelId,
       type: channel.type,
       selected: channel.selected,
     }));
@@ -297,5 +297,5 @@ export const getChannelsConfig = (state) => {
 export const getSelectedChannelIds = (state, type) => {
     return Object.values(state.channel.byId)
       .filter((channel) => channel.selected && (!type || channel.type === type))
-      .map((channel) => channel.id);
+      .map((channel) => channel.channelId);
 }

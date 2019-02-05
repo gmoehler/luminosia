@@ -38,7 +38,7 @@ export default class ChannelGroup extends Component {
       .map((channelData) => {
 
         const {resolution, ...passthruProps} = this.props;
-        const channelId = channelData.id;
+        const channelId = channelData.channelId;
 
         if (channelData.loading) {
           return null;
@@ -50,7 +50,7 @@ export default class ChannelGroup extends Component {
 
         const channelProps = {
           ...passthruProps,
-          id: channelId,
+          channelId,
           key: channelId, // required because of list
           type: channelData.type,
           playState: channelData.playState,

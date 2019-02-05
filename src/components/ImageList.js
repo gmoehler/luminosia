@@ -58,7 +58,7 @@ export default class ImageList extends PureComponent {
 				width: img.width,
 				height: img.height,
 				src: reader.result,
-				id: fileName.name,
+				imageId: fileName.name,
 				sampleRate: that.props.sampleRate,
 				duration: samplesToSeconds(img.width, that.props.sampleRate)
 			}
@@ -108,15 +108,15 @@ export default class ImageList extends PureComponent {
 		const imagesComponent =  images
 			.map((img) => 
 			<ImageInList 
-				id={ img.id } 	
-				key={ img.id } 
+				imageId={ img.imageId } 	
+				key={ img.imageId } 
 				src={ img.src } 
-				data-imageid={ img.id }
-				borderColor={this.props.selectedImage && img.id === this.props.selectedImage.imageId ? 
+				data-imageid={ img.imageId }
+				borderColor={this.props.selectedImage && img.imageId === this.props.selectedImage.imageId ? 
 					"red" : "transparent" }
 				draggable onDragStart={ (e) => {
 					e.dataTransfer.setData("src", img.src);
-					e.dataTransfer.setData("imageid", img.id);
+					e.dataTransfer.setData("imageid", img.imageId);
 					// transfer duration in pixels since this is going to be consumed 
 					// in a Channel component which calculates in pixels
 					e.dataTransfer.setData("duration", secondsToPixels(img.duration, resolution)); 

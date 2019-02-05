@@ -37,7 +37,7 @@ export const imageChannelState = {
     lastChannelId: 2,
     byId: {
       2: {
-        id: 2,
+        channelId: 2,
         type: "image",
         playState: "stopped",
         sampleRate: 100,

@@ -38,7 +38,7 @@ export default (state = initialState, action) => {
         markersById: {
           ...state.markersById,
           [action.payload.markerId]: {
-            id: action.payload.markerId,
+            markerId: action.payload.markerId,
             pos: action.payload.pos,
             type: action.payload.type,
           }
@@ -63,7 +63,7 @@ export default (state = initialState, action) => {
         markersById: {
           ...state.markersById,
           [action.payload.markerId]: {
-            id: action.payload.markerId,
+            markerId: action.payload.markerId,
             pos: currentPos + action.payload.incr,
             type: action.payload.type ? action.payload.type : currentType,
           }
