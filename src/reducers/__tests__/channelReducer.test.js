@@ -1,6 +1,6 @@
 import reducer from '../channelReducer';
 import * as types from '../../actions/types';
-import { audioChannel, imageChannel } from '../../__fixtures__/channel.fixtures';
+import { audioChannelPayload, imageChannelPayload } from '../../__fixtures__/channel.fixtures';
 
 describe('channel reducer', () => {
   it('should return the initial state', () => {
@@ -16,12 +16,12 @@ describe('channel reducer', () => {
     expect(
       reducer(reducer(undefined, {}), {
         type: types.ADD_CHANNEL,
-        payload: audioChannel
+        payload: audioChannelPayload
       })
     ).toEqual({
       byId: {
         0: {
-          ...audioChannel,
+          ...audioChannelPayload,
           id: 0,
           lastPartId: -1,
         }
@@ -35,12 +35,12 @@ describe('channel reducer', () => {
     expect(
       reducer(reducer(undefined, {}), {
         type: types.ADD_CHANNEL,
-        payload: imageChannel
+        payload: imageChannelPayload
       })
     ).toEqual({
       byId: {
         0: {
-          ...imageChannel,
+          ...imageChannelPayload,
           id: 0,
           lastPartId: -1, // update is done by action not reducer
         }

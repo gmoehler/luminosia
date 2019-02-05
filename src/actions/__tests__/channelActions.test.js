@@ -3,31 +3,29 @@ import thunk from "redux-thunk";
 
 import * as actions from '../channelActions';
 import * as types from '../types';
-import { audioChannel, imageChannel, initialImageChannel } from '../../__fixtures__/channel.fixtures';
+import { audioChannelPayload, imageChannelPayload, initialImageChannel,
+  imageChannel } from '../../__fixtures__/channel.fixtures';
 
 import * as fileUtilsMock from '../../utils/fileUtils';
-
 jest.mock('../../utils/fileUtils');
 
 export const mockStore = configureMockStore([thunk]);
-
-
 
 describe('actions', () => {
   it('should add an audio channel', () => {
     const expectedAction = {
       type: types.ADD_CHANNEL,
-      payload: audioChannel
+      payload: audioChannelPayload
     }
-    expect(actions.addChannel(audioChannel)).toEqual(expectedAction)
+    expect(actions.addChannel(audioChannelPayload)).toEqual(expectedAction)
   });
   
   it('should add an image channel', () => {
     const expectedAction = {
       type: types.ADD_CHANNEL,
-      payload: imageChannel
+      payload: imageChannelPayload
     }
-    expect(actions.addChannel(imageChannel)).toEqual(expectedAction)
+    expect(actions.addChannel(imageChannelPayload)).toEqual(expectedAction)
   });
 
   it('should create an initial image channel', () => {
@@ -130,27 +128,7 @@ it('should upload an audio file and create channel', () => {
 
 it('should update markers for last added channel ', () => {
 
-  const store = mockStore({
-    channel: {
-      lastChannelId: 2,
-      byId: {
-		2: {
-			type: "image",
-        	playState: "stopped",
-        	sampleRate: 44100,
-        	duration: 21.21,
-        	selected: true,
-        	lastPartId: 1,
-        	byParts: {
-        	1: {
-        		offset: 3.3,
-        		duration: 11.21,
-        		sampleRate: 44100,
-        	}}, // byPartId
-        }} // byId
-    } // channel
-  });
-
+  const store = mockStore(imageChannel);
   const expectedActions = [
     {
       type: types.SET_MARKER,
@@ -164,15 +142,16 @@ it('should update markers for last added channel ', () => {
       type: types.SET_MARKER,
       payload: {
         markerId: `2-1-r`, 
-        pos: 14.51,
+        pos: 11.21 + 3.3,
         type: "normal"
       }
     },
   ]
 
-  return store.dispatch(actions.updateChannelMarkersForLastAddedChannel());
+  store.dispatch(actions.updateChannelMarkersForLastAddedChannel());
   const acts = store.getActions();
   expect(acts).toEqual(expectedActions);
-  
-  });
+});
+
+
 })

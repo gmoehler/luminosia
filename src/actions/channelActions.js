@@ -14,7 +14,7 @@ import { drawExportImage, clearExportImage } from './generalActions';
 
 // load channel from config
 
-export const addChannel = channelInfo => ({
+export const addChannel = (channelInfo) => ({
   type: ADD_CHANNEL,
   payload: channelInfo
 });
@@ -118,7 +118,7 @@ export const uploadAudioFile = (audioFile, audioContext) => {
           duration: audioBuffer.duration,
           selected: true,
         }
-        console.log(channelInfo);
+        // console.log(channelInfo);
         dispatch(addChannel(channelInfo)); 
         dispatch(uploadAudioSuccess());
         console.log("done");
