@@ -5,7 +5,7 @@ import * as actions from '../channelActions';
 import * as types from '../types';
 import { audioChannel, imageChannel, initialImageChannel } from '../../__fixtures__/channel.fixtures';
 
-import {setSampleRate, setDuration} from '../../utils/__mocks__/fileUtils';
+import * as fileUtilsMock from '../../utils/__mocks__/fileUtils';
 
 jest.mock('../../utils/fileUtils');
 
@@ -82,48 +82,50 @@ describe('actions', () => {
 
 it('should upload an audio file and create channel', () => {
 
-    setSampleRate(44100);
-    setDuration(21.21);
-    const store = mockStore({
-      channel: {
-        byId: {},
-        lastChannelId: -1
-      }
-    });
-    const audioFile = {
-      name: "dummy.mp3"
-    };
+  fileUtilsMock.setSampleRate(44100);
+  fileUtilsMock.setDuration(21.21);
+  const store = mockStore({
+    channel: {
+      byId: {},
+      lastChannelId: -1
+    }
+  });
+  const audioFile = {
+    name: "dummy.mp3"
+  };
 
-    const expectedActions = [
-      {
-        type: types.UPLOAD_AUDIO_STARTED
-      },
-      {
-        type: types.ADD_CHANNEL,
-        payload: {
-          type: "audio",
-          playState: "stopped",
-          src: "dummy.mp3",
-          offset: 0,
-          sampleRate: 44100,
-          buffer: {
-            
-          },
+  const expectedActions = [
+    {
+      type: types.UPLOAD_AUDIO_STARTED
+    },
+    {
+      type: types.ADD_CHANNEL,
+      payload: {
+        type: "audio",
+        playState: "stopped",
+        src: audioFile.name,
+        offset: 0,
+        sampleRate: 44100,
+        buffer: {
           duration: 21.21,
-          selected: true,
-        }
-      },
-      {
-        type: types.UPLOAD_AUDIO_SUCCESS
-      },
+          sampleRate: 44100,
+        },
+        duration: 21.21,
+        selected: true,
+      }
+    },
+    {
+      type: types.UPLOAD_AUDIO_SUCCESS
+    },
 
-    ]
+  ]
 
-    const audioContext = {};
-    store.dispatch(actions.uploadAudioFile(audioFile, audioContext));
-    const acts = store.getActions();
-    expect(acts).toEqual(expectedActions);
-
+  const audioContext = {};
+  return store.dispatch(actions.uploadAudioFile(audioFile, audioContext))
+    .then(() => {
+      const acts = store.getActions();
+      return expect(acts).toEqual(expectedActions);
+    })
   });
 
 
