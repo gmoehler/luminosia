@@ -225,7 +225,7 @@ it('should add part and markers', () => {
     },
   ]
 
-  store.dispatch(actions.addPartWithMarkers(partWithChannelId));
+  store.dispatch(actions.insertNewPart(partWithChannelId));
   const acts = store.getActions();
   expect(acts).toMatchObject(expectedActions);
 });

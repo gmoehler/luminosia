@@ -21,7 +21,7 @@ export function withEventHandler(WrappedComponent) {
         move: this.props.move,
         updateMarker: this.props.updateMarker,
         setMarker: this.props.setMarker,
-        addPartWithMarkers: this.props.addPartWithMarkers,
+        insertNewPart: this.props.insertNewPart,
         selectPartOrImage: this.props.selectPartOrImage,
         deleteSelectedPartAndMarkers: this.props.deleteSelectedPartAndMarkers,
       });
@@ -29,7 +29,7 @@ export function withEventHandler(WrappedComponent) {
 
     render() {
 
-      const {mode, select, move, updateMarker, setMarker, addPartWithMarkers, selectPartOrImage, deleteSelectedPartAndMarkers, ...passthruProps} = this.props;
+      const {mode, select, move, updateMarker, setMarker, insertNewPart, selectPartOrImage, deleteSelectedPartAndMarkers, ...passthruProps} = this.props;
 
       if (this.mousehandler) {
         this.mousehandler.setMode(this.props.mode);
@@ -44,7 +44,7 @@ export function withEventHandler(WrappedComponent) {
     move: PropTypes.func.isRequired,
     updateMarker: PropTypes.func.isRequired,
     setMarker: PropTypes.func.isRequired,
-    addPartWithMarkers: PropTypes.func.isRequired,
+    insertNewPart: PropTypes.func.isRequired,
     selectPartOrImage: PropTypes.func.isRequired,
     deleteSelectedPartAndMarkers: PropTypes.func.isRequired,
     mode: PropTypes.oneOf(['selectionMode', 'moveMode']).isRequired,

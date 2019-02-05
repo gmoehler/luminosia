@@ -159,7 +159,7 @@ export const updateChannelMarkersForLastAddedChannel = () => {
   }
 };
 
-export const addPartWithMarkers = (partInfo) => {
+export const insertNewPart = (partInfo) => {
   return (dispatch, getState) => {
 
     // remove insertion marker
