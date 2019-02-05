@@ -8,7 +8,7 @@ import { filterObjectByKeys } from '../utils/miscUtils';
 // TODO: improve this reducer using a sub-reducer on the selected channel
 
 const initialState = {
-  byId: {},
+  byChannelId: {},
   lastChannelId: -1
 };
 
@@ -31,8 +31,8 @@ export default (state = initialState, action) => {
       return {
         ...state,
         lastChannelId: channelId,
-        byId: {
-          ...state.byId,
+        byChannelId: {
+          ...state.byChannelId,
           [channelId]: {
             ...action.payload,
             channelId,
@@ -42,20 +42,20 @@ export default (state = initialState, action) => {
       };
 
     case DELETE_CHANNEL:
-      const channels = cloneDeep(state.byId);
+      const channels = cloneDeep(state.byChannelId);
       delete channels[action.payload];
       return {
         ...state,
-        byId: channels
+        byChannelId: channels
       }
 
     case SELECT_CHANNEL:
     return {
       ...state,
-      byId: {
-        ...state.byId,
+      byChannelId: {
+        ...state.byChannelId,
         [action.payload]: {
-          ...state.byId[action.payload],
+          ...state.byChannelId[action.payload],
           selected: true
         }
       }
@@ -64,29 +64,29 @@ export default (state = initialState, action) => {
     case DESELECT_CHANNEL:
     return {
       ...state,
-      byId: {
-        ...state.byId,
+      byChannelId: {
+        ...state.byChannelId,
         [action.payload]: {
-          ...state.byId[action.payload],
+          ...state.byChannelId[action.payload],
           selected: false
         }
       }
     };
 
     case ADD_PART:
-      const partId = state.byId[action.payload.channelId].lastPartId + 1;
-      const maxDuration = Math.max(state.byId[action.payload.channelId].duration,
+      const partId = state.byChannelId[action.payload.channelId].lastPartId + 1;
+      const maxDuration = Math.max(state.byChannelId[action.payload.channelId].duration,
         action.payload.offset + action.payload.duration);
       return {
         ...state,
-        byId: {
-          ...state.byId,
+        byChannelId: {
+          ...state.byChannelId,
           [action.payload.channelId]: {
-            ...state.byId[action.payload.channelId],
+            ...state.byChannelId[action.payload.channelId],
             lastPartId: partId,
             duration: maxDuration,
             byParts: {
-              ...state.byId[action.payload.channelId].byParts,
+              ...state.byChannelId[action.payload.channelId].byParts,
               [partId]: {
                 partId,
                 src: action.payload.src,
@@ -100,15 +100,15 @@ export default (state = initialState, action) => {
       };
 
     case DELETE_PART:
-      const parts = cloneDeep(state.byId[action.payload.channelId]).byParts;
+      const parts = cloneDeep(state.byChannelId[action.payload.channelId]).byParts;
       delete parts[action.payload.partId];
 
       return {
         ...state,
-        byId: {
-          ...state.byId,
+        byChannelId: {
+          ...state.byChannelId,
           [action.payload.channelId]: {
-            ...state.byId[action.payload.channelId],
+            ...state.byChannelId[action.payload.channelId],
             byParts: parts
           }
         }
@@ -118,7 +118,7 @@ export default (state = initialState, action) => {
       if (_hasAudioChannel(state) && _allChannelsStopped(state)) {
         return {
           ...state,
-          byId: _allChannelsStopped(state) && mergePlayStateIntoToChannels(state, "playing")
+          byChannelId: _allChannelsStopped(state) && mergePlayStateIntoToChannels(state, "playing")
         }
       }
       return {
@@ -128,12 +128,12 @@ export default (state = initialState, action) => {
     case STOP_CHANNELS:
       return {
         ...state,
-        byId: mergePlayStateIntoToChannels(state, "stopped")
+        byChannelId: mergePlayStateIntoToChannels(state, "stopped")
       }
 
     case SET_CHANNEL_PLAY_STATE:
       const mergedChannelState = merge({},
-        state.byId[action.payload.channelId],
+        state.byChannelId[action.payload.channelId],
         {
           playState: action.payload.playState
         }
@@ -141,15 +141,15 @@ export default (state = initialState, action) => {
 
       return {
         ...state,
-        byId: {
-          ...state.byId,
+        byChannelId: {
+          ...state.byChannelId,
           [action.payload.channelId]: mergedChannelState
         }
       }
 
     case MOVE_CHANNEL:
       // not really implemented
-      const channel = state.byId[action.payload.channelId];
+      const channel = state.byChannelId[action.payload.channelId];
       const part = channel.byParts[action.payload.partId];
       const currentOffset = part.offset;
       const offsetIncr = action.payload.incr;
@@ -169,8 +169,8 @@ export default (state = initialState, action) => {
 
       return {
         ...state,
-        byId: {
-          ...state.byId,
+        byChannelId: {
+          ...state.byChannelId,
           [action.payload.channelId]: mergedMoveChannelState
         }
       }
@@ -183,7 +183,7 @@ export default (state = initialState, action) => {
 // helper functions for reducer
 
 function mergePlayStateIntoToChannels(state, playState) {
-  const channelPlayStatesStopped = Object.keys(state.byId)
+  const channelPlayStatesStopped = Object.keys(state.byChannelId)
     .map((key) => {
       return {
         [key]: {
@@ -192,20 +192,20 @@ function mergePlayStateIntoToChannels(state, playState) {
       }
     })
     .reduce((a, b) => Object.assign({}, a, b));
-  const mergedState = merge({}, state.byId, channelPlayStatesStopped);
+  const mergedState = merge({}, state.byChannelId, channelPlayStatesStopped);
   return mergedState;
 }
 
 function _hasAudioChannel(channelState) {
-  return Object.keys(channelState.byId)
+  return Object.keys(channelState.byChannelId)
     .reduce((result, key) => result || 
-      channelState.byId[key].type === "audio",
+      channelState.byChannelId[key].type === "audio",
       false)
 }
 
 function _allChannelsStopped(channelState) {
-  return Object.keys(channelState.byId)
-    .reduce((result, key) => result && (channelState.byId[key].type !== "audio" || channelState.byId[key].playState === "stopped"),
+  return Object.keys(channelState.byChannelId)
+    .reduce((result, key) => result && (channelState.byChannelId[key].type !== "audio" || channelState.byChannelId[key].playState === "stopped"),
       true)
 }
 
@@ -221,7 +221,7 @@ export function allChannelsStopped(state) {
 
 // channel data sorted by type and id
 export const getAllChannelsData = (state) => {
-  return Object.values(state.channel.byId)
+  return Object.values(state.channel.byChannelId)
   .sort((ch1, ch2) => {
     const str1 = ch1.type + ch1.channelId;
     const str2 = ch2.type + ch2.channelId;
@@ -244,15 +244,15 @@ export const getAllChannelsOverview = (state) => {
 }
 
 export const getChannelData = (state, channelId) => {
-  return state.channel.byId[channelId];
+  return state.channel.byChannelId[channelId];
 }
 
 export const getChannelIds = (state) => {
-  return Object.keys(state.channel.byId);
+  return Object.keys(state.channel.byChannelId);
 }
 
 export const getPart = (state, channelId, partId) => {
-  return state.channel.byId[channelId].byParts[partId];
+  return state.channel.byChannelId[channelId].byParts[partId];
 }
 
 export const getLastChannelId = (state) => {
@@ -261,22 +261,22 @@ export const getLastChannelId = (state) => {
 
 export const getLastChannel = (state) => {
   const lastChannelId = state.channel.lastChannelId;
-  return state.channel.byId[lastChannelId];
+  return state.channel.byChannelId[lastChannelId];
 }
 
 export const getLastPartId = (state, channelId) => {
-  return state.channel.byId[channelId].lastPartId;
+  return state.channel.byChannelId[channelId].lastPartId;
 }
 
 function getDuration(state, channelId) {
-  const channelData = state.channel.byId[channelId];
+  const channelData = state.channel.byChannelId[channelId];
   const offset = channelData.offset ? channelData.offset : 0;
   return channelData.duration + offset;
 }
 
 export const getMaxDuration = (state) => {
-  return state.channel.byId === {} ? 0 :
-    Object.keys(state.channel.byId)
+  return state.channel.byChannelId === {} ? 0 :
+    Object.keys(state.channel.byChannelId)
       .reduce((duration, channeld) => 
         Math.max(duration, getDuration(state, channeld)), 0);
 }
@@ -288,14 +288,14 @@ export const getChannelsConfig = (state) => {
   const propsToArray = {
     "byParts": "parts"
   };
-  const channels = state.channel.byId ? Object.values(state.channel.byId) : [];
+  const channels = state.channel.byChannelId ? Object.values(state.channel.byChannelId) : [];
   return channels.map((ch) => {
     return filterObjectByKeys(ch, allowedProps, propsToArray)
   });
 };
 
 export const getSelectedChannelIds = (state, type) => {
-    return Object.values(state.channel.byId)
+    return Object.values(state.channel.byChannelId)
       .filter((channel) => channel.selected && (!type || channel.type === type))
       .map((channel) => channel.channelId);
 }

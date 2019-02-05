@@ -6,7 +6,7 @@ describe('channel reducer', () => {
   it('should return the initial state', () => {
     expect(reducer(undefined, {})).toEqual(
       {
-        byId: {},
+        byChannelId: {},
         lastChannelId: -1
       }
     )
@@ -19,7 +19,7 @@ describe('channel reducer', () => {
         payload: audioChannelPayload
       })
     ).toEqual({
-      byId: {
+      byChannelId: {
         0: {
           ...audioChannelPayload,
           channelId: 0,
@@ -38,7 +38,7 @@ describe('channel reducer', () => {
         payload: imageChannelPayload
       })
     ).toEqual({
-      byId: {
+      byChannelId: {
         0: {
           ...imageChannelPayload,
           channelId: 0,

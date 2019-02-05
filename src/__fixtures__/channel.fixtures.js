@@ -1,19 +1,19 @@
-export const  audioChannelPayload = { 
-	src: 'some source.mp3',
+export const audioChannelPayload = {
+  src: 'some source.mp3',
   type: 'audio',
   offset: 2.0,
   buffer: {
     length: 10,
-    // real channels have more fields here
+  // real channels have more fields here
   }
 }
-  
-export const  imageChannelPayload = { 
+
+export const imageChannelPayload = {
   type: 'image',
   sampleRate: 100,
   selected: false,
   duration: 55.5,
-  partsById: {
+  pyParts: {
     "2": {
       length: 10,
       imageId: "Regenbogenraus.png",
@@ -23,8 +23,8 @@ export const  imageChannelPayload = {
     }
   }
 }
-  
-export const  initialImageChannelPayload = { 
+
+export const initialImageChannelPayload = {
   type: 'image',
   sampleRate: 100,
   selected: true,
@@ -35,7 +35,7 @@ export const  initialImageChannelPayload = {
 export const imageChannelState = {
   channel: {
     lastChannelId: 2,
-    byId: {
+    byChannelId: {
       2: {
         channelId: 2,
         type: "image",
@@ -45,12 +45,14 @@ export const imageChannelState = {
         selected: true,
         lastPartId: 1,
         byParts: {
-        1: {
-          offset: 3.3,
-          duration: 11.21,
-          sampleRate: 100,
-        }}, // byPartId
-    }} // byId
+          1: {
+            offset: 3.3,
+            duration: 11.21,
+            sampleRate: 100,
+          }
+        }, // byPartId
+      }
+    } // byChannelId
   } // channel
 }
 
