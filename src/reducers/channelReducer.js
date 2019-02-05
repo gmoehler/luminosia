@@ -259,6 +259,11 @@ export const getLastChannelId = (state) => {
   return state.channel.lastChannelId;
 }
 
+export const getLastChannel = (state) => {
+  const lastChannelId = state.channel.lastChannelId;
+  return state.channel.byId[lastChannelId];
+}
+
 export const getLastPartId = (state, channelId) => {
   return state.channel.byId[channelId].lastPartId;
 }

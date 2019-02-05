@@ -4,7 +4,7 @@ import { PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL,
 
 import { setMarker, deleteMarker, deselect, selectPartOrImage } from './viewActions';
 
-import { getLastPartId, getLastChannelId, getSelectedChannelIds, getMaxDuration } from '../reducers/channelReducer';
+import { getLastPartId, getLastChannel, getSelectedChannelIds, getMaxDuration } from '../reducers/channelReducer';
 import { getSelectedPart, getSelectedImage } from '../reducers/viewReducer';
 import { getImageDuration } from '../reducers/imageListReducer';
 import { removeImage } from './imageListActions';
@@ -132,17 +132,16 @@ export const uploadAudioFile = (audioFile, audioContext) => {
   }
 }
 
-// since we do not get the channel id this only works for the channel that was
-// last added
-export const updateChannelMarkersForLastAddedChannel = (channelInfo) => {
+export const updateChannelMarkersForLastAddedChannel = () => {
   return (dispatch, getState) => {
     
-    if (channelInfo.byParts){
-      const channelId = getLastChannelId(getState());
+    const lastChannel = getLastChannel(getState());
+    if (lastChannel){
+      const channelId = lastChannel.id;
 
-      Object.keys(channelInfo.byParts).forEach((partId) => {
+      Object.keys(lastChannel.byParts).forEach((partId) => {
       
-        const part = channelInfo.byParts[partId];
+        const part = lastChannel.byParts[partId];
         dispatch(setMarker({
             markerId: `${channelId}-${partId}-l`, 
             pos: part.offset,

@@ -68,7 +68,7 @@ export const uploadConfig = (configData, audioContext) => {
           .then((channelInfo) => {
             if (channelInfo) { // audio channels are not loaded yet
               dispatch(addChannel(channelInfo));
-              dispatch(updateChannelMarkersForLastAddedChannel(channelInfo)); // TODO: channelInfo does not know the channel id here...
+              dispatch(updateChannelMarkersForLastAddedChannel()); // channelInfo does not know the channel id here...
             }
           }));
 
