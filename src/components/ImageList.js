@@ -108,7 +108,7 @@ export default class ImageList extends PureComponent {
 		const imagesComponent =  images
 			.map((img) => 
 			<ImageInList 
-				imageId={ img.imageId } 	
+				id={ img.imageId } 	
 				key={ img.imageId } 
 				src={ img.src } 
 				data-imageid={ img.imageId }
