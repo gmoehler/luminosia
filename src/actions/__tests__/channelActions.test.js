@@ -3,8 +3,10 @@ import thunk from "redux-thunk";
 
 import * as actions from '../channelActions';
 import * as types from '../types';
-import { audioChannelPayload, imageChannelPayload, initialImageChannel,
-  imageChannel } from '../../__fixtures__/channel.fixtures';
+import { audioChannelPayload, imageChannelPayload, initialImageChannelPayload,
+  imageChannelState, part } from '../../__fixtures__/channel.fixtures';
+
+import {initialState as initialViewState} from '../../reducers/viewReducer';
 
 import * as fileUtilsMock from '../../utils/fileUtils';
 jest.mock('../../utils/fileUtils');
@@ -31,7 +33,7 @@ describe('actions', () => {
   it('should create an initial image channel', () => {
     const expectedActions = [{
         type: types.ADD_CHANNEL,
-        payload: initialImageChannel
+        payload: initialImageChannelPayload
     }];
 
     const store = mockStore({
@@ -128,12 +130,12 @@ it('should upload an audio file and create channel', () => {
 
 it('should update markers for last added channel ', () => {
 
-  const store = mockStore(imageChannel);
+  const store = mockStore(imageChannelState);
   const expectedActions = [
     {
       type: types.SET_MARKER,
       payload: {
-        markerId: `2-1-l`, 
+        markerId: "2-1-l", 
         pos: 3.3,
         type: "normal"
       }
@@ -141,7 +143,7 @@ it('should update markers for last added channel ', () => {
     {
       type: types.SET_MARKER,
       payload: {
-        markerId: `2-1-r`, 
+        markerId: "2-1-r", 
         pos: 11.21 + 3.3,
         type: "normal"
       }
@@ -152,6 +154,83 @@ it('should update markers for last added channel ', () => {
   const acts = store.getActions();
   expect(acts).toEqual(expectedActions);
 });
+
+
+it('should add part and markers', () => {
+
+  const state = {
+    ...imageChannelState,
+    view: initialViewState,
+  }
+
+  const store = mockStore(state);
+  const partWithChannelId = {
+    ...part,
+    channelId: 2,
+  }
+  const expectedActions = [
+    // commented out lines are not relevant
+    {
+      type: types.DELETE_MARKER,
+      payload: {
+        markerId: "insert",
+      }
+    },
+    {
+      type: types.ADD_PART,
+      payload: {
+        ...part,
+//        channelId: 2
+      }
+    },
+    {
+      type: types.SET_MARKER,
+      payload: {
+        markerId: `2-1-l`, // should be 2-2-l, but lastPartId not changed in test
+        pos: 5.5,
+        type: "normal"
+      }
+    },
+    {
+      type: types.SET_MARKER,
+      payload: {
+        markerId: `2-1-r`, // should be 2-2-r, but lastPartId not changed in test
+        pos: 55.5 + 5.55,
+        type: "normal"
+      }
+    },
+    {
+      type: types.SELECT_PART_OR_IMAGE,
+      payload: {
+        channelId: 2,
+        partId: 1,
+        selected: true,
+      },  
+    },
+    {
+      type: types.UPDATE_MARKER,
+      payload: {
+        markerId: "2-1-l", 
+        incr: 0,
+        type: "selected"
+      }
+    },
+    {
+      type: types.UPDATE_MARKER,
+      payload: {
+        markerId: "2-1-r", 
+        incr: 0,
+        type: "selected"
+      }
+    },
+  ]
+
+  store.dispatch(actions.addPartWithMarkers(partWithChannelId));
+  const acts = store.getActions();
+  expect(acts).toMatchObject(expectedActions);
+});
+
+
 
 
 })

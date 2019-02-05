@@ -4,7 +4,8 @@ import { CLEAR_VIEW, SELECT, SET_RESOLUTION, SET_MODE,
     SELECT_PART_OR_IMAGE, DESELECT_PART_OR_IMAGE
 } from '../actions/types';
 
-const initialState = {
+// export for tests
+export const initialState = {
   selection: {
     from: null,
     to: null
@@ -54,6 +55,7 @@ export default (state = initialState, action) => {
       };
 
     case UPDATE_MARKER:
+      // update marker type and pos by incr
       const currentPos = state.markersById[action.payload.markerId] ? state.markersById[action.payload.markerId].pos : 0;
       const currentType = state.markersById[action.payload.markerId] ? state.markersById[action.payload.markerId].type : "normal";
       return {

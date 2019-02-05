@@ -24,7 +24,7 @@ export const  imageChannelPayload = {
   }
 }
   
-export const  initialImageChannel = { 
+export const  initialImageChannelPayload = { 
   type: 'image',
   sampleRate: 100,
   selected: true,
@@ -32,7 +32,7 @@ export const  initialImageChannel = {
   playState: "stopped",
 }
 
-export const imageChannel = {
+export const imageChannelState = {
   channel: {
     lastChannelId: 2,
     byId: {
@@ -40,7 +40,7 @@ export const imageChannel = {
         id: 2,
         type: "image",
         playState: "stopped",
-        sampleRate: 44100,
+        sampleRate: 100,
         duration: 21.21,
         selected: true,
         lastPartId: 1,
@@ -48,8 +48,14 @@ export const imageChannel = {
         1: {
           offset: 3.3,
           duration: 11.21,
-          sampleRate: 44100,
+          sampleRate: 100,
         }}, // byPartId
     }} // byId
   } // channel
+}
+
+export const part = {
+  offset: 5.5,
+  duration: 55.55,
+  sampleRate: 100,
 }

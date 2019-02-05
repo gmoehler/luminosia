@@ -81,12 +81,14 @@ function loadImageChannel(channelConfig, state) {
   // an icremented 'curid' is the part id used as key
   const normalizedParts = channelConfig.parts ? channelConfig.parts.reduce((res, part) => {
     part.id = res.curid;
-    part.duration = part.duration ? 
+    part.duration = part.duration ?
       part.duration : getImageDuration(state, part.src);
     res[res.curid] = part;
     res.curid++;
     return res;
-  }, {curid: 0}) : null;
+  }, {
+    curid: 0
+  }) : null;
 
   // incremented id no longer required
   delete normalizedParts.curid;
@@ -119,7 +121,7 @@ export const uploadAudioFile = (audioFile, audioContext) => {
           selected: true,
         }
         // console.log(channelInfo);
-        dispatch(addChannel(channelInfo)); 
+        dispatch(addChannel(channelInfo));
         dispatch(uploadAudioSuccess());
         console.log("done");
       })
@@ -134,51 +136,58 @@ export const uploadAudioFile = (audioFile, audioContext) => {
 
 export const updateChannelMarkersForLastAddedChannel = () => {
   return (dispatch, getState) => {
-    
+
     const lastChannel = getLastChannel(getState());
-    if (lastChannel){
+    if (lastChannel) {
       const channelId = lastChannel.id;
 
       Object.keys(lastChannel.byParts).forEach((partId) => {
-      
+
         const part = lastChannel.byParts[partId];
         dispatch(setMarker({
-            markerId: `${channelId}-${partId}-l`, 
-            pos: part.offset,
-            type: "normal"
-          }));
-          dispatch(setMarker({
-            markerId: `${channelId}-${partId}-r`, 
-            pos: part.offset + part.duration,
-            type: "normal"
-          }));
+          markerId: `${channelId}-${partId}-l`,
+          pos: part.offset,
+          type: "normal"
+        }));
+        dispatch(setMarker({
+          markerId: `${channelId}-${partId}-r`,
+          pos: part.offset + part.duration,
+          type: "normal"
+        }));
       });
     }
   }
 };
 
-export const addPartAndMarkers = (partInfo) => {
+export const addPartWithMarkers = (partInfo) => {
   return (dispatch, getState) => {
+
+    // remove insertion marker
+    dispatch(deleteMarker({
+      markerId: "insert"
+    }));
+
     dispatch(addPart(partInfo))
     const lastPartId = getLastPartId(getState(), partInfo.channelId);
+    // generate markers for part
     dispatch(setMarker({
-      markerId: `${partInfo.channelId}-${lastPartId}-l`, 
+      markerId: `${partInfo.channelId}-${lastPartId}-l`,
       pos: partInfo.offset,
       type: "normal"
     }));
     dispatch(setMarker({
-      markerId: `${partInfo.channelId}-${lastPartId}-r`, 
+      markerId: `${partInfo.channelId}-${lastPartId}-r`,
       pos: partInfo.offset + partInfo.duration,
       type: "normal"
     }));
-    dispatch(deleteMarker({
-      markerId: "insert" 
-    })); 
-      
+
+
     // select the new part
-    const lastPart = {...partInfo};
-    lastPart.partId = lastPartId;
-    lastPart.selected = true;
+    const lastPart = {
+      channelId: partInfo.channelId,
+      partId: lastPartId,
+      selected: true,
+    }
     dispatch(selectPartOrImage(lastPart));
   }
 }
@@ -195,9 +204,11 @@ export const deleteSelectedPartAndMarkers = () => {
     if (selPart) {
       dispatch(deletePart(selPart));
       dispatch(deleteMarker({
-        markerId: `${selPart.channelId}-${selPart.partId}-l`}));
+        markerId: `${selPart.channelId}-${selPart.partId}-l`
+      }));
       dispatch(deleteMarker({
-        markerId: `${selPart.channelId}-${selPart.partId}-r`}));
+        markerId: `${selPart.channelId}-${selPart.partId}-r`
+      }));
       dispatch(deselect());
     }
     if (selImage) {
@@ -222,8 +233,7 @@ export const playChannelAndImage = () => {
   return (dispatch, getState) => {
     const selectedImageChannels = getSelectedChannelIds(getState(), "image");
     dispatch(clearExportImage(selectedImageChannels.length));
-    selectedImageChannels.map((channelId, idx) => 
-      dispatch(drawExportImage(channelId, idx)))
+    selectedImageChannels.map((channelId, idx) => dispatch(drawExportImage(channelId, idx)))
     dispatch(playChannel());
   }
 }
