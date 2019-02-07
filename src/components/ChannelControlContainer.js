@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { stopChannel, deleteSelectedPartAndMarkers, createImageChannel, uploadAudioFile, deleteChannel, playChannelAndImage, selectChannel, deselectChannel } from '../actions/channelActions'
 
 import { downloadConfig, uploadConfigFile, uploadConfig, exportImageChannel } from '../actions/generalActions'
-import { select, setResolution } from '../actions/viewActions'
+import { setResolution } from '../actions/viewActions'
 import ChannelControl from './ChannelControl';
 import { getChannelIds, allChannelsStopped } from '../reducers/channelReducer';
 import { getSelectedImage, getSelectedPart } from '../reducers/viewReducer';
@@ -91,7 +91,6 @@ const mapDispatchToProps = dispatch => ({
   playChannelAndImageAction: (channelId) => dispatch(playChannelAndImage(channelId)),
   stopChannelAction: () => dispatch(stopChannel()),
   setResolutionAction: (resolution) => dispatch(setResolution(resolution)),
-  selectAction: (range) => dispatch(select(range)),
   deleteSelectedPartAndMarkers: () => dispatch(deleteSelectedPartAndMarkers()),
   selectChannelAction: (channelId) => dispatch(selectChannel(channelId)),
   deselectChannelAction: (channelId) => dispatch(deselectChannel(channelId)),

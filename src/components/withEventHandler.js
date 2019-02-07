@@ -17,7 +17,8 @@ export function withEventHandler(WrappedComponent) {
     componentDidMount() {
       // mouse handler setup
       this.mousehandler = new MouseHandler({
-        select: this.props.select,
+        selectRange: this.props.selectRange,
+        deselectRange: this.props.deselectRange,
         move: this.props.move,
         updateMarker: this.props.updateMarker,
         setMarker: this.props.setMarker,
@@ -29,14 +30,15 @@ export function withEventHandler(WrappedComponent) {
 
     render() {
 
-      const {select, move, updateMarker, setMarker, insertNewPart, selectPartOrImage, deleteSelectedPartAndMarkers, ...passthruProps} = this.props;
+      const {selectRange, deselectRange, move, updateMarker, setMarker, insertNewPart, selectPartOrImage, deleteSelectedPartAndMarkers, ...passthruProps} = this.props;
 
       return <WrappedComponent {...passthruProps} handleMouseEvent={ (eventName, evInfo) => this.mousehandler.handleMouseEvent(eventName, evInfo, this.props.resolution) } />
     }
   }
 
   WithEventHandler.propTypes = {
-    select: PropTypes.func.isRequired,
+    selectRange: PropTypes.func.isRequired,
+    deselectRange: PropTypes.func.isRequired,
     move: PropTypes.func.isRequired,
     updateMarker: PropTypes.func.isRequired,
     setMarker: PropTypes.func.isRequired,

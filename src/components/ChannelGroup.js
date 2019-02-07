@@ -24,8 +24,6 @@ const ImageChannelWithPlay = withEventHandler(withPlay(timeToPixels(ImageChannel
 // contains multiple AudioChannels
 export default class ChannelGroup extends Component {
 
-
-
   render() {
 
     // no data: nothing to do
