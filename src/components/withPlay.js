@@ -149,7 +149,7 @@ export function withPlay(WrappedComponent) {
 
     render() {
 
-      const {buffer, mode, ...passthruProps} = this.props;
+      const {buffer, ...passthruProps} = this.props;
 
       // memoized audio peak data
       const {data, length, bits} = buffer ? this.doExtractPeaks(buffer, this.props.sampleRate / this.props.resolution, 16)

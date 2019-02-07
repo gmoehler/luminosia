@@ -1,5 +1,5 @@
 import { cloneDeep } from 'lodash';
-import { CLEAR_VIEW, SELECT, SET_RESOLUTION, SET_MODE, SET_MARKER, UPDATE_MARKER, DELETE_MARKER, SELECT_PART_OR_IMAGE, DESELECT_PART_OR_IMAGE} from '../actions/types';
+import { CLEAR_VIEW, SELECT, SET_RESOLUTION, SET_MARKER, UPDATE_MARKER, DELETE_MARKER, SELECT_PART_OR_IMAGE, DESELECT_PART_OR_IMAGE} from '../actions/types';
 
 // export for tests
 export const initialState = {
@@ -9,7 +9,6 @@ export const initialState = {
   },
   byMarkerId: {},
   resolution: 80,
-  mode: "moveMode",
   selectedPartOrImage: null,
   currentById: {},
 };
@@ -73,12 +72,6 @@ export default (state = initialState, action) => {
         resolution: action.payload
       }
 
-    case SET_MODE:
-      return {
-        ...state,
-        mode: action.payload
-      }
-
     case SELECT_PART_OR_IMAGE:
       const selPartOrImage = action.payload.selected ? action.payload : null;
       return {
@@ -106,10 +99,6 @@ export const getSelectionRange = (state) => {
 
 export const getResolution = (state) => {
   return state.view.resolution
-}
-
-export const getMode = (state) => {
-  return state.view.mode
 }
 
 export const getMarkers = (state) => {

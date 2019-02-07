@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { stopChannel, deleteSelectedPartAndMarkers, createImageChannel, uploadAudioFile, deleteChannel, playChannelAndImage, selectChannel, deselectChannel } from '../actions/channelActions'
 
 import { downloadConfig, uploadConfigFile, uploadConfig, exportImageChannel } from '../actions/generalActions'
-import { setMode, select, setResolution } from '../actions/viewActions'
+import { select, setResolution } from '../actions/viewActions'
 import ChannelControl from './ChannelControl';
 import { getChannelIds, allChannelsStopped } from '../reducers/channelReducer';
 import { getSelectedImage, getSelectedPart } from '../reducers/viewReducer';
@@ -46,21 +46,29 @@ class ChannelControlContainer extends Component {
     )
   }
 
-  setMode = (mode) => {
-    this.props.selectAction({
-      from: null,
-      to: null
-    });
-    this.props.setModeAction(mode);
-  }
-
   render() {
 
     return (
-      <ChannelControl init={ this.doInit } downloadConfig={ this.props.downloadConfigAction } uploadConfigFile={ this.props.uploadConfigFileAction } uploadAudioFile={ this.props.uploadAudioFileAction } deleteSelectedPart={ this.deleteSelectedPart }
-        channelIds={ this.props.channelIds } createImageChannel={ this.props.createImageChannelAction } exportImageChannel={ this.props.exportImageChannelAction } deleteChannel={ this.props.deleteChannelAction } playChannelAndImage={ this.props.playChannelAndImageAction }
-        stopChannel={ this.props.stopChannelAction } zoomIn={ this.zoomIn } zoomOut={ this.zoomOut } setMode={ this.setMode } selectedImageOrPart={ this.props.selectedImageOrPart }
-        enablePlay={ this.props.enablePlay } enableStop={ this.props.enableStop } selectChannel={ this.props.selectChannelAction } deselectChannel={ this.props.deselectChannelAction } />
+      <ChannelControl 
+        init={ this.doInit } 
+        downloadConfig={ this.props.downloadConfigAction } 
+        uploadConfigFile={ this.props.uploadConfigFileAction } 
+        uploadAudioFile={ this.props.uploadAudioFileAction } 
+        deleteSelectedPart={ this.deleteSelectedPart }
+        channelIds={ this.props.channelIds } 
+        createImageChannel={ this.props.createImageChannelAction } 
+        exportImageChannel={ this.props.exportImageChannelAction } 
+        deleteChannel={ this.props.deleteChannelAction } 
+        playChannelAndImage={ this.props.playChannelAndImageAction }
+        stopChannel={ this.props.stopChannelAction } 
+        zoomIn={ this.zoomIn } 
+        zoomOut={ this.zoomOut } 
+        selectedImageOrPart={ this.props.selectedImageOrPart }
+        enablePlay={ this.props.enablePlay } 
+        enableStop={ this.props.enableStop } 
+        selectChannel={ this.props.selectChannelAction } 
+        deselectChannel={ this.props.deselectChannelAction } 
+      />
       );
   }
 }
@@ -83,7 +91,6 @@ const mapDispatchToProps = dispatch => ({
   playChannelAndImageAction: (channelId) => dispatch(playChannelAndImage(channelId)),
   stopChannelAction: () => dispatch(stopChannel()),
   setResolutionAction: (resolution) => dispatch(setResolution(resolution)),
-  setModeAction: (modeEvent) => dispatch(setMode(modeEvent.target.value)),
   selectAction: (range) => dispatch(select(range)),
   deleteSelectedPartAndMarkers: () => dispatch(deleteSelectedPartAndMarkers()),
   selectChannelAction: (channelId) => dispatch(selectChannel(channelId)),

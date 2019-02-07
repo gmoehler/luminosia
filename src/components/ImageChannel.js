@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled, { withTheme } from 'styled-components';
-import { getMouseEventPosition } from '../utils/eventUtils';
+import { getMouseEventPosition, isImplementedKey } from '../utils/eventUtils';
 
 const MAX_CANVAS_WIDTH = 1000;
 
@@ -77,7 +77,9 @@ class Channel extends Component {
 
   componentDidMount() {
     this.draw();
-    document.addEventListener("keydown", (e) => this.handleMouseEvent(e, "keyDown"));
+    document.addEventListener("keydown", (e) => {
+      if (isImplementedKey(e)) return this.handleMouseEvent(e, "keyDown");
+    });
   }
 
   componentDidUpdate() {
@@ -126,12 +128,14 @@ class Channel extends Component {
   handleMouseEvent = (e, eventName) => {
     if (this.props.handleMouseEvent) {
       e.preventDefault();
-      const pos = getMouseEventPosition(e, "ChannelWrapper", this.props.channelId);
+      const pos = eventName !== "keyDown" ? 
+        getMouseEventPosition(e, "ChannelWrapper", this.props.channelId) : {};
       const src = e.dataTransfer && e.dataTransfer.getData("src");
       const imageId = e.dataTransfer && e.dataTransfer.getData("imageid");
       const duration = e.dataTransfer && Number(e.dataTransfer.getData("duration"));
       const key = e.key;
       const shiftKey = e.shiftKey;
+      const adaptedEventName = shiftKey ? "shift-" + eventName : eventName;
       const evInfo = {
         ...pos, // x pos, channelId, partId
         timestamp: e.timeStamp,
@@ -141,7 +145,7 @@ class Channel extends Component {
         key,
         shiftKey,
       }
-      this.props.handleMouseEvent(eventName, evInfo);
+      this.props.handleMouseEvent(adaptedEventName, evInfo);
       return;
     }
   }
@@ -250,8 +254,6 @@ class Channel extends Component {
         onDragOver={ (e) => this.handleMouseEvent(e, "dragOver") }
         onDragStart={ (e) => this.handleMouseEvent(e, "dragStart") } 
         onDrop={ (e) => this.handleMouseEvent(e, "drop") } 
-
-        onKeyDown={ (e) => this.handleMouseEvent(e, "keyDown") } 
         
         cssWidth={ maxWidth } theme={ theme } height={ imageHeight }
         tabIndex={0}

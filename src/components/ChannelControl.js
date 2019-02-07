@@ -138,11 +138,4 @@ export default withStyles(styles, {
   withTheme: true
 })(ChannelControl);
 
-/*
-        <select onChange={ this.props.setMode }>
-          <option value="moveMode">Move mode</option>
-          <option value="selectionMode">Selection mode</option>
-        </select>
-        */
-
 // export const ChannelControlWithTheme = withTheme(ChannelControl);

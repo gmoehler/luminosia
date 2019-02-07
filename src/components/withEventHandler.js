@@ -29,11 +29,7 @@ export function withEventHandler(WrappedComponent) {
 
     render() {
 
-      const {mode, select, move, updateMarker, setMarker, insertNewPart, selectPartOrImage, deleteSelectedPartAndMarkers, ...passthruProps} = this.props;
-
-      if (this.mousehandler) {
-        this.mousehandler.setMode(this.props.mode);
-      }
+      const {select, move, updateMarker, setMarker, insertNewPart, selectPartOrImage, deleteSelectedPartAndMarkers, ...passthruProps} = this.props;
 
       return <WrappedComponent {...passthruProps} handleMouseEvent={ (eventName, evInfo) => this.mousehandler.handleMouseEvent(eventName, evInfo, this.props.resolution) } />
     }
@@ -47,7 +43,6 @@ export function withEventHandler(WrappedComponent) {
     insertNewPart: PropTypes.func.isRequired,
     selectPartOrImage: PropTypes.func.isRequired,
     deleteSelectedPartAndMarkers: PropTypes.func.isRequired,
-    mode: PropTypes.oneOf(['selectionMode', 'moveMode']).isRequired,
   }
 
   return WithEventHandler;

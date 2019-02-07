@@ -19,7 +19,8 @@ export default class MoveMouseHandler {
       break;
 
       // also handles click selection
-	    case "mouseDown":
+      case "mouseDown":
+      this.deselect();
       this.handleMoveFrom(evInfo);
       break;
 
@@ -33,6 +34,22 @@ export default class MoveMouseHandler {
 
       case "mouseLeave":
       this.handleMoveTo(evInfo, true);
+      break;
+
+      case "shift-mouseDown":
+      this.handleSelectionFrom(evInfo);
+      break;
+
+      case "shift-mouseMove":
+      this.handleSelectionTo(evInfo, false);
+      break;
+
+      case "shift-mouseUp":
+      this.handleSelectionTo(evInfo, true);
+      break;
+
+      case "shift-mouseLeave":
+      this.handleSelectionTo(evInfo, true);
       break;
 
       default:
@@ -79,4 +96,32 @@ export default class MoveMouseHandler {
       }
     }
   }
+
+  handleSelectionFrom = (evInfo) => {
+    this.selectFromX = evInfo.x;
+    this.handlerFunctions.select(evInfo.x, evInfo.x);
+  }
+
+  handleSelectionTo = (evInfo, finalizeSelection) => {
+    if (this.selectFromX) { // only when mouse down has occured
+      // console.log('selection to: ', x);
+      if (this.selectFromX < evInfo.x) {
+        this.handlerFunctions.select(this.selectFromX, evInfo.x);
+      } else {
+        this.handlerFunctions.select(evInfo.x, this.selectFromX);
+      }
+      if (finalizeSelection) {
+        this.selectFromX = null; 
+        this.selected = true;
+      }
+    }
+  }
+
+  deselect = () => {
+    if (this.selected) {
+      this.handlerFunctions.select(null, null);
+      this.selected = false;
+    }
+  }
+
 }

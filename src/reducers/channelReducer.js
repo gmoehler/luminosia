@@ -195,13 +195,6 @@ function mergePlayStateIntoToChannels(state, playState) {
   return mergedState;
 }
 
-function _hasAudioChannel(channelState) {
-  return Object.keys(channelState.byChannelId)
-    .reduce((result, key) => result ||
-      channelState.byChannelId[key].type === "audio",
-      false)
-}
-
 function _allChannelsStopped(channelState) {
   return Object.keys(channelState.byChannelId)
     .reduce((result, key) => 
@@ -210,10 +203,6 @@ function _allChannelsStopped(channelState) {
 }
 
 // state access functions
-
-export function hasAudioChannel(state) {
-  return _hasAudioChannel(state.channel);
-}
 
 export function allChannelsStopped(state) {
   return (_allChannelsStopped(state.channel));

@@ -14,10 +14,14 @@ export function getMouseEventPosition(e, className, channelId) {
         channelId: String(channelId) // to allow simple boolean comparisons
       }
     }
-    console.warn(`MouseEvent did not find ${className}`);
+    console.debug(`Event did not find ${className}`);
     return {
       x: 0,
       partId,
       channelId: String(channelId)
     }
+}
+
+export function isImplementedKey(e) {
+  return ["Delete","Backspace"].includes(e.key);
 }
