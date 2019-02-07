@@ -114,7 +114,7 @@ export default (state = initialState, action) => {
       };
 
     case PLAY_CHANNELS:
-      if (_hasAudioChannel(state) && _allChannelsStopped(state)) {
+      if (_allChannelsStopped(state)) {
         return {
           ...state,
           byChannelId: _allChannelsStopped(state) && mergePlayStateIntoToChannels(state, "playing")
@@ -204,7 +204,8 @@ function _hasAudioChannel(channelState) {
 
 function _allChannelsStopped(channelState) {
   return Object.keys(channelState.byChannelId)
-    .reduce((result, key) => result && (channelState.byChannelId[key].type !== "audio" || channelState.byChannelId[key].playState === "stopped"),
+    .reduce((result, key) => 
+      result && channelState.byChannelId[key].playState === "stopped",
       true)
 }
 

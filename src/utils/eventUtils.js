@@ -11,13 +11,13 @@ export function getMouseEventPosition(e, className, channelId) {
       return  {
         x: Math.max(0, e.clientX - el.offsetLeft + parentScroll),
         partId,
-        channelId
+        channelId: String(channelId) // to allow simple boolean comparisons
       }
     }
     console.warn(`MouseEvent did not find ${className}`);
     return {
       x: 0,
       partId,
-      channelId
+      channelId: String(channelId)
     }
 }
