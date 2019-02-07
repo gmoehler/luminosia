@@ -23,8 +23,8 @@ export default (state = initialState, action) => {
       return {
         ...state,
         selection: {
-          from: null,
-    	  to: null
+          from: action.payload.from,
+    	    to: action.payload.to
         }
       };
       
@@ -32,8 +32,8 @@ export default (state = initialState, action) => {
       return {
         ...state,
         selection: {
-          from: action.payload.from,
-          to: action.payload.to
+          from: null,
+          to: null
         }
       };
 

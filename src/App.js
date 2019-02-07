@@ -23,6 +23,7 @@ import AnimationPaneContainer from './components/AnimationPaneContainer';
 import ChannelSelectorContainer from './components/ChannelSelectorContainer';
 
 const drawerWidth = 400;
+const channelSelectorWidth = 96;
 
 const styles = theme => ({
   root: {
@@ -140,7 +141,7 @@ class App extends React.Component {
           <AnimationPaneContainer drawerWidth={open ? drawerWidth : 0} />
           <div className={classes.channelPane}>
             <ChannelSelectorContainer/>
-            <ChannelGroupContainer  drawerWidth={open ? drawerWidth  + 72 : 72} />
+            <ChannelGroupContainer  drawerWidth={open ? drawerWidth  + channelSelectorWidth : channelSelectorWidth} width={channelSelectorWidth}/>
           </div>
           <ImageExporter drawerWidth={open ? drawerWidth : 0} />
         </main>

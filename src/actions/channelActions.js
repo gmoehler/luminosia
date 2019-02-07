@@ -2,7 +2,7 @@ import { PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL, ADD
 
 import { setMarker, deleteMarker, deselect, selectPartOrImage } from './viewActions';
 
-import { getLastPartId, getLastChannel, getSelectedChannelIds, getMaxDuration } from '../reducers/channelReducer';
+import { getLastPartId, getLastChannel, getSelectedChannelIds, getMaxDuration, getChannelData } from '../reducers/channelReducer';
 import { getSelectedPart, getSelectedImage } from '../reducers/viewReducer';
 import { getImageDuration } from '../reducers/imageListReducer';
 import { removeImage } from './imageListActions';
@@ -131,6 +131,15 @@ export const uploadAudioFile = (audioFile, audioContext) => {
       })
   }
 }
+
+export const duplicateChannel = (channelId) => {
+  return (dispatch, getState) => {
+    const ch = getChannelData(getState(), channelId);
+    dispatch(addChannel(ch));
+    // TODO: add new channel just after copied one
+  }
+};
+
 
 export const updateChannelMarkersForLastAddedChannel = () => {
   return (dispatch, getState) => {

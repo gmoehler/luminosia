@@ -9,6 +9,9 @@ import { Tooltip, IconButton } from '@material-ui/core';
 import {indigo } from '@material-ui/core/colors/indigo';
 import DownloadChannelIcon from '@material-ui/icons/SaveAlt';
 import DeleteChannelIcon from '@material-ui/icons/DeleteForever';
+import ChannelDupIcon from '@material-ui/icons/FileCopy'
+
+const channelSelectorWidth = 96;
 
 const styles = () => ({
   channelControlWrapper: {
@@ -19,7 +22,7 @@ const styles = () => ({
     padding: 0,
     background: 'darkgrey',
     height: '90px',
-    width: '72px',
+    width: `${channelSelectorWidth}px`,
   },
   wrapperSelected: {
     background: '#3f51b5',
@@ -87,14 +90,22 @@ class CustomizedSwitches extends React.Component {
             </IconButton>
             </Tooltip>
 
-          <Tooltip title="Delete image channel">
+          <Tooltip title="Duplicate channel">
             <IconButton 
               className={ classes.button }
-              onClick={ () => this.props.deleteChannel(channel.channelId) }>
-              <DeleteChannelIcon className={classes.icon}/>
+              onClick={ () => this.props.duplicateChannel(channel.channelId) }>
+              <ChannelDupIcon className={classes.icon}/>
             </IconButton>
           </Tooltip>
-          </div>
+
+          <Tooltip title="Delete image channel">
+          <IconButton 
+            className={ classes.button }
+            onClick={ () => this.props.deleteChannel(channel.channelId) }>
+            <DeleteChannelIcon className={classes.icon}/>
+          </IconButton>
+        </Tooltip>
+        </div>
 
         </div>
       );
@@ -112,6 +123,7 @@ CustomizedSwitches.propTypes = {
   channelOverview: PropTypes.array,
   selectChannel: PropTypes.func.isRequired,
   deselectChannel: PropTypes.func.isRequired,
+  duplicateChannel: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(CustomizedSwitches);

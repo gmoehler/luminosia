@@ -101,6 +101,10 @@ export default class ImageList extends PureComponent {
 		}
 	}
 
+	componentDidMount() {
+		this.props.loadImagesfromStorage();
+	}
+
   render() {
 
 		const { images, resolution } = this.props;

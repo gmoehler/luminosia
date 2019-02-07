@@ -20,13 +20,6 @@ export default (state = initialState, action) => {
     case ADD_CHANNEL:
       const channelId = state.lastChannelId + 1;
       const lastPartId = action.payload.lastPartId && action.payload.lastPartId >= 0 ? action.payload.lastPartId : -1;
-      /* let duration = action.payload.duration;
-      if (!duration && action.payload.type === "audio" && action.payload.buffer) {
-        duration = action.payload.buffer.duration;
-      }
-      if (!duration) {
-        duration = 10; 
-      } */
       return {
         ...state,
         lastChannelId: channelId,

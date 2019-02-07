@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import ImageList from './ImageList'
 import { getImageList } from '../reducers/imageListReducer';
 import { getResolution, getSelectedImage } from '../reducers/viewReducer';
-import { saveImageToStorage, addImage } from '../actions/imageListActions';
+import { saveImageToStorage, addImage, loadImagesfromStorage } from '../actions/imageListActions';
 import { selectPartOrImage } from '../actions/viewActions';
 
 export const defaultSampleRate = 100;
@@ -20,6 +20,7 @@ class ImageListContainer extends Component {
         selectImage={this.props.selectPartOrImageAction}
         selectedImage={this.props.selectedImage}
         resolution={ this.props.resolution } 
+        loadImagesfromStorage = {this.props.loadImagesfromStorageAction}
         sampleRate={defaultSampleRate}
       />);
   }
@@ -37,6 +38,7 @@ const mapDispatchToProps = dispatch => ({
   addImageAction: (image) => dispatch(addImage(image)),
   selectPartOrImageAction: (imageInfo) => dispatch(selectPartOrImage(imageInfo)),
   saveImageToStorageAction: (imageFile, key) => dispatch(saveImageToStorage(imageFile, key)),
+  loadImagesfromStorageAction: () => dispatch(loadImagesfromStorage()),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ImageListContainer);
