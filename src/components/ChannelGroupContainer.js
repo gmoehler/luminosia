@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import { connect } from 'react-redux'; 
 
 import ChannelGroup from './ChannelGroup'
 import { setChannelPlayState, moveChannel, insertNewPart, deleteSelectedPartAndMarkers } from '../actions/channelActions'
@@ -7,7 +7,7 @@ import { selectRange, deselectRange, setMarker, updateMarker, selectPartOrImage 
 import { getMaxDuration, getLastPartId, getAllChannelsData } from '../reducers/channelReducer'
 import { getSelectionRange, getResolution, getMarkers } from '../reducers/viewReducer'
 
-class ChannelGroupContainer extends Component {
+class ChannelGroupContainer extends Component {x
 
   getLastPartId = (channelId) => {
     getLastPartId(this.props.currentState, channelId)

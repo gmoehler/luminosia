@@ -3,10 +3,22 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { getChannelExportData } from '../actions/generalActions';
 import { samplesToRad } from '../utils/conversions';
+import Slider from '@material-ui/lab/Slider';
+
+const minRotationSpeed = 0.1;
+const maxRotationSpeed = 10;
+
 
 const AnimationPaneWrapper = styled.div`
 	width:  calc(95vw - ${props => props.drawerWidth}px);
 	background: black;
+	display: flex;
+	flex-orientation: row;
+`;
+
+const AnimationControl = styled.div`
+	width:  96px;
+	background: darkgrey;
 `;
 
 const AnimationCanvas = styled.canvas`
@@ -83,18 +95,33 @@ export default class AnimationPane extends PureComponent {
   componentDidUpdate() {
     this.draw();
   }
+  
+  handleChange = (ev, val) => {
+  	const rotationSpeed = 10 / (101-val); // 0.1 ... 10
+  	this.setState({rotationSpeed});
+  };
 
   render() {
+  	
+  	const { rotationSpeed } = this.state;
 
 		const {drawerWidth, selectedChannels, resolution} = this.props;
     return (
 			<AnimationPaneWrapper
 					drawerWidth = {drawerWidth}>
+					<AnimationControl>
+						<Slider 
+							value={rotationSpeed}
+							onChange={this.handleChange}
+							vertical
+						/>
+					</AnimationControl>
 					<AnimationCanvas 
 						id = "animationPaneCanvas" 
 						height = {resolution * 80}
 						width = {selectedChannels.length * resolution * 80}/>
-      </AnimationPaneWrapper>
+        </AnimationPaneWrapper>
+        
     )
 	}
 }
