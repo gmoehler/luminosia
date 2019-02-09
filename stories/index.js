@@ -1,17 +1,14 @@
 import React from 'react';
 import { ThemeProvider } from 'styled-components';
 import { storiesOf } from '@storybook/react';
-import { action } from '@storybook/addon-actions';
 import { timeToPixels } from '../src/components/timeToPixels';
 import Channel from '../src/components/Channel';
 import ImageChannel from '../src/components/ImageChannel';
 import TimeScale from '../src/components/TimeScale';
-import TrackControls from '../src/components/TrackControls';
 import BBCWaveformData from '../public/media/json/vocals.json';
 import imageFile from '../public/media/image/mostlyStripes.png';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faVolumeUp, faVolumeDown } from '@fortawesome/free-solid-svg-icons';
 
 library.add(faVolumeUp);
@@ -193,7 +190,3 @@ storiesOf('TimeScale', module)
     </ThemeProvider>
   ));
 
-storiesOf('TrackControls', module)
-  .add('Default Values.', () => (
-    <TrackControls></TrackControls>
-  ));

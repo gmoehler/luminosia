@@ -1,17 +1,14 @@
 import { cloneDeep } from 'lodash';
-import { CLEAR_VIEW, SELECT, SET_RESOLUTION, SET_MODE, 
-    SET_MARKER, UPDATE_MARKER, DELETE_MARKER, 
-    SELECT_PART_OR_IMAGE, DESELECT_PART_OR_IMAGE
-} from '../actions/types';
+import { CLEAR_VIEW, SELECT_RANGE, DESELECT_RANGE, SET_RESOLUTION, SET_MARKER, UPDATE_MARKER, DELETE_MARKER, SELECT_PART_OR_IMAGE, DESELECT_PART_OR_IMAGE} from '../actions/types';
 
-const initialState = {
+// export for tests
+export const initialState = {
   selection: {
     from: null,
     to: null
   },
-  markersById: {},
+  byMarkerId: {},
   resolution: 80,
-  mode: "moveMode",
   selectedPartOrImage: null,
   currentById: {},
 };
@@ -22,22 +19,31 @@ export default (state = initialState, action) => {
     case CLEAR_VIEW:
       return initialState;
 
-    case SELECT:
+    case SELECT_RANGE:
       return {
         ...state,
         selection: {
           from: action.payload.from,
-          to: action.payload.to
+    	    to: action.payload.to
+        }
+      };
+      
+      case DESELECT_RANGE:
+      return {
+        ...state,
+        selection: {
+          from: null,
+          to: null
         }
       };
 
     case SET_MARKER:
       return {
         ...state,
-        markersById: {
-          ...state.markersById,
+        byMarkerId: {
+          ...state.byMarkerId,
           [action.payload.markerId]: {
-            id: action.payload.markerId,
+            markerId: action.payload.markerId,
             pos: action.payload.pos,
             type: action.payload.type,
           }
@@ -45,23 +51,24 @@ export default (state = initialState, action) => {
       };
 
     case DELETE_MARKER:
-      const markers = cloneDeep(state.markersById);
+      const markers = cloneDeep(state.byMarkerId);
       delete markers[action.payload.markerId];
 
       return {
         ...state,
-        markersById: markers
+        byMarkerId: markers
       };
 
     case UPDATE_MARKER:
-      const currentPos = state.markersById[action.payload.markerId] ? state.markersById[action.payload.markerId].pos : 0;
-      const currentType = state.markersById[action.payload.markerId] ? state.markersById[action.payload.markerId].type : "normal";
+      // update marker type and pos by incr
+      const currentPos = state.byMarkerId[action.payload.markerId] ? state.byMarkerId[action.payload.markerId].pos : 0;
+      const currentType = state.byMarkerId[action.payload.markerId] ? state.byMarkerId[action.payload.markerId].type : "normal";
       return {
         ...state,
-        markersById: {
-          ...state.markersById,
+        byMarkerId: {
+          ...state.byMarkerId,
           [action.payload.markerId]: {
-            id: action.payload.markerId,
+            markerId: action.payload.markerId,
             pos: currentPos + action.payload.incr,
             type: action.payload.type ? action.payload.type : currentType,
           }
@@ -72,12 +79,6 @@ export default (state = initialState, action) => {
       return {
         ...state,
         resolution: action.payload
-      }
-
-    case SET_MODE:
-      return {
-        ...state,
-        mode: action.payload
       }
 
     case SELECT_PART_OR_IMAGE:
@@ -109,12 +110,8 @@ export const getResolution = (state) => {
   return state.view.resolution
 }
 
-export const getMode = (state) => {
-  return state.view.mode
-}
-
 export const getMarkers = (state) => {
-  return state.view.markersById ? Object.values(state.view.markersById) : [];
+  return state.view.byMarkerId ? Object.values(state.view.byMarkerId) : [];
 }
 
 export const getSelectedPart = (state) => {

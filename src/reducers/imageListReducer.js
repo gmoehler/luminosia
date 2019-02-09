@@ -3,7 +3,7 @@ import { CLEAR_IMAGELIST, ADD_IMAGE, REMOVE_IMAGE, } from '../actions/types';
 import { filterObjectByKeys } from '../utils/miscUtils';
 
 const initialState = {
-  byId: {},
+  byImageId: {},
 };
 
 export default (state = initialState, action) => {
@@ -13,22 +13,22 @@ export default (state = initialState, action) => {
       return initialState;
 
     case ADD_IMAGE:
-      const id = action.payload.id ? action.payload.id : action.payload.src;
+      const imageId = action.payload.imageId ? action.payload.imageId : action.payload.src;
       return {
         ...state,
-        byId: {
-          ...state.byId,
-          [id]: action.payload
+        byImageId: {
+          ...state.byImageId,
+          [imageId]: action.payload
         }
       };
 
     case REMOVE_IMAGE:
-      const images = cloneDeep(state).byId;
+      const images = cloneDeep(state).byImageId;
       delete images[action.payload.imageId];
 
       return {
         ...state,
-        byId: images
+        byImageId: images
       };
 
     default:
@@ -37,27 +37,26 @@ export default (state = initialState, action) => {
 }
 
 export const getImageList = (state) => {
-  return state.images.byId ? Object.values(state.images.byId) : [];
+  return state.images.byImageId ? Object.values(state.images.byImageId) : [];
 }
 
 export const getImageSampleRate = (state) => {
   return state.images.sampleRate;
 }
 
-export const getImageDuration = (state, id) => {
-  const img = state.images.byId[id];
+export const getImageDuration = (state, imageId) => {
+  const img = state.images.byImageId[imageId];
   return img ? img.duration : 0;
 }
 
 // array of all images with relevant fields filtered out
 export const getImageListConfig = (state) => {
-  const allowedProps = ["src", "sampleRate", 
-    "id", "width", "height", "duration"];
-  
-  const images = state.images.byId ? 
-    Object.values(state.images.byId) : [];
-  
-  return images.map((img) => 
-    filterObjectByKeys(img, allowedProps));
+  const allowedProps = ["src", "sampleRate",
+    "imageId", "width", "height", "duration"];
+
+  const images = state.images.byImageId ?
+    Object.values(state.images.byImageId) : [];
+
+  return images.map((img) => filterObjectByKeys(img, allowedProps));
 
 };

@@ -3,10 +3,29 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { getChannelExportData } from '../actions/generalActions';
 import { samplesToRad } from '../utils/conversions';
+import Slider from '@material-ui/lab/Slider';
+
+const minRotationSpeed = 0.1;
+const maxRotationSpeed = 9.9;
+
 
 const AnimationPaneWrapper = styled.div`
 	width:  calc(95vw - ${props => props.drawerWidth}px);
 	background: black;
+	display: flex;
+	flex-direction: row;
+`;
+
+const AnimationControl = styled.div`
+	width:  96px;
+	background: darkgrey;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+	align-items: flex-end;
+	padding: 20px;
+	color: #3f51b5;
+	font-weight: 600;
 `;
 
 const AnimationCanvas = styled.canvas`
@@ -82,19 +101,47 @@ export default class AnimationPane extends PureComponent {
 
   componentDidUpdate() {
     this.draw();
-  }
+	}
+	
+	speed2slider(speed) {
+		return (speed - minRotationSpeed) / (maxRotationSpeed-minRotationSpeed) * 100;
+	}
+
+	slider2speed(val) {
+		//100 -> max, 0 -> min
+		return minRotationSpeed + val / 100 * (maxRotationSpeed-minRotationSpeed);
+	}
+  
+  handleChange = (ev, val) => {
+  	const rotationSpeed = this.slider2speed(val);
+  	this.setState( { rotationSpeed } );
+  };
 
   render() {
+  	
+  	const { rotationSpeed } = this.state;
 
 		const {drawerWidth, selectedChannels, resolution} = this.props;
     return (
 			<AnimationPaneWrapper
 					drawerWidth = {drawerWidth}>
+					<AnimationControl>
+						{rotationSpeed.toFixed(1)}
+						<Slider 
+							value={this.speed2slider(rotationSpeed)}
+							onChange={this.handleChange}
+							vertical
+							style= {{
+								width: 0
+							}}
+						/>
+					</AnimationControl>
 					<AnimationCanvas 
 						id = "animationPaneCanvas" 
 						height = {resolution * 80}
 						width = {selectedChannels.length * resolution * 80}/>
-      </AnimationPaneWrapper>
+        </AnimationPaneWrapper>
+        
     )
 	}
 }

@@ -29,10 +29,10 @@ export const REMOVE_IMAGE = "REMOVE_IMAGE";
 
 // view actions
 export const CLEAR_VIEW = "CLEAR_VIEW";
-export const SELECT = "SELECT";
+export const SELECT_RANGE = "SELECT_RANGE";
+export const DESELECT_RANGE = "DESELECT_RANGE";
 export const SET_RESOLUTION = "SET_RESOLUTION";
 export const SET_CHANNEL_PLAY_STATE = "SET_CHANNEL_PLAY_STATE";
-export const SET_MODE = "SET_MODE";
 export const SET_MARKER = "SET_MARKER";
 export const DELETE_MARKER = "DELETE_MARKER";
 export const UPDATE_MARKER = "UPDATE_MARKER";

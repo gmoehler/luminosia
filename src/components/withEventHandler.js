@@ -17,11 +17,12 @@ export function withEventHandler(WrappedComponent) {
     componentDidMount() {
       // mouse handler setup
       this.mousehandler = new MouseHandler({
-        select: this.props.select,
+        selectRange: this.props.selectRange,
+        deselectRange: this.props.deselectRange,
         move: this.props.move,
         updateMarker: this.props.updateMarker,
         setMarker: this.props.setMarker,
-        addPartAndMarkers: this.props.addPartAndMarkers,
+        insertNewPart: this.props.insertNewPart,
         selectPartOrImage: this.props.selectPartOrImage,
         deleteSelectedPartAndMarkers: this.props.deleteSelectedPartAndMarkers,
       });
@@ -29,25 +30,21 @@ export function withEventHandler(WrappedComponent) {
 
     render() {
 
-      const {mode, select, move, updateMarker, setMarker, addPartAndMarkers, selectPartOrImage, deleteSelectedPartAndMarkers, ...passthruProps} = this.props;
-
-      if (this.mousehandler) {
-        this.mousehandler.setMode(this.props.mode);
-      }
+      const {selectRange, deselectRange, move, updateMarker, setMarker, insertNewPart, selectPartOrImage, deleteSelectedPartAndMarkers, ...passthruProps} = this.props;
 
       return <WrappedComponent {...passthruProps} handleMouseEvent={ (eventName, evInfo) => this.mousehandler.handleMouseEvent(eventName, evInfo, this.props.resolution) } />
     }
   }
 
   WithEventHandler.propTypes = {
-    select: PropTypes.func.isRequired,
+    selectRange: PropTypes.func.isRequired,
+    deselectRange: PropTypes.func.isRequired,
     move: PropTypes.func.isRequired,
     updateMarker: PropTypes.func.isRequired,
     setMarker: PropTypes.func.isRequired,
-    addPartAndMarkers: PropTypes.func.isRequired,
+    insertNewPart: PropTypes.func.isRequired,
     selectPartOrImage: PropTypes.func.isRequired,
     deleteSelectedPartAndMarkers: PropTypes.func.isRequired,
-    mode: PropTypes.oneOf(['selectionMode', 'moveMode']).isRequired,
   }
 
   return WithEventHandler;

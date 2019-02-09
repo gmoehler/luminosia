@@ -2,7 +2,7 @@
 
 export default class SelectionMouseHandler {
 
-  constructor(handlerFunctions){
+  constructor(handlerFunctions) {
     this.handlerFunctions = handlerFunctions;
     this.prevPosX = null;
     this.prevTimestamp = 0;
@@ -14,26 +14,26 @@ export default class SelectionMouseHandler {
     switch (eventName) {
 
       case "dragEnter":
-      this.handleInsertMarker(evInfo)
-      break;
+        this.handleInsertMarker(evInfo)
+        break;
 
       case "dragOver":
-      this.handleInsertMarker(evInfo)
-      break;
+        this.handleInsertMarker(evInfo)
+        break;
 
       case "drop":
-      this.handleInsertImage(evInfo)
-      break;
+        this.handleInsertImage(evInfo)
+        break;
 
       default:
-      break;
+        break;
     }
   }
 
   handleInsertMarker = (evInfo, timestamp) => {
     // only realize marker move after some time intervals and larger steps
-    if (!this.prevPosX || 
-        (evInfo.timestamp - this.prevTimestamp > 100 && Math.abs(evInfo.x - this.prevPosX) > 0.01)) { 
+    if (!this.prevPosX ||
+      (evInfo.timestamp - this.prevTimestamp > 100 && Math.abs(evInfo.x - this.prevPosX) > 0.01)) {
       // console.log(evInfo.x, " ", evInfo.timestamp, "drag");
       this.handlerFunctions.setMarker("insert", evInfo.x, "insert");
       this.prevPosX = evInfo.x;
@@ -43,7 +43,7 @@ export default class SelectionMouseHandler {
 
   handleInsertImage = (evInfo) => {
     // console.log(evInfo.x, " drop");
-    this.handlerFunctions.addPartAndMarkers(evInfo.channelId, evInfo.imageId, evInfo.src, evInfo.x, evInfo.duration);
+    this.handlerFunctions.insertNewPart(evInfo.channelId, evInfo.imageId, evInfo.src, evInfo.x, evInfo.duration);
     this.prevPosX = null;
     this.prevTimestamp = 0;
   }

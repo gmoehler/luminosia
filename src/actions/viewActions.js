@@ -1,4 +1,4 @@
-import { SELECT, SET_RESOLUTION, SET_MODE, UPDATE_MARKER, SET_MARKER, DELETE_MARKER, SELECT_PART_OR_IMAGE, DESELECT_PART_OR_IMAGE, CLEAR_VIEW } from './types';
+import { SELECT_RANGE, DESELECT_RANGE, SET_RESOLUTION, UPDATE_MARKER, SET_MARKER, DELETE_MARKER, SELECT_PART_OR_IMAGE, DESELECT_PART_OR_IMAGE, CLEAR_VIEW } from './types';
 
 import { getSelectedPart, getSelectedImage } from '../reducers/viewReducer';
 
@@ -6,20 +6,19 @@ export const clearView = () => ({
   type: CLEAR_VIEW
 });
 
-export const select = (selectInfo) => ({
-  type: SELECT,
+export const selectRange = (selectInfo) => ({
+  type: SELECT_RANGE,
   payload: selectInfo
+});
+
+export const deselectRange = () => ({
+  type: DESELECT_RANGE
 });
 
 export const setResolution = (resolutionInfo) => ({
   type: SET_RESOLUTION,
   payload: resolutionInfo
 });
-
-export const setMode = (modeInfo) => ({
-  type: SET_MODE,
-  payload: modeInfo
-})
 
 export const setMarker = (markerInfo) => ({
   type: SET_MARKER,

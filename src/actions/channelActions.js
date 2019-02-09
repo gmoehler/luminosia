@@ -1,12 +1,8 @@
-import LoaderFactory from '../loader/LoaderFactory'
-
-import { PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL, 
-  ADD_PART, DELETE_PART, ADD_CHANNEL, CLEAR_CHANNELS, UPLOAD_AUDIO_STARTED, UPLOAD_AUDIO_SUCCESS, UPLOAD_AUDIO_FAILURE, DELETE_CHANNEL, SELECT_CHANNEL, DESELECT_CHANNEL
-} from './types';
+import { PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL, ADD_PART, DELETE_PART, ADD_CHANNEL, CLEAR_CHANNELS, UPLOAD_AUDIO_STARTED, UPLOAD_AUDIO_SUCCESS, UPLOAD_AUDIO_FAILURE, DELETE_CHANNEL, SELECT_CHANNEL, DESELECT_CHANNEL} from './types';
 
 import { setMarker, deleteMarker, deselect, selectPartOrImage } from './viewActions';
 
-import { getLastPartId, getLastChannelId, getSelectedChannelIds, getMaxDuration } from '../reducers/channelReducer';
+import { getLastPartId, getLastChannel, getSelectedChannelIds, getMaxDuration, getChannelData } from '../reducers/channelReducer';
 import { getSelectedPart, getSelectedImage } from '../reducers/viewReducer';
 import { getImageDuration } from '../reducers/imageListReducer';
 import { removeImage } from './imageListActions';
@@ -16,19 +12,22 @@ import { drawExportImage, clearExportImage } from './generalActions';
 
 // load channel from config
 
-export const addChannel = channelInfo => ({
+export const addChannel = (channelInfo) => ({
   type: ADD_CHANNEL,
   payload: channelInfo
 });
 
-export const addImageChannel = () => {
+// create an empty image channel
+export const createImageChannel = () => {
   return (dispatch, getState) => {
+    // we extend the duration to the longest channel
     const duration = Math.max(10, getMaxDuration(getState()));
+    // add required fields
     dispatch(addChannel({
       type: "image",
       sampleRate: defaultSampleRate,
-      playState: "stopped",
       selected: true,
+      playState: "stopped",
       duration,
     }));
   }
@@ -53,15 +52,12 @@ export const deselectChannel = (channelInfo) => ({
   payload: channelInfo
 });
 
-
 const uploadAudioStarted = startInfo => ({
-  type: UPLOAD_AUDIO_STARTED,
-  payload: startInfo
+  type: UPLOAD_AUDIO_STARTED
 });
 
 const uploadAudioSuccess = channelInfo => ({
-  type: UPLOAD_AUDIO_SUCCESS,
-  payload: channelInfo
+  type: UPLOAD_AUDIO_SUCCESS
 });
 
 const uploadAudioFailure = errorInfo => ({
@@ -69,15 +65,10 @@ const uploadAudioFailure = errorInfo => ({
   payload: errorInfo
 });
 
-function loadChannelFromFile(channelSource, audioContext) {
-  const loader = LoaderFactory.createLoader(channelSource, audioContext);
-  return loader.load();
-};
-
-// load a channel based on a channel config
+// helper function (no action): load a channel based on a channel config
 export function loadAChannel(channelConfig, audioContext, state) {
   if (channelConfig.type === "audio") {
-    return loadWaveChannel(channelConfig, audioContext);
+    return Promise.resolve(); // audio channels are curr. not loaded from config
   }
   return loadImageChannel(channelConfig, state);
 }
@@ -87,13 +78,15 @@ function loadImageChannel(channelConfig, state) {
   // first normalize the parts
   // an icremented 'curid' is the part id used as key
   const normalizedParts = channelConfig.parts ? channelConfig.parts.reduce((res, part) => {
-    part.id = res.curid;
-    part.duration = part.duration ? 
+    part.partId = res.curid;
+    part.duration = part.duration ?
       part.duration : getImageDuration(state, part.src);
     res[res.curid] = part;
     res.curid++;
     return res;
-  }, {curid: 0}) : null;
+  }, {
+    curid: 0
+  }) : null;
 
   // incremented id no longer required
   delete normalizedParts.curid;
@@ -103,24 +96,11 @@ function loadImageChannel(channelConfig, state) {
 
   return Promise.resolve({
     ...channelConfig,
-    byParts: normalizedParts
+    byPartId: normalizedParts
   })
 }
 
-// load wave channel from static content
-function loadWaveChannel(channelConfig, audioContext) {
-  return loadChannelFromFile(channelConfig.src, audioContext)
-    .then((buf) => {
-      return {
-        type: "audio",
-        playState: "stopped",
-        sampleRate: buf.sampleRate,
-        buffer: buf,
-        ...channelConfig
-      }
-    })
-}
-
+// load audio file to studio
 export const uploadAudioFile = (audioFile, audioContext) => {
   return (dispatch, getState) => {
     dispatch(uploadAudioStarted());
@@ -138,9 +118,11 @@ export const uploadAudioFile = (audioFile, audioContext) => {
           duration: audioBuffer.duration,
           selected: true,
         }
-        dispatch(addChannel(channelInfo)); 
+        // console.log(channelInfo);
+        dispatch(addChannel(channelInfo));
+        dispatch(uploadAudioSuccess());
+        console.log("done");
       })
-      .then(dispatch(uploadAudioSuccess()))
       .catch(err => {
         console.error(err);
         return dispatch(uploadAudioFailure({
@@ -150,53 +132,69 @@ export const uploadAudioFile = (audioFile, audioContext) => {
   }
 }
 
-// since we do not get the channel id this only works for the channel that was
-// last added
-export const updateChannelMarkersForLastAddedChannel = (channelInfo) => {
+export const duplicateChannel = (channelId) => {
   return (dispatch, getState) => {
-    
-    if (channelInfo.byParts){
-      const channelId = getLastChannelId(getState());
+    const ch = getChannelData(getState(), channelId);
+    dispatch(addChannel(ch));
+    // TODO: add new channel just after copied one
+  }
+};
 
-      Object.keys(channelInfo.byParts).forEach((partId) => {
-      
-        const part = channelInfo.byParts[partId];
+
+export const updateChannelMarkersForLastAddedChannel = () => {
+  return (dispatch, getState) => {
+
+    const lastChannel = getLastChannel(getState());
+    if (lastChannel) {
+      const channelId = lastChannel.channelId;
+
+      Object.keys(lastChannel.byPartId).forEach((partId) => {
+
+        const part = lastChannel.byPartId[partId];
         dispatch(setMarker({
-            markerId: `${channelId}-${partId}-l`, 
-            pos: part.offset,
-            type: "normal"
-          }));
-          dispatch(setMarker({
-            markerId: `${channelId}-${partId}-r`, 
-            pos: part.offset + part.duration,
-            type: "normal"
-          }));
+          markerId: `${channelId}-${partId}-l`,
+          pos: part.offset,
+          type: "normal"
+        }));
+        dispatch(setMarker({
+          markerId: `${channelId}-${partId}-r`,
+          pos: part.offset + part.duration,
+          type: "normal"
+        }));
       });
     }
   }
 };
 
-export const addPartAndMarkers = (partInfo) => {
+export const insertNewPart = (partInfo) => {
   return (dispatch, getState) => {
+
+    // remove insertion marker
+    dispatch(deleteMarker({
+      markerId: "insert"
+    }));
+
     dispatch(addPart(partInfo))
     const lastPartId = getLastPartId(getState(), partInfo.channelId);
+    // generate markers for part
     dispatch(setMarker({
-      markerId: `${partInfo.channelId}-${lastPartId}-l`, 
+      markerId: `${partInfo.channelId}-${lastPartId}-l`,
       pos: partInfo.offset,
       type: "normal"
     }));
     dispatch(setMarker({
-      markerId: `${partInfo.channelId}-${lastPartId}-r`, 
+      markerId: `${partInfo.channelId}-${lastPartId}-r`,
       pos: partInfo.offset + partInfo.duration,
       type: "normal"
     }));
-    dispatch(deleteMarker({
-      markerId: "insert"})); 
-      
+
+
     // select the new part
-    const lastPart = {...partInfo};
-    lastPart.partId = lastPartId;
-    lastPart.selected = true;
+    const lastPart = {
+      channelId: partInfo.channelId,
+      partId: lastPartId,
+      selected: true,
+    }
     dispatch(selectPartOrImage(lastPart));
   }
 }
@@ -213,9 +211,11 @@ export const deleteSelectedPartAndMarkers = () => {
     if (selPart) {
       dispatch(deletePart(selPart));
       dispatch(deleteMarker({
-        markerId: `${selPart.channelId}-${selPart.partId}-l`}));
+        markerId: `${selPart.channelId}-${selPart.partId}-l`
+      }));
       dispatch(deleteMarker({
-        markerId: `${selPart.channelId}-${selPart.partId}-r`}));
+        markerId: `${selPart.channelId}-${selPart.partId}-r`
+      }));
       dispatch(deselect());
     }
     if (selImage) {
@@ -240,8 +240,7 @@ export const playChannelAndImage = () => {
   return (dispatch, getState) => {
     const selectedImageChannels = getSelectedChannelIds(getState(), "image");
     dispatch(clearExportImage(selectedImageChannels.length));
-    selectedImageChannels.map((channelId, idx) => 
-      dispatch(drawExportImage(channelId, idx)))
+    selectedImageChannels.map((channelId, idx) => dispatch(drawExportImage(channelId, idx)))
     dispatch(playChannel());
   }
 }

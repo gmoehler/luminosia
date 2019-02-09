@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import ChannelSelector from './ChannelSelector';
 import { getAllChannelsOverview } from '../reducers/channelReducer';
-import { selectChannel, deselectChannel, deleteChannel } from '../actions/channelActions';
+import { selectChannel, deselectChannel, deleteChannel, duplicateChannel } from '../actions/channelActions';
 import { exportImageChannel } from '../actions/generalActions';
 
 class ChannelSelectorContainer extends Component {
@@ -17,6 +17,7 @@ class ChannelSelectorContainer extends Component {
         deselectChannel={this.props.deselectChannelAction}
         exportImageChannel={this.props.exportImageChannelAction}
         deleteChannel={this.props.deleteChannelAction}
+        duplicateChannel={this.props.duplicateChannelAction}
       />);
   }
 }
@@ -32,6 +33,7 @@ const mapDispatchToProps = dispatch => ({
   deselectChannelAction: (channelId) => dispatch(deselectChannel(channelId)),
   exportImageChannelAction: (channelId) => dispatch(exportImageChannel(channelId)),
   deleteChannelAction: (channelId) => dispatch(deleteChannel(channelId)),
+  duplicateChannelAction: (channelId) => dispatch(duplicateChannel(channelId)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChannelSelectorContainer);

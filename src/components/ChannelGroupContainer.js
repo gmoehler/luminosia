@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import { connect } from 'react-redux'; 
 
 import ChannelGroup from './ChannelGroup'
-import { setChannelPlayState, moveChannel, addPartAndMarkers, deleteSelectedPartAndMarkers } from '../actions/channelActions'
-import { select, setMarker, updateMarker, selectPartOrImage } from '../actions/viewActions'
+import { setChannelPlayState, moveChannel, insertNewPart, deleteSelectedPartAndMarkers } from '../actions/channelActions'
+import { selectRange, deselectRange, setMarker, updateMarker, selectPartOrImage } from '../actions/viewActions'
 import { getMaxDuration, getLastPartId, getAllChannelsData } from '../reducers/channelReducer'
-import { getSelectionRange, getResolution, getMode, getMarkers } from '../reducers/viewReducer'
+import { getSelectionRange, getResolution, getMarkers } from '../reducers/viewReducer'
 
-class ChannelGroupContainer extends Component {
+class ChannelGroupContainer extends Component {x
 
   getLastPartId = (channelId) => {
     getLastPartId(this.props.currentState, channelId)
@@ -27,16 +27,16 @@ const mapStateToProps = (state, props) => {
     selection: getSelectionRange(state),
     resolution: getResolution(state),
     maxDuration: getMaxDuration(state),
-    mode: getMode(state),
     markers: getMarkers(state),
   }
 };
 
 const mapDispatchToProps = dispatch => ({
-  select: (from, to) => dispatch(select({
+  selectRange: (from, to) => dispatch(selectRange({
     from,
     to
   })),
+  deselectRange: () => dispatch(deselectRange()),
   setMarker: (markerId, pos, type) => dispatch(setMarker({
     markerId,
     pos,
@@ -47,7 +47,7 @@ const mapDispatchToProps = dispatch => ({
     incr,
     type
   })),
-  addPartAndMarkers: (channelId, imageId, src, offset, duration) => dispatch(addPartAndMarkers({
+  insertNewPart: (channelId, imageId, src, offset, duration) => dispatch(insertNewPart({
     channelId,
     imageId,
     src,
