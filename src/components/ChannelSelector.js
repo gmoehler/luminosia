@@ -98,7 +98,7 @@ class CustomizedSwitches extends React.Component {
             </IconButton>
           </Tooltip>
 
-          <Tooltip title="Delete image channel">
+          <Tooltip title="Delete channel">
           <IconButton 
             className={ classes.button }
             onClick={ () => this.props.deleteChannel(channel.channelId) }>
