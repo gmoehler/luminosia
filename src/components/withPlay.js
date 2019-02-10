@@ -117,6 +117,11 @@ export function withPlay(WrappedComponent) {
         progress: currentTimeInSecs
       })
 
+
+      if ( this.props.reportProgress) {
+        this.props.reportProgress(currentTimeInSecs);
+      }
+
       if (currentTimeInSecs < this.animateEndAt) {
         this.animationRequest = window.requestAnimationFrame(this.animateProgress);
       } else {
@@ -178,6 +183,7 @@ export function withPlay(WrappedComponent) {
     sampleRate: PropTypes.number.isRequired,
     resolution: PropTypes.number.isRequired,
     playState: PropTypes.oneOf(['stopped', 'playing']).isRequired,
+    reportProgress: PropTypes.func,
     selection: PropTypes.exact({
       from: PropTypes.number,
       to: PropTypes.number,
