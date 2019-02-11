@@ -91,11 +91,11 @@ export const clearExportImage = (numChannels) => {
       const maxDuration = getMaxDuration(getState());
       const canvas = document.getElementById("imageExportCanvas");
       canvas.height = numChannels * 30;
-      canvas.width =  secondsToSamples(maxDuration, 100); // TODO: actual sample rate
+      canvas.width = secondsToSamples(maxDuration, 100); // TODO: actual sample rate
 
       const cc = canvas.getContext('2d');
       cc.fillStyle = "black";
-      cc.fillRect(0,0, canvas.width, canvas.height);
+      cc.fillRect(0, 0, canvas.width, canvas.height);
     }
   };
 };
@@ -114,7 +114,7 @@ export const drawExportImage = (channelId, idx) => {
         const img = document.getElementById(part.imageId);
         const offsetPx = part.offset ? secondsToSamples(part.offset, data.sampleRate) : 0;
         const widthPx = part.duration ? secondsToSamples(part.duration, data.sampleRate) : 0;
-        cc.drawImage(img, 0, 0, widthPx, 30,  offsetPx, idx*30, widthPx, 30);
+        cc.drawImage(img, 0, 0, widthPx, 30, offsetPx, idx * 30, widthPx, 30);
       });
     }
   };
@@ -137,12 +137,12 @@ export const exportImageChannel = (channelId) => {
 // to acoid retreiving the same frame twice
 // we use ceil on the start idx and floor on the end idx
 export const getChannelExportData = ((fromTime, toTime, sampleRate) => {
-    const exportCanvas = document.getElementById("imageExportCanvas");
+  const exportCanvas = document.getElementById("imageExportCanvas");
   if (exportCanvas) {
     const exportCc = exportCanvas.getContext('2d');
     const fromIdx = secondsToSamples(fromTime, sampleRate);
     const toIdx = secondsToSamples(toTime, sampleRate, false); // floor
-    const width = toIdx-fromIdx;
+    const width = toIdx - fromIdx;
     if (width > 0) {
       return exportCc.getImageData(fromIdx, 0, width, exportCanvas.height);
     }

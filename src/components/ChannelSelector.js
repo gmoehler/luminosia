@@ -6,7 +6,7 @@ import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import { Tooltip, IconButton } from '@material-ui/core';
-import {indigo } from '@material-ui/core/colors/indigo';
+import { indigo } from '@material-ui/core/colors/indigo';
 import DownloadChannelIcon from '@material-ui/icons/SaveAlt';
 import DeleteChannelIcon from '@material-ui/icons/DeleteForever';
 import ChannelDupIcon from '@material-ui/icons/FileCopy';

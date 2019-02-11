@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
-import ImageList from './ImageList'
+import ImageList from './ImageList';
 import { getImageList } from '../reducers/imageListReducer';
 import { getResolution, getSelectedImage } from '../reducers/viewReducer';
 import { saveImageToStorage, addImage, loadImagesfromStorage } from '../actions/imageListActions';
@@ -13,15 +14,17 @@ class ImageListContainer extends Component {
 
   render() {
 
+    const { addImageAction, images, selectPartOrImageAction, selectedImage, resolution, loadImagesfromStorageAction } = this.props;
+
     return (
       <ImageList 
-        addImage ={this.props.addImageAction}
-        images={ this.props.images } 
-        selectImage={this.props.selectPartOrImageAction}
-        selectedImage={this.props.selectedImage}
-        resolution={ this.props.resolution } 
-        loadImagesfromStorage = {this.props.loadImagesfromStorageAction}
-        sampleRate={defaultSampleRate}
+          addImage ={ addImageAction }
+          images={ images } 
+          selectImage={ selectPartOrImageAction }
+          selectedImage={ selectedImage }
+          resolution={ resolution } 
+          loadImagesfromStorage = { loadImagesfromStorageAction }
+          sampleRate={ defaultSampleRate }
       />);
   }
 }
@@ -31,7 +34,7 @@ const mapStateToProps = (state, props) => {
     images: getImageList(state),
     resolution: getResolution(state),
     selectedImage: getSelectedImage(state)
-  }
+  };
 };
 
 const mapDispatchToProps = dispatch => ({
@@ -39,6 +42,15 @@ const mapDispatchToProps = dispatch => ({
   selectPartOrImageAction: (imageInfo) => dispatch(selectPartOrImage(imageInfo)),
   saveImageToStorageAction: (imageFile, key) => dispatch(saveImageToStorage(imageFile, key)),
   loadImagesfromStorageAction: () => dispatch(loadImagesfromStorage()),
-})
+});
+
+ImageListContainer.propTypes = {
+  images: PropTypes.array, // all images
+	resolution: PropTypes.number,
+  addImageAction: PropTypes.func.isRequired,
+  selectPartOrImageAction: PropTypes.func.isRequired,
+  loadImagesfromStorageAction: PropTypes.func.isRequired,
+	selectedImage: PropTypes.string,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(ImageListContainer);

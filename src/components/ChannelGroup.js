@@ -49,9 +49,9 @@ export default class ChannelGroup extends Component {
     // check progress to do autoscrolling 
     const progressPx = secondsToPixels(progress, this.props.resolution);
     if (progressPx > this.groupRef.scrollLeft + this.groupRef.clientWidth) {
-      this.setState({scrollLeft: progressPx});
+      this.setState({ scrollLeft: progressPx });
     } else if (progressPx < this.groupRef.scrollLeft) {
-      this.setState({scrollLeft: progressPx});
+      this.setState({ scrollLeft: progressPx });
     }
   }
 
@@ -66,7 +66,7 @@ export default class ChannelGroup extends Component {
     const channelComponents = this.props.allChannelsData
       .map((channelData) => {
 
-        const {resolution, ...passthruProps} = this.props;
+        const { resolution, ...passthruProps } = this.props;
         const channelId = channelData.channelId;
 
         if (channelData.loading) {

@@ -5,6 +5,7 @@
 
   "rules": {
     "semi":"error",
+    "object-curly-spacing": [2, "always"],
     "react/jsx-curly-spacing": [2, {"when": "always"}],
     "react/jsx-max-props-per-line": [2, {"maximum": 1}],
     "react/jsx-indent-props": [2, "tabs"],

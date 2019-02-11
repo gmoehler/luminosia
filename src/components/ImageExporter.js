@@ -14,23 +14,23 @@ const ImageExporterCanvas = styled.canvas`
 
 export default class ImageExporter extends PureComponent {
 	constructor(props) {
-    super(props);
+		super(props);
 		this.state = {
 			dragging: false
 		};
 	}
 
 
-  render() {
+	render() {
 
-    return (
-			<ImageExporterWrapper drawerWidth = { this.props.drawerWidth }>
-				<ImageExporterCanvas id = "imageExportCanvas" />
-      </ImageExporterWrapper>
-    );
-  }
+		return (
+			<ImageExporterWrapper drawerWidth={ this.props.drawerWidth }>
+     <ImageExporterCanvas id="imageExportCanvas" />
+   </ImageExporterWrapper>
+			);
+	}
 }
 
 ImageExporter.propTypes = {
-  drawerWidth: PropTypes.number,
+	drawerWidth: PropTypes.number,
 };

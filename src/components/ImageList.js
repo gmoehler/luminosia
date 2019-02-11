@@ -45,6 +45,10 @@ export default class ImageList extends PureComponent {
 		};
 	}
 
+	componentDidMount() {
+		this.props.loadImagesfromStorage();
+	}
+
 	loadImageAndAddToStore(fileName) {
 		var reader = new FileReader();
 		var img = new Image();
@@ -52,7 +56,7 @@ export default class ImageList extends PureComponent {
 
 		reader.onload = function(e) {
 			img.src = reader.result;
-		}
+		};
 		img.onload = function() {
 			const newImage = {
 				width: img.width,
@@ -61,7 +65,7 @@ export default class ImageList extends PureComponent {
 				imageId: fileName.name,
 				sampleRate: that.props.sampleRate,
 				duration: samplesToSeconds(img.width, that.props.sampleRate)
-			}
+			};
 			that.props.addImage(newImage);
 		};
 		reader.readAsDataURL(fileName);
@@ -70,7 +74,7 @@ export default class ImageList extends PureComponent {
 	handleMouseEvent = (e, eventName) => {
 		e.preventDefault();
 		e.stopPropagation();
-		if (eventName === "mouseUp"){
+		if (eventName === "mouseUp") {
 			let el = e.target;
 			const imageId = el.getAttribute("data-imageid");
 			this.props.selectImage({
@@ -78,17 +82,26 @@ export default class ImageList extends PureComponent {
 				selected: true
 			});
 		} else if (eventName === "dragEnter") {
-			this.dragCounter++;			
-			this.setState({...this.state, dragging: true})
+			this.dragCounter++;
+			this.setState({
+				...this.state,
+				dragging: true
+			});
 		} else if (eventName === "dragLeave") {
 			this.dragCounter--;
 			if (this.dragCounter <= 0) {
-				this.setState({...this.state, dragging: false});
+				this.setState({
+					...this.state,
+					dragging: false
+				});
 				this.dragCounter = 0;
 			}
 		} else if (eventName === "drop") {
 			// load images on drop
-			this.setState({...this.state, dragging: false});
+			this.setState({
+				...this.state,
+				dragging: false
+			});
 			this.dragCounter = 0;
 
 			if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
@@ -101,56 +114,52 @@ export default class ImageList extends PureComponent {
 		}
 	}
 
-	componentDidMount() {
-		this.props.loadImagesfromStorage();
-	}
 
-  render() {
+	render() {
 
 		const { images, resolution } = this.props;
 
-		const imagesComponent =  images
-			.map((img) => 
-			<ImageInList 
-				id={ img.imageId } 	
-				key={ img.imageId } 
-				src={ img.src } 
-				data-imageid={ img.imageId }
-				borderColor={this.props.selectedImage && img.imageId === this.props.selectedImage.imageId ? 
-					"red" : "transparent" }
-				draggable onDragStart={ (e) => {
-					e.dataTransfer.setData("src", img.src);
-					e.dataTransfer.setData("imageid", img.imageId);
-					// transfer duration in pixels since this is going to be consumed 
-					// in a Channel component which calculates in pixels
-					e.dataTransfer.setData("duration", secondsToPixels(img.duration, resolution)); 
-				}}
-				/>
+		const imagesComponent = images
+			.map((img) => (<ImageInList id={ img.imageId }
+    key={ img.imageId }
+    src={ img.src }
+    data-imageid={ img.imageId }
+    borderColor={ this.props.selectedImage && img.imageId === this.props.selectedImage.imageId ?
+                                                                                                               "red" : "transparent" }
+    draggable
+    onDragStart={ (e) => {
+                                  	e.dataTransfer.setData("src", img.src);
+                                  	e.dataTransfer.setData("imageid", img.imageId);
+                                  	// transfer duration in pixels since this is going to be consumed 
+                                  	// in a Channel component which calculates in pixels
+                                  	e.dataTransfer.setData("duration", secondsToPixels(img.duration, resolution));
+                                  } } />)
 		);
-		
-		const dropHereLabel = images.length > 0 ? null : 
-			<DropHereLabel center> Drop your images here </DropHereLabel>
 
-    return (
-			<ImageListWrapper
-				borderColor={images.length > 0 ? "tranparent" : "darkgrey"}
-				onMouseUp={ (e) => this.handleMouseEvent(e, "mouseUp") } 
+		const dropHereLabel = images.length > 0 ? null :
+			<DropHereLabel center> Drop your images here </DropHereLabel>;
 
-				onDragEnter={ (e) => this.handleMouseEvent(e, "dragEnter") } 
-				onDragEnd={ (e) => this.handleMouseEvent(e, "dragEnd") } 
-				onDragExit={ (e) => this.handleMouseEvent(e, "dragExit") } 
-				onDragLeave={ (e) => this.handleMouseEvent(e, "dragLeave") } 
-				onDragOver={ (e) => this.handleMouseEvent(e, "dragOver") }
-				onDrop={ (e) => this.handleMouseEvent(e, "drop") } 
-				backgroundColor={this.state.dragging ? "darkgrey" : "white"}>
-					{ dropHereLabel }
-					{ imagesComponent }
-      </ImageListWrapper>
-    )
-  }
+		return (
+			<ImageListWrapper borderColor={ images.length > 0 ? "tranparent" : "darkgrey" }
+    		onMouseUp={ (e) => this.handleMouseEvent(e, "mouseUp") }
+    		onDragEnter={ (e) => this.handleMouseEvent(e, "dragEnter") }
+    		onDragEnd={ (e) => this.handleMouseEvent(e, "dragEnd") }
+    		onDragExit={ (e) => this.handleMouseEvent(e, "dragExit") }
+    		onDragLeave={ (e) => this.handleMouseEvent(e, "dragLeave") }
+    		onDragOver={ (e) => this.handleMouseEvent(e, "dragOver") }
+    		onDrop={ (e) => this.handleMouseEvent(e, "drop") }
+    		backgroundColor={ this.state.dragging ? "darkgrey" : "white" }>
+     { dropHereLabel }
+     { imagesComponent }
+   </ImageListWrapper>
+			);
+	}
 }
 
 ImageList.propTypes = {
 	images: PropTypes.array, // all images
 	resolution: PropTypes.number,
-}
+	loadImagesfromStorage: PropTypes.func.isRequired,
+	selectImage: PropTypes.func.isRequired,
+	selectedImage: PropTypes.string,
+};

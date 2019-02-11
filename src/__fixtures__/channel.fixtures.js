@@ -6,7 +6,7 @@ export const audioChannelPayload = {
     length: 10,
   // real channels have more fields here
   }
-}
+};
 
 export const imageChannelPayload = {
   type: 'image',
@@ -22,7 +22,7 @@ export const imageChannelPayload = {
       duration: 1.9125
     }
   }
-}
+};
 
 export const initialImageChannelPayload = {
   type: 'image',
@@ -30,7 +30,7 @@ export const initialImageChannelPayload = {
   selected: true,
   duration: 10,
   playState: "stopped",
-}
+};
 
 export const imageChannelState = {
   channel: {
@@ -54,10 +54,10 @@ export const imageChannelState = {
       }
     } // byChannelId
   } // channel
-}
+};
 
 export const part = {
   offset: 5.5,
   duration: 55.55,
   sampleRate: 100,
-}
+};

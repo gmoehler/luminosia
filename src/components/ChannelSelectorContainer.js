@@ -11,8 +11,8 @@ class ChannelSelectorContainer extends Component {
 
   render() {
 
-    const {channelOverview, selectChannelAction, deselectChannelAction,
-      exportImageChannelAction, deleteChannelAction, duplicateChannelAction} = this.props;
+    const { channelOverview, selectChannelAction, deselectChannelAction,
+      exportImageChannelAction, deleteChannelAction, duplicateChannelAction } = this.props;
 
     return (
       <ChannelSelector

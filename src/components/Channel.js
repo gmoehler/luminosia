@@ -79,7 +79,7 @@ class Channel extends Component {
   }
 
   draw() {
-    const {peaks, bits, /* length,*/ waveHeight, theme, scale} = this.props;
+    const { peaks, bits, /* length,*/ waveHeight, theme, scale } = this.props;
 
     let offset = 0;
     for (let i = 0; i < this.canvases.length; i++) {
@@ -137,8 +137,8 @@ class Channel extends Component {
   }
 
   render() {
-    const {length, waveHeight, scale, progress, cursorPos, 
-      selection, markers, theme, offset, selected} = this.props;
+    const { length, waveHeight, scale, progress, cursorPos, 
+      selection, markers, theme, offset, selected } = this.props;
 
     let totalWidth = length;
     let waveformCount = 0;
@@ -250,8 +250,8 @@ Channel.propTypes = {
   factor: PropTypes.number,
   length: PropTypes.number,
   offset: PropTypes.number,
-  peaks: PropTypes.number, 
-  bits: PropTypes.array, 
+  peaks: PropTypes.object, 
+  bits: PropTypes.number, 
   waveHeight: PropTypes.number,
 };
 

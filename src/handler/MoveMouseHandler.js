@@ -2,7 +2,7 @@
 
 export default class MoveMouseHandler {
 
-  constructor(handlerFunctions){
+  constructor(handlerFunctions) {
     this.handlerFunctions = handlerFunctions;
     this.moveFromX = null;
     this.channelId = null;
@@ -15,59 +15,59 @@ export default class MoveMouseHandler {
     switch (eventName) {
 
       case "keyDown":
-      this.handleKeyDown(evInfo);
-      break;
+        this.handleKeyDown(evInfo);
+        break;
 
       // also handles click selection
       case "mouseDown":
-      this.deselectRange();
-      this.handleMoveFrom(evInfo);
-      break;
+        this.deselectRange();
+        this.handleMoveFrom(evInfo);
+        break;
 
       case "mouseMove":
-      this.handleMoveTo(evInfo, false);
-      break;
+        this.handleMoveTo(evInfo, false);
+        break;
 
       case "mouseUp":
-      this.handleMoveTo(evInfo, true);
-      break;
+        this.handleMoveTo(evInfo, true);
+        break;
 
       case "mouseLeave":
-      this.handleMoveTo(evInfo, true);
-      break;
+        this.handleMoveTo(evInfo, true);
+        break;
 
       case "shift-mouseDown":
-      this.handleSelectionFrom(evInfo);
-      break;
+        this.handleSelectionFrom(evInfo);
+        break;
 
       case "shift-mouseMove":
-      this.handleSelectionTo(evInfo, false);
-      break;
+        this.handleSelectionTo(evInfo, false);
+        break;
 
       case "shift-mouseUp":
-      this.handleSelectionTo(evInfo, true);
-      break;
+        this.handleSelectionTo(evInfo, true);
+        break;
 
       case "shift-mouseLeave":
-      this.handleSelectionTo(evInfo, true);
-      break;
+        this.handleSelectionTo(evInfo, true);
+        break;
 
       default:
-      break;
+        break;
     }
   }
 
   handleKeyDown = (evInfo) => {
-    if(evInfo.key === "Delete" || evInfo.key === "Backspace" ) {
-        this.handlerFunctions.deleteSelectedPartAndMarkers();
+    if (evInfo.key === "Delete" || evInfo.key === "Backspace") {
+      this.handlerFunctions.deleteSelectedPartAndMarkers();
     }
   }
-  
+
   handleMoveFrom = (evInfo) => {
     this.handlerFunctions.selectPartOrImage({
       channelId: evInfo.channelId,
       partId: evInfo.partId,
-      selected: true  // select
+      selected: true // select
     });
 
     this.moveFromX = evInfo.x;
@@ -76,13 +76,13 @@ export default class MoveMouseHandler {
   }
 
   handleMoveTo = (evInfo, finalizeSelection) => {
-    if (this.moveFromX && this.partId && this.channelId) { 
+    if (this.moveFromX && this.partId && this.channelId) {
       // only when mouse down has occured
       // console.log(`move from ${this.moveFromX} to ${x}`);
       const incrX = evInfo.x - this.moveFromX;
       if (Math.abs(incrX) > 0) {
         this.handlerFunctions.move(this.partId, incrX);
-        this.moveFromX = evInfo.x; 
+        this.moveFromX = evInfo.x;
         // also move the markers
         this.handlerFunctions.updateMarker(`${this.channelId}-${this.partId}-l`, incrX); // type = null:
         this.handlerFunctions.updateMarker(`${this.channelId}-${this.partId}-r`, incrX); // dont change type
@@ -91,7 +91,7 @@ export default class MoveMouseHandler {
       if (finalizeSelection) {
         // leave part selected after move
         this.xOrigin = null;
-        this.moveFromX = null; 
+        this.moveFromX = null;
         this.partId = null;
       }
     }
@@ -111,7 +111,7 @@ export default class MoveMouseHandler {
         this.handlerFunctions.selectRange(evInfo.x, this.selectFromX);
       }
       if (finalizeSelection) {
-        this.selectFromX = null; 
+        this.selectFromX = null;
         this.selected = true;
       }
     }

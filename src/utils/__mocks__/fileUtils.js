@@ -15,10 +15,10 @@ export function setDuration(dur) {
 
 // API
 
-export function readAudioFile(file, audioContext){
+export function readAudioFile(file, audioContext) {
   return Promise.resolve({
     sampleRate,
     duration
-  })
+  });
 }
 

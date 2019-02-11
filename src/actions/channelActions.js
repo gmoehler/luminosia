@@ -1,4 +1,4 @@
-import { PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL, ADD_PART, DELETE_PART, ADD_CHANNEL, CLEAR_CHANNELS, UPLOAD_AUDIO_STARTED, UPLOAD_AUDIO_SUCCESS, UPLOAD_AUDIO_FAILURE, DELETE_CHANNEL, SELECT_CHANNEL, DESELECT_CHANNEL} from './types';
+import { PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL, ADD_PART, DELETE_PART, ADD_CHANNEL, CLEAR_CHANNELS, UPLOAD_AUDIO_STARTED, UPLOAD_AUDIO_SUCCESS, UPLOAD_AUDIO_FAILURE, DELETE_CHANNEL, SELECT_CHANNEL, DESELECT_CHANNEL } from './types';
 
 import { setMarker, deleteMarker, deselect, selectPartOrImage } from './viewActions';
 
@@ -121,7 +121,7 @@ export const uploadAudioFile = (audioFile, audioContext) => {
         // console.log(channelInfo);
         dispatch(addChannel(channelInfo));
         dispatch(uploadAudioSuccess());
-        console.log("done");
+        console.log("File read.");
       })
       .catch(err => {
         console.error(err);
@@ -136,7 +136,7 @@ export const duplicateChannel = (channelId) => {
   return (dispatch, getState) => {
     const ch = getChannelData(getState(), channelId);
     dispatch(addChannel(ch));
-    // TODO: add new channel just after copied one
+  // TODO: add new channel just after copied one
   };
 };
 

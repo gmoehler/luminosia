@@ -91,7 +91,7 @@ class Channel extends Component {
   }   
 
   draw = () => {
-    const {imageHeight, scale, factor} = this.props;
+    const { imageHeight, scale, factor } = this.props;
 
     Object.keys(this.images).forEach((idx) => {
 
@@ -166,8 +166,8 @@ class Channel extends Component {
   }
 
   render() {
-    const {parts, imageHeight, scale, progress, cursorPos, 
-      selection, markers, theme, maxWidth, selected} = this.props;
+    const { parts, imageHeight, scale, progress, cursorPos, 
+      selection, markers, theme, maxWidth, selected } = this.props;
 
     // loop thru all images/parts
     const allImageCanvases = [];
@@ -179,7 +179,7 @@ class Channel extends Component {
 
       parts.forEach((part) => {
 
-        const {partId, src, offset, duration} = {
+        const { partId, src, offset, duration } = {
           ...part
         };
 

@@ -190,8 +190,7 @@ function mergePlayStateIntoToChannels(state, playState) {
 
 function _allChannelsStopped(channelState) {
   return Object.keys(channelState.byChannelId)
-    .reduce((result, key) => 
-      result && channelState.byChannelId[key].playState === "stopped",
+    .reduce((result, key) => result && channelState.byChannelId[key].playState === "stopped",
       true);
 }
 
