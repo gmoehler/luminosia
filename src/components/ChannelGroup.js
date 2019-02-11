@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import Channel from './Channel';
 import ImageChannel from './ImageChannel';
-import { withPlay } from './withPlay'
+import { withPlay } from './withPlay';
 import { withEventHandler } from './withEventHandler';
 import { timeToPixels } from './timeToPixels';
 import { secondsToPixels } from '../utils/conversions';
@@ -27,33 +27,31 @@ export default class ChannelGroup extends Component {
   constructor (props) {
     super(props);
     this.groupRef = null;
-    this.scrollTriggerRight = 0;
+    this.state = {
+      scrollLeft: 0,
+    };
   }
 
   componentDidUpdate() {
-    // this.considerScroll();
+    this.considerScroll();
   }
 
-  scrollRight = (progressPx) => {
-    if (this.state.progress && this.groupRef) {
-      // see if we have to scroll
-      const progressPx = secondsToPixels(this.state.progress, this.props.resolution);
-      const scrollTriggerRight = this.groupRef.scrollLeft + this.groupRef.clientWidth;
-      if (progressPx > scrollTriggerRight) {
-        // progress is to the right
-        this.groupRef.scrollLeft = progressPx;
-      } else if (progressPx < this.groupRef.scrollLeft) {
-        // progress is to the left
-        this.groupRef.scrollLeft = Math.max(progressPx - 30, 0);
+  considerScroll = () => {
+    if ( this.groupRef ){
+      const scrolldiff = Math.abs(this.state.scrollLeft - this.groupRef.scrollLeft);
+      if (scrolldiff > 10 ) { // do it only once for all channels
+        this.groupRef.scrollLeft = this.state.scrollLeft;
       }
     }
   }
 
   reportProgress = (progress) => {
+    // check progress to do autoscrolling 
     const progressPx = secondsToPixels(progress, this.props.resolution);
-    if (progressPx > this.scrollTriggerRight) {
-      this.scrollTriggerRight = this.groupRef.scrollLeft + this.groupRef.clientWidth;
-      this.groupRef.scrollLeft = progressPx;
+    if (progressPx > this.groupRef.scrollLeft + this.groupRef.clientWidth) {
+      this.setState({scrollLeft: progressPx});
+    } else if (progressPx < this.groupRef.scrollLeft) {
+      this.setState({scrollLeft: progressPx});
     }
   }
 
@@ -93,25 +91,28 @@ export default class ChannelGroup extends Component {
           parts: channelData.byPartId ? Object.values(channelData.byPartId) : [],
           scale: windowPixelRatio,
           reportProgress: this.reportProgress,
-        }
+        };
 
         if (channelData.type === "audio") {
           return (
-            <AudioChannelWithPlay {...channelProps} setChannelPlayState={ playState => this.props.setChannelPlayState(channelId, playState) } />);
+            <AudioChannelWithPlay { ...channelProps }
+                setChannelPlayState={ playState => this.props.setChannelPlayState(channelId, playState) } />);
         }
 
         return (
-          <ImageChannelWithPlay {...channelProps} setChannelPlayState={ playState => this.props.setChannelPlayState(channelId, playState) } move={ (partId, incr) => this.props.move(channelId, partId, incr) } />);
+          <ImageChannelWithPlay { ...channelProps }
+              setChannelPlayState={ playState => this.props.setChannelPlayState(channelId, playState) }
+              move={ (partId, incr) => this.props.move(channelId, partId, incr) } />);
 
 
       });
 
     return (
       <ChannelGroupWrapper drawerWidth={ this.props.drawerWidth || 0 }
-        ref={ (ref) => this.groupRef=ref}>
-        { channelComponents }
+          ref={ (ref) => this.groupRef=ref }>
+        { channelComponents}
       </ChannelGroupWrapper>
-    )
+    );
   }
 }
 
@@ -121,4 +122,4 @@ ChannelGroup.propTypes = {
   setChannelPlayState: PropTypes.func.isRequired,
   move: PropTypes.func.isRequired,
   drawerWidth: PropTypes.number.isRequired,
-}
+};

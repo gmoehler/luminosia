@@ -9,7 +9,7 @@ import { Tooltip, IconButton } from '@material-ui/core';
 import {indigo } from '@material-ui/core/colors/indigo';
 import DownloadChannelIcon from '@material-ui/icons/SaveAlt';
 import DeleteChannelIcon from '@material-ui/icons/DeleteForever';
-import ChannelDupIcon from '@material-ui/icons/FileCopy'
+import ChannelDupIcon from '@material-ui/icons/FileCopy';
 
 const channelSelectorWidth = 96;
 
@@ -52,7 +52,7 @@ const styles = () => ({
 class CustomizedSwitches extends React.Component {
 
   handleChange = channelId => event => {
-    const selected = event.target.checked
+    const selected = event.target.checked;
     if (selected){
       this.props.selectChannel(channelId);
     } else {
@@ -65,18 +65,18 @@ class CustomizedSwitches extends React.Component {
 
     const switches = this.props.channelOverview
       .map((channel) => 
-        <div key={channel.channelId}
-          className={ classNames(
+        (<div key={ channel.channelId }
+            className={ classNames(
           classes.channelControlWrapper,
-          channel.selected && classes.wrapperSelected)}
-          background = {indigo}>
+          channel.selected && classes.wrapperSelected) }
+            background = { indigo }>
           <FormControlLabel
-            className={ classes.switchWrapper }
-            control={
-              <Tooltip title={channel.selected?"Mute":"Unmute"}>
-                <Switch disabled={channel.type === "audio"}
-                  checked={channel.selected}
-                  onChange={this.handleChange(channel.channelId)}
+              className={ classes.switchWrapper }
+              control={
+              <Tooltip title={ channel.selected?"Mute":"Unmute" }>
+                <Switch disabled={ channel.type === "audio" }
+                    checked={ channel.selected }
+                    onChange={ this.handleChange(channel.channelId) }
                 />
                 </Tooltip>
             }
@@ -84,30 +84,30 @@ class CustomizedSwitches extends React.Component {
           <div className={ classes.lowerIcons }>
           <Tooltip title="Export image channel">
             <IconButton 
-              className={ classes.button }
-              onClick={ () => this.props.exportImageChannel(channel.channelId) }>
-              <DownloadChannelIcon className={classes.icon}/>
+                className={ classes.button }
+                onClick={ () => this.props.exportImageChannel(channel.channelId) }>
+              <DownloadChannelIcon className={ classes.icon } />
             </IconButton>
             </Tooltip>
 
           <Tooltip title="Duplicate channel">
             <IconButton 
-              className={ classes.button }
-              onClick={ () => this.props.duplicateChannel(channel.channelId) }>
-              <ChannelDupIcon className={classes.icon}/>
+                className={ classes.button }
+                onClick={ () => this.props.duplicateChannel(channel.channelId) }>
+              <ChannelDupIcon className={ classes.icon } />
             </IconButton>
           </Tooltip>
 
           <Tooltip title="Delete channel">
           <IconButton 
-            className={ classes.button }
-            onClick={ () => this.props.deleteChannel(channel.channelId) }>
-            <DeleteChannelIcon className={classes.icon}/>
+              className={ classes.button }
+              onClick={ () => this.props.deleteChannel(channel.channelId) }>
+            <DeleteChannelIcon className={ classes.icon } />
           </IconButton>
         </Tooltip>
         </div>
 
-        </div>
+        </div>)
       );
 
     return (
@@ -124,6 +124,8 @@ CustomizedSwitches.propTypes = {
   selectChannel: PropTypes.func.isRequired,
   deselectChannel: PropTypes.func.isRequired,
   duplicateChannel: PropTypes.func.isRequired,
+  deleteChannel: PropTypes.func.isRequired,
+  exportImageChannel: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(CustomizedSwitches);

@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 const ImageExporterWrapper = styled.div`
@@ -23,10 +24,13 @@ export default class ImageExporter extends PureComponent {
   render() {
 
     return (
-			<ImageExporterWrapper drawerWidth = {this.props.drawerWidth}>
-					<ImageExporterCanvas 
-						id = "imageExportCanvas" />
+			<ImageExporterWrapper drawerWidth = { this.props.drawerWidth }>
+				<ImageExporterCanvas id = "imageExportCanvas" />
       </ImageExporterWrapper>
-    )
+    );
   }
 }
+
+ImageExporter.propTypes = {
+  drawerWidth: PropTypes.number,
+};

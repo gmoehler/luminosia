@@ -32,22 +32,22 @@ export default (state = initialState, action) => {
       };
 
     default:
-      return state
+      return state;
   }
-}
+};
 
 export const getImageList = (state) => {
   return state.images.byImageId ? Object.values(state.images.byImageId) : [];
-}
+};
 
 export const getImageSampleRate = (state) => {
   return state.images.sampleRate;
-}
+};
 
 export const getImageDuration = (state, imageId) => {
   const img = state.images.byImageId[imageId];
   return img ? img.duration : 0;
-}
+};
 
 // array of all images with relevant fields filtered out
 export const getImageListConfig = (state) => {

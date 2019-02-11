@@ -17,16 +17,16 @@ describe('actions', () => {
     const expectedAction = {
       type: types.ADD_CHANNEL,
       payload: audioChannelPayload
-    }
-    expect(actions.addChannel(audioChannelPayload)).toEqual(expectedAction)
+    };
+    expect(actions.addChannel(audioChannelPayload)).toEqual(expectedAction);
   });
 
   it('should add an image channel', () => {
     const expectedAction = {
       type: types.ADD_CHANNEL,
       payload: imageChannelPayload
-    }
-    expect(actions.addChannel(imageChannelPayload)).toEqual(expectedAction)
+    };
+    expect(actions.addChannel(imageChannelPayload)).toEqual(expectedAction);
   });
 
   it('should create an initial image channel', () => {
@@ -51,31 +51,31 @@ describe('actions', () => {
     const expectedAction = {
       type: types.DELETE_CHANNEL,
       payload: 2
-    }
-    expect(actions.deleteChannel(2)).toEqual(expectedAction)
+    };
+    expect(actions.deleteChannel(2)).toEqual(expectedAction);
   });
 
   it('should clear all channels', () => {
     const expectedAction = {
       type: types.CLEAR_CHANNELS
-    }
-    expect(actions.clearChannels()).toEqual(expectedAction)
+    };
+    expect(actions.clearChannels()).toEqual(expectedAction);
   });
 
   it('should select a channel', () => {
     const expectedAction = {
       type: types.SELECT_CHANNEL,
       payload: 2
-    }
-    expect(actions.selectChannel(2)).toEqual(expectedAction)
+    };
+    expect(actions.selectChannel(2)).toEqual(expectedAction);
   });
 
   it('should deselect a channel', () => {
     const expectedAction = {
       type: types.DESELECT_CHANNEL,
       payload: 2
-    }
-    expect(actions.deselectChannel(2)).toEqual(expectedAction)
+    };
+    expect(actions.deselectChannel(2)).toEqual(expectedAction);
   });
 
 
@@ -117,14 +117,14 @@ describe('actions', () => {
         type: types.UPLOAD_AUDIO_SUCCESS
       },
 
-    ]
+    ];
 
     const audioContext = {};
     return store.dispatch(actions.uploadAudioFile(audioFile, audioContext))
       .then(() => {
         const acts = store.getActions();
         return expect(acts).toEqual(expectedActions);
-      })
+      });
   });
 
   it('should update markers for last added channel ', () => {
@@ -147,7 +147,7 @@ describe('actions', () => {
           type: "normal"
         }
       },
-    ]
+    ];
 
     store.dispatch(actions.updateChannelMarkersForLastAddedChannel());
     const acts = store.getActions();
@@ -160,13 +160,13 @@ describe('actions', () => {
     const state = {
       ...imageChannelState,
       view: initialViewState,
-    }
+    };
 
     const store = mockStore(state);
     const partWithChannelId = {
       ...part,
       channelId: 2,
-    }
+    };
     const expectedActions = [
       // commented out lines are not relevant
       {
@@ -222,7 +222,7 @@ describe('actions', () => {
           type: "selected"
         }
       },
-    ]
+    ];
 
     store.dispatch(actions.insertNewPart(partWithChannelId));
     const acts = store.getActions();
@@ -232,4 +232,4 @@ describe('actions', () => {
 
 
 
-})
+});

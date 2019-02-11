@@ -79,14 +79,14 @@ export default (state = initialState, action) => {
       return {
         ...state,
         resolution: action.payload
-      }
+      };
 
     case SELECT_PART_OR_IMAGE:
       const selPartOrImage = action.payload.selected ? action.payload : null;
       return {
         ...state,
         selectedPartOrImage: selPartOrImage
-      }
+      };
 
     case DESELECT_PART_OR_IMAGE:
       return {
@@ -95,24 +95,24 @@ export default (state = initialState, action) => {
       };
 
     default:
-      return state
+      return state;
   }
-}
+};
 
 export const getSelectionRange = (state) => {
   return {
     from: state.view.selection.from,
     to: state.view.selection.to,
-  }
-}
+  };
+};
 
 export const getResolution = (state) => {
-  return state.view.resolution
-}
+  return state.view.resolution;
+};
 
 export const getMarkers = (state) => {
   return state.view.byMarkerId ? Object.values(state.view.byMarkerId) : [];
-}
+};
 
 export const getSelectedPart = (state) => {
   if (state.view.selectedPartOrImage &&
@@ -120,16 +120,16 @@ export const getSelectedPart = (state) => {
     return state.view.selectedPartOrImage;
   }
   return null;
-}
+};
 
 export const getSelectedImage = (state) => {
   if (state.view.selectedPartOrImage &&
     state.view.selectedPartOrImage.imageId) {
     return state.view.selectedPartOrImage;
   }
-  return null
-}
+  return null;
+};
 
 export const getCurrent = (state) => {
   return state.view.currentById;
-}
+};

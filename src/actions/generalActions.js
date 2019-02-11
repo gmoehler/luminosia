@@ -41,10 +41,10 @@ export const uploadConfigFile = (configFile, audioContext) => {
         console.error(err);
         return dispatch(uploadConfigFailure({
           err
-        }))
-      })
-  }
-}
+        }));
+      });
+  };
+};
 
 export const uploadConfig = (configData, audioContext) => {
   return (dispatch, getState) => {
@@ -73,16 +73,16 @@ export const uploadConfig = (configData, audioContext) => {
           }));
 
         return Promise.all(channelPromises);
-      })
-  }
+      });
+  };
 };
 
 export const downloadConfig = (() => {
   return (dispatch, getState) => {
     const config = getConfig(getState());
     downloadTextfile("config.json", JSON.stringify(config));
-  }
-})
+  };
+});
 
 // clear export image section (make black) 
 export const clearExportImage = (numChannels) => {
@@ -97,8 +97,8 @@ export const clearExportImage = (numChannels) => {
       cc.fillStyle = "black";
       cc.fillRect(0,0, canvas.width, canvas.height);
     }
-  }
-}
+  };
+};
 
 // draw a channel to the export at position idx
 export const drawExportImage = (channelId, idx) => {
@@ -115,10 +115,10 @@ export const drawExportImage = (channelId, idx) => {
         const offsetPx = part.offset ? secondsToSamples(part.offset, data.sampleRate) : 0;
         const widthPx = part.duration ? secondsToSamples(part.duration, data.sampleRate) : 0;
         cc.drawImage(img, 0, 0, widthPx, 30,  offsetPx, idx*30, widthPx, 30);
-      })
+      });
     }
-  }
-}
+  };
+};
 
 // export one channel
 export const exportImageChannel = (channelId) => {
@@ -129,8 +129,8 @@ export const exportImageChannel = (channelId) => {
     if (resultImage) {
       downloadImagefile(`result-${channelId}.png`, resultImage);
     }
-  }
-}
+  };
+};
 
 // during animation: get image data from export canvas within an interval
 // assuming all selected channels are on the canvas

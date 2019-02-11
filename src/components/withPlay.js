@@ -115,7 +115,7 @@ export function withPlay(WrappedComponent) {
       this.setState({
         ...this.state,
         progress: currentTimeInSecs
-      })
+      });
 
 
       if ( this.props.reportProgress) {
@@ -134,7 +134,7 @@ export function withPlay(WrappedComponent) {
       this.setState({
         ...this.state,
         progress: null
-      })
+      });
       this.animationStartTime = null;
     }
 
@@ -166,14 +166,14 @@ export function withPlay(WrappedComponent) {
       const peaksDataMono = Array.isArray(data) ? data[0] : []; // only one channel for now
 
       // time to pixel conversion is done in HOC TimeToPixel
-      return <WrappedComponent 
-        {...passthruProps} 
-        progress={ this.state.progress } 
-        handleMouseEvent={this.props.handleMouseEvent } 
-        factor={ this.props.resolution / this.props.sampleRate } /* req only for images*/ 
-        peaks={ peaksDataMono } /* only for audio */ 
-        bits={ bits } /* only for audio */ 
-        length={ length } /* only for audio */ />;
+      return (<WrappedComponent 
+          { ...passthruProps } 
+          progress={ this.state.progress } 
+          handleMouseEvent={ this.props.handleMouseEvent } 
+          factor={ this.props.resolution / this.props.sampleRate } /* req only for images*/ 
+          peaks={ peaksDataMono } /* only for audio */ 
+          bits={ bits } /* only for audio */ 
+          length={ length } /* only for audio */ />);
     }
   }
   ;
@@ -191,7 +191,7 @@ export function withPlay(WrappedComponent) {
     setChannelPlayState: PropTypes.func.isRequired,
     parts: PropTypes.array,
     maxDuration: PropTypes.number,
-  }
+  };
 
   withPlay.displayName = `WithSubscription(${getDisplayName(WrappedComponent)})`;
   return WithPlay;

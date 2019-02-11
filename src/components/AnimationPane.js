@@ -40,9 +40,16 @@ export default class AnimationPane extends PureComponent {
 		this.margin = 10;
 		this.state = {
 			rotationSpeed: 2, // rotations per second
-		}
+		};
 	}
 
+	componentDidMount() {
+    this.draw();
+  }
+
+  componentDidUpdate() {
+    this.draw();
+	}
 
 	drawArc(cc, arcIdx, color, radius, fromRad, toRad) {
 
@@ -86,7 +93,7 @@ export default class AnimationPane extends PureComponent {
 							// console.log(`animate: ${row} ${startIdx}`)
 							const dataIdx = 4 * startIdx;
 							const color = `rgba(${d[dataIdx]},${d[dataIdx+1]},${d[dataIdx+2]},255)`;
-							this.drawArc(cc, arcIdx, color, i+this.innerRadius, this.prevRad, toRad)
+							this.drawArc(cc, arcIdx, color, i+this.innerRadius, this.prevRad, toRad);
 						}
 					}
 					this.prevRad = toRad;
@@ -95,13 +102,6 @@ export default class AnimationPane extends PureComponent {
 	}
 }
 	
-	componentDidMount() {
-    this.draw();
-  }
-
-  componentDidUpdate() {
-    this.draw();
-	}
 	
 	speed2slider(speed) {
 		return (speed - minRotationSpeed) / (maxRotationSpeed-minRotationSpeed) * 100;
@@ -124,29 +124,28 @@ export default class AnimationPane extends PureComponent {
 		const {drawerWidth, selectedChannels, resolution} = this.props;
     return (
 			<AnimationPaneWrapper
-					drawerWidth = {drawerWidth}>
+    		drawerWidth = { drawerWidth }>
 					<AnimationControl>
 						{rotationSpeed.toFixed(1)}
-						<Slider 
-							value={this.speed2slider(rotationSpeed)}
-							onChange={this.handleChange}
-							vertical
-							style= {{
-								width: 0
-							}}
+						<Slider value={ this.speed2slider(rotationSpeed) }
+    					onChange={ this.handleChange }
+    					vertical
+    					style= { { width: 0 } }
 						/>
 					</AnimationControl>
-					<AnimationCanvas 
-						id = "animationPaneCanvas" 
-						height = {resolution * 80}
-						width = {selectedChannels.length * resolution * 80}/>
+					<AnimationCanvas id = "animationPaneCanvas" 
+    				height = { resolution * 80 }
+    				width = { selectedChannels.length * resolution * 80 } />
         </AnimationPaneWrapper>
         
-    )
+    );
 	}
 }
 
 AnimationPane.propTypes = {
 	progress: PropTypes.number,
 	sampleRate: PropTypes.number.isRequired,
-}
+	resolution: PropTypes.number.isRequired,
+	selectedChannels: PropTypes.arrayOf(PropTypes.number),
+	drawerWidth: PropTypes.number,
+};

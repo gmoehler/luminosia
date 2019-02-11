@@ -35,7 +35,7 @@ export function saveImagesToStorage(image) {
   return (dispatch, getState) => {
     const images = getImageList(getState());
     images.forEach((img) => saveImageToStorage(img));
-  }
+  };
 }
 
 // load images from localstorage and add them to the store
@@ -50,7 +50,7 @@ export function loadImagesfromStorage() {
       }, [])
 			    .forEach((img) =>
 				    dispatch(addImage(img)));
-  }
+  };
 }
 
 export function clearImagesfromStorage() {
@@ -59,5 +59,5 @@ export function clearImagesfromStorage() {
 		  .filter((k) => k.startsWith("image_"))
 			  .forEach((img) =>
 				    localStorage.removeItem(img));
-  }
+  };
 }

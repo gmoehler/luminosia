@@ -30,7 +30,7 @@ export const createImageChannel = () => {
       playState: "stopped",
       duration,
     }));
-  }
+  };
 };
 
 export const deleteChannel = channelInfo => ({
@@ -97,7 +97,7 @@ function loadImageChannel(channelConfig, state) {
   return Promise.resolve({
     ...channelConfig,
     byPartId: normalizedParts
-  })
+  });
 }
 
 // load audio file to studio
@@ -117,7 +117,7 @@ export const uploadAudioFile = (audioFile, audioContext) => {
           buffer: audioBuffer,
           duration: audioBuffer.duration,
           selected: true,
-        }
+        };
         // console.log(channelInfo);
         dispatch(addChannel(channelInfo));
         dispatch(uploadAudioSuccess());
@@ -127,17 +127,17 @@ export const uploadAudioFile = (audioFile, audioContext) => {
         console.error(err);
         return dispatch(uploadAudioFailure({
           err
-        }))
-      })
-  }
-}
+        }));
+      });
+  };
+};
 
 export const duplicateChannel = (channelId) => {
   return (dispatch, getState) => {
     const ch = getChannelData(getState(), channelId);
     dispatch(addChannel(ch));
     // TODO: add new channel just after copied one
-  }
+  };
 };
 
 
@@ -163,7 +163,7 @@ export const updateChannelMarkersForLastAddedChannel = () => {
         }));
       });
     }
-  }
+  };
 };
 
 export const insertNewPart = (partInfo) => {
@@ -174,7 +174,7 @@ export const insertNewPart = (partInfo) => {
       markerId: "insert"
     }));
 
-    dispatch(addPart(partInfo))
+    dispatch(addPart(partInfo));
     const lastPartId = getLastPartId(getState(), partInfo.channelId);
     // generate markers for part
     dispatch(setMarker({
@@ -194,10 +194,10 @@ export const insertNewPart = (partInfo) => {
       channelId: partInfo.channelId,
       partId: lastPartId,
       selected: true,
-    }
+    };
     dispatch(selectPartOrImage(lastPart));
-  }
-}
+  };
+};
 
 export const addPart = partInfo => ({
   type: ADD_PART,
@@ -221,8 +221,8 @@ export const deleteSelectedPartAndMarkers = () => {
     if (selImage) {
       dispatch(removeImage(selImage));
     }
-  }
-}
+  };
+};
 
 export const deletePart = partInfo => ({
   type: DELETE_PART,
@@ -240,10 +240,10 @@ export const playChannelAndImage = () => {
   return (dispatch, getState) => {
     const selectedImageChannels = getSelectedChannelIds(getState(), "image");
     dispatch(clearExportImage(selectedImageChannels.length));
-    selectedImageChannels.map((channelId, idx) => dispatch(drawExportImage(channelId, idx)))
+    selectedImageChannels.map((channelId, idx) => dispatch(drawExportImage(channelId, idx)));
     dispatch(playChannel());
-  }
-}
+  };
+};
 
 export const stopChannel = () => ({
   type: STOP_CHANNELS

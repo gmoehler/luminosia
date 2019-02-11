@@ -118,11 +118,11 @@ class Channel extends Component {
 
         cc.scale(scale, scale);
         img.onload = cc.drawImage(img, imageOffset, 0, sourceWidth, img.height,
-          0, 0, targetWidth, targetHeight)
+          0, 0, targetWidth, targetHeight);
 
         canvasOffset += MAX_CANVAS_WIDTH;
       }
-    })
+    });
   }
 
   handleMouseEvent = (e, eventName) => {
@@ -144,7 +144,7 @@ class Channel extends Component {
         duration,
         key,
         shiftKey,
-      }
+      };
       this.props.handleMouseEvent(adaptedEventName, evInfo);
       return;
     }
@@ -155,14 +155,14 @@ class Channel extends Component {
       if (!this.canvases[i]) {
         this.canvases[i] = [];
       }
-      this.canvases[i][c] = canvas
-    }
+      this.canvases[i][c] = canvas;
+    };
   }
 
   createImageRef(i) {
     return (image) => {
       this.images[i] = image;
-    }
+    };
   }
 
   render() {
@@ -191,35 +191,55 @@ class Channel extends Component {
         while (totalWidth > 0) {
           const currentWidth = Math.min(totalWidth, MAX_CANVAS_WIDTH);
           const canvasImage = (
-          <ImageCanvas key={ String(partId) + "-" + String(canvasCount) } cssWidth={ currentWidth } width={ currentWidth * scale } height={ imageHeight } ref={ this.createCanvasRef(partId, canvasCount) } data-partid={ partId }
+          <ImageCanvas key={ String(partId) + "-" + String(canvasCount) }
+              cssWidth={ currentWidth }
+              width={ currentWidth * scale }
+              height={ imageHeight }
+              ref={ this.createCanvasRef(partId, canvasCount) }
+              data-partid={ partId }
           />
-          )
+          );
 
           canvasImages.push(canvasImage);
           totalWidth -= currentWidth;
           canvasCount += 1;
         }
         allImageCanvases.push(
-          <ImageCanvases key={ partId } className='ImageCanvases' theme={ theme } offset={ offset }>
+          <ImageCanvases key={ partId }
+              className='ImageCanvases'
+              theme={ theme }
+              offset={ offset }>
             { canvasImages }
           </ImageCanvases>
         );
         allCanvasRefImages.push(
-          <CanvasRefImage key={ partId } src={ src } className="hidden" ref={ this.createImageRef(partId) } />
-        )
+          <CanvasRefImage key={ partId }
+              src={ src }
+              className="hidden"
+              ref={ this.createImageRef(partId) } />
+        );
       });
     }
 
     const progressElem = progress ?
-      <ImageProgress className='Progress' progress={ progress } theme={ theme } height={ imageHeight } />
+      (<ImageProgress className='Progress'
+          progress={ progress }
+          theme={ theme }
+          height={ imageHeight } />)
       : null;
 
     const selectionElem = selection && selection.from && selection.to ?
-      <ImageSelection className='Selection' selection={ selection } theme={ theme } height={ imageHeight } />
+      (<ImageSelection className='Selection'
+          selection={ selection }
+          theme={ theme }
+          height={ imageHeight } />)
       : null;
 
     const cursorElem = cursorPos ?
-      <ImageCursor className='Cursor' cursorPos={ cursorPos } theme={ theme } height={ imageHeight } />
+      (<ImageCursor className='Cursor'
+          cursorPos={ cursorPos }
+          theme={ theme }
+          height={ imageHeight } />)
       : null;
 
     const markerElems = markers && Array.isArray(markers) ?
@@ -230,34 +250,36 @@ class Channel extends Component {
         } else if ( marker.type  === "selected" ) {
           color = theme.selectedMarkerColor;
         }
-        return <ImageMarker 
-          key={ marker.markerId } 
-          className='Marker' 
-          markerPos={ marker.pos } 
-          markerColor={color} 
-          theme={ theme } 
-          height={ imageHeight }
-        />
+        return (<ImageMarker 
+            key={ marker.markerId } 
+            className='Marker' 
+            markerPos={ marker.pos } 
+            markerColor={ color } 
+            theme={ theme } 
+            height={ imageHeight }
+        />);
       }) : null;
 
     return (
       <ImageChannelWrapper className='ChannelWrapper' 
-        onMouseDown={ (e) => this.handleMouseEvent(e, "mouseDown") } 
-        onMouseUp={ (e) => this.handleMouseEvent(e, "mouseUp") } 
-        onMouseMove={ (e) => this.handleMouseEvent(e, "mouseMove") } 
-        onMouseLeave={ (e) => this.handleMouseEvent(e, "mouseLeave") }
+          onMouseDown={ (e) => this.handleMouseEvent(e, "mouseDown") } 
+          onMouseUp={ (e) => this.handleMouseEvent(e, "mouseUp") } 
+          onMouseMove={ (e) => this.handleMouseEvent(e, "mouseMove") } 
+          onMouseLeave={ (e) => this.handleMouseEvent(e, "mouseLeave") }
 
-        onDragEnter={ (e) => this.handleMouseEvent(e, "dragEnter") } 
-        onDragEnd={ (e) => this.handleMouseEvent(e, "dragEnd") } 
-        onDragExit={ (e) => this.handleMouseEvent(e, "dragExit") } 
-        onDragLeave={ (e) => this.handleMouseEvent(e, "dragLeave") } 
-        onDragOver={ (e) => this.handleMouseEvent(e, "dragOver") }
-        onDragStart={ (e) => this.handleMouseEvent(e, "dragStart") } 
-        onDrop={ (e) => this.handleMouseEvent(e, "drop") } 
+          onDragEnter={ (e) => this.handleMouseEvent(e, "dragEnter") } 
+          onDragEnd={ (e) => this.handleMouseEvent(e, "dragEnd") } 
+          onDragExit={ (e) => this.handleMouseEvent(e, "dragExit") } 
+          onDragLeave={ (e) => this.handleMouseEvent(e, "dragLeave") } 
+          onDragOver={ (e) => this.handleMouseEvent(e, "dragOver") }
+          onDragStart={ (e) => this.handleMouseEvent(e, "dragStart") } 
+          onDrop={ (e) => this.handleMouseEvent(e, "drop") } 
         
-        cssWidth={ maxWidth } theme={ theme } height={ imageHeight }
-        tabIndex={0}
-        borderColor={selected ? theme.borderColorSelected : theme.borderColor}>
+          cssWidth={ maxWidth }
+          theme={ theme }
+          height={ imageHeight }
+          tabIndex={ 0 }
+          borderColor={ selected ? theme.borderColorSelected : theme.borderColor }>
         
         { allCanvasRefImages }
         { allImageCanvases }
@@ -271,6 +293,7 @@ class Channel extends Component {
 }
 
 Channel.propTypes = {
+  channelId: PropTypes.number.isRequired,
 	parts: PropTypes.arrayOf(
 		PropTypes.shape({
       	partId: PropTypes.number.isRequired,
@@ -289,7 +312,10 @@ Channel.propTypes = {
 	markers: PropTypes.arrayOf(PropTypes.object),
 	theme:PropTypes.object,
   maxWidth:PropTypes.number,
-}
+  selected: PropTypes.bool,
+  handleMouseEvent: PropTypes.func,
+  factor: PropTypes.number,
+};
 
 Channel.defaultProps = {
   theme: {
