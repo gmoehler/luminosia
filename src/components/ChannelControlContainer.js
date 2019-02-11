@@ -23,10 +23,6 @@ class ChannelControlContainer extends Component {
     this.resolutionIdx = defaultResolutionIdx;
   }
 
-  deleteSelectedPart = () => {
-    this.props.deleteSelectedPartAndMarkers();
-  }
-
   resetZoom = () => {
     this.resolutionIdx = defaultResolutionIdx;
     this.props.setResolutionAction(
@@ -50,7 +46,9 @@ class ChannelControlContainer extends Component {
 
   render() {
 
-    const { channelIds, downloadConfigAction, uploadConfigFileAction, uploadAudioFileAction, deleteSelectedPart, createImageChannelAction, exportImageChannelAction, deleteChannelAction, playChannelAndImageAction, stopChannelAction, selectedImageOrPart, enablePlay, enableStop, selectChannelAction, deselectChannelAction } = this.props;
+    const { channelIds, downloadConfigAction, uploadConfigFileAction, uploadAudioFileAction, createImageChannelAction,
+       exportImageChannelAction, deleteChannelAction, playChannelAndImageAction, stopChannelAction, selectedImageOrPart, 
+       enablePlay, enableStop, selectChannelAction, deselectChannelAction } = this.props;
 
     return (
       <ChannelControl init={ this.doInit }
@@ -60,7 +58,7 @@ class ChannelControlContainer extends Component {
           downloadConfig={ downloadConfigAction }
           uploadConfigFile={ uploadConfigFileAction }
           uploadAudioFile={ uploadAudioFileAction }
-          deleteSelectedPart={ deleteSelectedPart }
+          deleteSelectedPart={ deleteSelectedPartAndMarkers }
           createImageChannel={ createImageChannelAction }
           exportImageChannel={ exportImageChannelAction }
           deleteChannel={ deleteChannelAction }
@@ -78,8 +76,8 @@ class ChannelControlContainer extends Component {
 const mapStateToProps = state => ({
   channelIds: getChannelIds(state),
   selectedImageOrPart: getSelectedImage(state) || getSelectedPart(state),
-  enablePlay: getChannelIds(state).length > 0 && allChannelsStopped(state),
-  enableStop: getChannelIds(state).length && !allChannelsStopped(state),
+  enablePlay: Boolean(getChannelIds(state).length > 0 && allChannelsStopped(state)),
+  enableStop: Boolean(getChannelIds(state).length && !allChannelsStopped(state)),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -103,18 +101,17 @@ ChannelControlContainer.propTypes = {
   downloadConfigAction: PropTypes.func.isRequired,
   uploadConfigFileAction: PropTypes.func.isRequired,
   uploadAudioFileAction: PropTypes.func.isRequired,
-  deleteSelectedPart: PropTypes.func.isRequired,
+  deleteSelectedPartAndMarkers: PropTypes.func.isRequired,
   createImageChannelAction: PropTypes.func.isRequired,
   exportImageChannelAction: PropTypes.func.isRequired,
   deleteChannelAction: PropTypes.func.isRequired,
   playChannelAndImageAction: PropTypes.func.isRequired,
   stopChannelAction: PropTypes.func.isRequired,
-  selectedImageOrPart: PropTypes.func.isRequired,
-  enablePlay: PropTypes.func.isRequired,
-  enableStop: PropTypes.func.isRequired,
+  selectedImageOrPart: PropTypes.object,
+  enablePlay: PropTypes.bool.isRequired,
+  enableStop: PropTypes.bool.isRequired,
   selectChannelAction: PropTypes.func.isRequired,
   deselectChannelAction: PropTypes.func.isRequired,
-  deleteSelectedPartAndMarkers: PropTypes.func.isRequired,
   setResolutionAction: PropTypes.func.isRequired,
 };
 

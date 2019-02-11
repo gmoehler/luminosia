@@ -89,10 +89,10 @@ function loadImageChannel(channelConfig, state) {
       return res;
     }, {
       curid: 0
-    }) : null;
+    }) : {};
 
   // incremented id no longer required
-  delete normalizedParts.curid;
+  normalizedParts && delete normalizedParts.curid;
   delete channelConfig.parts;
   channelConfig.lastPartId = Object.keys(normalizedParts).length - 1;
   channelConfig.playState = "stopped";
