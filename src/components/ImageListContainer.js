@@ -50,7 +50,7 @@ ImageListContainer.propTypes = {
   addImageAction: PropTypes.func.isRequired,
   selectPartOrImageAction: PropTypes.func.isRequired,
   loadImagesfromStorageAction: PropTypes.func.isRequired,
-	selectedImage: PropTypes.string,
+	selectedImage: PropTypes.object,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ImageListContainer);

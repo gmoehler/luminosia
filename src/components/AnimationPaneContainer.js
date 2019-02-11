@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, { Component } from "react";
+import { connect } from "react-redux";
 
-import AnimationPane from './AnimationPane';
-import { getCurrent, getSelectionRange } from '../reducers/viewReducer';
-import { getSelectedChannelIds, allChannelsStopped, getMaxDuration } from '../reducers/channelReducer';
-import { withPlay } from './withPlay'
+import AnimationPane from "./AnimationPane";
+import { getCurrent, getSelectionRange } from "../reducers/viewReducer";
+import { getSelectedChannelIds, allChannelsStopped, getMaxDuration } from "../reducers/channelReducer";
+import { withPlay } from "./withPlay";
 
 const AnimationPaneWithPlay = withPlay(AnimationPane);
 
@@ -23,10 +23,11 @@ class AnimationPaneContainer extends Component {
 
     return (
       <AnimationPaneWithPlay 
-        sampleRate={ 100 } 
-        resolution={ 2 } 
-        type="animation" 
-        setChannelPlayState={ this.setChannelPlayState } {...this.props}
+          sampleRate={ 100 } 
+          resolution={ 2 } 
+          type="animation" 
+          setChannelPlayState={ this.setChannelPlayState }
+          { ...this.props }
       />
       );
   }
@@ -42,7 +43,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
 
-})
+});
 
 
 export default connect(mapStateToProps, mapDispatchToProps)(AnimationPaneContainer);

@@ -37,7 +37,7 @@ export default class ChannelGroup extends Component {
   }
 
   considerScroll = () => {
-    if ( this.groupRef ){
+    if ( this.props.playState === "playing" && this.groupRef ){
       const scrolldiff = Math.abs(this.state.scrollLeft - this.groupRef.scrollLeft);
       if (scrolldiff > 10 ) { // do it only once for all channels
         this.groupRef.scrollLeft = this.state.scrollLeft;

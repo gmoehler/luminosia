@@ -1,12 +1,14 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { stopChannel, deleteSelectedPartAndMarkers, createImageChannel, uploadAudioFile, deleteChannel, playChannelAndImage, selectChannel, deselectChannel } from '../actions/channelActions'
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
 
-import { downloadConfig, uploadConfigFile, uploadConfig, exportImageChannel } from '../actions/generalActions'
-import { setResolution } from '../actions/viewActions'
-import ChannelControl from './ChannelControl';
-import { getChannelIds, allChannelsStopped } from '../reducers/channelReducer';
-import { getSelectedImage, getSelectedPart } from '../reducers/viewReducer';
+import { stopChannel, deleteSelectedPartAndMarkers, createImageChannel, uploadAudioFile, deleteChannel, playChannelAndImage, selectChannel, deselectChannel } from "../actions/channelActions";
+
+import { downloadConfig, uploadConfigFile, uploadConfig, exportImageChannel } from "../actions/generalActions";
+import { setResolution } from "../actions/viewActions";
+import ChannelControl from "./ChannelControl";
+import { getChannelIds, allChannelsStopped } from "../reducers/channelReducer";
+import { getSelectedImage, getSelectedPart } from "../reducers/viewReducer";
 
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
 const audioContext = window.AudioContext && new window.AudioContext();
@@ -29,46 +31,46 @@ class ChannelControlContainer extends Component {
     this.resolutionIdx = defaultResolutionIdx;
     this.props.setResolutionAction(
       resolutions[this.resolutionIdx]
-    )
+    );
   }
 
   zoomIn = () => {
     this.resolutionIdx = Math.min(Math.max(parseInt(this.resolutionIdx) - 1, 0), resolutions.length - 1);
     this.props.setResolutionAction(
       resolutions[this.resolutionIdx]
-    )
+    );
   }
 
   zoomOut = () => {
     this.resolutionIdx = Math.min(Math.max(parseInt(this.resolutionIdx) + 1, 0), resolutions.length - 1);
     this.props.setResolutionAction(
       resolutions[this.resolutionIdx]
-    )
+    );
   }
 
   render() {
 
+    const { channelIds, downloadConfigAction, uploadConfigFileAction, uploadAudioFileAction, deleteSelectedPart, createImageChannelAction, exportImageChannelAction, deleteChannelAction, playChannelAndImageAction, stopChannelAction, selectedImageOrPart, enablePlay, enableStop, selectChannelAction, deselectChannelAction } = this.props;
+
     return (
-      <ChannelControl 
-        init={ this.doInit } 
-        downloadConfig={ this.props.downloadConfigAction } 
-        uploadConfigFile={ this.props.uploadConfigFileAction } 
-        uploadAudioFile={ this.props.uploadAudioFileAction } 
-        deleteSelectedPart={ this.deleteSelectedPart }
-        channelIds={ this.props.channelIds } 
-        createImageChannel={ this.props.createImageChannelAction } 
-        exportImageChannel={ this.props.exportImageChannelAction } 
-        deleteChannel={ this.props.deleteChannelAction } 
-        playChannelAndImage={ this.props.playChannelAndImageAction }
-        stopChannel={ this.props.stopChannelAction } 
-        zoomIn={ this.zoomIn } 
-        zoomOut={ this.zoomOut } 
-        selectedImageOrPart={ this.props.selectedImageOrPart }
-        enablePlay={ this.props.enablePlay } 
-        enableStop={ this.props.enableStop } 
-        selectChannel={ this.props.selectChannelAction } 
-        deselectChannel={ this.props.deselectChannelAction } 
-      />
+      <ChannelControl init={ this.doInit }
+          zoomIn={ this.zoomIn }
+          zoomOut={ this.zoomOut }
+          channelIds={ channelIds }
+          downloadConfig={ downloadConfigAction }
+          uploadConfigFile={ uploadConfigFileAction }
+          uploadAudioFile={ uploadAudioFileAction }
+          deleteSelectedPart={ deleteSelectedPart }
+          createImageChannel={ createImageChannelAction }
+          exportImageChannel={ exportImageChannelAction }
+          deleteChannel={ deleteChannelAction }
+          playChannelAndImage={ playChannelAndImageAction }
+          stopChannel={ stopChannelAction }
+          selectedImageOrPart={ selectedImageOrPart }
+          enablePlay={ enablePlay }
+          enableStop={ enableStop }
+          selectChannel={ selectChannelAction }
+          deselectChannel={ deselectChannelAction } />
       );
   }
 }
@@ -94,7 +96,27 @@ const mapDispatchToProps = dispatch => ({
   deleteSelectedPartAndMarkers: () => dispatch(deleteSelectedPartAndMarkers()),
   selectChannelAction: (channelId) => dispatch(selectChannel(channelId)),
   deselectChannelAction: (channelId) => dispatch(deselectChannel(channelId)),
-})
+});
+
+ChannelControlContainer.propTypes = {
+  channelIds: PropTypes.array,
+  downloadConfigAction: PropTypes.func.isRequired,
+  uploadConfigFileAction: PropTypes.func.isRequired,
+  uploadAudioFileAction: PropTypes.func.isRequired,
+  deleteSelectedPart: PropTypes.func.isRequired,
+  createImageChannelAction: PropTypes.func.isRequired,
+  exportImageChannelAction: PropTypes.func.isRequired,
+  deleteChannelAction: PropTypes.func.isRequired,
+  playChannelAndImageAction: PropTypes.func.isRequired,
+  stopChannelAction: PropTypes.func.isRequired,
+  selectedImageOrPart: PropTypes.func.isRequired,
+  enablePlay: PropTypes.func.isRequired,
+  enableStop: PropTypes.func.isRequired,
+  selectChannelAction: PropTypes.func.isRequired,
+  deselectChannelAction: PropTypes.func.isRequired,
+  deleteSelectedPartAndMarkers: PropTypes.func.isRequired,
+  setResolutionAction: PropTypes.func.isRequired,
+};
 
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChannelControlContainer);

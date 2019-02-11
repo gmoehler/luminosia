@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import ChannelGroup from "./ChannelGroup";
 import { setChannelPlayState, moveChannel, insertNewPart, deleteSelectedPartAndMarkers } from "../actions/channelActions";
 import { selectRange, deselectRange, setMarker, updateMarker, selectPartOrImage } from "../actions/viewActions";
-import { getMaxDuration, getLastPartId, getAllChannelsData } from "../reducers/channelReducer";
+import { getMaxDuration, getLastPartId, getAllChannelsData, allChannelsStopped } from "../reducers/channelReducer";
 import { getSelectionRange, getResolution, getMarkers } from "../reducers/viewReducer";
 import { getImageSources } from "../reducers/imageListReducer";
 
@@ -30,6 +30,7 @@ const mapStateToProps = (state, props) => {
     maxDuration: getMaxDuration(state),
     markers: getMarkers(state),
     imageSources: getImageSources(state),
+    playState: allChannelsStopped(state) ? "stopped" : "playing",
   };
 };
 

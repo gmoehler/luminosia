@@ -161,5 +161,5 @@ ImageList.propTypes = {
 	resolution: PropTypes.number,
 	loadImagesfromStorage: PropTypes.func.isRequired,
 	selectImage: PropTypes.func.isRequired,
-	selectedImage: PropTypes.string,
+	selectedImage: PropTypes.object,
 };
