@@ -160,7 +160,6 @@ export class ChannelControl extends Component {
   }
 }
 
-
 ChannelControl.propTypes = {
   channelIds: PropTypes.array,
   createImageChannel: PropTypes.func.isRequired,

@@ -46,9 +46,9 @@ class ChannelControlContainer extends Component {
 
   render() {
 
-    const { channelIds, downloadConfigAction, uploadConfigFileAction, uploadAudioFileAction, createImageChannelAction,
-       exportImageChannelAction, deleteChannelAction, playChannelAndImageAction, stopChannelAction, selectedImageOrPart, 
-       enablePlay, enableStop, selectChannelAction, deselectChannelAction } = this.props;
+    const { channelIds, downloadConfigAction, uploadConfigFileAction, uploadAudioFileAction, deleteSelectedPartAndMarkersAction, 
+      createImageChannelAction, exportImageChannelAction, deleteChannelAction, playChannelAndImageAction, stopChannelAction, 
+      selectedImageOrPart, enablePlay, enableStop, selectChannelAction, deselectChannelAction } = this.props;
 
     return (
       <ChannelControl init={ this.doInit }
@@ -58,7 +58,7 @@ class ChannelControlContainer extends Component {
           downloadConfig={ downloadConfigAction }
           uploadConfigFile={ uploadConfigFileAction }
           uploadAudioFile={ uploadAudioFileAction }
-          deleteSelectedPart={ deleteSelectedPartAndMarkers }
+          deleteSelectedPart={ deleteSelectedPartAndMarkersAction }
           createImageChannel={ createImageChannelAction }
           exportImageChannel={ exportImageChannelAction }
           deleteChannel={ deleteChannelAction }
@@ -91,7 +91,7 @@ const mapDispatchToProps = dispatch => ({
   playChannelAndImageAction: (channelId) => dispatch(playChannelAndImage(channelId)),
   stopChannelAction: () => dispatch(stopChannel()),
   setResolutionAction: (resolution) => dispatch(setResolution(resolution)),
-  deleteSelectedPartAndMarkers: () => dispatch(deleteSelectedPartAndMarkers()),
+  deleteSelectedPartAndMarkersAction: () => dispatch(deleteSelectedPartAndMarkers()),
   selectChannelAction: (channelId) => dispatch(selectChannel(channelId)),
   deselectChannelAction: (channelId) => dispatch(deselectChannel(channelId)),
 });
@@ -101,7 +101,7 @@ ChannelControlContainer.propTypes = {
   downloadConfigAction: PropTypes.func.isRequired,
   uploadConfigFileAction: PropTypes.func.isRequired,
   uploadAudioFileAction: PropTypes.func.isRequired,
-  deleteSelectedPartAndMarkers: PropTypes.func.isRequired,
+  deleteSelectedPartAndMarkersAction: PropTypes.func.isRequired,
   createImageChannelAction: PropTypes.func.isRequired,
   exportImageChannelAction: PropTypes.func.isRequired,
   deleteChannelAction: PropTypes.func.isRequired,
