@@ -159,7 +159,7 @@ class Channel extends Component {
     }
 
     const progressElem = progress ? 
-      (<Progress className='Progress'
+      (<Progress className="Progress"
           progress={ progress }
           theme={ theme }
           waveHeight={ waveHeight }
@@ -167,7 +167,7 @@ class Channel extends Component {
       : null;
 
     const selectionElem = selection && selection.from && selection.to ? 
-      (<Selection className='Selection'
+      (<Selection className="Selection"
           selection={ selection }
           theme={ theme }
           waveHeight={ waveHeight }
@@ -175,7 +175,7 @@ class Channel extends Component {
       : null;
 
     const cursorElem = cursorPos ? 
-      (<Cursor className='Cursor'
+      (<Cursor className="Cursor"
           cursorPos={ cursorPos }
           theme={ theme }
           waveHeight={ waveHeight }
@@ -191,7 +191,7 @@ class Channel extends Component {
           color = theme.selectedMarkerColor;
         }
         return (<Marker 
-            className='Marker' 
+            className="Marker" 
             key={ marker.markerId } 
             markerPos= { marker.pos } 
             markerColor={ color } 
@@ -205,7 +205,7 @@ class Channel extends Component {
 
     return (
       <ChannelWrapper 
-          className='ChannelWrapper' 
+          className="ChannelWrapper" 
           onMouseDown={ (e) => this.handleMouseEvent(e, "mouseDown") } 
           onMouseUp={ (e) => this.handleMouseEvent(e, "mouseUp") } 
           onMouseMove={ (e) => this.handleMouseEvent(e, "mouseMove") } 
@@ -217,7 +217,7 @@ class Channel extends Component {
 
           borderColor={ borderColor }>
 
-        <WaveformCanvases className='WaveformCanvases'
+        <WaveformCanvases className="WaveformCanvases"
             theme={ theme }
             offset={ offset } >
           { waveforms }

@@ -79,16 +79,17 @@ function loadImageChannel(channelConfig, state) {
 
   // first normalize the parts
   // an icremented 'curid' is the part id used as key
-  const normalizedParts = channelConfig.parts ? channelConfig.parts.reduce((res, part) => {
-    part.partId = res.curid;
-    part.duration = part.duration ?
-      part.duration : getImageDuration(state, part.src);
-    res[res.curid] = part;
-    res.curid++;
-    return res;
-  }, {
-    curid: 0
-  }) : null;
+  const normalizedParts = channelConfig.parts ? 
+    channelConfig.parts.reduce((res, part) => {
+      part.partId = res.curid;
+      part.duration = part.duration ?
+        part.duration : getImageDuration(state, part.src);
+      res[res.curid] = part;
+      res.curid++;
+      return res;
+    }, {
+      curid: 0
+    }) : null;
 
   // incremented id no longer required
   delete normalizedParts.curid;
@@ -176,7 +177,10 @@ export const insertNewPart = (partInfo) => {
       markerId: "insert"
     }));
 
-    dispatch(addPart(partInfo));
+    const partWithoutSrc = { ...partInfo };
+    delete partWithoutSrc.src;
+
+    dispatch(addPart(partWithoutSrc));
     const lastPartId = getLastPartId(getState(), partInfo.channelId);
     // generate markers for part
     dispatch(setMarker({

@@ -167,7 +167,7 @@ class Channel extends Component {
 
   render() {
     const { parts, imageHeight, scale, progress, cursorPos, 
-      selection, markers, theme, maxWidth, selected } = this.props;
+      selection, markers, theme, maxWidth, selected, imageSources } = this.props;
 
     // loop thru all images/parts
     const allImageCanvases = [];
@@ -179,9 +179,11 @@ class Channel extends Component {
 
       parts.forEach((part) => {
 
-        const { partId, src, offset, duration } = {
+        const { partId, imageId, offset, duration } = {
           ...part
         };
+
+        const src = imageSources[imageId];
 
         // paint images of canvases with max with MAX_CANVAS_WIDTH
         const canvasImages = [];
@@ -206,7 +208,7 @@ class Channel extends Component {
         }
         allImageCanvases.push(
           <ImageCanvases key={ partId }
-              className='ImageCanvases'
+              className="ImageCanvases"
               theme={ theme }
               offset={ offset }>
             { canvasImages }
@@ -222,21 +224,21 @@ class Channel extends Component {
     }
 
     const progressElem = progress ?
-      (<ImageProgress className='Progress'
+      (<ImageProgress className="Progress"
           progress={ progress }
           theme={ theme }
           height={ imageHeight } />)
       : null;
 
     const selectionElem = selection && selection.from && selection.to ?
-      (<ImageSelection className='Selection'
+      (<ImageSelection className="Selection"
           selection={ selection }
           theme={ theme }
           height={ imageHeight } />)
       : null;
 
     const cursorElem = cursorPos ?
-      (<ImageCursor className='Cursor'
+      (<ImageCursor className="Cursor"
           cursorPos={ cursorPos }
           theme={ theme }
           height={ imageHeight } />)
@@ -252,7 +254,7 @@ class Channel extends Component {
         }
         return (<ImageMarker 
             key={ marker.markerId } 
-            className='Marker' 
+            className="Marker" 
             markerPos={ marker.pos } 
             markerColor={ color } 
             theme={ theme } 
@@ -261,7 +263,7 @@ class Channel extends Component {
       }) : null;
 
     return (
-      <ImageChannelWrapper className='ChannelWrapper' 
+      <ImageChannelWrapper className="ChannelWrapper" 
           onMouseDown={ (e) => this.handleMouseEvent(e, "mouseDown") } 
           onMouseUp={ (e) => this.handleMouseEvent(e, "mouseUp") } 
           onMouseMove={ (e) => this.handleMouseEvent(e, "mouseMove") } 
@@ -297,10 +299,10 @@ Channel.propTypes = {
 	parts: PropTypes.arrayOf(
 		PropTypes.shape({
       	partId: PropTypes.number.isRequired,
-        src: PropTypes.string.isRequired,
     	  offset: PropTypes.number, // might be zero
         duration:PropTypes.number.isRequired,
     })),
+  imageSources: PropTypes.object.isRequired,
   imageHeight: PropTypes.number,
   scale: PropTypes.number,
   progress: PropTypes.number,
