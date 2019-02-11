@@ -37,7 +37,7 @@ export function withPlay(WrappedComponent) {
 
     componentDidUpdate(prevProps, prevState) {
 
-      const {playState, selection, offset} = this.props;
+      const { playState, selection, offset } = this.props;
 
       // start or stop playing
       if (prevProps.playState !== playState) {
@@ -93,7 +93,7 @@ export function withPlay(WrappedComponent) {
           const duration = actEndAt - actStartAt;
           this.playout.play(this.audioContext.currentTime + trackDelay, trackStartAt, duration);
         } else {
-          console.log(`skip  ${this.props.type} playing from ${actStartAt}s to ${actEndAt}`);
+          // console.log(`skip  ${this.props.type} playing from ${actStartAt}s to ${actEndAt}`);
         }
 
         // start progress animation
@@ -115,7 +115,12 @@ export function withPlay(WrappedComponent) {
       this.setState({
         ...this.state,
         progress: currentTimeInSecs
-      })
+      });
+
+
+      if (this.props.reportProgress) {
+        this.props.reportProgress(currentTimeInSecs);
+      }
 
       if (currentTimeInSecs < this.animateEndAt) {
         this.animationRequest = window.requestAnimationFrame(this.animateProgress);
@@ -129,7 +134,7 @@ export function withPlay(WrappedComponent) {
       this.setState({
         ...this.state,
         progress: null
-      })
+      });
       this.animationStartTime = null;
     }
 
@@ -149,10 +154,10 @@ export function withPlay(WrappedComponent) {
 
     render() {
 
-      const {buffer, ...passthruProps} = this.props;
+      const { buffer, ...passthruProps } = this.props;
 
       // memoized audio peak data
-      const {data, length, bits} = buffer ? this.doExtractPeaks(buffer, this.props.sampleRate / this.props.resolution, 16)
+      const { data, length, bits } = buffer ? this.doExtractPeaks(buffer, this.props.sampleRate / this.props.resolution, 16)
         : {
           data: [],
           length: 0,
@@ -161,14 +166,13 @@ export function withPlay(WrappedComponent) {
       const peaksDataMono = Array.isArray(data) ? data[0] : []; // only one channel for now
 
       // time to pixel conversion is done in HOC TimeToPixel
-      return <WrappedComponent 
-        {...passthruProps} 
-        progress={ this.state.progress } 
-        handleMouseEvent={this.props.handleMouseEvent } 
-        factor={ this.props.resolution / this.props.sampleRate } /* req only for images*/ 
-        peaks={ peaksDataMono } /* only for audio */ 
-        bits={ bits } /* only for audio */ 
-        length={ length } /* only for audio */ />;
+      return (<WrappedComponent { ...passthruProps }
+          progress={ this.state.progress }
+          handleMouseEvent={ this.props.handleMouseEvent }
+          factor={ this.props.resolution / this.props.sampleRate }
+          peaks={ peaksDataMono }
+          bits={ bits }
+          length={ length } /* only for audio */ />);
     }
   }
   ;
@@ -178,6 +182,7 @@ export function withPlay(WrappedComponent) {
     sampleRate: PropTypes.number.isRequired,
     resolution: PropTypes.number.isRequired,
     playState: PropTypes.oneOf(['stopped', 'playing']).isRequired,
+    reportProgress: PropTypes.func,
     selection: PropTypes.exact({
       from: PropTypes.number,
       to: PropTypes.number,
@@ -185,7 +190,7 @@ export function withPlay(WrappedComponent) {
     setChannelPlayState: PropTypes.func.isRequired,
     parts: PropTypes.array,
     maxDuration: PropTypes.number,
-  }
+  };
 
   withPlay.displayName = `WithSubscription(${getDisplayName(WrappedComponent)})`;
   return WithPlay;

@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+
 import styled, { withTheme } from 'styled-components';
 import { secondsToPixels } from '../utils/conversions';
 
@@ -105,7 +107,7 @@ const TimeStamp = styled.div`
 class TimeScale extends Component {
   constructor(props) {
     super(props);
-    
+
     this.setCanvasRef = canvas => {
       this.canvas = canvas;
     };
@@ -137,7 +139,7 @@ class TimeScale extends Component {
 
   // duration, samplesPerPixel, sampleRate, controlWidth, color
   render() {
-    const { duration, samplesPerPixel, sampleRate, controlWidth, scale, timeScaleHeight} = this.props;
+    const { duration, samplesPerPixel, sampleRate, controlWidth, scale, timeScaleHeight } = this.props;
     const widthX = secondsToPixels(duration, samplesPerPixel, sampleRate);
     const pixPerSec = sampleRate / samplesPerPixel;
     const scaleInfo = getScaleInfo(samplesPerPixel);
@@ -151,7 +153,10 @@ class TimeScale extends Component {
       // put a timestamp every 30 seconds.
       if (scaleInfo.marker && (counter % scaleInfo.marker === 0)) {
         const timestamp = formatTime(counter);
-        timeMarkers.push(<TimeStamp key={timestamp} pix={pix}>{timestamp}</TimeStamp>);
+        timeMarkers.push(<TimeStamp key={ timestamp }
+            pix={ pix }>
+                           { timestamp }
+                         </TimeStamp>);
         canvasInfo[pix] = timeScaleHeight;
       } else if (scaleInfo.bigStep && (counter % scaleInfo.bigStep === 0)) {
         canvasInfo[pix] = Math.floor(timeScaleHeight / 2);
@@ -166,17 +171,29 @@ class TimeScale extends Component {
     this.width = widthX;
 
     return (
-      <PlaylistTimeScale controlWidth={controlWidth}>
-        <PlaylistTimeScaleScroll width={widthX}>
-          {timeMarkers}
-          <TimeTicks
-            cssWidth={ widthX }
-            width={widthX * scale} height={timeScaleHeight * scale} ref={this.setCanvasRef}></TimeTicks>
+      <PlaylistTimeScale controlWidth={ controlWidth }>
+        <PlaylistTimeScaleScroll width={ widthX }>
+          { timeMarkers }
+          <TimeTicks cssWidth={ widthX }
+              width={ widthX * scale }
+              height={ timeScaleHeight * scale }
+              ref={ this.setCanvasRef }></TimeTicks>
         </PlaylistTimeScaleScroll>
       </PlaylistTimeScale>
-    );
+      );
   }
 }
+
+TimeScale.propTypes = {
+  duration: PropTypes.number,
+  samplesPerPixel: PropTypes.number,
+  sampleRate: PropTypes.number,
+  controlWidth: PropTypes.number,
+  theme: PropTypes.object,
+  scale: PropTypes.number,
+  timeScaleHeight: PropTypes.number,
+};
+
 
 TimeScale.defaultProps = {
   theme: {

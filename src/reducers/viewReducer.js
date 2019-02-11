@@ -1,5 +1,5 @@
 import { cloneDeep } from 'lodash';
-import { CLEAR_VIEW, SELECT_RANGE, DESELECT_RANGE, SET_RESOLUTION, SET_MARKER, UPDATE_MARKER, DELETE_MARKER, SELECT_PART_OR_IMAGE, DESELECT_PART_OR_IMAGE} from '../actions/types';
+import { CLEAR_VIEW, SELECT_RANGE, DESELECT_RANGE, SET_RESOLUTION, SET_MARKER, UPDATE_MARKER, DELETE_MARKER, SELECT_PART_OR_IMAGE, DESELECT_PART_OR_IMAGE } from '../actions/types';
 
 // export for tests
 export const initialState = {
@@ -24,11 +24,11 @@ export default (state = initialState, action) => {
         ...state,
         selection: {
           from: action.payload.from,
-    	    to: action.payload.to
+          to: action.payload.to
         }
       };
-      
-      case DESELECT_RANGE:
+
+    case DESELECT_RANGE:
       return {
         ...state,
         selection: {
@@ -79,14 +79,14 @@ export default (state = initialState, action) => {
       return {
         ...state,
         resolution: action.payload
-      }
+      };
 
     case SELECT_PART_OR_IMAGE:
       const selPartOrImage = action.payload.selected ? action.payload : null;
       return {
         ...state,
         selectedPartOrImage: selPartOrImage
-      }
+      };
 
     case DESELECT_PART_OR_IMAGE:
       return {
@@ -95,24 +95,24 @@ export default (state = initialState, action) => {
       };
 
     default:
-      return state
+      return state;
   }
-}
+};
 
 export const getSelectionRange = (state) => {
   return {
     from: state.view.selection.from,
     to: state.view.selection.to,
-  }
-}
+  };
+};
 
 export const getResolution = (state) => {
-  return state.view.resolution
-}
+  return state.view.resolution;
+};
 
 export const getMarkers = (state) => {
   return state.view.byMarkerId ? Object.values(state.view.byMarkerId) : [];
-}
+};
 
 export const getSelectedPart = (state) => {
   if (state.view.selectedPartOrImage &&
@@ -120,16 +120,16 @@ export const getSelectedPart = (state) => {
     return state.view.selectedPartOrImage;
   }
   return null;
-}
+};
 
 export const getSelectedImage = (state) => {
   if (state.view.selectedPartOrImage &&
     state.view.selectedPartOrImage.imageId) {
     return state.view.selectedPartOrImage;
   }
-  return null
-}
+  return null;
+};
 
 export const getCurrent = (state) => {
   return state.view.currentById;
-}
+};

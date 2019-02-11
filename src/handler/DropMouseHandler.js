@@ -14,15 +14,15 @@ export default class SelectionMouseHandler {
     switch (eventName) {
 
       case "dragEnter":
-        this.handleInsertMarker(evInfo)
+        this.handleInsertMarker(evInfo);
         break;
 
       case "dragOver":
-        this.handleInsertMarker(evInfo)
+        this.handleInsertMarker(evInfo);
         break;
 
       case "drop":
-        this.handleInsertImage(evInfo)
+        this.handleInsertImage(evInfo);
         break;
 
       default:

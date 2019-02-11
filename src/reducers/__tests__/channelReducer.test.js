@@ -9,8 +9,8 @@ describe('channel reducer', () => {
         byChannelId: {},
         lastChannelId: -1
       }
-    )
-  })
+    );
+  });
 
   it('should handle ADD_CHANNEL for an audio channel', () => {
     expect(
@@ -28,8 +28,8 @@ describe('channel reducer', () => {
       },
       lastChannelId: 0,
 
-    })
-  })
+    });
+  });
 
   it('should handle ADD_CHANNEL for an image channel', () => {
     expect(
@@ -47,8 +47,8 @@ describe('channel reducer', () => {
       },
       lastChannelId: 0,
 
-    })
-  })
+    });
+  });
 
 
-})
+});

@@ -40,20 +40,27 @@ export default class AnimationPane extends PureComponent {
 		this.margin = 10;
 		this.state = {
 			rotationSpeed: 2, // rotations per second
-		}
+		};
 	}
 
+	componentDidMount() {
+		this.draw();
+	}
+
+	componentDidUpdate() {
+		this.draw();
+	}
 
 	drawArc(cc, arcIdx, color, radius, fromRad, toRad) {
 
-		const {resolution} = this.props;
+		const { resolution } = this.props;
 
 		const largestRadius = resolution * (30 + this.innerRadius);
 		const centerX = this.margin + largestRadius + arcIdx * (this.margin + 2 * largestRadius);
 		const centerY = this.margin + largestRadius;
 
 		cc.beginPath();
-		cc.arc(centerX , centerY, resolution*radius, fromRad, toRad, false);
+		cc.arc(centerX, centerY, resolution * radius, fromRad, toRad, false);
 		cc.strokeStyle = color;
 		cc.lineWidth = 2;
 		cc.stroke();
@@ -61,7 +68,7 @@ export default class AnimationPane extends PureComponent {
 
 	draw() {
 
-		const {progress, sampleRate, selectedChannels } = this.props;
+		const { progress, sampleRate, selectedChannels } = this.props;
 
 		if (progress && progress > 0) {
 			// get the part of the image that happened during the last update interval
@@ -71,82 +78,74 @@ export default class AnimationPane extends PureComponent {
 			// canvas.height = 2* (2*this.innerRadius + 60) + 20;
 			const cc = canvas.getContext('2d');
 
-			const oneSampleRad  = samplesToRad(1, sampleRate, this.state.rotationSpeed);
+			const oneSampleRad = samplesToRad(1, sampleRate, this.state.rotationSpeed);
 			const d = expData.data;
 			const numArcs = selectedChannels.length;
 
 			// console.log(`Num arcs: ${numArcs} (${expData.height} x ${expData.width})`)
 
-				for (let w = 0; w < expData.width; w++) { //left to right (i.e. time)
-					const toRad = this.prevRad + oneSampleRad;
-					for (let i=0; i < 30; i++) { // top to bottom
-						for (let arcIdx=0; arcIdx < numArcs; arcIdx++) { // pois
-							const row = 30 * arcIdx + i;
-							const startIdx = row * expData.width + w;
-							// console.log(`animate: ${row} ${startIdx}`)
-							const dataIdx = 4 * startIdx;
-							const color = `rgba(${d[dataIdx]},${d[dataIdx+1]},${d[dataIdx+2]},255)`;
-							this.drawArc(cc, arcIdx, color, i+this.innerRadius, this.prevRad, toRad)
-						}
+			for (let w = 0; w < expData.width; w++) { //left to right (i.e. time)
+				const toRad = this.prevRad + oneSampleRad;
+				for (let i = 0; i < 30; i++) { // top to bottom
+					for (let arcIdx = 0; arcIdx < numArcs; arcIdx++) { // pois
+						const row = 30 * arcIdx + i;
+						const startIdx = row * expData.width + w;
+						// console.log(`animate: ${row} ${startIdx}`)
+						const dataIdx = 4 * startIdx;
+						const color = `rgba(${d[dataIdx]},${d[dataIdx+1]},${d[dataIdx+2]},255)`;
+						this.drawArc(cc, arcIdx, color, i + this.innerRadius, this.prevRad, toRad);
 					}
-					this.prevRad = toRad;
+				}
+				this.prevRad = toRad;
 			}
 			this.prevTime = progress;
+		}
 	}
-}
-	
-	componentDidMount() {
-    this.draw();
-  }
 
-  componentDidUpdate() {
-    this.draw();
-	}
-	
+
 	speed2slider(speed) {
-		return (speed - minRotationSpeed) / (maxRotationSpeed-minRotationSpeed) * 100;
+		return (speed - minRotationSpeed) / (maxRotationSpeed - minRotationSpeed) * 100;
 	}
 
 	slider2speed(val) {
 		//100 -> max, 0 -> min
-		return minRotationSpeed + val / 100 * (maxRotationSpeed-minRotationSpeed);
+		return minRotationSpeed + val / 100 * (maxRotationSpeed - minRotationSpeed);
 	}
-  
-  handleChange = (ev, val) => {
-  	const rotationSpeed = this.slider2speed(val);
-  	this.setState( { rotationSpeed } );
-  };
 
-  render() {
-  	
-  	const { rotationSpeed } = this.state;
+	handleChange = (ev, val) => {
+		const rotationSpeed = this.slider2speed(val);
+		this.setState({
+			rotationSpeed
+		});
+	};
 
-		const {drawerWidth, selectedChannels, resolution} = this.props;
-    return (
-			<AnimationPaneWrapper
-					drawerWidth = {drawerWidth}>
-					<AnimationControl>
-						{rotationSpeed.toFixed(1)}
-						<Slider 
-							value={this.speed2slider(rotationSpeed)}
-							onChange={this.handleChange}
-							vertical
-							style= {{
-								width: 0
-							}}
-						/>
-					</AnimationControl>
-					<AnimationCanvas 
-						id = "animationPaneCanvas" 
-						height = {resolution * 80}
-						width = {selectedChannels.length * resolution * 80}/>
-        </AnimationPaneWrapper>
-        
-    )
+	render() {
+
+		const { rotationSpeed } = this.state;
+
+		const { drawerWidth, selectedChannels, resolution } = this.props;
+		return (
+			<AnimationPaneWrapper drawerWidth={ drawerWidth }>
+     <AnimationControl>
+       { rotationSpeed.toFixed(1) }
+       <Slider value={ this.speed2slider(rotationSpeed) }
+           onChange={ this.handleChange }
+           vertical
+           style={ { width: 0 } } />
+     </AnimationControl>
+     <AnimationCanvas id="animationPaneCanvas"
+         height={ resolution * 80 }
+         width={ selectedChannels.length * resolution * 80 } />
+   </AnimationPaneWrapper>
+
+			);
 	}
 }
 
 AnimationPane.propTypes = {
 	progress: PropTypes.number,
 	sampleRate: PropTypes.number.isRequired,
-}
+	resolution: PropTypes.number.isRequired,
+	selectedChannels: PropTypes.arrayOf(PropTypes.number),
+	drawerWidth: PropTypes.number,
+};

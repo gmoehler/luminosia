@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import ChannelSelector from './ChannelSelector';
@@ -10,14 +11,17 @@ class ChannelSelectorContainer extends Component {
 
   render() {
 
+    const { channelOverview, selectChannelAction, deselectChannelAction,
+      exportImageChannelAction, deleteChannelAction, duplicateChannelAction } = this.props;
+
     return (
       <ChannelSelector
-        channelOverview={this.props.channelOverview}
-        selectChannel={this.props.selectChannelAction}
-        deselectChannel={this.props.deselectChannelAction}
-        exportImageChannel={this.props.exportImageChannelAction}
-        deleteChannel={this.props.deleteChannelAction}
-        duplicateChannel={this.props.duplicateChannelAction}
+          channelOverview={ channelOverview }
+          selectChannel={ selectChannelAction }
+          deselectChannel={ deselectChannelAction }
+          exportImageChannel={ exportImageChannelAction }
+          deleteChannel={ deleteChannelAction }
+          duplicateChannel={ duplicateChannelAction }
       />);
   }
 }
@@ -25,7 +29,7 @@ class ChannelSelectorContainer extends Component {
 const mapStateToProps = (state, props) => {
   return {
     channelOverview: getAllChannelsOverview(state),
-  }
+  };
 };
 
 const mapDispatchToProps = dispatch => ({
@@ -34,6 +38,15 @@ const mapDispatchToProps = dispatch => ({
   exportImageChannelAction: (channelId) => dispatch(exportImageChannel(channelId)),
   deleteChannelAction: (channelId) => dispatch(deleteChannel(channelId)),
   duplicateChannelAction: (channelId) => dispatch(duplicateChannel(channelId)),
-})
+});
+
+ChannelSelectorContainer.propTypes = {
+  channelOverview: PropTypes.array,
+  selectChannelAction: PropTypes.func.isRequired,
+  deselectChannelAction: PropTypes.func.isRequired,
+  exportImageChannelAction: PropTypes.func.isRequired,
+  deleteChannelAction: PropTypes.func.isRequired,
+  duplicateChannelAction: PropTypes.func.isRequired,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChannelSelectorContainer);

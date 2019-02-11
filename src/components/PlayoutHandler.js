@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
-import Playout from '../player/Playout'
+import Playout from '../player/Playout';
 
 class PlayoutHandler extends Component {
   constructor(props) {
@@ -9,6 +9,27 @@ class PlayoutHandler extends Component {
     this.playout = null;
     this.state = {
       isPlaying: false
+    };
+  }
+
+  componentDidMount() {
+    if (!this.isPlaying && this.props.playing) {
+      this.startPlaying();
+    } else if (this.isPlaying && !this.props.playing) {
+      this.stopPlaying();
+    }
+  }
+
+  // needed because we react cannot find out for headless component
+  shouldComponentUpdate(nextProps, nextState) {
+    return nextProps.playing !== this.props.playing;
+  }
+
+  componentDidUpdate() {
+    if (!this.isPlaying && this.props.playing) {
+      this.startPlaying();
+    } else if (this.isPlaying && !this.props.playing) {
+      this.stopPlaying();
     }
   }
 
@@ -26,27 +47,6 @@ class PlayoutHandler extends Component {
   stopPlaying() {
     this.playout.stop();
     this.isPlaying = false;
-  }
-
-  // needed because we react cannot find out for headless component
-  shouldComponentUpdate(nextProps, nextState) {
-    return nextProps.playing !== this.props.playing;
-  }
-
-  componentDidMount() {
-    if (!this.isPlaying && this.props.playing) {
-      this.startPlaying();
-    } else if (this.isPlaying && !this.props.playing) {
-      this.stopPlaying();
-    }
-  }
-
-  componentDidUpdate() {
-    if (!this.isPlaying && this.props.playing) {
-      this.startPlaying();
-    } else if (this.isPlaying && !this.props.playing) {
-      this.stopPlaying();
-    }
   }
 
   render() {

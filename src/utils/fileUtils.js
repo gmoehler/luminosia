@@ -21,22 +21,22 @@ export function downloadFile(filename, src) {
 }
 
 
-export function readTextFile(file){
+export function readTextFile(file) {
   return new Promise((resolve, reject) => {
-    var fr = new FileReader();  
+    var fr = new FileReader();
     fr.onload = () => {
-      resolve(fr.result )
+      resolve(fr.result);
     };
     fr.readAsText(file);
   });
 }
 
-export function readAudioFile(file, audioContext){
+export function readAudioFile(file, audioContext) {
   return new Promise((resolve, reject) => {
-    var fr = new FileReader();  
+    var fr = new FileReader();
     fr.onload = () => {
       audioContext.decodeAudioData(fr.result)
-        .then ((decodedAudio) => resolve(decodedAudio));
+        .then((decodedAudio) => resolve(decodedAudio));
     };
     fr.readAsArrayBuffer(file);
   });

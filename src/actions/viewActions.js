@@ -58,7 +58,7 @@ const updateMarkers = (dispatch, part) => {
     incr: 0,
     type
   }));
-}
+};
 
 // partinfo is channelld, partId and selected
 // imageinfo is imageId
@@ -98,6 +98,6 @@ export const selectPartOrImage = ((partOrImageInfo) => {
       // for parts only
       updateMarkers(dispatch, partOrImageInfo);
     }
-  }
+  };
 });
 
