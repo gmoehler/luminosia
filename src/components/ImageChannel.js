@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import styled, { withTheme } from 'styled-components';
-import { getMouseEventPosition, isImplementedKey } from '../utils/eventUtils';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import styled, { withTheme } from "styled-components";
+import { getMouseEventPosition, isImplementedKey } from "../utils/eventUtils";
 
 const MAX_CANVAS_WIDTH = 1000;
 
@@ -107,7 +107,7 @@ class Channel extends Component {
           break;
         }
 
-        const cc = canvas.getContext('2d');
+        const cc = canvas.getContext("2d");
         cc.clearRect(0, 0, canvas.width, canvas.height);
         const imageOffset = canvasOffset / factor;
 
@@ -319,16 +319,16 @@ Channel.propTypes = {
 
 Channel.defaultProps = {
   theme: {
-    waveProgressColor: 'transparent', // 'rgb(255,255,255,0.3)', // transparent white
-    waveProgressBorderColor: 'rgb(255,255,255,1)', // transparent white
-    cursorColor: 'red',
-    markerColor: 'rgba(255,255, 0, 0.5)', // transparent yellow
-    insertMarkerColor: 'rgba(255,165, 0, 0.5)', // transparent orange
-    selectedMarkerColor: 'rgba(255,165, 0, 1)', // orange
-    selectionColor: 'rgba(0,0,255,0.5)',
-    imageBackgroundColor: 'black',
-    borderColorSelected: '#3f51b5',
-    borderColor: 'darkgrey',
+    waveProgressColor: "transparent", // 'rgb(255,255,255,0.3)', // transparent white
+    waveProgressBorderColor: "rgb(255,255,255,1)", // transparent white
+    cursorColor: "red",
+    markerColor: "rgba(255,255, 0, 0.5)", // transparent yellow
+    insertMarkerColor: "rgba(255,165, 0, 0.5)", // transparent orange
+    selectedMarkerColor: "rgba(255,165, 0, 1)", // orange
+    selectionColor: "rgba(0,0,255,0.5)",
+    imageBackgroundColor: "black",
+    borderColorSelected: "#3f51b5",
+    borderColor: "darkgrey",
   },
   factor: 1,
   // checking `window.devicePixelRatio` when drawing to canvas.

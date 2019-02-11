@@ -1,4 +1,4 @@
-import { FADEIN, FADEOUT, createFadeIn, createFadeOut } from 'fade-maker';
+import { FADEIN, FADEOUT, createFadeIn, createFadeOut } from "fade-maker";
 
 export default class {
 
@@ -9,21 +9,21 @@ export default class {
     this.destination = this.ac.destination;
   }
 
-  applyFade(type, start, duration, shape = 'logarithmic') {
+  applyFade(type, start, duration, shape = "logarithmic") {
     if (type === FADEIN) {
       createFadeIn(this.fadeGain.gain, shape, start, duration);
     } else if (type === FADEOUT) {
       createFadeOut(this.fadeGain.gain, shape, start, duration);
     } else {
-      throw new Error('Unsupported fade type');
+      throw new Error("Unsupported fade type");
     }
   }
 
-  applyFadeIn(start, duration, shape = 'logarithmic') {
+  applyFadeIn(start, duration, shape = "logarithmic") {
     this.applyFade(FADEIN, start, duration, shape);
   }
 
-  applyFadeOut(start, duration, shape = 'logarithmic') {
+  applyFadeOut(start, duration, shape = "logarithmic") {
     this.applyFade(FADEOUT, start, duration, shape);
   }
 

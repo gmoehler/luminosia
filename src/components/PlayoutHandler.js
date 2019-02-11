@@ -1,6 +1,6 @@
-import { Component } from 'react';
-import PropTypes from 'prop-types';
-import Playout from '../player/Playout';
+import { Component } from "react";
+import PropTypes from "prop-types";
+import Playout from "../player/Playout";
 
 class PlayoutHandler extends Component {
   constructor(props) {

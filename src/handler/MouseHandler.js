@@ -1,6 +1,6 @@
 
-import MoveMouseHandler from './MoveMouseHandler';
-import DropMouseHandler from './DropMouseHandler';
+import MoveMouseHandler from "./MoveMouseHandler";
+import DropMouseHandler from "./DropMouseHandler";
 
 export default class MouseHandler {
 

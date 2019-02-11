@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
 
-import ChannelSelector from './ChannelSelector';
-import { getAllChannelsOverview } from '../reducers/channelReducer';
-import { selectChannel, deselectChannel, deleteChannel, duplicateChannel } from '../actions/channelActions';
-import { exportImageChannel } from '../actions/generalActions';
+import ChannelSelector from "./ChannelSelector";
+import { getAllChannelsOverview } from "../reducers/channelReducer";
+import { selectChannel, deselectChannel, deleteChannel, duplicateChannel } from "../actions/channelActions";
+import { exportImageChannel } from "../actions/generalActions";
 
 class ChannelSelectorContainer extends Component {
 

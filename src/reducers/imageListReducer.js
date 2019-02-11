@@ -1,6 +1,6 @@
-import { cloneDeep } from 'lodash';
-import { CLEAR_IMAGELIST, ADD_IMAGE, REMOVE_IMAGE, } from '../actions/types';
-import { filterObjectByKeys } from '../utils/miscUtils';
+import { cloneDeep } from "lodash";
+import { CLEAR_IMAGELIST, ADD_IMAGE, REMOVE_IMAGE, } from "../actions/types";
+import { filterObjectByKeys } from "../utils/miscUtils";
 
 const initialState = {
   byImageId: {},

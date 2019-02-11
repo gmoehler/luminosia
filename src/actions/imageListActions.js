@@ -1,5 +1,5 @@
-import { ADD_IMAGE, CLEAR_IMAGELIST, REMOVE_IMAGE } from './types';
-import { getImageList } from '../reducers/imageListReducer';
+import { ADD_IMAGE, CLEAR_IMAGELIST, REMOVE_IMAGE } from "./types";
+import { getImageList } from "../reducers/imageListReducer";
 
 
 export const addImage = (imageInfo) => ({

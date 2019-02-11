@@ -1,19 +1,19 @@
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
-import * as actions from '../channelActions';
-import * as types from '../types';
-import { audioChannelPayload, imageChannelPayload, initialImageChannelPayload, imageChannelState, part } from '../../__fixtures__/channel.fixtures';
+import * as actions from "../channelActions";
+import * as types from "../types";
+import { audioChannelPayload, imageChannelPayload, initialImageChannelPayload, imageChannelState, part } from "../../__fixtures__/channel.fixtures";
 
-import { initialState as initialViewState } from '../../reducers/viewReducer';
+import { initialState as initialViewState } from "../../reducers/viewReducer";
 
-import * as fileUtilsMock from '../../utils/fileUtils';
-jest.mock('../../utils/fileUtils');
+import * as fileUtilsMock from "../../utils/fileUtils";
+jest.mock("../../utils/fileUtils");
 
 export const mockStore = configureMockStore([thunk]);
 
-describe('actions', () => {
-  it('should add an audio channel', () => {
+describe("actions", () => {
+  it("should add an audio channel", () => {
     const expectedAction = {
       type: types.ADD_CHANNEL,
       payload: audioChannelPayload
@@ -21,7 +21,7 @@ describe('actions', () => {
     expect(actions.addChannel(audioChannelPayload)).toEqual(expectedAction);
   });
 
-  it('should add an image channel', () => {
+  it("should add an image channel", () => {
     const expectedAction = {
       type: types.ADD_CHANNEL,
       payload: imageChannelPayload
@@ -29,7 +29,7 @@ describe('actions', () => {
     expect(actions.addChannel(imageChannelPayload)).toEqual(expectedAction);
   });
 
-  it('should create an initial image channel', () => {
+  it("should create an initial image channel", () => {
     const expectedActions = [{
       type: types.ADD_CHANNEL,
       payload: initialImageChannelPayload
@@ -47,7 +47,7 @@ describe('actions', () => {
 
   });
 
-  it('should delete a channel', () => {
+  it("should delete a channel", () => {
     const expectedAction = {
       type: types.DELETE_CHANNEL,
       payload: 2
@@ -55,14 +55,14 @@ describe('actions', () => {
     expect(actions.deleteChannel(2)).toEqual(expectedAction);
   });
 
-  it('should clear all channels', () => {
+  it("should clear all channels", () => {
     const expectedAction = {
       type: types.CLEAR_CHANNELS
     };
     expect(actions.clearChannels()).toEqual(expectedAction);
   });
 
-  it('should select a channel', () => {
+  it("should select a channel", () => {
     const expectedAction = {
       type: types.SELECT_CHANNEL,
       payload: 2
@@ -70,7 +70,7 @@ describe('actions', () => {
     expect(actions.selectChannel(2)).toEqual(expectedAction);
   });
 
-  it('should deselect a channel', () => {
+  it("should deselect a channel", () => {
     const expectedAction = {
       type: types.DESELECT_CHANNEL,
       payload: 2
@@ -79,7 +79,7 @@ describe('actions', () => {
   });
 
 
-  it('should upload an audio file and create channel', () => {
+  it("should upload an audio file and create channel", () => {
 
     fileUtilsMock.setSampleRate(44100);
     fileUtilsMock.setDuration(21.21);
@@ -127,7 +127,7 @@ describe('actions', () => {
       });
   });
 
-  it('should update markers for last added channel ', () => {
+  it("should update markers for last added channel ", () => {
 
     const store = mockStore(imageChannelState);
     const expectedActions = [
@@ -155,7 +155,7 @@ describe('actions', () => {
   });
 
 
-  it('should add part and markers', () => {
+  it("should add part and markers", () => {
 
     const state = {
       ...imageChannelState,
@@ -185,7 +185,7 @@ describe('actions', () => {
       {
         type: types.SET_MARKER,
         payload: {
-          markerId: `2-1-l`, // should be 2-2-l, but lastPartId not changed in test
+          markerId: "2-1-l", // should be 2-2-l, but lastPartId not changed in test
           pos: 5.5,
           type: "normal"
         }
@@ -193,7 +193,7 @@ describe('actions', () => {
       {
         type: types.SET_MARKER,
         payload: {
-          markerId: `2-1-r`, // should be 2-2-r, but lastPartId not changed in test
+          markerId: "2-1-r", // should be 2-2-r, but lastPartId not changed in test
           pos: 55.5 + 5.55,
           type: "normal"
         }

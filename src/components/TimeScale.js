@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 
-import styled, { withTheme } from 'styled-components';
-import { secondsToPixels } from '../utils/conversions';
+import styled, { withTheme } from "styled-components";
+import { secondsToPixels } from "../utils/conversions";
 
 const TIME_INFO = {
   20000: {
@@ -123,7 +123,7 @@ class TimeScale extends Component {
 
   draw() {
     const canvas = this.canvas;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     const { theme, scale, timeScaleHeight } = this.props;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -198,7 +198,7 @@ TimeScale.propTypes = {
 TimeScale.defaultProps = {
   theme: {
     // color of the time ticks on the canvas
-    timeColor: 'grey',
+    timeColor: "grey",
   },
   // checking `window.devicePixelRatio` when drawing to canvas.
   scale: 1,

@@ -1,6 +1,6 @@
 
 export function downloadTextfile(filename, text) {
-  downloadFile(filename, 'data:application/json;charset=utf-8,' + encodeURIComponent(text));
+  downloadFile(filename, "data:application/json;charset=utf-8," + encodeURIComponent(text));
 }
 
 export function downloadImagefile(filename, imageUrl) {
@@ -8,11 +8,11 @@ export function downloadImagefile(filename, imageUrl) {
 }
 
 export function downloadFile(filename, src) {
-  var element = document.createElement('a');
-  element.setAttribute('href', src);
-  element.setAttribute('download', filename);
+  var element = document.createElement("a");
+  element.setAttribute("href", src);
+  element.setAttribute("download", filename);
 
-  element.style.display = 'none';
+  element.style.display = "none";
   document.body.appendChild(element);
 
   element.click();

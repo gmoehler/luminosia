@@ -1,5 +1,5 @@
-import { cloneDeep } from 'lodash';
-import { CLEAR_VIEW, SELECT_RANGE, DESELECT_RANGE, SET_RESOLUTION, SET_MARKER, UPDATE_MARKER, DELETE_MARKER, SELECT_PART_OR_IMAGE, DESELECT_PART_OR_IMAGE } from '../actions/types';
+import { cloneDeep } from "lodash";
+import { CLEAR_VIEW, SELECT_RANGE, DESELECT_RANGE, SET_RESOLUTION, SET_MARKER, UPDATE_MARKER, DELETE_MARKER, SELECT_PART_OR_IMAGE, DESELECT_PART_OR_IMAGE } from "../actions/types";
 
 // export for tests
 export const initialState = {

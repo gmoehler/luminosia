@@ -1,14 +1,16 @@
-import { PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL, ADD_PART, DELETE_PART, ADD_CHANNEL, CLEAR_CHANNELS, UPLOAD_AUDIO_STARTED, UPLOAD_AUDIO_SUCCESS, UPLOAD_AUDIO_FAILURE, DELETE_CHANNEL, SELECT_CHANNEL, DESELECT_CHANNEL } from './types';
+import { PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL, 
+  ADD_PART, DELETE_PART, ADD_CHANNEL, CLEAR_CHANNELS, UPLOAD_AUDIO_STARTED, 
+  UPLOAD_AUDIO_SUCCESS, UPLOAD_AUDIO_FAILURE, DELETE_CHANNEL, SELECT_CHANNEL, DESELECT_CHANNEL } from "./types";
 
-import { setMarker, deleteMarker, deselect, selectPartOrImage } from './viewActions';
+import { setMarker, deleteMarker, deselect, selectPartOrImage } from "./viewActions";
 
-import { getLastPartId, getLastChannel, getSelectedChannelIds, getMaxDuration, getChannelData } from '../reducers/channelReducer';
-import { getSelectedPart, getSelectedImage } from '../reducers/viewReducer';
-import { getImageDuration } from '../reducers/imageListReducer';
-import { removeImage } from './imageListActions';
-import { defaultSampleRate } from '../components/ImageListContainer';
-import { readAudioFile } from '../utils/fileUtils';
-import { drawExportImage, clearExportImage } from './generalActions';
+import { getLastPartId, getLastChannel, getSelectedChannelIds, getMaxDuration, getChannelData } from "../reducers/channelReducer";
+import { getSelectedPart, getSelectedImage } from "../reducers/viewReducer";
+import { getImageDuration } from "../reducers/imageListReducer";
+import { removeImage } from "./imageListActions";
+import { defaultSampleRate } from "../components/ImageListContainer";
+import { readAudioFile } from "../utils/fileUtils";
+import { drawExportImage, clearExportImage } from "./generalActions";
 
 // load channel from config
 

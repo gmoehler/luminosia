@@ -1,9 +1,9 @@
-import reducer from '../channelReducer';
-import * as types from '../../actions/types';
-import { audioChannelPayload, imageChannelPayload } from '../../__fixtures__/channel.fixtures';
+import reducer from "../channelReducer";
+import * as types from "../../actions/types";
+import { audioChannelPayload, imageChannelPayload } from "../../__fixtures__/channel.fixtures";
 
-describe('channel reducer', () => {
-  it('should return the initial state', () => {
+describe("channel reducer", () => {
+  it("should return the initial state", () => {
     expect(reducer(undefined, {})).toEqual(
       {
         byChannelId: {},
@@ -12,7 +12,7 @@ describe('channel reducer', () => {
     );
   });
 
-  it('should handle ADD_CHANNEL for an audio channel', () => {
+  it("should handle ADD_CHANNEL for an audio channel", () => {
     expect(
       reducer(reducer(undefined, {}), {
         type: types.ADD_CHANNEL,
@@ -31,7 +31,7 @@ describe('channel reducer', () => {
     });
   });
 
-  it('should handle ADD_CHANNEL for an image channel', () => {
+  it("should handle ADD_CHANNEL for an image channel", () => {
     expect(
       reducer(reducer(undefined, {}), {
         type: types.ADD_CHANNEL,

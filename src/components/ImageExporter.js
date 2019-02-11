@@ -1,6 +1,6 @@
-import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import React, { PureComponent } from "react";
+import PropTypes from "prop-types";
+import styled from "styled-components";
 
 const ImageExporterWrapper = styled.div`
 	width:  calc(95vw - ${props => props.drawerWidth}px);

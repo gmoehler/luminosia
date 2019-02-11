@@ -1,8 +1,8 @@
-import { merge, cloneDeep } from 'lodash';
+import { merge, cloneDeep } from "lodash";
 
-import { ADD_CHANNEL, CLEAR_CHANNELS, PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL, ADD_PART, DELETE_PART, DELETE_CHANNEL, SELECT_CHANNEL, DESELECT_CHANNEL } from '../actions/types';
+import { ADD_CHANNEL, CLEAR_CHANNELS, PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL, ADD_PART, DELETE_PART, DELETE_CHANNEL, SELECT_CHANNEL, DESELECT_CHANNEL } from "../actions/types";
 
-import { filterObjectByKeys } from '../utils/miscUtils';
+import { filterObjectByKeys } from "../utils/miscUtils";
 
 // TODO: improve this reducer using a sub-reducer on the selected channel
 

@@ -4,12 +4,12 @@
   and generates the waveform based on the audio data
 */
 
-import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
-import extractPeaks from 'webaudio-peaks';
-import memoize from 'memoize-one';
+import React, { PureComponent } from "react";
+import PropTypes from "prop-types";
+import extractPeaks from "webaudio-peaks";
+import memoize from "memoize-one";
 
-import Playout from '../player/Playout';
+import Playout from "../player/Playout";
 
 export function withPlay(WrappedComponent) {
 
@@ -181,7 +181,7 @@ export function withPlay(WrappedComponent) {
     type: PropTypes.oneOf(["audio", "image", "animation"]),
     sampleRate: PropTypes.number.isRequired,
     resolution: PropTypes.number.isRequired,
-    playState: PropTypes.oneOf(['stopped', 'playing']).isRequired,
+    playState: PropTypes.oneOf(["stopped", "playing"]).isRequired,
     reportProgress: PropTypes.func,
     selection: PropTypes.exact({
       from: PropTypes.number,
@@ -198,5 +198,5 @@ export function withPlay(WrappedComponent) {
 
 
 function getDisplayName(WrappedComponent) {
-  return WrappedComponent.displayName || WrappedComponent.name || 'Component';
+  return WrappedComponent.displayName || WrappedComponent.name || "Component";
 }

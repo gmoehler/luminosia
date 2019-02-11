@@ -1,9 +1,9 @@
-import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { getChannelExportData } from '../actions/generalActions';
-import { samplesToRad } from '../utils/conversions';
-import Slider from '@material-ui/lab/Slider';
+import React, { PureComponent } from "react";
+import PropTypes from "prop-types";
+import styled from "styled-components";
+import { getChannelExportData } from "../actions/generalActions";
+import { samplesToRad } from "../utils/conversions";
+import Slider from "@material-ui/lab/Slider";
 
 const minRotationSpeed = 0.1;
 const maxRotationSpeed = 9.9;
@@ -76,7 +76,7 @@ export default class AnimationPane extends PureComponent {
 
 			const canvas = document.getElementById("animationPaneCanvas");
 			// canvas.height = 2* (2*this.innerRadius + 60) + 20;
-			const cc = canvas.getContext('2d');
+			const cc = canvas.getContext("2d");
 
 			const oneSampleRad = samplesToRad(1, sampleRate, this.state.rotationSpeed);
 			const d = expData.data;

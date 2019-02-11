@@ -1,47 +1,47 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
-import { withStyles } from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
-import BurstModeIcon from '@material-ui/icons/BurstMode';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import React from "react";
+import PropTypes from "prop-types";
+import classNames from "classnames";
+import { withStyles } from "@material-ui/core/styles";
+import Drawer from "@material-ui/core/Drawer";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import Typography from "@material-ui/core/Typography";
+import Divider from "@material-ui/core/Divider";
+import IconButton from "@material-ui/core/IconButton";
+import BurstModeIcon from "@material-ui/icons/BurstMode";
+import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
+import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 
-import ChannelControlContainer from './components/ChannelControlContainer';
-import ImageControlContainer from './components/ImageControlContainer';
-import ImageListContainer from './components/ImageListContainer';
-import ChannelGroupContainer from './components/ChannelGroupContainer';
-import { Tooltip } from '@material-ui/core';
-import ImageExporter from './components/ImageExporter';
-import AnimationPaneContainer from './components/AnimationPaneContainer';
-import ChannelSelectorContainer from './components/ChannelSelectorContainer';
+import ChannelControlContainer from "./components/ChannelControlContainer";
+import ImageControlContainer from "./components/ImageControlContainer";
+import ImageListContainer from "./components/ImageListContainer";
+import ChannelGroupContainer from "./components/ChannelGroupContainer";
+import { Tooltip } from "@material-ui/core";
+import ImageExporter from "./components/ImageExporter";
+import AnimationPaneContainer from "./components/AnimationPaneContainer";
+import ChannelSelectorContainer from "./components/ChannelSelectorContainer";
 
 const drawerWidth = 400;
 const channelSelectorWidth = 96;
 
 const styles = theme => ({
   root: {
-    display: 'flex',
+    display: "flex",
     flexGrow: 1,
   },
   grow: {
     flexGrow: 1,
   },
   appBar: {
-    transition: theme.transitions.create(['margin', 'width'], {
+    transition: theme.transitions.create(["margin", "width"], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
   },
   appBarShift: {
     width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(['margin', 'width'], {
+    transition: theme.transitions.create(["margin", "width"], {
       easing: theme.transitions.easing.easeOut,
       duration: theme.transitions.duration.enteringScreen,
     }),
@@ -55,7 +55,7 @@ const styles = theme => ({
     marginRight: 20,
   },
   hide: {
-    display: 'none',
+    display: "none",
   },
   drawer: {
     width: drawerWidth,
@@ -65,31 +65,31 @@ const styles = theme => ({
     width: drawerWidth,
   },
   drawerHeader: {
-    display: 'flex',
-    alignItems: 'center',
-    padding: '0 8px',
+    display: "flex",
+    alignItems: "center",
+    padding: "0 8px",
     ...theme.mixins.toolbar,
-    justifyContent: 'space-between',
+    justifyContent: "space-between",
   },
   content: {
     flexGrow: 1,
     padding: theme.spacing.unit * 3,
-    transition: theme.transitions.create('margin', {
+    transition: theme.transitions.create("margin", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
     marginRight: -drawerWidth,
   },
   contentShift: {
-    transition: theme.transitions.create('margin', {
+    transition: theme.transitions.create("margin", {
       easing: theme.transitions.easing.easeOut,
       duration: theme.transitions.duration.enteringScreen,
     }),
     marginRight: 0,
   },
   channelPane: {
-    display: 'flex',
-    flexDirection: 'row',
+    display: "flex",
+    flexDirection: "row",
   }
 });
 
@@ -159,7 +159,7 @@ class App extends React.Component {
             classes={ { paper: classes.drawerPaper, } }>
           <div className={ classes.drawerHeader }>
               <IconButton onClick={ this.handleDrawerClose }>
-                { theme.direction === 'rtl' ? <ChevronLeftIcon /> : <ChevronRightIcon /> }
+                { theme.direction === "rtl" ? <ChevronLeftIcon /> : <ChevronRightIcon /> }
               </IconButton>
             <ImageControlContainer />
           </div>

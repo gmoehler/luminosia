@@ -1,13 +1,13 @@
 
-import { UPLOAD_CONFIG_STARTED, UPLOAD_CONFIG_SUCCESS, UPLOAD_CONFIG_FAILURE } from './types';
+import { UPLOAD_CONFIG_STARTED, UPLOAD_CONFIG_SUCCESS, UPLOAD_CONFIG_FAILURE } from "./types";
 
-import { downloadTextfile, readTextFile, downloadImagefile } from '../utils/fileUtils';
-import { getConfig } from '../reducers/rootReducer';
+import { downloadTextfile, readTextFile, downloadImagefile } from "../utils/fileUtils";
+import { getConfig } from "../reducers/rootReducer";
 
-import { addChannel, loadAChannel, updateChannelMarkersForLastAddedChannel } from './channelActions';
-import { addImage, loadImage } from './imageListActions';
-import { getChannelData, getMaxDuration } from '../reducers/channelReducer';
-import { secondsToSamples } from '../utils/conversions';
+import { addChannel, loadAChannel, updateChannelMarkersForLastAddedChannel } from "./channelActions";
+import { addImage, loadImage } from "./imageListActions";
+import { getChannelData, getMaxDuration } from "../reducers/channelReducer";
+import { secondsToSamples } from "../utils/conversions";
 
 // load channels and images from config
 
@@ -93,7 +93,7 @@ export const clearExportImage = (numChannels) => {
       canvas.height = numChannels * 30;
       canvas.width = secondsToSamples(maxDuration, 100); // TODO: actual sample rate
 
-      const cc = canvas.getContext('2d');
+      const cc = canvas.getContext("2d");
       cc.fillStyle = "black";
       cc.fillRect(0, 0, canvas.width, canvas.height);
     }
@@ -106,7 +106,7 @@ export const drawExportImage = (channelId, idx) => {
     const data = getChannelData(getState(), channelId);
     if (data && data.byPartId) {
       const canvas = document.getElementById("imageExportCanvas");
-      const cc = canvas.getContext('2d');
+      const cc = canvas.getContext("2d");
 
       Object.keys(data.byPartId).forEach((partId) => {
 
@@ -139,7 +139,7 @@ export const exportImageChannel = (channelId) => {
 export const getChannelExportData = ((fromTime, toTime, sampleRate) => {
   const exportCanvas = document.getElementById("imageExportCanvas");
   if (exportCanvas) {
-    const exportCc = exportCanvas.getContext('2d');
+    const exportCc = exportCanvas.getContext("2d");
     const fromIdx = secondsToSamples(fromTime, sampleRate);
     const toIdx = secondsToSamples(toTime, sampleRate, false); // floor
     const width = toIdx - fromIdx;

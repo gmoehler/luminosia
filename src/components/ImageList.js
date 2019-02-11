@@ -1,8 +1,8 @@
-import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import React, { PureComponent } from "react";
+import PropTypes from "prop-types";
+import styled from "styled-components";
 
-import { secondsToPixels, samplesToSeconds } from '../utils/conversions';
+import { secondsToPixels, samplesToSeconds } from "../utils/conversions";
 
 const ImageListWrapper = styled.div`
 	display: flex;
