@@ -1,13 +1,13 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import styled /*, { withTheme } */ from 'styled-components';
-import { withStyles } from '@material-ui/core/styles';
-import { Tooltip, IconButton, } from '@material-ui/core';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import styled /*, { withTheme } */ from "styled-components";
+import { withStyles } from "@material-ui/core/styles";
+import { Tooltip, IconButton, } from "@material-ui/core";
 
-import RestoreImagesIcon from '@material-ui/icons/CloudDownload';
-import SaveImagesIcon from '@material-ui/icons/CloudUpload';
-import ClearStoreIcon from '@material-ui/icons/CloudOff';
-import ClearImagesIcon from '@material-ui/icons/Clear';
+import RestoreImagesIcon from "@material-ui/icons/CloudDownload";
+import SaveImagesIcon from "@material-ui/icons/CloudUpload";
+import ClearStoreIcon from "@material-ui/icons/CloudOff";
+import ClearImagesIcon from "@material-ui/icons/Clear";
 
 const ChannelControlWrapper = styled.div`
   display: flex
@@ -19,7 +19,7 @@ const ChannelControlWrapper = styled.div`
 
 const styles = theme => ({
   root: {
-    color: 'white',
+    color: "white",
   },
   formControl: {
     margin: theme.spacing.unit,

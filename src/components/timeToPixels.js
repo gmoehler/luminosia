@@ -2,11 +2,11 @@
   Deals with time (in secs) to pixel conversion
 */
 
-import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
-import { cloneDeep } from 'lodash';
+import React, { PureComponent } from "react";
+import PropTypes from "prop-types";
+import { cloneDeep } from "lodash";
 
-import { secondsToPixels, pixelsToSeconds } from '../utils/conversions';
+import { secondsToPixels, pixelsToSeconds } from "../utils/conversions";
 
 // HOC to support time to pixel conversion for one channel
 export function timeToPixels(WrappedComponent) {

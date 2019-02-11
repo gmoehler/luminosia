@@ -1,6 +1,6 @@
-import { cloneDeep } from 'lodash';
-import { CLEAR_IMAGELIST, ADD_IMAGE, REMOVE_IMAGE, } from '../actions/types';
-import { filterObjectByKeys } from '../utils/miscUtils';
+import { cloneDeep } from "lodash";
+import { CLEAR_IMAGELIST, ADD_IMAGE, REMOVE_IMAGE, } from "../actions/types";
+import { filterObjectByKeys } from "../utils/miscUtils";
 
 const initialState = {
   byImageId: {},
@@ -37,7 +37,16 @@ export default (state = initialState, action) => {
 };
 
 export const getImageList = (state) => {
-  return state.images.byImageId ? Object.values(state.images.byImageId) : [];
+  return Object.values(state.images.byImageId);
+};
+
+// an map with imageIds pointing to image sources
+export const getImageSources = (state) => {
+  const ret = Object.values(state.images.byImageId).reduce((srcMap, img) => {
+      srcMap[img.imageId] = img.src;
+      return srcMap;
+  }, {});
+    return ret;
 };
 
 export const getImageSampleRate = (state) => {

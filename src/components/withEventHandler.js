@@ -2,9 +2,9 @@
  HOC to support mouse and keyboard events
 */
 
-import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
-import MouseHandler from '../handler/MouseHandler';
+import React, { PureComponent } from "react";
+import PropTypes from "prop-types";
+import MouseHandler from "../handler/MouseHandler";
 
 export function withEventHandler(WrappedComponent) {
 

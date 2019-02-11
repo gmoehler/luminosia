@@ -1,22 +1,23 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux'; 
+import React, { Component } from "react";
+import { connect } from "react-redux"; 
 
-import ChannelGroup from './ChannelGroup'
-import { setChannelPlayState, moveChannel, insertNewPart, deleteSelectedPartAndMarkers } from '../actions/channelActions'
-import { selectRange, deselectRange, setMarker, updateMarker, selectPartOrImage } from '../actions/viewActions'
-import { getMaxDuration, getLastPartId, getAllChannelsData } from '../reducers/channelReducer'
-import { getSelectionRange, getResolution, getMarkers } from '../reducers/viewReducer'
+import ChannelGroup from "./ChannelGroup";
+import { setChannelPlayState, moveChannel, insertNewPart, deleteSelectedPartAndMarkers } from "../actions/channelActions";
+import { selectRange, deselectRange, setMarker, updateMarker, selectPartOrImage } from "../actions/viewActions";
+import { getMaxDuration, getLastPartId, getAllChannelsData, allChannelsStopped } from "../reducers/channelReducer";
+import { getSelectionRange, getResolution, getMarkers } from "../reducers/viewReducer";
+import { getImageSources } from "../reducers/imageListReducer";
 
 class ChannelGroupContainer extends Component {x
 
   getLastPartId = (channelId) => {
-    getLastPartId(this.props.currentState, channelId)
+    getLastPartId(this.props.currentState, channelId);
   }
 
   render() {
 
     return (
-      <ChannelGroup {...this.props} />);
+      <ChannelGroup { ...this.props } />);
   }
 }
 
@@ -28,7 +29,9 @@ const mapStateToProps = (state, props) => {
     resolution: getResolution(state),
     maxDuration: getMaxDuration(state),
     markers: getMarkers(state),
-  }
+    imageSources: getImageSources(state),
+    playState: allChannelsStopped(state) ? "stopped" : "playing",
+  };
 };
 
 const mapDispatchToProps = dispatch => ({
@@ -65,6 +68,6 @@ const mapDispatchToProps = dispatch => ({
     channelId,
     playState
   })),
-})
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChannelGroupContainer);

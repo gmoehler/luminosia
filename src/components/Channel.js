@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import styled, { withTheme } from 'styled-components';
-import { getMouseEventPosition } from '../utils/eventUtils';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import styled, { withTheme } from "styled-components";
+import { getMouseEventPosition } from "../utils/eventUtils";
 
 const MAX_CANVAS_WIDTH = 1000;
 
@@ -87,7 +87,7 @@ class Channel extends Component {
       if (!canvas) {
         break; // TODO: find out how to reset canvases on new render
       }
-      const cc = canvas.getContext('2d');
+      const cc = canvas.getContext("2d");
       const h2 = waveHeight / 2;
       const maxValue = 2 ** (bits - 1);
 
@@ -159,7 +159,7 @@ class Channel extends Component {
     }
 
     const progressElem = progress ? 
-      (<Progress className='Progress'
+      (<Progress className="Progress"
           progress={ progress }
           theme={ theme }
           waveHeight={ waveHeight }
@@ -167,7 +167,7 @@ class Channel extends Component {
       : null;
 
     const selectionElem = selection && selection.from && selection.to ? 
-      (<Selection className='Selection'
+      (<Selection className="Selection"
           selection={ selection }
           theme={ theme }
           waveHeight={ waveHeight }
@@ -175,7 +175,7 @@ class Channel extends Component {
       : null;
 
     const cursorElem = cursorPos ? 
-      (<Cursor className='Cursor'
+      (<Cursor className="Cursor"
           cursorPos={ cursorPos }
           theme={ theme }
           waveHeight={ waveHeight }
@@ -191,7 +191,7 @@ class Channel extends Component {
           color = theme.selectedMarkerColor;
         }
         return (<Marker 
-            className='Marker' 
+            className="Marker" 
             key={ marker.markerId } 
             markerPos= { marker.pos } 
             markerColor={ color } 
@@ -205,7 +205,7 @@ class Channel extends Component {
 
     return (
       <ChannelWrapper 
-          className='ChannelWrapper' 
+          className="ChannelWrapper" 
           onMouseDown={ (e) => this.handleMouseEvent(e, "mouseDown") } 
           onMouseUp={ (e) => this.handleMouseEvent(e, "mouseUp") } 
           onMouseMove={ (e) => this.handleMouseEvent(e, "mouseMove") } 
@@ -217,7 +217,7 @@ class Channel extends Component {
 
           borderColor={ borderColor }>
 
-        <WaveformCanvases className='WaveformCanvases'
+        <WaveformCanvases className="WaveformCanvases"
             theme={ theme }
             offset={ offset } >
           { waveforms }
@@ -258,17 +258,17 @@ Channel.propTypes = {
 Channel.defaultProps = {
   theme: {
     // color of the waveform outline
-    waveOutlineColor: '#282c34',
-    waveFillColor: '#05a0cd',
-    waveProgressColor: 'transparent', //'rgb(255,120,0)',
-    waveProgressBorderColor: 'rgb(255,255,255)',
-    cursorColor: 'red',
-    markerColor: 'rgba(255,255, 0, 0.5)', // transparent yellow
-    insertMarkerColor: 'rgba(255,165, 0, 0.5)', // transparent orange
-    selectedMarkerColor: 'rgba(255,165, 0, 1)', // orange
-    selectionColor: 'rgba(0,0,255,0.5)',
-    borderColorSelected: '#3f51b5',
-    borderColor: 'darkgrey',
+    waveOutlineColor: "#282c34",
+    waveFillColor: "#05a0cd",
+    waveProgressColor: "transparent", //'rgb(255,120,0)',
+    waveProgressBorderColor: "rgb(255,255,255)",
+    cursorColor: "red",
+    markerColor: "rgba(255,255, 0, 0.5)", // transparent yellow
+    insertMarkerColor: "rgba(255,165, 0, 0.5)", // transparent orange
+    selectedMarkerColor: "rgba(255,165, 0, 1)", // orange
+    selectionColor: "rgba(0,0,255,0.5)",
+    borderColorSelected: "#3f51b5",
+    borderColor: "darkgrey",
   },
   // checking `window.devicePixelRatio` when drawing to canvas.
   scale: 1,

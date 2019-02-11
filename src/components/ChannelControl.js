@@ -1,16 +1,17 @@
-import React, { Component } from 'react';
-import styled /*, { withTheme } */ from 'styled-components';
-import { withStyles } from '@material-ui/core/styles';
-import { Tooltip, IconButton } from '@material-ui/core';
-import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
-import DeleteIcon from '@material-ui/icons/Delete';
-import DownloadConfigIcon from '@material-ui/icons/GetApp';
-import UploadConfigIcon from '@material-ui/icons/Publish';
-import UploadAudioChannelIcon from '@material-ui/icons/QueueMusic';
-import ZoomInIcon from '@material-ui/icons/ZoomIn';
-import ZoomOutIcon from '@material-ui/icons/ZoomOut';
-import PlayArrowIcon from '@material-ui/icons/PlayArrow';
-import StopIcon from '@material-ui/icons/Stop';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import styled /*, { withTheme } */ from "styled-components";
+import { withStyles } from "@material-ui/core/styles";
+import { Tooltip, IconButton } from "@material-ui/core";
+import PlaylistAddIcon from "@material-ui/icons/PlaylistAdd";
+import DeleteIcon from "@material-ui/icons/Delete";
+import DownloadConfigIcon from "@material-ui/icons/GetApp";
+import UploadConfigIcon from "@material-ui/icons/Publish";
+import UploadAudioChannelIcon from "@material-ui/icons/QueueMusic";
+import ZoomInIcon from "@material-ui/icons/ZoomIn";
+import ZoomOutIcon from "@material-ui/icons/ZoomOut";
+import PlayArrowIcon from "@material-ui/icons/PlayArrow";
+import StopIcon from "@material-ui/icons/Stop";
 
 const ChannelControlWrapper = styled.div`
   display: flex
@@ -23,14 +24,14 @@ const ChannelControlWrapper = styled.div`
 
 const styles = theme => ({
   root: {
-    color: 'white',
+    color: "white",
   },
   formControl: {
     margin: theme.spacing.unit,
     minWidth: 80,
   },
   controlgroup: {
-    padding: '0 30',
+    padding: "0 30",
   }
 });
 
@@ -41,6 +42,14 @@ export class ChannelControl extends Component {
     this.state = {
       channelId: "",
     };
+  }
+
+  componentDidUpdate() {
+    if (this.state.channelId && !this.props.channelIds.includes(this.state.channelId)) {
+      this.setState({
+        channelId: this.props.channelIds[0]
+      });
+    }
   }
 
   uploadConfigFile = (evt) => {
@@ -64,68 +73,84 @@ export class ChannelControl extends Component {
     });
   };
 
-  componentDidUpdate() {
-    if (this.state.channelId && !this.props.channelIds.includes(this.state.channelId)) {
-      this.setState({
-        channelId: this.props.channelIds[0]
-      });
-    }
-  }
 
   render() {
+
+    const { createImageChannel, downloadConfig, enablePlay, playChannelAndImage, enableStop, stopChannel, zoomIn, zoomOut, selectedImageOrPart, deleteSelectedPart } = this.props;
 
     return (
       <ChannelControlWrapper>
         <div style={ { margin: "0 10px" } }>
-          <input type="file" accept="audio/*" hidden ref={ (fileUpload) => this.fileUpload = fileUpload } onChange={ this.uploadAudioFile } width={ 0 } />
+          <input type="file"
+              accept="audio/*"
+              hidden
+              ref={ (fileUpload) => this.fileUpload = fileUpload }
+              onChange={ this.uploadAudioFile }
+              width={ 0 } />
           <Tooltip title="Load audio">
-            <IconButton color="inherit" onClick={ () => this.fileUpload.click() }>
+            <IconButton color="inherit"
+                onClick={ () => this.fileUpload.click() }>
               <UploadAudioChannelIcon />
             </IconButton>
           </Tooltip>
           <Tooltip title="Add image channel">
-            <IconButton color="inherit" onClick={ this.props.createImageChannel }>
-              <PlaylistAddIcon/>
+            <IconButton color="inherit"
+                onClick={ createImageChannel }>
+              <PlaylistAddIcon />
             </IconButton>
           </Tooltip>
           <Tooltip title="Load show">
-            <IconButton color="inherit" onClick={ () => this.showUpload.click() }>
+            <IconButton color="inherit"
+                onClick={ () => this.showUpload.click() }>
               <UploadConfigIcon />
             </IconButton>
           </Tooltip>
-          <input type="file" hidden ref={ (showUpload) => this.showUpload = showUpload } onChange={ this.uploadConfigFile } width={ 0 } />
+          <input type="file"
+              hidden
+              ref={ (showUpload) => this.showUpload = showUpload }
+              onChange={ this.uploadConfigFile }
+              width={ 0 } />
           <Tooltip title="Download show">
-            <IconButton color="inherit" onClick={ this.props.downloadConfig }>
-              <DownloadConfigIcon/>
+            <IconButton color="inherit"
+                onClick={ downloadConfig }>
+              <DownloadConfigIcon />
             </IconButton>
           </Tooltip>
         </div>
         <div style={ { margin: "0 10px" } }>
-          <Tooltip title="Play" disabled={ !this.props.enablePlay }>
-            <IconButton color="inherit" onClick={ () => this.props.playChannelAndImage(this.state.channelId) }>
-              <PlayArrowIcon/>
+          <Tooltip title="Play">
+            <IconButton color="inherit" 
+                disabled={ !enablePlay }
+                onClick={ () => playChannelAndImage(this.state.channelId) }>
+              <PlayArrowIcon />
             </IconButton>
           </Tooltip>
-          <Tooltip title="Stop" disabled={ !this.props.enableStop }>
-            <IconButton color="inherit" onClick={ this.props.stopChannel }>
-              <StopIcon/>
+          <Tooltip title="Stop">
+            <IconButton color="inherit"
+                disabled={ !enableStop }
+                onClick={ stopChannel }>
+              <StopIcon />
             </IconButton>
           </Tooltip>
         </div>
         <div style={ { margin: "0 10px" } }>
           <Tooltip title="Zoom in">
-            <IconButton color="inherit" onClick={ this.props.zoomIn }>
-              <ZoomInIcon/>
+            <IconButton color="inherit"
+                onClick={ zoomIn }>
+              <ZoomInIcon />
             </IconButton>
           </Tooltip>
           <Tooltip title="Zoom out">
-            <IconButton color="inherit" onClick={ this.props.zoomOut }>
-              <ZoomOutIcon/>
+            <IconButton color="inherit"
+                onClick={ zoomOut }>
+              <ZoomOutIcon />
             </IconButton>
           </Tooltip>
           <Tooltip title="Delete selected">
-            <IconButton disabled={ !this.props.selectedImageOrPart } color="inherit" onClick={ this.props.deleteSelectedPart }>
-              <DeleteIcon/>
+            <IconButton disabled={ !selectedImageOrPart }
+                color="inherit"
+                onClick={ deleteSelectedPart }>
+              <DeleteIcon />
             </IconButton>
           </Tooltip>
         </div>
@@ -133,6 +158,26 @@ export class ChannelControl extends Component {
       );
   }
 }
+
+ChannelControl.propTypes = {
+  channelIds: PropTypes.array,
+  createImageChannel: PropTypes.func.isRequired,
+  downloadConfig: PropTypes.func.isRequired,
+  enablePlay: PropTypes.bool.isRequired,
+  playChannelAndImage: PropTypes.func.isRequired,
+  enableStop: PropTypes.bool.isRequired,
+  stopChannel: PropTypes.func.isRequired,
+  playChannelAndImageAction: PropTypes.func,
+  stopChannelAction: PropTypes.func,
+  zoomIn: PropTypes.func.isRequired,
+  zoomOut: PropTypes.func.isRequired,
+  selectedImageOrPart: PropTypes.object,
+  deleteSelectedPart: PropTypes.func.isRequired,
+  uploadConfigFile: PropTypes.func.isRequired,
+  deselectChannel: PropTypes.func.isRequired,
+  selectChannel: PropTypes.func.isRequired,
+  uploadAudioFile: PropTypes.func.isRequired,
+};
 
 export default withStyles(styles, {
   withTheme: true

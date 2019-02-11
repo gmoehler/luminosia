@@ -1,13 +1,13 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import styled from "styled-components";
 
-import Channel from './Channel';
-import ImageChannel from './ImageChannel';
-import { withPlay } from './withPlay';
-import { withEventHandler } from './withEventHandler';
-import { timeToPixels } from './timeToPixels';
-import { secondsToPixels } from '../utils/conversions';
+import Channel from "./Channel";
+import ImageChannel from "./ImageChannel";
+import { withPlay } from "./withPlay";
+import { withEventHandler } from "./withEventHandler";
+import { timeToPixels } from "./timeToPixels";
+import { secondsToPixels } from "../utils/conversions";
 
 const ChannelGroupWrapper = styled.div`
   width:  calc(95vw - ${props => props.drawerWidth}px);
@@ -37,7 +37,7 @@ export default class ChannelGroup extends Component {
   }
 
   considerScroll = () => {
-    if ( this.groupRef ){
+    if ( this.props.playState === "playing" && this.groupRef ){
       const scrolldiff = Math.abs(this.state.scrollLeft - this.groupRef.scrollLeft);
       if (scrolldiff > 10 ) { // do it only once for all channels
         this.groupRef.scrollLeft = this.state.scrollLeft;

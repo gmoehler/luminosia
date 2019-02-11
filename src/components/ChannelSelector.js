@@ -1,51 +1,51 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
-import { withStyles } from '@material-ui/core/styles';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
-import { Tooltip, IconButton } from '@material-ui/core';
-import { indigo } from '@material-ui/core/colors/indigo';
-import DownloadChannelIcon from '@material-ui/icons/SaveAlt';
-import DeleteChannelIcon from '@material-ui/icons/DeleteForever';
-import ChannelDupIcon from '@material-ui/icons/FileCopy';
+import React from "react";
+import PropTypes from "prop-types";
+import classNames from "classnames";
+import { withStyles } from "@material-ui/core/styles";
+import FormGroup from "@material-ui/core/FormGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Switch from "@material-ui/core/Switch";
+import { Tooltip, IconButton } from "@material-ui/core";
+import { indigo } from "@material-ui/core/colors/indigo";
+import DownloadChannelIcon from "@material-ui/icons/SaveAlt";
+import DeleteChannelIcon from "@material-ui/icons/DeleteForever";
+import ChannelDupIcon from "@material-ui/icons/FileCopy";
 
 const channelSelectorWidth = 96;
 
 const styles = () => ({
   channelControlWrapper: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    flexDirection: 'column',
+    display: "flex",
+    justifyContent: "space-between",
+    flexDirection: "column",
     margin: 0,
     padding: 0,
-    background: 'darkgrey',
-    height: '90px',
+    background: "darkgrey",
+    height: "90px",
     width: `${channelSelectorWidth}px`,
   },
   wrapperSelected: {
-    background: '#3f51b5',
+    background: "#3f51b5",
   },
   switchWrapper: {
-    display: 'flex',
-    justifyContent: 'flex-end',
+    display: "flex",
+    justifyContent: "flex-end",
     margin: 0,
     padding: 0,
   },
   icon: {
-    fill: 'white',
+    fill: "white",
   },
   button: {
     padding: 0,
     margin: 0,
   },
   lowerIcons: {
-  	display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    margin: '0 9px 12px 9px',
-    fill: 'white',
+  	display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    margin: "0 9px 12px 9px",
+    fill: "white",
   }
 });
 

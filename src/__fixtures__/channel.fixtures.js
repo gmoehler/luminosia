@@ -1,6 +1,6 @@
 export const audioChannelPayload = {
-  src: 'some source.mp3',
-  type: 'audio',
+  src: "some source.mp3",
+  type: "audio",
   offset: 2.0,
   buffer: {
     length: 10,
@@ -9,7 +9,7 @@ export const audioChannelPayload = {
 };
 
 export const imageChannelPayload = {
-  type: 'image',
+  type: "image",
   sampleRate: 100,
   selected: false,
   duration: 55.5,
@@ -25,7 +25,7 @@ export const imageChannelPayload = {
 };
 
 export const initialImageChannelPayload = {
-  type: 'image',
+  type: "image",
   sampleRate: 100,
   selected: true,
   duration: 10,

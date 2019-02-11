@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
 
-import { loadImagesfromStorage, saveImagesToStorage, clearImagesfromStorage, clearImageList } from '../actions/imageListActions';
-import ImageControl from './ImageControl';
+import { loadImagesfromStorage, saveImagesToStorage, clearImagesfromStorage, clearImageList } from "../actions/imageListActions";
+import ImageControl from "./ImageControl";
 
 class ImageControlContainer extends Component {
 

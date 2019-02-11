@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import styled, { withTheme } from 'styled-components';
-import { getMouseEventPosition, isImplementedKey } from '../utils/eventUtils';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import styled, { withTheme } from "styled-components";
+import { getMouseEventPosition, isImplementedKey } from "../utils/eventUtils";
 
 const MAX_CANVAS_WIDTH = 1000;
 
@@ -107,7 +107,7 @@ class Channel extends Component {
           break;
         }
 
-        const cc = canvas.getContext('2d');
+        const cc = canvas.getContext("2d");
         cc.clearRect(0, 0, canvas.width, canvas.height);
         const imageOffset = canvasOffset / factor;
 
@@ -117,8 +117,13 @@ class Channel extends Component {
         const targetHeight = imageHeight;
 
         cc.scale(scale, scale);
-        img.onload = cc.drawImage(img, imageOffset, 0, sourceWidth, img.height,
-          0, 0, targetWidth, targetHeight);
+        if (img.src) {
+          img.onload = cc.drawImage(img, imageOffset, 0, sourceWidth, img.height,
+            0, 0, targetWidth, targetHeight);
+        } else {
+          cc.fillStyle = "#FF0000"; // red rectangle if image is missing
+          cc.fillRect(0, 0, targetWidth, targetHeight);
+        }
 
         canvasOffset += MAX_CANVAS_WIDTH;
       }
@@ -167,7 +172,7 @@ class Channel extends Component {
 
   render() {
     const { parts, imageHeight, scale, progress, cursorPos, 
-      selection, markers, theme, maxWidth, selected } = this.props;
+      selection, markers, theme, maxWidth, selected, imageSources } = this.props;
 
     // loop thru all images/parts
     const allImageCanvases = [];
@@ -179,9 +184,11 @@ class Channel extends Component {
 
       parts.forEach((part) => {
 
-        const { partId, src, offset, duration } = {
+        const { partId, imageId, offset, duration } = {
           ...part
         };
+
+        const src = imageSources[imageId];
 
         // paint images of canvases with max with MAX_CANVAS_WIDTH
         const canvasImages = [];
@@ -206,7 +213,7 @@ class Channel extends Component {
         }
         allImageCanvases.push(
           <ImageCanvases key={ partId }
-              className='ImageCanvases'
+              className="ImageCanvases"
               theme={ theme }
               offset={ offset }>
             { canvasImages }
@@ -222,21 +229,21 @@ class Channel extends Component {
     }
 
     const progressElem = progress ?
-      (<ImageProgress className='Progress'
+      (<ImageProgress className="Progress"
           progress={ progress }
           theme={ theme }
           height={ imageHeight } />)
       : null;
 
     const selectionElem = selection && selection.from && selection.to ?
-      (<ImageSelection className='Selection'
+      (<ImageSelection className="Selection"
           selection={ selection }
           theme={ theme }
           height={ imageHeight } />)
       : null;
 
     const cursorElem = cursorPos ?
-      (<ImageCursor className='Cursor'
+      (<ImageCursor className="Cursor"
           cursorPos={ cursorPos }
           theme={ theme }
           height={ imageHeight } />)
@@ -252,7 +259,7 @@ class Channel extends Component {
         }
         return (<ImageMarker 
             key={ marker.markerId } 
-            className='Marker' 
+            className="Marker" 
             markerPos={ marker.pos } 
             markerColor={ color } 
             theme={ theme } 
@@ -261,7 +268,7 @@ class Channel extends Component {
       }) : null;
 
     return (
-      <ImageChannelWrapper className='ChannelWrapper' 
+      <ImageChannelWrapper className="ChannelWrapper" 
           onMouseDown={ (e) => this.handleMouseEvent(e, "mouseDown") } 
           onMouseUp={ (e) => this.handleMouseEvent(e, "mouseUp") } 
           onMouseMove={ (e) => this.handleMouseEvent(e, "mouseMove") } 
@@ -297,10 +304,10 @@ Channel.propTypes = {
 	parts: PropTypes.arrayOf(
 		PropTypes.shape({
       	partId: PropTypes.number.isRequired,
-        src: PropTypes.string.isRequired,
     	  offset: PropTypes.number, // might be zero
         duration:PropTypes.number.isRequired,
     })),
+  imageSources: PropTypes.object.isRequired,
   imageHeight: PropTypes.number,
   scale: PropTypes.number,
   progress: PropTypes.number,
@@ -319,16 +326,16 @@ Channel.propTypes = {
 
 Channel.defaultProps = {
   theme: {
-    waveProgressColor: 'transparent', // 'rgb(255,255,255,0.3)', // transparent white
-    waveProgressBorderColor: 'rgb(255,255,255,1)', // transparent white
-    cursorColor: 'red',
-    markerColor: 'rgba(255,255, 0, 0.5)', // transparent yellow
-    insertMarkerColor: 'rgba(255,165, 0, 0.5)', // transparent orange
-    selectedMarkerColor: 'rgba(255,165, 0, 1)', // orange
-    selectionColor: 'rgba(0,0,255,0.5)',
-    imageBackgroundColor: 'black',
-    borderColorSelected: '#3f51b5',
-    borderColor: 'darkgrey',
+    waveProgressColor: "transparent", // 'rgb(255,255,255,0.3)', // transparent white
+    waveProgressBorderColor: "rgb(255,255,255,1)", // transparent white
+    cursorColor: "red",
+    markerColor: "rgba(255,255, 0, 0.5)", // transparent yellow
+    insertMarkerColor: "rgba(255,165, 0, 0.5)", // transparent orange
+    selectedMarkerColor: "rgba(255,165, 0, 1)", // orange
+    selectionColor: "rgba(0,0,255,0.5)",
+    imageBackgroundColor: "black",
+    borderColorSelected: "#3f51b5",
+    borderColor: "darkgrey",
   },
   factor: 1,
   // checking `window.devicePixelRatio` when drawing to canvas.

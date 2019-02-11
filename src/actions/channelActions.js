@@ -1,14 +1,16 @@
-import { PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL, ADD_PART, DELETE_PART, ADD_CHANNEL, CLEAR_CHANNELS, UPLOAD_AUDIO_STARTED, UPLOAD_AUDIO_SUCCESS, UPLOAD_AUDIO_FAILURE, DELETE_CHANNEL, SELECT_CHANNEL, DESELECT_CHANNEL } from './types';
+import { PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL, 
+  ADD_PART, DELETE_PART, ADD_CHANNEL, CLEAR_CHANNELS, UPLOAD_AUDIO_STARTED, 
+  UPLOAD_AUDIO_SUCCESS, UPLOAD_AUDIO_FAILURE, DELETE_CHANNEL, SELECT_CHANNEL, DESELECT_CHANNEL } from "./types";
 
-import { setMarker, deleteMarker, deselect, selectPartOrImage } from './viewActions';
+import { setMarker, deleteMarker, deselect, selectPartOrImage } from "./viewActions";
 
-import { getLastPartId, getLastChannel, getSelectedChannelIds, getMaxDuration, getChannelData } from '../reducers/channelReducer';
-import { getSelectedPart, getSelectedImage } from '../reducers/viewReducer';
-import { getImageDuration } from '../reducers/imageListReducer';
-import { removeImage } from './imageListActions';
-import { defaultSampleRate } from '../components/ImageListContainer';
-import { readAudioFile } from '../utils/fileUtils';
-import { drawExportImage, clearExportImage } from './generalActions';
+import { getLastPartId, getLastChannel, getSelectedChannelIds, getMaxDuration, getChannelData } from "../reducers/channelReducer";
+import { getSelectedPart, getSelectedImage } from "../reducers/viewReducer";
+import { getImageDuration } from "../reducers/imageListReducer";
+import { removeImage } from "./imageListActions";
+import { defaultSampleRate } from "../components/ImageListContainer";
+import { readAudioFile } from "../utils/fileUtils";
+import { drawExportImage, clearExportImage } from "./generalActions";
 
 // load channel from config
 
@@ -77,19 +79,20 @@ function loadImageChannel(channelConfig, state) {
 
   // first normalize the parts
   // an icremented 'curid' is the part id used as key
-  const normalizedParts = channelConfig.parts ? channelConfig.parts.reduce((res, part) => {
-    part.partId = res.curid;
-    part.duration = part.duration ?
-      part.duration : getImageDuration(state, part.src);
-    res[res.curid] = part;
-    res.curid++;
-    return res;
-  }, {
-    curid: 0
-  }) : null;
+  const normalizedParts = channelConfig.parts ? 
+    channelConfig.parts.reduce((res, part) => {
+      part.partId = res.curid;
+      part.duration = part.duration ?
+        part.duration : getImageDuration(state, part.src);
+      res[res.curid] = part;
+      res.curid++;
+      return res;
+    }, {
+      curid: 0
+    }) : {};
 
   // incremented id no longer required
-  delete normalizedParts.curid;
+  normalizedParts && delete normalizedParts.curid;
   delete channelConfig.parts;
   channelConfig.lastPartId = Object.keys(normalizedParts).length - 1;
   channelConfig.playState = "stopped";
@@ -174,7 +177,10 @@ export const insertNewPart = (partInfo) => {
       markerId: "insert"
     }));
 
-    dispatch(addPart(partInfo));
+    const partWithoutSrc = { ...partInfo };
+    delete partWithoutSrc.src;
+
+    dispatch(addPart(partWithoutSrc));
     const lastPartId = getLastPartId(getState(), partInfo.channelId);
     // generate markers for part
     dispatch(setMarker({

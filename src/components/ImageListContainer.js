@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
 
-import ImageList from './ImageList';
-import { getImageList } from '../reducers/imageListReducer';
-import { getResolution, getSelectedImage } from '../reducers/viewReducer';
-import { saveImageToStorage, addImage, loadImagesfromStorage } from '../actions/imageListActions';
-import { selectPartOrImage } from '../actions/viewActions';
+import ImageList from "./ImageList";
+import { getImageList } from "../reducers/imageListReducer";
+import { getResolution, getSelectedImage } from "../reducers/viewReducer";
+import { saveImageToStorage, addImage, loadImagesfromStorage } from "../actions/imageListActions";
+import { selectPartOrImage } from "../actions/viewActions";
 
 export const defaultSampleRate = 100;
 
@@ -50,7 +50,7 @@ ImageListContainer.propTypes = {
   addImageAction: PropTypes.func.isRequired,
   selectPartOrImageAction: PropTypes.func.isRequired,
   loadImagesfromStorageAction: PropTypes.func.isRequired,
-	selectedImage: PropTypes.string,
+	selectedImage: PropTypes.object,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ImageListContainer);
