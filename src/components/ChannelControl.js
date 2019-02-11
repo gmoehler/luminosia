@@ -43,7 +43,7 @@ export class ChannelControl extends Component {
       channelId: "",
     };
   }
-  
+
   componentDidUpdate() {
     if (this.state.channelId && !this.props.channelIds.includes(this.state.channelId)) {
       this.setState({
@@ -76,8 +76,7 @@ export class ChannelControl extends Component {
 
   render() {
 
-    const { createImageChannel, downloadConfig, enablePlay, playChannelAndImage, enableStop, stopChannel,
-      zoomIn, zoomOut, selectedImageOrPart, deleteSelectedPart } = this.props;
+    const { createImageChannel, downloadConfig, enablePlay, playChannelAndImage, enableStop, stopChannel, zoomIn, zoomOut, selectedImageOrPart, deleteSelectedPart } = this.props;
 
     return (
       <ChannelControlWrapper>
@@ -119,16 +118,16 @@ export class ChannelControl extends Component {
           </Tooltip>
         </div>
         <div style={ { margin: "0 10px" } }>
-          <Tooltip title="Play"
-              disabled={ !enablePlay }>
-            <IconButton color="inherit"
+          <Tooltip title="Play">
+            <IconButton color="inherit" 
+                disabled={ !enablePlay }
                 onClick={ () => playChannelAndImage(this.state.channelId) }>
               <PlayArrowIcon />
             </IconButton>
           </Tooltip>
-          <Tooltip title="Stop"
-              disabled={ !enableStop }>
+          <Tooltip title="Stop">
             <IconButton color="inherit"
+                disabled={ !enableStop }
                 onClick={ stopChannel }>
               <StopIcon />
             </IconButton>
@@ -177,7 +176,7 @@ ChannelControl.propTypes = {
   uploadConfigFile: PropTypes.func.isRequired,
   deselectChannel: PropTypes.func.isRequired,
   selectChannel: PropTypes.func.isRequired,
-  uploadAudioFile:  PropTypes.func.isRequired,
+  uploadAudioFile: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles, {

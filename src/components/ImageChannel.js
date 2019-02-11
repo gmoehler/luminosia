@@ -117,8 +117,13 @@ class Channel extends Component {
         const targetHeight = imageHeight;
 
         cc.scale(scale, scale);
-        img.onload = cc.drawImage(img, imageOffset, 0, sourceWidth, img.height,
-          0, 0, targetWidth, targetHeight);
+        if (img.src) {
+          img.onload = cc.drawImage(img, imageOffset, 0, sourceWidth, img.height,
+            0, 0, targetWidth, targetHeight);
+        } else {
+          cc.fillStyle = "#FF0000"; // red rectangle if image is missing
+          cc.fillRect(0, 0, targetWidth, targetHeight);
+        }
 
         canvasOffset += MAX_CANVAS_WIDTH;
       }
