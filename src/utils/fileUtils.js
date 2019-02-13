@@ -7,6 +7,11 @@ export function downloadImagefile(filename, imageUrl) {
   downloadFile(filename, imageUrl);
 }
 
+export function downloadBinaryFile(filename, binaryData) {
+  downloadFile(filename, binaryData);
+}
+
+
 export function downloadFile(filename, src) {
   var element = document.createElement("a");
   element.setAttribute("href", src);
@@ -19,7 +24,6 @@ export function downloadFile(filename, src) {
 
   document.body.removeChild(element);
 }
-
 
 export function readTextFile(file) {
   return new Promise((resolve, reject) => {

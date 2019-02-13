@@ -1,7 +1,7 @@
 
 import { UPLOAD_CONFIG_STARTED, UPLOAD_CONFIG_SUCCESS, UPLOAD_CONFIG_FAILURE } from "./types";
 
-import { downloadTextfile, readTextFile, downloadImagefile } from "../utils/fileUtils";
+import { downloadTextfile, readTextFile, downloadImagefile, /*downloadBinaryFile*/ } from "../utils/fileUtils";
 import { getConfig } from "../reducers/rootReducer";
 
 import { addChannel, loadAChannel, updateChannelMarkersForLastAddedChannel } from "./channelActions";
@@ -123,12 +123,15 @@ export const drawExportImage = (channelId, idx) => {
 // export one channel
 export const exportImageChannel = (channelId) => {
   return (dispatch, getState) => {
-    dispatch(drawExportImage(channelId));
+    dispatch(clearExportImage(1));
+    dispatch(drawExportImage(channelId, 0));
+    // const data = getChannelExportData();
+    // downloadBinaryFile(`result-${channelId}.pch`, data);
     const canvas = document.getElementById("imageExportCanvas");
     const resultImage = canvas.toDataURL("image/png");
     if (resultImage) {
       downloadImagefile(`result-${channelId}.png`, resultImage);
-    }
+    } 
   };
 };
 
@@ -136,12 +139,13 @@ export const exportImageChannel = (channelId) => {
 // assuming all selected channels are on the canvas
 // to acoid retreiving the same frame twice
 // we use ceil on the start idx and floor on the end idx
+// if fromTime and toTime are undefined: get complete canvas
 export const getChannelExportData = ((fromTime, toTime, sampleRate) => {
   const exportCanvas = document.getElementById("imageExportCanvas");
   if (exportCanvas) {
     const exportCc = exportCanvas.getContext("2d");
-    const fromIdx = secondsToSamples(fromTime, sampleRate);
-    const toIdx = secondsToSamples(toTime, sampleRate, false); // floor
+    const fromIdx = fromTime? secondsToSamples(fromTime, sampleRate) : 0;
+    const toIdx = toTime ? secondsToSamples(toTime, sampleRate, false) : exportCanvas.width; // floor
     const width = toIdx - fromIdx;
     if (width > 0) {
       return exportCc.getImageData(fromIdx, 0, width, exportCanvas.height);
