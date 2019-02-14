@@ -1,13 +1,14 @@
 
 import { UPLOAD_CONFIG_STARTED, UPLOAD_CONFIG_SUCCESS, UPLOAD_CONFIG_FAILURE } from "./types";
 
-import { downloadTextfile, readTextFile, downloadImagefile, /*downloadBinaryFile*/ } from "../utils/fileUtils";
+import { downloadTextfile, readTextFile, /* downloadImagefile, */ downloadBinaryFile } from "../utils/fileUtils";
 import { getConfig } from "../reducers/rootReducer";
 
 import { addChannel, loadAChannel, updateChannelMarkersForLastAddedChannel } from "./channelActions";
 import { addImage, loadImage } from "./imageListActions";
 import { getChannelData, getMaxDuration } from "../reducers/channelReducer";
 import { secondsToSamples } from "../utils/conversions";
+import { encodeImage } from "../utils/imageUtils";
 
 // load channels and images from config
 
@@ -125,13 +126,15 @@ export const exportImageChannel = (channelId) => {
   return (dispatch, getState) => {
     dispatch(clearExportImage(1));
     dispatch(drawExportImage(channelId, 0));
-    // const data = getChannelExportData();
-    // downloadBinaryFile(`result-${channelId}.pch`, data);
-    const canvas = document.getElementById("imageExportCanvas");
+    // binary download
+    const data = getChannelExportData();
+    downloadBinaryFile(`result-${channelId}.poi`, encodeImage(data));
+    // image file download
+    /* const canvas = document.getElementById("imageExportCanvas");
     const resultImage = canvas.toDataURL("image/png");
     if (resultImage) {
       downloadImagefile(`result-${channelId}.png`, resultImage);
-    } 
+    } */
   };
 };
 
