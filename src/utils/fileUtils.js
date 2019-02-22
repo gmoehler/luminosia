@@ -1,4 +1,6 @@
 
+import { saveAs } from "file-saver";
+
 export function downloadTextfile(filename, text) {
   downloadFile(filename, "data:application/json;charset=utf-8," + encodeURIComponent(text));
 }
@@ -8,13 +10,18 @@ export function downloadImagefile(filename, imageUrl) {
 }
 
 export function downloadBinaryFile(filename, uint8array) {
-  const binaryData = btoa(String.fromCharCode(...uint8array));
-  downloadFile(filename, "data:application/octet-stream;base64," + binaryData);
+  // const binaryData0 = btoa(String.fromCharCode(...uint8array));
+  // const decoder = new TextDecoder("utf8");
+  // const binaryData = btoa(decoder.decode(uint8array));
+  //var binaryData = btoa(Uint8ToString(uint8array));
+  // const fileData = "data:application/octet-stream;base64," + binaryData;
+  // downloadFile(filename, fileData);
+  var blob = new Blob([uint8array], { type: "data:application/octet-stream;base64" });
+  saveAs(blob, filename);
 }
 
-
 export function downloadFile(filename, src) {
-  var element = document.createElement("a");
+  const element = document.createElement("a");
   element.setAttribute("href", src);
   element.setAttribute("download", filename);
 
