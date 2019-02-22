@@ -35,6 +35,7 @@ const styles = () => ({
   },
   icon: {
     fill: "white",
+    width: ".8em"
   },
   button: {
     padding: 0,
@@ -82,9 +83,10 @@ class CustomizedSwitches extends React.Component {
             }
           />
           <div className={ classes.lowerIcons }>
-          <Tooltip title="Export image channel">
+          <Tooltip title="Export channel to binary file">
             <IconButton 
                 className={ classes.button }
+                size={ "large" }
                 onClick={ () => this.props.exportImageChannel(channel.channelId) }>
               <DownloadChannelIcon className={ classes.icon } />
             </IconButton>

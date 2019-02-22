@@ -7,8 +7,9 @@ export function downloadImagefile(filename, imageUrl) {
   downloadFile(filename, imageUrl);
 }
 
-export function downloadBinaryFile(filename, binaryData) {
-  downloadFile(filename, binaryData);
+export function downloadBinaryFile(filename, uint8array) {
+  const binaryData = btoa(String.fromCharCode(...uint8array));
+  downloadFile(filename, "data:application/octet-stream;base64," + binaryData);
 }
 
 
