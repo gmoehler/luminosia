@@ -12,13 +12,11 @@ describe("image utils", () => {
     	width: 2,
     	height: 4,
     	data
-    }
+    };
     
     const encodedImg = utils.runtimeEncodeImage(img);
-    console.log(encodedImg);
     const finalImg = utils.runtimeDecodeImage(encodedImg);
-    console.log(finalImg);
     
-    expect(finalImg).toEqual(img);
+    expect( Array.from(finalImg)).toEqual(img.data);
   });
 });
