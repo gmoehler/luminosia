@@ -4,7 +4,7 @@ export function encodeImage(a) {
 }
 
 export function runtimeEncodeImage(a) {
-  const buffer = new ArrayBuffer(4 * a.width * a.height); // max size when every pixel was different
+  const buffer = new ArrayBuffer(3 + 4 * a.width * a.height); // max size when every pixel was different
   const output = new Uint8Array(buffer);
 
   let o = 0; // start index in output array
