@@ -18,9 +18,11 @@ export function runtimeEncodeImage(a) {
 
   for (let col = 0; col < a.width; col++) {
     // initialize prev value with first value of column
-    const idx = 4*col;
+    console.log("col: ", col);
+	const idx = 4*col;
     prev = [a.data[idx], a.data[idx+1], a.data[idx+2]];
-    cnt = 0; // runtime count
+    cnt = 1; // runtime count
+    console.log("first val: ", prev);
 
     // start with second value of col
     for (let row = 1; row < a.height; row++) {
@@ -35,24 +37,24 @@ export function runtimeEncodeImage(a) {
         cnt++;
       } else {
         // new value: output prev value with count
-        output[o] = prev[0];
-        output[o+1] = prev[1];
-        output[o+2] = prev[2];
-        output[o+3] = cnt;
-        o += 4; // next output index
+        output[o++] = prev[0];
+        output[o++] = prev[1];
+        output[o++] = prev[2];
+        output[o++] = cnt;
+        console.log(`save val: ${prev}, ${cnt}`);
 
         // remember current value as prev value
         prev = [a.data[s], a.data[s+1], a.data[s+2]];
-        cnt = 0; // reset runtime count
+        console.log("new val: ", prev);
+        cnt = 1; // reset runtime count
       }
     }
 
     // end of column: output last value with count
-    output[o] = prev[0];
-    output[o+1] = prev[1];
-    output[o+2] = prev[2];
-    output[o+3] = cnt;
-    o += 4; // next output index
+    output[o++] = prev[0];
+    output[o++] = prev[1];
+    output[o++] = prev[2];
+    output[o++] = cnt;
   }
   return output.subarray(0, o);
 }
