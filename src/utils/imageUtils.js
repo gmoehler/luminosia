@@ -17,8 +17,8 @@ export function runtimeEncodeImage(a) {
 
   // output header: encoding-id(1), width, height
   output[o++] = 1;
-  output[o++] = a.width;
   output[o++] = a.height;
+  output[o++] = a.width;
 
   for (let col = 0; col < a.width; col++) {
     // initialize prev value with first value of column
@@ -78,8 +78,8 @@ export function runtimeDecodeImage(a) {
   if (a[i++] !== 1) {
     throw new Error("image not runtime encoded");
   }
-  const width = a[i++];
   const height = a[i++];
+  const width = a[i++];
   // console.log(`${width}x${height}`);
 
   const buffer = new ArrayBuffer(4 * width * height); 

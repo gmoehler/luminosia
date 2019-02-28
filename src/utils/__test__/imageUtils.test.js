@@ -4,9 +4,9 @@ describe("image utils", () => {
   it("should runtime encode and decode correctly", () => {
     const data = [
     0,0,0,0, 1,1,1,0,
-    1,1,1,0, 1,1,1,0,
-    1,1,1,0, 1,1,1,0,
-    1,1,1,0, 0,0,0,0,
+    1,2,254,0, 1,3,44,0,
+    1,2,254,0, 1,3,44,0,
+    1,2,254,0, 0,0,0,0,
     ];
     const img = { 
     	width: 2,
