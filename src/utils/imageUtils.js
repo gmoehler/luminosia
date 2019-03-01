@@ -1,7 +1,7 @@
 
 export function encodeImage(a) {
-  // return runtimeEncodeImage(a);
-  return encodeImagePlain(a);
+  return runtimeEncodeImage(a);
+  // return encodeImagePlain(a);
 }
 
 export function runtimeEncodeImage(a) {
