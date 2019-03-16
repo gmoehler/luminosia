@@ -136,6 +136,7 @@ describe("actions", () => {
         payload: {
           markerId: "2-1-l",
           pos: 3.3,
+          minPos: 0,
           type: "normal"
         }
       },
@@ -144,6 +145,7 @@ describe("actions", () => {
         payload: {
           markerId: "2-1-r",
           pos: 11.21 + 3.3,
+          minPos: 11.21,
           type: "normal"
         }
       },
@@ -187,6 +189,7 @@ describe("actions", () => {
         payload: {
           markerId: "2-1-l", // should be 2-2-l, but lastPartId not changed in test
           pos: 5.5,
+          minPos: 0,
           type: "normal"
         }
       },
@@ -195,6 +198,7 @@ describe("actions", () => {
         payload: {
           markerId: "2-1-r", // should be 2-2-r, but lastPartId not changed in test
           pos: 55.5 + 5.55,
+          minPos: 55.55,
           type: "normal"
         }
       },
@@ -228,8 +232,5 @@ describe("actions", () => {
     const acts = store.getActions();
     expect(acts).toMatchObject(expectedActions);
   });
-
-
-
 
 });
