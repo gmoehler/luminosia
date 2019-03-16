@@ -108,8 +108,14 @@ export function runtimeDecodeImage(a) {
 }
 
 export function encodeImagePlain(a) {
-  const buffer = new ArrayBuffer(3 * a.width * a.height);
+  const buffer = new ArrayBuffer(3 + 3 * a.width * a.height);
   const output = new Uint8Array(buffer);
+
+  // output header: encoding-id(1), width, height
+  output[0] = 0;
+  output[1] = a.height;
+  output[2] = a.width;
+
   for (let col = 0; col < a.width; col++) {
     for (let row = 0; row < a.height; row++) {
       // convert row-based to column-based, skipp transparency (4th bit)
@@ -117,7 +123,7 @@ export function encodeImagePlain(a) {
       // input has r-g-b-transp values
       const s = 4 * (row * a.width + col);
       // o: start index in output array
-      const o = 3 * (col * a.height + row);
+      const o = 3 + 3 * (col * a.height + row);
       output[o] = a.data[s];
       output[o+1] = a.data[s+1];
       output[o+2] = a.data[s+2];
