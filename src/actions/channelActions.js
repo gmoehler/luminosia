@@ -157,11 +157,13 @@ export const updateChannelMarkersForLastAddedChannel = () => {
         dispatch(setMarker({
           markerId: `${channelId}-${partId}-l`,
           pos: part.offset,
+          minPos: 0,
           type: "normal"
         }));
         dispatch(setMarker({
           markerId: `${channelId}-${partId}-r`,
           pos: part.offset + part.duration,
+          minPos: part.duration,
           type: "normal"
         }));
       });
@@ -186,11 +188,13 @@ export const insertNewPart = (partInfo) => {
     dispatch(setMarker({
       markerId: `${partInfo.channelId}-${lastPartId}-l`,
       pos: partInfo.offset,
+      minPos: 0,
       type: "normal"
     }));
     dispatch(setMarker({
       markerId: `${partInfo.channelId}-${lastPartId}-r`,
       pos: partInfo.offset + partInfo.duration,
+      minPos: partInfo.duration,
       type: "normal"
     }));
 
