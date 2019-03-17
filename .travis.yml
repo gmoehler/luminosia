@@ -6,7 +6,7 @@ cache:
   - node_modules
 script:
   - npm test
-  - npm build
+  - npm run build
 
 deploy:
   provider: pages
@@ -14,4 +14,4 @@ deploy:
   github_token: $GITHUB_TOKEN
   local_dir: build
   on:
-    branch: master
+branch: master
