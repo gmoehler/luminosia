@@ -1,5 +1,5 @@
 import { cloneDeep } from "lodash";
-import { CLEAR_VIEW, SELECT_RANGE, DESELECT_RANGE, SET_RESOLUTION, SET_MARKER, UPDATE_MARKER, DELETE_MARKER, SELECT_PART_OR_IMAGE, DESELECT_PART_OR_IMAGE } from "../actions/types";
+import { CLEAR_VIEW, SELECT_RANGE, DESELECT_RANGE, SET_RESOLUTION, SET_MARKER, UPDATE_MARKER, DELETE_MARKER, SELECT_PART_OR_IMAGE, DESELECT_PART_OR_IMAGE, SELECT_IMAGE_CHANNEL } from "../actions/types";
 
 // export for tests
 export const initialState = {
@@ -11,6 +11,7 @@ export const initialState = {
   resolution: 80,
   selectedPartOrImage: null,
   currentById: {},
+  selectedImageChannel: null,
 };
 
 export default (state = initialState, action) => {
@@ -35,6 +36,12 @@ export default (state = initialState, action) => {
           from: null,
           to: null
         }
+      };
+
+    case SELECT_IMAGE_CHANNEL:
+      return {
+        ...state,
+        selectedImageChannel: action.payload.channelId
       };
 
     case SET_MARKER:
@@ -135,4 +142,8 @@ export const getSelectedImage = (state) => {
 
 export const getCurrent = (state) => {
   return state.view.currentById;
+};
+
+export const getSelectedImageChannel = (state) => {
+  return state.view.selectedImageChannel;
 };
