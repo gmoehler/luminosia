@@ -139,7 +139,7 @@ export const exportImageChannel = (channelId) => {
 };
 
 // during animation: get image data from export canvas within an interval
-// assuming all selected channels are on the canvas
+// assuming all active channels are on the canvas
 // to acoid retreiving the same frame twice
 // we use ceil on the start idx and floor on the end idx
 // if fromTime and toTime are undefined: get complete canvas

@@ -1,6 +1,6 @@
 import { merge, cloneDeep } from "lodash";
 
-import { ADD_CHANNEL, CLEAR_CHANNELS, PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL, ADD_PART, DELETE_PART, DELETE_CHANNEL, SELECT_CHANNEL, DESELECT_CHANNEL } from "../actions/types";
+import { ADD_CHANNEL, CLEAR_CHANNELS, PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL, ADD_PART, DELETE_PART, DELETE_CHANNEL, SET_CHANNEL_ACTIVE, UNSET_CHANNEL_ACTIVE } from "../actions/types";
 
 import { filterObjectByKeys } from "../utils/miscUtils";
 
@@ -41,26 +41,26 @@ export default (state = initialState, action) => {
         byChannelId: channels
       };
 
-    case SELECT_CHANNEL:
+    case SET_CHANNEL_ACTIVE:
       return {
         ...state,
         byChannelId: {
           ...state.byChannelId,
           [action.payload]: {
             ...state.byChannelId[action.payload],
-            selected: true
+            active: true
           }
         }
       };
 
-    case DESELECT_CHANNEL:
+    case UNSET_CHANNEL_ACTIVE:
       return {
         ...state,
         byChannelId: {
           ...state.byChannelId,
           [action.payload]: {
             ...state.byChannelId[action.payload],
-            selected: false
+            active: false
           }
         }
       };
@@ -220,7 +220,7 @@ export const getAllChannelsOverview = (state) => {
     .map((channel) => ({
       channelId: channel.channelId,
       type: channel.type,
-      selected: channel.selected,
+      active: channel.active,
     }));
 };
 
@@ -274,8 +274,8 @@ export const getChannelsConfig = (state) => {
   });
 };
 
-export const getSelectedChannelIds = (state, type) => {
+export const getActiveChannelIds = (state, type) => {
   return Object.values(state.channel.byChannelId)
-    .filter((channel) => channel.selected && (!type || channel.type === type))
+    .filter((channel) => channel.active && (!type || channel.type === type))
     .map((channel) => channel.channelId);
 };

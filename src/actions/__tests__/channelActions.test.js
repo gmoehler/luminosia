@@ -67,7 +67,7 @@ describe("actions", () => {
       type: types.SELECT_CHANNEL,
       payload: 2
     };
-    expect(actions.selectChannel(2)).toEqual(expectedAction);
+    expect(actions.setChannelActive(2)).toEqual(expectedAction);
   });
 
   it("should deselect a channel", () => {
@@ -75,7 +75,7 @@ describe("actions", () => {
       type: types.DESELECT_CHANNEL,
       payload: 2
     };
-    expect(actions.deselectChannel(2)).toEqual(expectedAction);
+    expect(actions.unsetChannelActive(2)).toEqual(expectedAction);
   });
 
 
@@ -110,7 +110,7 @@ describe("actions", () => {
             sampleRate: 44100,
           },
           duration: 21.21,
-          selected: true,
+          active: true,
         }
       },
       {
@@ -207,7 +207,7 @@ describe("actions", () => {
         payload: {
           channelId: 2,
           partId: 1,
-          selected: true,
+          active: true,
         },
       },
       {

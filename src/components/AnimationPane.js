@@ -68,7 +68,7 @@ export default class AnimationPane extends PureComponent {
 
 	draw() {
 
-		const { progress, sampleRate, selectedChannels } = this.props;
+		const { progress, sampleRate, activeChannels } = this.props;
 
 		if (progress && progress > 0) {
 			// get the part of the image that happened during the last update interval
@@ -80,7 +80,7 @@ export default class AnimationPane extends PureComponent {
 
 			const oneSampleRad = samplesToRad(1, sampleRate, this.state.rotationSpeed);
 			const d = expData.data;
-			const numArcs = selectedChannels.length;
+			const numArcs = activeChannels.length;
 
 			// console.log(`Num arcs: ${numArcs} (${expData.height} x ${expData.width})`)
 
@@ -123,7 +123,7 @@ export default class AnimationPane extends PureComponent {
 
 		const { rotationSpeed } = this.state;
 
-		const { drawerWidth, selectedChannels, resolution } = this.props;
+		const { drawerWidth, activeChannels, resolution } = this.props;
 		return (
 			<AnimationPaneWrapper drawerWidth={ drawerWidth }>
      <AnimationControl>
@@ -135,7 +135,7 @@ export default class AnimationPane extends PureComponent {
      </AnimationControl>
      <AnimationCanvas id="animationPaneCanvas"
          height={ resolution * 80 }
-         width={ selectedChannels.length * resolution * 80 } />
+         width={ activeChannels.length * resolution * 80 } />
    </AnimationPaneWrapper>
 
 			);
@@ -146,6 +146,6 @@ AnimationPane.propTypes = {
 	progress: PropTypes.number,
 	sampleRate: PropTypes.number.isRequired,
 	resolution: PropTypes.number.isRequired,
-	selectedChannels: PropTypes.arrayOf(PropTypes.number),
+	activeChannels: PropTypes.arrayOf(PropTypes.number),
 	drawerWidth: PropTypes.number,
 };

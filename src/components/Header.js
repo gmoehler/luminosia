@@ -65,9 +65,9 @@ export class Header extends Component {
   handleChannelSelectionChange = event => {
     const channelId = event.target.value;
     if (this.state[event.target.name]) {
-      this.props.deselectChannel(this.state[event.target.name]);
+      this.props.unsetChannelActive(this.state[event.target.name]);
     }
-    this.props.selectChannel(channelId);
+    this.props.setChannelActive(channelId);
     this.setState({
       [event.target.name]: channelId
     });
@@ -174,8 +174,8 @@ Header.propTypes = {
   selectedImageOrPart: PropTypes.object,
   deleteSelectedPart: PropTypes.func.isRequired,
   uploadConfigFile: PropTypes.func.isRequired,
-  deselectChannel: PropTypes.func.isRequired,
-  selectChannel: PropTypes.func.isRequired,
+  unsetChannelActive: PropTypes.func.isRequired,
+  setChannelActive: PropTypes.func.isRequired,
   uploadAudioFile: PropTypes.func.isRequired,
 };
 

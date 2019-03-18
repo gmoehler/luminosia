@@ -124,4 +124,5 @@ ChannelGroup.propTypes = {
   setChannelPlayState: PropTypes.func.isRequired,
   move: PropTypes.func.isRequired,
   drawerWidth: PropTypes.number.isRequired,
+  selectedImageChannel: PropTypes.number,
 };

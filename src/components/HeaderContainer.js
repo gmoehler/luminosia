@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import { stopChannel, deleteSelectedPartAndMarkers, createImageChannel, uploadAudioFile, deleteChannel, playChannelAndImage, selectChannel, deselectChannel } from "../actions/channelActions";
+import { stopChannel, deleteSelectedPartAndMarkers, createImageChannel, uploadAudioFile, deleteChannel, playChannelAndImage, setChannelActive, unsetChannelActive } from "../actions/channelActions";
 
 import { downloadConfig, uploadConfigFile, uploadConfig, exportImageChannel } from "../actions/generalActions";
 import { setResolution } from "../actions/viewActions";
@@ -48,7 +48,7 @@ class HeaderContainer extends Component {
 
     const { channelIds, downloadConfigAction, uploadConfigFileAction, uploadAudioFileAction, deleteSelectedPartAndMarkersAction, 
       createImageChannelAction, exportImageChannelAction, deleteChannelAction, playChannelAndImageAction, stopChannelAction, 
-      selectedImageOrPart, enablePlay, enableStop, selectChannelAction, deselectChannelAction } = this.props;
+      selectedImageOrPart, enablePlay, enableStop, setChannelActiveAction, unsetChannelActiveAction } = this.props;
 
     return (
       <Header init={ this.doInit }
@@ -67,8 +67,8 @@ class HeaderContainer extends Component {
           selectedImageOrPart={ selectedImageOrPart }
           enablePlay={ enablePlay }
           enableStop={ enableStop }
-          selectChannel={ selectChannelAction }
-          deselectChannel={ deselectChannelAction } />
+          setChannelActive={ setChannelActiveAction }
+          unsetChannelActive={ unsetChannelActiveAction } />
       );
   }
 }
@@ -92,8 +92,8 @@ const mapDispatchToProps = dispatch => ({
   stopChannelAction: () => dispatch(stopChannel()),
   setResolutionAction: (resolution) => dispatch(setResolution(resolution)),
   deleteSelectedPartAndMarkersAction: () => dispatch(deleteSelectedPartAndMarkers()),
-  selectChannelAction: (channelId) => dispatch(selectChannel(channelId)),
-  deselectChannelAction: (channelId) => dispatch(deselectChannel(channelId)),
+  setChannelActiveAction: (channelId) => dispatch(setChannelActive(channelId)),
+  unsetChannelActiveAction: (channelId) => dispatch(unsetChannelActive(channelId)),
 });
 
 HeaderContainer.propTypes = {
@@ -110,8 +110,8 @@ HeaderContainer.propTypes = {
   selectedImageOrPart: PropTypes.object,
   enablePlay: PropTypes.bool.isRequired,
   enableStop: PropTypes.bool.isRequired,
-  selectChannelAction: PropTypes.func.isRequired,
-  deselectChannelAction: PropTypes.func.isRequired,
+  setChannelActiveAction: PropTypes.func.isRequired,
+  unsetChannelActiveAction: PropTypes.func.isRequired,
   setResolutionAction: PropTypes.func.isRequired,
 };
 
