@@ -62,17 +62,17 @@ describe("actions", () => {
     expect(actions.clearChannels()).toEqual(expectedAction);
   });
 
-  it("should select a channel", () => {
+  it("should set a channel to active", () => {
     const expectedAction = {
-      type: types.SELECT_CHANNEL,
+      type: types.SET_CHANNEL_ACTIVE,
       payload: 2
     };
     expect(actions.setChannelActive(2)).toEqual(expectedAction);
   });
 
-  it("should deselect a channel", () => {
+  it("should set a channel to inactive", () => {
     const expectedAction = {
-      type: types.DESELECT_CHANNEL,
+      type: types.UNSET_CHANNEL_ACTIVE,
       payload: 2
     };
     expect(actions.unsetChannelActive(2)).toEqual(expectedAction);
@@ -207,8 +207,16 @@ describe("actions", () => {
         payload: {
           channelId: 2,
           partId: 1,
-          active: true,
+          selected: true,
         },
+      },
+      {
+        type: types.SELECT_IMAGE_CHANNEL,
+        payload: {
+          channelId: 2,
+          partId: 1,
+          selected: true,
+        }
       },
       {
         type: types.UPDATE_MARKER,

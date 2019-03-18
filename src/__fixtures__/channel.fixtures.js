@@ -57,6 +57,7 @@ export const imageChannelState = {
 };
 
 export const part = {
+  channelId: 2,
   offset: 5.5,
   duration: 55.55,
   sampleRate: 100,
