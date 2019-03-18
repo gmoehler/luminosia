@@ -29,6 +29,9 @@ const styles = () => ({
   wrapperActive: {
     background: "#3f51b5",
   },
+  wrapperSelected: {
+    background: "cornflowerblue",
+  },
   switchWrapper: {
     display: "flex",
     justifyContent: "flex-end",
@@ -64,14 +67,15 @@ class CustomizedSwitches extends React.Component {
   };
 
   render() {
-    const { classes } = this.props;
+    const { classes, selectedImageChannel } = this.props;
 
     const switches = this.props.channelOverview
       .map((channel) => 
         (<div key={ channel.channelId }
             className={ classNames(
           classes.channelSelectorWrapper,
-          channel.active && classes.wrapperActive) }
+          channel.active && classes.wrapperActive,
+          selectedImageChannel === String(channel.channelId) && classes.wrapperSelected) }
             background = { indigo }>
           <FormControlLabel
               className={ classes.switchWrapper }

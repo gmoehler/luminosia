@@ -12,12 +12,13 @@ class ChannelSelectorContainer extends Component {
 
   render() {
 
-    const { channelOverview, setChannelActiveAction, unsetChannelActiveAction,
+    const { channelOverview, selectedImageChannel, setChannelActiveAction, unsetChannelActiveAction,
       exportImageChannelAction, deleteChannelAction, duplicateChannelAction } = this.props;
 
     return (
       <ChannelSelector
           channelOverview={ channelOverview }
+          selectedImageChannel={ selectedImageChannel }
           setChannelActive={ setChannelActiveAction }
           unsetChannelActive={ unsetChannelActiveAction }
           exportImageChannel={ exportImageChannelAction }
@@ -44,6 +45,7 @@ const mapDispatchToProps = dispatch => ({
 
 ChannelSelectorContainer.propTypes = {
   channelOverview: PropTypes.array,
+  selectedImageChannel: PropTypes.string,
   setChannelActiveAction: PropTypes.func.isRequired,
   unsetChannelActiveAction: PropTypes.func.isRequired,
   exportImageChannelAction: PropTypes.func.isRequired,
