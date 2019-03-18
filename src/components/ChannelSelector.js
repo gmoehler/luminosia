@@ -14,7 +14,7 @@ import ChannelDupIcon from "@material-ui/icons/FileCopy";
 const channelSelectorWidth = 96;
 
 const styles = () => ({
-  channelControlWrapper: {
+  channelSelectorWrapper: {
     display: "flex",
     justifyContent: "space-between",
     flexDirection: "column",
@@ -68,7 +68,7 @@ class CustomizedSwitches extends React.Component {
       .map((channel) => 
         (<div key={ channel.channelId }
             className={ classNames(
-          classes.channelControlWrapper,
+          classes.channelSelectorWrapper,
           channel.selected && classes.wrapperSelected) }
             background = { indigo }>
           <FormControlLabel

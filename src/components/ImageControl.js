@@ -9,7 +9,7 @@ import SaveImagesIcon from "@material-ui/icons/CloudUpload";
 import ClearStoreIcon from "@material-ui/icons/CloudOff";
 import ClearImagesIcon from "@material-ui/icons/Clear";
 
-const ChannelControlWrapper = styled.div`
+const ImageControlWrapper = styled.div`
   display: flex
   justify-content: center;
   flex-direction: row;
@@ -35,7 +35,7 @@ export class ImageControl extends Component {
     const { loadImagesfromStorage, saveImagesToStorage, clearImagesfromStorage, clearImageList } = this.props;
 
     return (
-      <ChannelControlWrapper>
+      <ImageControlWrapper>
         <Tooltip title="Restore images from store">
           <IconButton color="primary"
               onClick={ loadImagesfromStorage }>
@@ -60,7 +60,7 @@ export class ImageControl extends Component {
             <ClearImagesIcon />
           </IconButton>
         </Tooltip>
-      </ChannelControlWrapper>
+      </ImageControlWrapper>
       );
   }
 }

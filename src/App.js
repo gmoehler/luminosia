@@ -13,7 +13,7 @@ import BurstModeIcon from "@material-ui/icons/BurstMode";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 
-import ChannelControlContainer from "./components/ChannelControlContainer";
+import HeaderContainer from "./components/HeaderContainer";
 import ImageControlContainer from "./components/ImageControlContainer";
 import ImageListContainer from "./components/ImageListContainer";
 import ChannelGroupContainer from "./components/ChannelGroupContainer";
@@ -111,32 +111,25 @@ class App extends React.Component {
   };
 
   render() {
-    const { classes, theme } = this.props;
-    const { open } = this.state;
+    const {classes, theme} = this.props;
+    const {open} = this.state;
 
     return (
       <div className={ classes.root }>
         <CssBaseline />
-        <AppBar 
-            position="fixed" 
-            className={ classNames(classes.appBar, { [classes.appBarShift]: open, }) }
-          >
+        <AppBar position="fixed" className={ classNames(classes.appBar, {
+                                               [classes.appBarShift]: open,
+                                             }) }>
           <Toolbar disableGutters={ !open }>
-            <Typography variant="h6"
-                color="inherit"
-                className={ classes.title }
-                noWrap>
+            <Typography variant="h6" color="inherit" className={ classes.title } noWrap>
               Luminosia Studio
             </Typography>
-            <ChannelControlContainer />
-            <div  className={ classes.grow }></div>
+            <HeaderContainer />
+            <div className={ classes.grow }></div>
             <Tooltip title="Work with images">
-              <IconButton color="inherit"
-                  aria-label="Open drawer"
-                  onClick={ this.handleDrawerOpen }
-                  className={ classNames(classes.menuButton, open && classes.hide) }>
-              <BurstModeIcon />
-            </IconButton>
+              <IconButton color="inherit" aria-label="Open drawer" onClick={ this.handleDrawerOpen } className={ classNames(classes.menuButton, open && classes.hide) }>
+                <BurstModeIcon />
+              </IconButton>
             </Tooltip>
           </Toolbar>
         </AppBar>
@@ -147,20 +140,15 @@ class App extends React.Component {
           <AnimationPaneContainer drawerWidth={ open ? drawerWidth : 0 } />
           <div className={ classes.channelPane }>
             <ChannelSelectorContainer />
-            <ChannelGroupContainer  drawerWidth={ open ? drawerWidth  + channelSelectorWidth : channelSelectorWidth }
-                width={ channelSelectorWidth } />
+            <ChannelGroupContainer drawerWidth={ open ? drawerWidth + channelSelectorWidth : channelSelectorWidth } width={ channelSelectorWidth } />
           </div>
           <ImageExporter drawerWidth={ open ? drawerWidth : 0 } />
         </main>
-        <Drawer className={ classes.drawer }
-            variant="persistent"
-            anchor="right"
-            open={ open } 
-            classes={ { paper: classes.drawerPaper, } }>
+        <Drawer className={ classes.drawer } variant="persistent" anchor="right" open={ open } classes={ { paper: classes.drawerPaper, } }>
           <div className={ classes.drawerHeader }>
-              <IconButton onClick={ this.handleDrawerClose }>
-                { theme.direction === "rtl" ? <ChevronLeftIcon /> : <ChevronRightIcon /> }
-              </IconButton>
+            <IconButton onClick={ this.handleDrawerClose }>
+              { theme.direction === "rtl" ? <ChevronLeftIcon /> : <ChevronRightIcon /> }
+            </IconButton>
             <ImageControlContainer />
           </div>
           <Divider />

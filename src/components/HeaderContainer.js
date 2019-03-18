@@ -6,7 +6,7 @@ import { stopChannel, deleteSelectedPartAndMarkers, createImageChannel, uploadAu
 
 import { downloadConfig, uploadConfigFile, uploadConfig, exportImageChannel } from "../actions/generalActions";
 import { setResolution } from "../actions/viewActions";
-import ChannelControl from "./ChannelControl";
+import Header from "./Header";
 import { getChannelIds, allChannelsStopped } from "../reducers/channelReducer";
 import { getSelectedImage, getSelectedPart } from "../reducers/viewReducer";
 
@@ -16,7 +16,7 @@ const audioContext = window.AudioContext && new window.AudioContext();
 const resolutions = [4000, 2000, 1000, 500, 250, 125, 80, 40, 20, 10, 5]; // in pixels / sec
 const defaultResolutionIdx = 6;
 
-class ChannelControlContainer extends Component {
+class HeaderContainer extends Component {
 
   constructor(props) {
     super(props);
@@ -51,7 +51,7 @@ class ChannelControlContainer extends Component {
       selectedImageOrPart, enablePlay, enableStop, selectChannelAction, deselectChannelAction } = this.props;
 
     return (
-      <ChannelControl init={ this.doInit }
+      <Header init={ this.doInit }
           zoomIn={ this.zoomIn }
           zoomOut={ this.zoomOut }
           channelIds={ channelIds }
@@ -96,7 +96,7 @@ const mapDispatchToProps = dispatch => ({
   deselectChannelAction: (channelId) => dispatch(deselectChannel(channelId)),
 });
 
-ChannelControlContainer.propTypes = {
+HeaderContainer.propTypes = {
   channelIds: PropTypes.array,
   downloadConfigAction: PropTypes.func.isRequired,
   uploadConfigFileAction: PropTypes.func.isRequired,
@@ -116,4 +116,4 @@ ChannelControlContainer.propTypes = {
 };
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(ChannelControlContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(HeaderContainer);
