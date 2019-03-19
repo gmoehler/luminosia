@@ -21,6 +21,7 @@ export const STOP_CHANNELS = "STOP_CHANNELS";
 export const MOVE_CHANNEL = "MOVE_CHANNEL";
 export const ADD_PART = "ADD_PART";
 export const DELETE_PART = "DELETE_PART";
+export const PASTE_PART = "PASTE_PART";
 
 // image list actions
 export const ADD_IMAGE = "ADD_IMAGE";
@@ -38,4 +39,5 @@ export const DELETE_MARKER = "DELETE_MARKER";
 export const UPDATE_MARKER = "UPDATE_MARKER";
 export const SELECT_PART_OR_IMAGE = "SELECT_PART_OR_IMAGE";
 export const DESELECT_PART_OR_IMAGE = "DESELECT_PART_OR_IMAGE";
+export const COPY_PART = "COPY_PART";
 export const SELECT_IMAGE_CHANNEL = "SELECT_IMAGE_CHANNEL";

@@ -2,13 +2,13 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import { stopChannel, deleteSelectedPartAndMarkers, createImageChannel, uploadAudioFile, deleteChannel, playChannelAndImage, setChannelActive, unsetChannelActive } from "../actions/channelActions";
+import { stopChannel, deleteSelectedPartAndMarkers, createImageChannel, uploadAudioFile, deleteChannel, playChannelAndImage, setChannelActive, unsetChannelActive, pastePart } from "../actions/channelActions";
 
 import { downloadConfig, uploadConfigFile, uploadConfig, exportImageChannel } from "../actions/generalActions";
-import { setResolution } from "../actions/viewActions";
+import { setResolution, copyPart } from "../actions/viewActions";
 import Header from "./Header";
 import { getChannelIds, allChannelsStopped } from "../reducers/channelReducer";
-import { getSelectedImage, getSelectedPart } from "../reducers/viewReducer";
+import { getSelectedImage, getSelectedPart, getPartToCopy } from "../reducers/viewReducer";
 
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
 const audioContext = window.AudioContext && new window.AudioContext();
@@ -48,7 +48,7 @@ class HeaderContainer extends Component {
 
     const { channelIds, downloadConfigAction, uploadConfigFileAction, uploadAudioFileAction, deleteSelectedPartAndMarkersAction, 
       createImageChannelAction, exportImageChannelAction, deleteChannelAction, playChannelAndImageAction, stopChannelAction, 
-      selectedImageOrPart, enablePlay, enableStop, setChannelActiveAction, unsetChannelActiveAction } = this.props;
+      selectedImageOrPart, enablePlay, enableStop, setChannelActiveAction, unsetChannelActiveAction, copyPartAction, pastePartAction, partToCopy } = this.props;
 
     return (
       <Header init={ this.doInit }
@@ -68,7 +68,11 @@ class HeaderContainer extends Component {
           enablePlay={ enablePlay }
           enableStop={ enableStop }
           setChannelActive={ setChannelActiveAction }
-          unsetChannelActive={ unsetChannelActiveAction } />
+          unsetChannelActive={ unsetChannelActiveAction } 
+          copyPart={ copyPartAction }
+          pastePart={ pastePartAction }
+          partToCopy={ partToCopy }
+          />
       );
   }
 }
@@ -76,6 +80,7 @@ class HeaderContainer extends Component {
 const mapStateToProps = state => ({
   channelIds: getChannelIds(state),
   selectedImageOrPart: getSelectedImage(state) || getSelectedPart(state),
+  partToCopy: Boolean(getPartToCopy(state)),
   enablePlay: Boolean(getChannelIds(state).length > 0 && allChannelsStopped(state)),
   enableStop: Boolean(getChannelIds(state).length && !allChannelsStopped(state)),
 });
@@ -94,6 +99,8 @@ const mapDispatchToProps = dispatch => ({
   deleteSelectedPartAndMarkersAction: () => dispatch(deleteSelectedPartAndMarkers()),
   setChannelActiveAction: (channelId) => dispatch(setChannelActive(channelId)),
   unsetChannelActiveAction: (channelId) => dispatch(unsetChannelActive(channelId)),
+  copyPartAction: () => dispatch(copyPart()),
+  pastePartAction: () => dispatch(pastePart())
 });
 
 HeaderContainer.propTypes = {
@@ -113,6 +120,9 @@ HeaderContainer.propTypes = {
   setChannelActiveAction: PropTypes.func.isRequired,
   unsetChannelActiveAction: PropTypes.func.isRequired,
   setResolutionAction: PropTypes.func.isRequired,
+  copyPartAction: PropTypes.func.isRequired,
+  pastePartAction: PropTypes.func.isRequired,
+  partToCopy: PropTypes.func.isRequired
 };
 
 

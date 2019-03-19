@@ -12,6 +12,7 @@ import ZoomInIcon from "@material-ui/icons/ZoomIn";
 import ZoomOutIcon from "@material-ui/icons/ZoomOut";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import StopIcon from "@material-ui/icons/Stop";
+import { ContentCopy, ContentPaste } from "mdi-material-ui";
 
 const HeaderWrapper = styled.div`
   display: flex
@@ -76,7 +77,8 @@ export class Header extends Component {
 
   render() {
 
-    const { createImageChannel, downloadConfig, enablePlay, playChannelAndImage, enableStop, stopChannel, zoomIn, zoomOut, selectedImageOrPart, deleteSelectedPart } = this.props;
+    const { createImageChannel, downloadConfig, enablePlay, playChannelAndImage, enableStop, 
+      stopChannel, zoomIn, zoomOut, selectedImageOrPart, deleteSelectedPart, copyPart, pastePart, partToCopy } = this.props;
 
     return (
       <HeaderWrapper>
@@ -146,6 +148,20 @@ export class Header extends Component {
               <ZoomOutIcon />
             </IconButton>
           </Tooltip>
+          <Tooltip title="Copy selected part">
+            <IconButton disabled={ !selectedImageOrPart }
+                color="inherit"
+                onClick={ copyPart }>
+              <ContentCopy />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Paste part">
+            <IconButton disabled={ !partToCopy }
+                color="inherit"
+                onClick={ pastePart }>
+              <ContentPaste />
+            </IconButton>
+          </Tooltip>
           <Tooltip title="Delete selected">
             <IconButton disabled={ !selectedImageOrPart }
                 color="inherit"
@@ -177,6 +193,9 @@ Header.propTypes = {
   unsetChannelActive: PropTypes.func.isRequired,
   setChannelActive: PropTypes.func.isRequired,
   uploadAudioFile: PropTypes.func.isRequired,
+  copyPart: PropTypes.func.isRequired,
+  pastePart: PropTypes.func.isRequired,
+  partToCopy: PropTypes.bool,
 };
 
 export default withStyles(styles, {

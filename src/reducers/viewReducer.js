@@ -1,5 +1,5 @@
 import { cloneDeep } from "lodash";
-import { CLEAR_VIEW, SELECT_RANGE, DESELECT_RANGE, SET_RESOLUTION, SET_MARKER, UPDATE_MARKER, DELETE_MARKER, SELECT_PART_OR_IMAGE, DESELECT_PART_OR_IMAGE, SELECT_IMAGE_CHANNEL } from "../actions/types";
+import { CLEAR_VIEW, SELECT_RANGE, DESELECT_RANGE, SET_RESOLUTION, SET_MARKER, UPDATE_MARKER, DELETE_MARKER, SELECT_PART_OR_IMAGE, DESELECT_PART_OR_IMAGE, SELECT_IMAGE_CHANNEL, COPY_PART, PASTE_PART } from "../actions/types";
 
 // export for tests
 export const initialState = {
@@ -12,6 +12,7 @@ export const initialState = {
   selectedPartOrImage: null,
   currentById: {},
   selectedImageChannel: null,
+  partToCopy: null,
 };
 
 export default (state = initialState, action) => {
@@ -79,7 +80,7 @@ export default (state = initialState, action) => {
           [action.payload.markerId]: {
             markerId: action.payload.markerId,
             pos: Math.max(currentPos + action.payload.incr, currentMinPos),
-            minPos:currentMinPos,
+            minPos: currentMinPos,
             type: action.payload.type ? action.payload.type : currentType,
           }
         }
@@ -102,6 +103,15 @@ export default (state = initialState, action) => {
       return {
         ...state,
         selectedPartOrImage: null
+      };
+
+    case COPY_PART:
+      const partToCopy = state.selectedPartOrImage && state.selectedPartOrImage.partId ? 
+        Object.assign({},state.selectedPartOrImage) : null;
+      delete partToCopy.selected; // dont need that
+      return {
+        ...state,
+        partToCopy
       };
 
     default:
@@ -130,6 +140,10 @@ export const getSelectedPart = (state) => {
     return state.view.selectedPartOrImage;
   }
   return null;
+};
+
+export const getPartToCopy = (state) => {
+  return state.view.partToCopy;
 };
 
 export const getSelectedImage = (state) => {
