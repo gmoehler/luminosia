@@ -5,10 +5,10 @@ import ChannelGroup from "./ChannelGroup";
 import { setChannelPlayState, moveChannel, insertNewPart, deleteSelectedPartAndMarkers } from "../actions/channelActions";
 import { selectRange, deselectRange, setMarker, updateMarker, selectPartOrImage } from "../actions/viewActions";
 import { getMaxDuration, getLastPartId, getAllChannelsData, allChannelsStopped } from "../reducers/channelReducer";
-import { getSelectionRange, getResolution, getMarkers } from "../reducers/viewReducer";
+import { getSelectionRange, getResolution, getMarkers, getSelectedImageChannel } from "../reducers/viewReducer";
 import { getImageSources } from "../reducers/imageListReducer";
 
-class ChannelGroupContainer extends Component {x
+class ChannelGroupContainer extends Component {
 
   getLastPartId = (channelId) => {
     getLastPartId(this.props.currentState, channelId);
@@ -31,6 +31,7 @@ const mapStateToProps = (state, props) => {
     markers: getMarkers(state),
     imageSources: getImageSources(state),
     playState: allChannelsStopped(state) ? "stopped" : "playing",
+    selectedImageChannel: getSelectedImageChannel(state),
   };
 };
 

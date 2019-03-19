@@ -1,4 +1,6 @@
-import { SELECT_RANGE, DESELECT_RANGE, SET_RESOLUTION, UPDATE_MARKER, SET_MARKER, DELETE_MARKER, SELECT_PART_OR_IMAGE, DESELECT_PART_OR_IMAGE, CLEAR_VIEW } from "./types";
+import { SELECT_RANGE, DESELECT_RANGE, SET_RESOLUTION, 
+  UPDATE_MARKER, SET_MARKER, DELETE_MARKER, SELECT_PART_OR_IMAGE, 
+  DESELECT_PART_OR_IMAGE, CLEAR_VIEW, SELECT_IMAGE_CHANNEL, COPY_PART } from "./types";
 
 import { getSelectedPart, getSelectedImage } from "../reducers/viewReducer";
 
@@ -43,6 +45,15 @@ const setSelected = (partInfo) => ({
 
 export const deselect = () => ({
   type: DESELECT_PART_OR_IMAGE,
+});
+
+export const selectImageChannel = (channelInfo) => ({
+  type: SELECT_IMAGE_CHANNEL,
+  payload: channelInfo
+});
+
+export const copyPart = () => ({
+  type: COPY_PART
 });
 
 const updateMarkers = (dispatch, part) => {
@@ -91,9 +102,9 @@ export const selectPartOrImage = ((partOrImageInfo) => {
       }
     }
 
-
     // clicked on unselected part
     dispatch(setSelected(partOrImageInfo));
+    dispatch(selectImageChannel(partOrImageInfo));
     if (partOrImageInfo.partId) {
       // for parts only
       updateMarkers(dispatch, partOrImageInfo);

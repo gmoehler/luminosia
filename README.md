@@ -5,8 +5,8 @@ Current Component Structure is:
 
 ```
 App
-  ChannelControlContainer
-    ChannelControl
+  HeaderContainer
+    Header
 
   ChannelGroupContainer
     ChannelGroup

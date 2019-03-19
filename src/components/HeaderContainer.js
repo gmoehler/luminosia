@@ -2,13 +2,13 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import { stopChannel, deleteSelectedPartAndMarkers, createImageChannel, uploadAudioFile, deleteChannel, playChannelAndImage, selectChannel, deselectChannel } from "../actions/channelActions";
+import { stopChannel, deleteSelectedPartAndMarkers, createImageChannel, uploadAudioFile, deleteChannel, playChannelAndImage, setChannelActive, unsetChannelActive, pastePart } from "../actions/channelActions";
 
 import { downloadConfig, uploadConfigFile, uploadConfig, exportImageChannel } from "../actions/generalActions";
-import { setResolution } from "../actions/viewActions";
-import ChannelControl from "./ChannelControl";
+import { setResolution, copyPart } from "../actions/viewActions";
+import Header from "./Header";
 import { getChannelIds, allChannelsStopped } from "../reducers/channelReducer";
-import { getSelectedImage, getSelectedPart } from "../reducers/viewReducer";
+import { getSelectedImage, getSelectedPart, getPartToCopy } from "../reducers/viewReducer";
 
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
 const audioContext = window.AudioContext && new window.AudioContext();
@@ -16,7 +16,7 @@ const audioContext = window.AudioContext && new window.AudioContext();
 const resolutions = [4000, 2000, 1000, 500, 250, 125, 80, 40, 20, 10, 5]; // in pixels / sec
 const defaultResolutionIdx = 6;
 
-class ChannelControlContainer extends Component {
+class HeaderContainer extends Component {
 
   constructor(props) {
     super(props);
@@ -48,10 +48,10 @@ class ChannelControlContainer extends Component {
 
     const { channelIds, downloadConfigAction, uploadConfigFileAction, uploadAudioFileAction, deleteSelectedPartAndMarkersAction, 
       createImageChannelAction, exportImageChannelAction, deleteChannelAction, playChannelAndImageAction, stopChannelAction, 
-      selectedImageOrPart, enablePlay, enableStop, selectChannelAction, deselectChannelAction } = this.props;
+      selectedImageOrPart, enablePlay, enableStop, setChannelActiveAction, unsetChannelActiveAction, copyPartAction, pastePartAction, partToCopy } = this.props;
 
     return (
-      <ChannelControl init={ this.doInit }
+      <Header init={ this.doInit }
           zoomIn={ this.zoomIn }
           zoomOut={ this.zoomOut }
           channelIds={ channelIds }
@@ -67,8 +67,12 @@ class ChannelControlContainer extends Component {
           selectedImageOrPart={ selectedImageOrPart }
           enablePlay={ enablePlay }
           enableStop={ enableStop }
-          selectChannel={ selectChannelAction }
-          deselectChannel={ deselectChannelAction } />
+          setChannelActive={ setChannelActiveAction }
+          unsetChannelActive={ unsetChannelActiveAction } 
+          copyPart={ copyPartAction }
+          pastePart={ pastePartAction }
+          partToCopy={ partToCopy }
+          />
       );
   }
 }
@@ -76,6 +80,7 @@ class ChannelControlContainer extends Component {
 const mapStateToProps = state => ({
   channelIds: getChannelIds(state),
   selectedImageOrPart: getSelectedImage(state) || getSelectedPart(state),
+  partToCopy: Boolean(getPartToCopy(state)),
   enablePlay: Boolean(getChannelIds(state).length > 0 && allChannelsStopped(state)),
   enableStop: Boolean(getChannelIds(state).length && !allChannelsStopped(state)),
 });
@@ -92,11 +97,13 @@ const mapDispatchToProps = dispatch => ({
   stopChannelAction: () => dispatch(stopChannel()),
   setResolutionAction: (resolution) => dispatch(setResolution(resolution)),
   deleteSelectedPartAndMarkersAction: () => dispatch(deleteSelectedPartAndMarkers()),
-  selectChannelAction: (channelId) => dispatch(selectChannel(channelId)),
-  deselectChannelAction: (channelId) => dispatch(deselectChannel(channelId)),
+  setChannelActiveAction: (channelId) => dispatch(setChannelActive(channelId)),
+  unsetChannelActiveAction: (channelId) => dispatch(unsetChannelActive(channelId)),
+  copyPartAction: () => dispatch(copyPart()),
+  pastePartAction: () => dispatch(pastePart())
 });
 
-ChannelControlContainer.propTypes = {
+HeaderContainer.propTypes = {
   channelIds: PropTypes.array,
   downloadConfigAction: PropTypes.func.isRequired,
   uploadConfigFileAction: PropTypes.func.isRequired,
@@ -110,10 +117,13 @@ ChannelControlContainer.propTypes = {
   selectedImageOrPart: PropTypes.object,
   enablePlay: PropTypes.bool.isRequired,
   enableStop: PropTypes.bool.isRequired,
-  selectChannelAction: PropTypes.func.isRequired,
-  deselectChannelAction: PropTypes.func.isRequired,
+  setChannelActiveAction: PropTypes.func.isRequired,
+  unsetChannelActiveAction: PropTypes.func.isRequired,
   setResolutionAction: PropTypes.func.isRequired,
+  copyPartAction: PropTypes.func.isRequired,
+  pastePartAction: PropTypes.func.isRequired,
+  partToCopy: PropTypes.func.isRequired
 };
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(ChannelControlContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(HeaderContainer);

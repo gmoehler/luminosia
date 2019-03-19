@@ -201,7 +201,7 @@ class Channel extends Component {
           <ImageCanvas key={ String(partId) + "-" + String(canvasCount) }
               cssWidth={ currentWidth }
               width={ currentWidth * scale }
-              height={ imageHeight }
+              height={ imageHeight + 2 }
               ref={ this.createCanvasRef(partId, canvasCount) }
               data-partid={ partId }
           />
@@ -334,8 +334,8 @@ Channel.defaultProps = {
     selectedMarkerColor: "rgba(255,165, 0, 1)", // orange
     selectionColor: "rgba(0,0,255,0.5)",
     imageBackgroundColor: "black",
-    borderColorSelected: "#3f51b5",
-    borderColor: "darkgrey",
+    borderColorSelected: "cornflowerblue",
+    borderColor: "#3f51b5",
   },
   factor: 1,
   // checking `window.devicePixelRatio` when drawing to canvas.

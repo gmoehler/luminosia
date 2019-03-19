@@ -11,7 +11,7 @@ export const audioChannelPayload = {
 export const imageChannelPayload = {
   type: "image",
   sampleRate: 100,
-  selected: false,
+  active: false,
   duration: 55.5,
   pyParts: {
     "2": {
@@ -27,7 +27,7 @@ export const imageChannelPayload = {
 export const initialImageChannelPayload = {
   type: "image",
   sampleRate: 100,
-  selected: true,
+  active: true,
   duration: 10,
   playState: "stopped",
 };
@@ -42,7 +42,7 @@ export const imageChannelState = {
         playState: "stopped",
         sampleRate: 100,
         duration: 21.21,
-        selected: true,
+        active: true,
         lastPartId: 1,
         byPartId: {
           1: {
@@ -57,6 +57,7 @@ export const imageChannelState = {
 };
 
 export const part = {
+  channelId: 2,
   offset: 5.5,
   duration: 55.55,
   sampleRate: 100,

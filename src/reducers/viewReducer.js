@@ -1,5 +1,7 @@
 import { cloneDeep } from "lodash";
-import { CLEAR_VIEW, SELECT_RANGE, DESELECT_RANGE, SET_RESOLUTION, SET_MARKER, UPDATE_MARKER, DELETE_MARKER, SELECT_PART_OR_IMAGE, DESELECT_PART_OR_IMAGE } from "../actions/types";
+import { CLEAR_VIEW, SELECT_RANGE, DESELECT_RANGE, SET_RESOLUTION, 
+  SET_MARKER, UPDATE_MARKER, DELETE_MARKER, SELECT_PART_OR_IMAGE, 
+  DESELECT_PART_OR_IMAGE, SELECT_IMAGE_CHANNEL, COPY_PART } from "../actions/types";
 
 // export for tests
 export const initialState = {
@@ -11,6 +13,8 @@ export const initialState = {
   resolution: 80,
   selectedPartOrImage: null,
   currentById: {},
+  selectedImageChannel: null,
+  partToCopy: null,
 };
 
 export default (state = initialState, action) => {
@@ -35,6 +39,12 @@ export default (state = initialState, action) => {
           from: null,
           to: null
         }
+      };
+
+    case SELECT_IMAGE_CHANNEL:
+      return {
+        ...state,
+        selectedImageChannel: action.payload.channelId
       };
 
     case SET_MARKER:
@@ -72,7 +82,7 @@ export default (state = initialState, action) => {
           [action.payload.markerId]: {
             markerId: action.payload.markerId,
             pos: Math.max(currentPos + action.payload.incr, currentMinPos),
-            minPos:currentMinPos,
+            minPos: currentMinPos,
             type: action.payload.type ? action.payload.type : currentType,
           }
         }
@@ -95,6 +105,15 @@ export default (state = initialState, action) => {
       return {
         ...state,
         selectedPartOrImage: null
+      };
+
+    case COPY_PART:
+      const partToCopy = state.selectedPartOrImage && state.selectedPartOrImage.partId ? 
+        Object.assign({},state.selectedPartOrImage) : null;
+      delete partToCopy.selected; // dont need that
+      return {
+        ...state,
+        partToCopy
       };
 
     default:
@@ -125,6 +144,10 @@ export const getSelectedPart = (state) => {
   return null;
 };
 
+export const getPartToCopy = (state) => {
+  return state.view.partToCopy;
+};
+
 export const getSelectedImage = (state) => {
   if (state.view.selectedPartOrImage &&
     state.view.selectedPartOrImage.imageId) {
@@ -135,4 +158,8 @@ export const getSelectedImage = (state) => {
 
 export const getCurrent = (state) => {
   return state.view.currentById;
+};
+
+export const getSelectedImageChannel = (state) => {
+  return state.view.selectedImageChannel;
 };

@@ -14,7 +14,7 @@ import ChannelDupIcon from "@material-ui/icons/FileCopy";
 const channelSelectorWidth = 96;
 
 const styles = () => ({
-  channelControlWrapper: {
+  channelSelectorWrapper: {
     display: "flex",
     justifyContent: "space-between",
     flexDirection: "column",
@@ -24,8 +24,11 @@ const styles = () => ({
     height: "90px",
     width: `${channelSelectorWidth}px`,
   },
-  wrapperSelected: {
+  wrapperActive: {
     background: "#3f51b5",
+  },
+  wrapperSelected: {
+    background: "cornflowerblue",
   },
   switchWrapper: {
     display: "flex",
@@ -53,30 +56,31 @@ const styles = () => ({
 class CustomizedSwitches extends React.Component {
 
   handleChange = channelId => event => {
-    const selected = event.target.checked;
-    if (selected){
-      this.props.selectChannel(channelId);
+    const active = event.target.checked;
+    if (active){
+      this.props.setChannelActive(channelId);
     } else {
-      this.props.deselectChannel(channelId);
+      this.props.unsetChannelActive(channelId);
     }
   };
 
   render() {
-    const { classes } = this.props;
+    const { classes, selectedImageChannel } = this.props;
 
     const switches = this.props.channelOverview
       .map((channel) => 
         (<div key={ channel.channelId }
             className={ classNames(
-          classes.channelControlWrapper,
-          channel.selected && classes.wrapperSelected) }
+          classes.channelSelectorWrapper,
+          channel.active && classes.wrapperActive,
+          selectedImageChannel === String(channel.channelId) && classes.wrapperSelected) }
             background = { indigo }>
           <FormControlLabel
               className={ classes.switchWrapper }
               control={
-              <Tooltip title={ channel.selected?"Mute":"Unmute" }>
+              <Tooltip title={ channel.active?"Mute":"Unmute" }>
                 <Switch disabled={ channel.type === "audio" }
-                    checked={ channel.selected }
+                    checked={ channel.active }
                     onChange={ this.handleChange(channel.channelId) }
                 />
                 </Tooltip>
@@ -123,11 +127,12 @@ class CustomizedSwitches extends React.Component {
 CustomizedSwitches.propTypes = {
   classes: PropTypes.object.isRequired,
   channelOverview: PropTypes.array,
-  selectChannel: PropTypes.func.isRequired,
-  deselectChannel: PropTypes.func.isRequired,
+  setChannelActive: PropTypes.func.isRequired,
+  unsetChannelActive: PropTypes.func.isRequired,
   duplicateChannel: PropTypes.func.isRequired,
   deleteChannel: PropTypes.func.isRequired,
   exportImageChannel: PropTypes.func.isRequired,
+  selectedImageChannel: PropTypes.number,
 };
 
 export default withStyles(styles)(CustomizedSwitches);

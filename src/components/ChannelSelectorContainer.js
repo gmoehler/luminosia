@@ -4,21 +4,23 @@ import { connect } from "react-redux";
 
 import ChannelSelector from "./ChannelSelector";
 import { getAllChannelsOverview } from "../reducers/channelReducer";
-import { selectChannel, deselectChannel, deleteChannel, duplicateChannel } from "../actions/channelActions";
+import { setChannelActive, unsetChannelActive, deleteChannel, duplicateChannel } from "../actions/channelActions";
 import { exportImageChannel } from "../actions/generalActions";
+import { getSelectedImageChannel } from "../reducers/viewReducer";
 
 class ChannelSelectorContainer extends Component {
 
   render() {
 
-    const { channelOverview, selectChannelAction, deselectChannelAction,
+    const { channelOverview, selectedImageChannel, setChannelActiveAction, unsetChannelActiveAction,
       exportImageChannelAction, deleteChannelAction, duplicateChannelAction } = this.props;
 
     return (
       <ChannelSelector
           channelOverview={ channelOverview }
-          selectChannel={ selectChannelAction }
-          deselectChannel={ deselectChannelAction }
+          selectedImageChannel={ selectedImageChannel }
+          setChannelActive={ setChannelActiveAction }
+          unsetChannelActive={ unsetChannelActiveAction }
           exportImageChannel={ exportImageChannelAction }
           deleteChannel={ deleteChannelAction }
           duplicateChannel={ duplicateChannelAction }
@@ -29,12 +31,13 @@ class ChannelSelectorContainer extends Component {
 const mapStateToProps = (state, props) => {
   return {
     channelOverview: getAllChannelsOverview(state),
+    selectedImageChannel: getSelectedImageChannel(state),
   };
 };
 
 const mapDispatchToProps = dispatch => ({
-  selectChannelAction: (channelId) => dispatch(selectChannel(channelId)),
-  deselectChannelAction: (channelId) => dispatch(deselectChannel(channelId)),
+  setChannelActiveAction: (channelId) => dispatch(setChannelActive(channelId)),
+  unsetChannelActiveAction: (channelId) => dispatch(unsetChannelActive(channelId)),
   exportImageChannelAction: (channelId) => dispatch(exportImageChannel(channelId)),
   deleteChannelAction: (channelId) => dispatch(deleteChannel(channelId)),
   duplicateChannelAction: (channelId) => dispatch(duplicateChannel(channelId)),
@@ -42,8 +45,9 @@ const mapDispatchToProps = dispatch => ({
 
 ChannelSelectorContainer.propTypes = {
   channelOverview: PropTypes.array,
-  selectChannelAction: PropTypes.func.isRequired,
-  deselectChannelAction: PropTypes.func.isRequired,
+  selectedImageChannel: PropTypes.string,
+  setChannelActiveAction: PropTypes.func.isRequired,
+  unsetChannelActiveAction: PropTypes.func.isRequired,
   exportImageChannelAction: PropTypes.func.isRequired,
   deleteChannelAction: PropTypes.func.isRequired,
   duplicateChannelAction: PropTypes.func.isRequired,
