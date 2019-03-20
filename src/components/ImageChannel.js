@@ -171,7 +171,7 @@ class Channel extends Component {
   }
 
   render() {
-    const { parts, imageHeight, scale, progress, cursorPos, 
+    const { channelId, parts, imageHeight, scale, progress, cursorPos, 
       selection, markers, theme, maxWidth, selected, imageSources } = this.props;
 
     // loop thru all images/parts
@@ -252,18 +252,24 @@ class Channel extends Component {
     const markerElems = markers && Array.isArray(markers) ?
       markers.map((marker) => { 
         let color = theme.markerColor;
+        // marker color depends on type (insert / normal), selection status
+        //  and whether the part belongs to this channel
         if ( marker.type  === "insert" || marker.markerId  === "insert" ) {
           color = theme.insertMarkerColor;
-        } else if ( marker.type  === "selected" ) {
+        } else if ( marker.type  === "selected"  && marker.channelId === channelId) {
           color = theme.selectedMarkerColor;
+        } else if ( marker.type  === "selected") {
+          color = theme.selectedMarkerColorOther;
+        } else if (marker.channelId !== channelId) {
+          color = theme.markerColorOther;
         }
-        return (<ImageMarker 
-            key={ marker.markerId } 
-            className="Marker" 
-            markerPos={ marker.pos } 
-            markerColor={ color } 
-            theme={ theme } 
-            height={ imageHeight }
+      return (<ImageMarker 
+          key={ marker.markerId } 
+          className="Marker" 
+          markerPos={ marker.pos } 
+          markerColor={ color } 
+          theme={ theme } 
+          height={ imageHeight }
         />);
       }) : null;
 
@@ -330,8 +336,10 @@ Channel.defaultProps = {
     waveProgressBorderColor: "rgb(255,255,255,1)", // transparent white
     cursorColor: "red",
     markerColor: "rgba(255,255, 0, 0.5)", // transparent yellow
+    markerColorOther: "rgba(255,255, 0, 0.2)", // more transparent yellow
     insertMarkerColor: "rgba(255,165, 0, 0.5)", // transparent orange
     selectedMarkerColor: "rgba(255,165, 0, 1)", // orange
+    selectedMarkerColorOther: "rgba(255,165, 0, 0.3)", // orange slightly transp
     selectionColor: "rgba(0,0,255,0.5)",
     imageBackgroundColor: "black",
     borderColorSelected: "cornflowerblue",
