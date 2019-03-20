@@ -66,7 +66,7 @@ export default class ChannelGroup extends Component {
     const channelComponents = this.props.allChannelsData
       .map((channelData) => {
 
-        const { resolution, selectedImageChannel, ...passthruProps } = this.props;
+        const { resolution, selectedImageChannelId, ...passthruProps } = this.props;
         const channelId = channelData.channelId;
 
         if (channelData.loading) {
@@ -101,7 +101,7 @@ export default class ChannelGroup extends Component {
 
         return (
           <ImageChannelWithPlay { ...channelProps }
-              selected={ selectedImageChannel === String(channelId) }
+              selected={ selectedImageChannelId === channelId }
               setChannelPlayState={ playState => this.props.setChannelPlayState(channelId, playState) }
               move={ (partId, incr) => this.props.move(channelId, partId, incr) } 
           />);
@@ -124,5 +124,5 @@ ChannelGroup.propTypes = {
   setChannelPlayState: PropTypes.func.isRequired,
   move: PropTypes.func.isRequired,
   drawerWidth: PropTypes.number.isRequired,
-  selectedImageChannel: PropTypes.number,
+  selectedImageChannelId: PropTypes.number,
 };

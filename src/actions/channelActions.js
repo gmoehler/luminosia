@@ -3,7 +3,7 @@ import { PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL, ADD
 import { setMarker, deleteMarker, deselect, selectPartOrImage } from "./viewActions";
 
 import { getLastPartId, getLastChannel, getActiveChannelIds, getMaxDuration, getChannelData, getPart } from "../reducers/channelReducer";
-import { getSelectedPart, getSelectedImage, getSelectedImageChannel, getPartToCopy } from "../reducers/viewReducer";
+import { getSelectedPart, getSelectedImage, getSelectedImageChannelId, getPartToCopy } from "../reducers/viewReducer";
 import { getImageDuration } from "../reducers/imageListReducer";
 import { removeImage } from "./imageListActions";
 import { defaultSampleRate } from "../components/ImageListContainer";
@@ -214,11 +214,11 @@ export const pastePart = () => {
   return (dispatch, getState) => {
     const partToCopyInfo = getPartToCopy(getState());
     const originialPart = getPart(getState(), partToCopyInfo.channelId, partToCopyInfo.partId);
-    const selectedImageChannel = getSelectedImageChannel(getState());
+    const selectedImageChannelId = getSelectedImageChannelId(getState());
 
     const partToPaste = {
       ...originialPart,
-      channelId: selectedImageChannel,
+      channelId: selectedImageChannelId,
     };
     dispatch(insertNewPart(partToPaste));
   };

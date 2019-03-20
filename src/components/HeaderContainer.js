@@ -48,7 +48,7 @@ class HeaderContainer extends Component {
 
     const { channelIds, downloadConfigAction, uploadConfigFileAction, uploadAudioFileAction, deleteSelectedPartAndMarkersAction, 
       createImageChannelAction, exportImageChannelAction, deleteChannelAction, playChannelAndImageAction, stopChannelAction, 
-      selectedImageOrPart, enablePlay, enableStop, setChannelActiveAction, unsetChannelActiveAction, copyPartAction, pastePartAction, partToCopy } = this.props;
+      selectedImageOrPart, enablePlay, enableStop, setChannelActiveAction, unsetChannelActiveAction, copyPartAction, pastePartAction, hasPartToCopy } = this.props;
 
     return (
       <Header init={ this.doInit }
@@ -71,7 +71,7 @@ class HeaderContainer extends Component {
           unsetChannelActive={ unsetChannelActiveAction } 
           copyPart={ copyPartAction }
           pastePart={ pastePartAction }
-          partToCopy={ partToCopy }
+          hasPartToCopy={ hasPartToCopy }
           />
       );
   }
@@ -80,7 +80,7 @@ class HeaderContainer extends Component {
 const mapStateToProps = state => ({
   channelIds: getChannelIds(state),
   selectedImageOrPart: getSelectedImage(state) || getSelectedPart(state),
-  partToCopy: Boolean(getPartToCopy(state)),
+  hasPartToCopy: Boolean(getPartToCopy(state)),
   enablePlay: Boolean(getChannelIds(state).length > 0 && allChannelsStopped(state)),
   enableStop: Boolean(getChannelIds(state).length && !allChannelsStopped(state)),
 });
@@ -122,7 +122,7 @@ HeaderContainer.propTypes = {
   setResolutionAction: PropTypes.func.isRequired,
   copyPartAction: PropTypes.func.isRequired,
   pastePartAction: PropTypes.func.isRequired,
-  partToCopy: PropTypes.func.isRequired
+  hasPartToCopy: PropTypes.bool,
 };
 
 

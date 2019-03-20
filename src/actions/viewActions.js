@@ -38,9 +38,9 @@ export const updateMarker = (markerInfo) => ({
   payload: markerInfo
 });
 
-const setSelected = (partInfo) => ({
+const setSelected = (partOrImageInfo) => ({
   type: SELECT_PART_OR_IMAGE,
-  payload: partInfo
+  payload: partOrImageInfo
 });
 
 export const deselect = () => ({

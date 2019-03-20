@@ -13,7 +13,7 @@ export const initialState = {
   resolution: 80,
   selectedPartOrImage: null,
   currentById: {},
-  selectedImageChannel: null,
+  selectedImageChannelId: null,
   partToCopy: null,
 };
 
@@ -44,7 +44,7 @@ export default (state = initialState, action) => {
     case SELECT_IMAGE_CHANNEL:
       return {
         ...state,
-        selectedImageChannel: action.payload.channelId
+        selectedImageChannelId: action.payload.channelId
       };
 
     case SET_MARKER:
@@ -160,6 +160,6 @@ export const getCurrent = (state) => {
   return state.view.currentById;
 };
 
-export const getSelectedImageChannel = (state) => {
-  return state.view.selectedImageChannel;
+export const getSelectedImageChannelId = (state) => {
+  return state.view.selectedImageChannelId;
 };

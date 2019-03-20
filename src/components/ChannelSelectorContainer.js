@@ -6,19 +6,19 @@ import ChannelSelector from "./ChannelSelector";
 import { getAllChannelsOverview } from "../reducers/channelReducer";
 import { setChannelActive, unsetChannelActive, deleteChannel, duplicateChannel } from "../actions/channelActions";
 import { exportImageChannel } from "../actions/generalActions";
-import { getSelectedImageChannel } from "../reducers/viewReducer";
+import { getSelectedImageChannelId } from "../reducers/viewReducer";
 
 class ChannelSelectorContainer extends Component {
 
   render() {
 
-    const { channelOverview, selectedImageChannel, setChannelActiveAction, unsetChannelActiveAction,
+    const { channelOverview, selectedImageChannelId, setChannelActiveAction, unsetChannelActiveAction,
       exportImageChannelAction, deleteChannelAction, duplicateChannelAction } = this.props;
 
     return (
       <ChannelSelector
           channelOverview={ channelOverview }
-          selectedImageChannel={ selectedImageChannel }
+          selectedImageChannelId={ selectedImageChannelId }
           setChannelActive={ setChannelActiveAction }
           unsetChannelActive={ unsetChannelActiveAction }
           exportImageChannel={ exportImageChannelAction }
@@ -31,7 +31,7 @@ class ChannelSelectorContainer extends Component {
 const mapStateToProps = (state, props) => {
   return {
     channelOverview: getAllChannelsOverview(state),
-    selectedImageChannel: getSelectedImageChannel(state),
+    selectedImageChannelId: getSelectedImageChannelId(state),
   };
 };
 
@@ -45,7 +45,7 @@ const mapDispatchToProps = dispatch => ({
 
 ChannelSelectorContainer.propTypes = {
   channelOverview: PropTypes.array,
-  selectedImageChannel: PropTypes.string,
+  selectedImageChannelId: PropTypes.number,
   setChannelActiveAction: PropTypes.func.isRequired,
   unsetChannelActiveAction: PropTypes.func.isRequired,
   exportImageChannelAction: PropTypes.func.isRequired,

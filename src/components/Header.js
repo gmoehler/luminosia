@@ -78,7 +78,7 @@ export class Header extends Component {
   render() {
 
     const { createImageChannel, downloadConfig, enablePlay, playChannelAndImage, enableStop, 
-      stopChannel, zoomIn, zoomOut, selectedImageOrPart, deleteSelectedPart, copyPart, pastePart, partToCopy } = this.props;
+      stopChannel, zoomIn, zoomOut, selectedImageOrPart, deleteSelectedPart, copyPart, pastePart, hasPartToCopy } = this.props;
 
     return (
       <HeaderWrapper>
@@ -156,7 +156,7 @@ export class Header extends Component {
             </IconButton>
           </Tooltip>
           <Tooltip title="Paste part">
-            <IconButton disabled={ !partToCopy }
+            <IconButton disabled={ !hasPartToCopy }
                 color="inherit"
                 onClick={ pastePart }>
               <ContentPaste />
@@ -195,7 +195,7 @@ Header.propTypes = {
   uploadAudioFile: PropTypes.func.isRequired,
   copyPart: PropTypes.func.isRequired,
   pastePart: PropTypes.func.isRequired,
-  partToCopy: PropTypes.bool,
+  hasPartToCopy: PropTypes.bool,
 };
 
 export default withStyles(styles, {
