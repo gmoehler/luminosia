@@ -138,7 +138,8 @@ export const duplicateChannel = (channelId) => {
   return (dispatch, getState) => {
     const ch = getChannelData(getState(), channelId);
     dispatch(addChannel(ch));
-  // TODO: add new channel just after copied one
+    // TODO: add new channel just after copied one
+    dispatch(updateChannelMarkersForLastAddedChannel()); // although we do know the channel id here...
   };
 };
 
