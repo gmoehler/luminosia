@@ -135,6 +135,8 @@ describe("actions", () => {
         type: types.SET_MARKER,
         payload: {
           markerId: "2-1-l",
+          channelId: 2,
+          partId: 1,
           pos: 3.3,
           minPos: 0,
           type: "normal"
@@ -144,6 +146,8 @@ describe("actions", () => {
         type: types.SET_MARKER,
         payload: {
           markerId: "2-1-r",
+          channelId: 2,
+          partId: 1,
           pos: 11.21 + 3.3,
           minPos: 11.21,
           type: "normal"
