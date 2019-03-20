@@ -21,7 +21,7 @@ const styles = () => ({
     margin: 0,
     padding: 0,
     background: "darkgrey",
-    height: "90px",
+    height: "92px",
     width: `${channelSelectorWidth}px`,
   },
   wrapperActive: {

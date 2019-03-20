@@ -290,7 +290,7 @@ class Channel extends Component {
         
           cssWidth={ maxWidth }
           theme={ theme }
-          height={ imageHeight }
+          height={ 2 + imageHeight } // add border
           tabIndex={ 0 }
           borderColor={ selected ? theme.borderColorSelected : theme.borderColor }>
         
