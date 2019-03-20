@@ -61,11 +61,15 @@ const updateMarkers = (dispatch, part) => {
   const markerIdPrefix = `${part.channelId}-${part.partId}`;
   dispatch(updateMarker({
     markerId: markerIdPrefix + "-l",
+    channelId: part.channelId,
+    partId: part.partId,
     incr: 0,
     type
   }));
   dispatch(updateMarker({
     markerId: markerIdPrefix + "-r",
+    channelId: part.channelId,
+    partId: part.partId,
     incr: 0,
     type
   }));

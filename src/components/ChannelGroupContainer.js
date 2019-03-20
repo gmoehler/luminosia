@@ -41,14 +41,18 @@ const mapDispatchToProps = dispatch => ({
     to
   })),
   deselectRange: () => dispatch(deselectRange()),
-  setMarker: (markerId, pos, minPos, type) => dispatch(setMarker({
+  setMarker: (markerId, channelId, partId, pos, minPos, type) => dispatch(setMarker({
     markerId,
+    channelId,
+    partId,
     pos,
     minPos,
     type
   })),
-  updateMarker: (markerId, incr, type) => dispatch(updateMarker({
+  updateMarker: (markerId, channelId, partId, incr, type) => dispatch(updateMarker({
     markerId,
+    channelId,
+    partId,
     incr,
     type
   })),

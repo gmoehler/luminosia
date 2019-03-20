@@ -35,7 +35,7 @@ export default class SelectionMouseHandler {
     if (!this.prevPosX ||
       (evInfo.timestamp - this.prevTimestamp > 100 && Math.abs(evInfo.x - this.prevPosX) > 0.01)) {
       // console.log(evInfo.x, " ", evInfo.timestamp, "drag");
-      this.handlerFunctions.setMarker("insert", evInfo.x, 0, "insert");
+      this.handlerFunctions.setMarker("insert", null, null, evInfo.x, 0, "insert");
       this.prevPosX = evInfo.x;
       this.prevTimestamp = evInfo.timestamp;
     }

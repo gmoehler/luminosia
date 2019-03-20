@@ -54,6 +54,8 @@ export default (state = initialState, action) => {
           ...state.byMarkerId,
           [action.payload.markerId]: {
             markerId: action.payload.markerId,
+            channelId: action.payload.channelId,
+            partId: action.payload.partId,
             pos: action.payload.pos,
             minPos: action.payload.minPos || 0,
             type: action.payload.type,
@@ -81,6 +83,8 @@ export default (state = initialState, action) => {
           ...state.byMarkerId,
           [action.payload.markerId]: {
             markerId: action.payload.markerId,
+            channelId: action.payload.channelId,
+            partId: action.payload.partId,
             pos: Math.max(currentPos + action.payload.incr, currentMinPos),
             minPos: currentMinPos,
             type: action.payload.type ? action.payload.type : currentType,
