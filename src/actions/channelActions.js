@@ -150,8 +150,12 @@ export const updateChannelMarkersForLastAddedChannel = () => {
     if (lastChannel) {
       const channelId = lastChannel.channelId;
 
-      Object.keys(lastChannel.byPartId).forEach((partId) => {
+      console.log(lastChannel);
 
+      Object.keys(lastChannel.byPartId).forEach((pId) => {
+
+        // seems to be required for tests with mockStore
+        const partId = parseInt(pId); 
         const part = lastChannel.byPartId[partId];
         dispatch(setMarker({
           markerId: `${channelId}-${partId}-l`,
