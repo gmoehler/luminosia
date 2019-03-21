@@ -12,7 +12,6 @@ export const initialState = {
   byMarkerId: {},
   resolution: 80,
   selectedPartOrImage: null,
-  currentById: {},
   selectedImageChannelId: null,
   partToCopy: null,
 };
@@ -158,10 +157,6 @@ export const getSelectedImage = (state) => {
     return state.view.selectedPartOrImage;
   }
   return null;
-};
-
-export const getCurrent = (state) => {
-  return state.view.currentById;
 };
 
 export const getSelectedImageChannelId = (state) => {

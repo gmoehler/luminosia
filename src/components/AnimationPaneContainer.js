@@ -35,14 +35,13 @@ class AnimationPaneContainer extends Component {
 
 const mapStateToProps = state => ({
   playState: allChannelsStopped(state) ? "stopped" : "playing",
-  current: getCurrent(state),
   activeChannels: getActiveChannelIds(state, "image"),
   selection: getSelectionRange(state),
   maxDuration: getMaxDuration(state),
 });
 
 const mapDispatchToProps = dispatch => ({
-
+  //  no actions needed
 });
 
 

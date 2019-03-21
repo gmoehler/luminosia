@@ -155,7 +155,7 @@ export const updateChannelMarkersForLastAddedChannel = () => {
       Object.keys(lastChannel.byPartId).forEach((pId) => {
 
         // seems to be required for tests with mockStore
-        const partId = parseInt(pId); 
+        const partId = parseInt(pId);
         const part = lastChannel.byPartId[partId];
         dispatch(setMarker({
           markerId: `${channelId}-${partId}-l`,
@@ -186,7 +186,8 @@ export const insertNewPart = (partInfo) => {
       markerId: "insert"
     }));
 
-    // clone
+    // clone, but remove src if existing
+    // remove src is probably no longer required
     const partWithoutSrc = {
       ...partInfo
     };
