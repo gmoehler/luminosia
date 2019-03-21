@@ -21,7 +21,7 @@ const styles = () => ({
     margin: 0,
     padding: 0,
     background: "darkgrey",
-    height: "90px",
+    height: "92px",
     width: `${channelSelectorWidth}px`,
   },
   wrapperActive: {
@@ -65,7 +65,7 @@ class CustomizedSwitches extends React.Component {
   };
 
   render() {
-    const { classes, selectedImageChannel } = this.props;
+    const { classes, selectedImageChannelId } = this.props;
 
     const switches = this.props.channelOverview
       .map((channel) => 
@@ -73,7 +73,7 @@ class CustomizedSwitches extends React.Component {
             className={ classNames(
           classes.channelSelectorWrapper,
           channel.active && classes.wrapperActive,
-          selectedImageChannel === String(channel.channelId) && classes.wrapperSelected) }
+          selectedImageChannelId === channel.channelId && classes.wrapperSelected) }
             background = { indigo }>
           <FormControlLabel
               className={ classes.switchWrapper }
@@ -132,7 +132,7 @@ CustomizedSwitches.propTypes = {
   duplicateChannel: PropTypes.func.isRequired,
   deleteChannel: PropTypes.func.isRequired,
   exportImageChannel: PropTypes.func.isRequired,
-  selectedImageChannel: PropTypes.number,
+  selectedImageChannelId: PropTypes.number,
 };
 
 export default withStyles(styles)(CustomizedSwitches);

@@ -3,7 +3,7 @@ import { PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL, ADD
 import { setMarker, deleteMarker, deselect, selectPartOrImage } from "./viewActions";
 
 import { getLastPartId, getLastChannel, getActiveChannelIds, getMaxDuration, getChannelData, getPart } from "../reducers/channelReducer";
-import { getSelectedPart, getSelectedImage, getSelectedImageChannel, getPartToCopy } from "../reducers/viewReducer";
+import { getSelectedPart, getSelectedImage, getSelectedImageChannelId, getPartToCopy } from "../reducers/viewReducer";
 import { getImageDuration } from "../reducers/imageListReducer";
 import { removeImage } from "./imageListActions";
 import { defaultSampleRate } from "../components/ImageListContainer";
@@ -138,7 +138,8 @@ export const duplicateChannel = (channelId) => {
   return (dispatch, getState) => {
     const ch = getChannelData(getState(), channelId);
     dispatch(addChannel(ch));
-  // TODO: add new channel just after copied one
+    // TODO: add new channel just after copied one
+    dispatch(updateChannelMarkersForLastAddedChannel()); // although we do know the channel id here...
   };
 };
 
@@ -149,17 +150,25 @@ export const updateChannelMarkersForLastAddedChannel = () => {
     if (lastChannel) {
       const channelId = lastChannel.channelId;
 
-      Object.keys(lastChannel.byPartId).forEach((partId) => {
+      console.log(lastChannel);
 
+      Object.keys(lastChannel.byPartId).forEach((pId) => {
+
+        // seems to be required for tests with mockStore
+        const partId = parseInt(pId); 
         const part = lastChannel.byPartId[partId];
         dispatch(setMarker({
           markerId: `${channelId}-${partId}-l`,
+          channelId: channelId,
+          partId: partId,
           pos: part.offset,
           minPos: 0,
           type: "normal"
         }));
         dispatch(setMarker({
           markerId: `${channelId}-${partId}-r`,
+          channelId: channelId,
+          partId: partId,
           pos: part.offset + part.duration,
           minPos: part.duration,
           type: "normal"
@@ -188,12 +197,16 @@ export const insertNewPart = (partInfo) => {
     // generate markers for part
     dispatch(setMarker({
       markerId: `${partInfo.channelId}-${lastPartId}-l`,
+      channelId: partInfo.channelId,
+      partId: lastPartId,
       pos: partInfo.offset,
       minPos: 0,
       type: "normal"
     }));
     dispatch(setMarker({
       markerId: `${partInfo.channelId}-${lastPartId}-r`,
+      channelId: partInfo.channelId,
+      partId: lastPartId,
       pos: partInfo.offset + partInfo.duration,
       minPos: partInfo.duration,
       type: "normal"
@@ -214,11 +227,11 @@ export const pastePart = () => {
   return (dispatch, getState) => {
     const partToCopyInfo = getPartToCopy(getState());
     const originialPart = getPart(getState(), partToCopyInfo.channelId, partToCopyInfo.partId);
-    const selectedImageChannel = getSelectedImageChannel(getState());
+    const selectedImageChannelId = getSelectedImageChannelId(getState());
 
     const partToPaste = {
       ...originialPart,
-      channelId: selectedImageChannel,
+      channelId: selectedImageChannelId,
     };
     dispatch(insertNewPart(partToPaste));
   };

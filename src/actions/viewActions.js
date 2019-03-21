@@ -38,9 +38,9 @@ export const updateMarker = (markerInfo) => ({
   payload: markerInfo
 });
 
-const setSelected = (partInfo) => ({
+const setSelected = (partOrImageInfo) => ({
   type: SELECT_PART_OR_IMAGE,
-  payload: partInfo
+  payload: partOrImageInfo
 });
 
 export const deselect = () => ({
@@ -61,11 +61,15 @@ const updateMarkers = (dispatch, part) => {
   const markerIdPrefix = `${part.channelId}-${part.partId}`;
   dispatch(updateMarker({
     markerId: markerIdPrefix + "-l",
+    channelId: part.channelId,
+    partId: part.partId,
     incr: 0,
     type
   }));
   dispatch(updateMarker({
     markerId: markerIdPrefix + "-r",
+    channelId: part.channelId,
+    partId: part.partId,
     incr: 0,
     type
   }));

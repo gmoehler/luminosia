@@ -35,7 +35,7 @@ export default class SelectionMouseHandler {
     if (!this.prevPosX ||
       (evInfo.timestamp - this.prevTimestamp > 100 && Math.abs(evInfo.x - this.prevPosX) > 0.01)) {
       // console.log(evInfo.x, " ", evInfo.timestamp, "drag");
-      this.handlerFunctions.setMarker("insert", evInfo.x, 0, "insert");
+      this.handlerFunctions.setMarker("insert", null, null, evInfo.x, 0, "insert");
       this.prevPosX = evInfo.x;
       this.prevTimestamp = evInfo.timestamp;
     }
@@ -43,7 +43,8 @@ export default class SelectionMouseHandler {
 
   handleInsertImage = (evInfo) => {
     // console.log(evInfo.x, " drop");
-    this.handlerFunctions.insertNewPart(evInfo.channelId, evInfo.imageId, evInfo.src, evInfo.x, evInfo.duration);
+    const channelId = parseInt(evInfo.channelId);
+    this.handlerFunctions.insertNewPart(channelId, evInfo.imageId, evInfo.src, evInfo.x, evInfo.duration);
     this.prevPosX = null;
     this.prevTimestamp = 0;
   }
