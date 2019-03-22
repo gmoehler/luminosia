@@ -14,7 +14,7 @@ export const imageChannelPayload = {
   active: false,
   duration: 55.5,
   pyParts: {
-  2: {
+    2: {
       length: 10,
       imageId: "Regenbogenraus.png",
       src: "data:image/png;base64",
@@ -45,7 +45,7 @@ export const imageChannelState = {
         active: true,
         lastPartSeqNum: 1,
         byPartId: {
-        "2:1": {
+          "2:1": {
             partId: "2:1",
             channelId: 2,
             offset: 3.3,
@@ -59,7 +59,16 @@ export const imageChannelState = {
 };
 
 export const part = {
+  partId: "2:3",
   channelId: 2,
+  offset: 5.5,
+  duration: 55.55,
+  sampleRate: 100,
+};
+
+export const part2 = {
+  partId: "2:5",
+  channelId: 3,
   offset: 5.5,
   duration: 55.55,
   sampleRate: 100,

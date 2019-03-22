@@ -1,8 +1,8 @@
 import { SELECT_RANGE, DESELECT_RANGE, SET_RESOLUTION, 
   UPDATE_MARKER, SET_MARKER, DELETE_MARKER, SELECT_PART_OR_IMAGE, 
-  DESELECT_PART_OR_IMAGE, CLEAR_VIEW, SELECT_IMAGE_CHANNEL, COPY_PART } from "./types";
+  DESELECT_PART_OR_IMAGE, CLEAR_VIEW, SELECT_IMAGE_CHANNEL, COPY_PART, ADD_ELEMENT_TO_SEL, REMOVE_ELEMENT_FROM_SEL } from "./types";
 
-import { getSelectedPart, getSelectedImage } from "../reducers/viewReducer";
+import { getSelectedPart, getSelectedImage, isElementSelected } from "../reducers/viewReducer";
 
 export const clearView = () => ({
   type: CLEAR_VIEW
@@ -36,6 +36,16 @@ export const deleteMarker = (markerInfo) => ({
 export const updateMarker = (markerInfo) => ({
   type: UPDATE_MARKER,
   payload: markerInfo
+});
+
+export const addElemToSel = (elementInfo) => ({
+  type: ADD_ELEMENT_TO_SEL,
+  payload: elementInfo
+});
+
+export const remElemFromSel = (elementInfo) => ({
+  type: REMOVE_ELEMENT_FROM_SEL,
+  payload: elementInfo
 });
 
 const setSelected = (partOrImageInfo) => ({
@@ -82,6 +92,13 @@ export const selectPartOrImage = ((partOrImageInfo) => {
     const curSelPart = getSelectedPart(getState());
     const curSelImage = getSelectedImage(getState());
 
+    // toggle selection state for multi-elem-selection
+    if (isElementSelected(getState(), partOrImageInfo)) {
+      dispatch(remElemFromSel(partOrImageInfo));
+    } else {
+      dispatch(addElemToSel(partOrImageInfo));
+    }
+
     if (curSelPart) {
       // de-select markers of currently selected part
       const curUnselPart = {
@@ -94,6 +111,7 @@ export const selectPartOrImage = ((partOrImageInfo) => {
       if (curSelPart.channelId === partOrImageInfo.channelId &&
         curSelPart.partId === partOrImageInfo.partId) {
         dispatch(deselect());
+        dispatch(remElemFromSel(partOrImageInfo));
         return;
       }
     }
