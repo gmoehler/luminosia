@@ -309,7 +309,7 @@ Channel.propTypes = {
   channelId: PropTypes.number.isRequired,
 	parts: PropTypes.arrayOf(
 		PropTypes.shape({
-      	partId: PropTypes.number.isRequired,
+      	partId: PropTypes.string.isRequired,
     	  offset: PropTypes.number, // might be zero
         duration:PropTypes.number.isRequired,
     })),

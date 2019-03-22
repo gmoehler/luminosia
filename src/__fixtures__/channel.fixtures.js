@@ -43,10 +43,11 @@ export const imageChannelState = {
         sampleRate: 100,
         duration: 21.21,
         active: true,
-        lastPartId: 1,
+        lastPartSeqNum: 1,
         byPartId: {
-        1: {
-            partId: 1,
+        "2:1": {
+            partId: "2:1",
+            channelId: 2,
             offset: 3.3,
             duration: 11.21,
             sampleRate: 100,

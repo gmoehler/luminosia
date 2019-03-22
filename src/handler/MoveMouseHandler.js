@@ -85,9 +85,8 @@ export default class MoveMouseHandler {
         this.moveFromX = evInfo.x;
         // also move the markers
         const channelId = parseInt(this.channelId);
-        const partId = parseInt(this.partId);
-        this.handlerFunctions.updateMarker(`${this.channelId}-${this.partId}-l`, channelId, partId, incrX); // type = null:
-        this.handlerFunctions.updateMarker(`${this.channelId}-${this.partId}-r`, channelId, partId, incrX); // dont change type
+        this.handlerFunctions.updateMarker(`${this.partId}-l`, channelId, this.partId, incrX); // type = null:
+        this.handlerFunctions.updateMarker(`${this.partId}-r`, channelId, this.partId, incrX); // dont change type
       }
 
       if (finalizeSelection) {

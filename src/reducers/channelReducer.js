@@ -19,7 +19,18 @@ export default (state = initialState, action) => {
 
     case ADD_CHANNEL:
       const channelId = state.lastChannelId + 1;
-      const lastPartId = action.payload.lastPartId && action.payload.lastPartId >= 0 ? action.payload.lastPartId : -1;
+
+      // update partId & channelId in all parts
+      const newByPartId = {};
+      let partSeqNum = -1;
+      Object.keys(action.payload.byPartId || {}).forEach((oldPartId) =>{
+        const part = cloneDeep(action.payload.byPartId[oldPartId]);
+        const partId = generatePartId(channelId, ++partSeqNum);
+        part.channelId = channelId;
+        part.partId = partId;
+        newByPartId[partId] = part;
+      });
+
       return {
         ...state,
         lastChannelId: channelId,
@@ -28,7 +39,8 @@ export default (state = initialState, action) => {
           [channelId]: {
             ...action.payload,
             channelId,
-            lastPartId,
+            lastPartSeqNum: partSeqNum,
+            byPartId: newByPartId
           }
         }
       };
@@ -66,7 +78,8 @@ export default (state = initialState, action) => {
       };
 
     case ADD_PART:
-      const partId = state.byChannelId[action.payload.channelId].lastPartId + 1;
+      const partSeqNum1 = state.byChannelId[action.payload.channelId].lastPartSeqNum + 1;
+      const partId = generatePartId(action.payload.channelId, partSeqNum1);
       const maxDuration = Math.max(state.byChannelId[action.payload.channelId].duration,
         action.payload.offset + action.payload.duration);
       return {
@@ -75,7 +88,7 @@ export default (state = initialState, action) => {
           ...state.byChannelId,
           [action.payload.channelId]: {
             ...state.byChannelId[action.payload.channelId],
-            lastPartId: partId,
+            lastPartSeqNum: partSeqNum1,
             duration: maxDuration,
             byPartId: {
               ...state.byChannelId[action.payload.channelId].byPartId,
@@ -245,9 +258,14 @@ export const getLastChannel = (state) => {
   return state.channel.byChannelId[lastChannelId];
 };
 
-export const getLastPartId = (state, channelId) => {
-  return state.channel.byChannelId[channelId].lastPartId;
+export const getNextPartId = (state, channelId) => {
+  const nextPartSeqNum = state.channel.byChannelId[channelId].lastPartSeqNum + 1;
+  return `${channelId}:${nextPartSeqNum}`;
 };
+
+function generatePartId(channelId, partSeqId) {
+  return `${channelId}:${partSeqId}`;
+}
 
 function getDuration(state, channelId) {
   const channelData = state.channel.byChannelId[channelId];

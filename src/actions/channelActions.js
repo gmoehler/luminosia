@@ -2,7 +2,7 @@ import { PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL, ADD
 
 import { setMarker, deleteMarker, deselect, selectPartOrImage } from "./viewActions";
 
-import { getLastPartId, getLastChannel, getActiveChannelIds, getMaxDuration, getChannelData, getPart } from "../reducers/channelReducer";
+import { getNextPartId, getLastChannel, getActiveChannelIds, getMaxDuration, getChannelData, getPart } from "../reducers/channelReducer";
 import { getSelectedPart, getSelectedImage, getSelectedImageChannelId, getPartToCopy } from "../reducers/viewReducer";
 import { getImageDuration } from "../reducers/imageListReducer";
 import { removeImage } from "./imageListActions";
@@ -10,8 +10,7 @@ import { defaultSampleRate } from "../components/ImageListContainer";
 import { readAudioFile } from "../utils/fileUtils";
 import { drawExportImage, clearExportImage } from "./generalActions";
 
-// load channel from config
-
+// add channel with channelInfo containing complete channel information
 export const addChannel = (channelInfo) => ({
   type: ADD_CHANNEL,
   payload: channelInfo
@@ -93,7 +92,7 @@ function loadImageChannel(channelConfig, state) {
   normalizedParts &&
   delete normalizedParts.curid;
   delete channelConfig.parts;
-  channelConfig.lastPartId = Object.keys(normalizedParts).length - 1;
+  channelConfig.lastPartSeqNum = Object.keys(normalizedParts).length - 1;
   channelConfig.playState = "stopped";
 
   return Promise.resolve({
@@ -137,6 +136,7 @@ export const uploadAudioFile = (audioFile, audioContext) => {
 export const duplicateChannel = (channelId) => {
   return (dispatch, getState) => {
     const ch = getChannelData(getState(), channelId);
+    // also sanatizes the parts
     dispatch(addChannel(ch));
     // TODO: add new channel just after copied one
     dispatch(updateChannelMarkersForLastAddedChannel()); // although we do know the channel id here...
@@ -150,15 +150,10 @@ export const updateChannelMarkersForLastAddedChannel = () => {
     if (lastChannel) {
       const channelId = lastChannel.channelId;
 
-      console.log(lastChannel);
-
-      Object.keys(lastChannel.byPartId).forEach((pId) => {
-
-        // seems to be required for tests with mockStore
-        const partId = parseInt(pId);
+      Object.keys(lastChannel.byPartId).forEach((partId) => {
         const part = lastChannel.byPartId[partId];
         dispatch(setMarker({
-          markerId: `${channelId}-${partId}-l`,
+          markerId: `${partId}-l`,
           channelId: channelId,
           partId: partId,
           pos: part.offset,
@@ -166,7 +161,7 @@ export const updateChannelMarkersForLastAddedChannel = () => {
           type: "normal"
         }));
         dispatch(setMarker({
-          markerId: `${channelId}-${partId}-r`,
+          markerId: `${partId}-r`,
           channelId: channelId,
           partId: partId,
           pos: part.offset + part.duration,
@@ -193,21 +188,23 @@ export const insertNewPart = (partInfo) => {
     };
     delete partWithoutSrc.src;
 
+    // remember partid that new part will have to re-use for markers
+    const nextPartId = getNextPartId(getState(), partInfo.channelId);
     dispatch(addPart(partWithoutSrc));
-    const lastPartId = getLastPartId(getState(), partInfo.channelId);
+
     // generate markers for part
     dispatch(setMarker({
-      markerId: `${partInfo.channelId}-${lastPartId}-l`,
+      markerId: `${nextPartId}-l`,
       channelId: partInfo.channelId,
-      partId: lastPartId,
+      partId: nextPartId,
       pos: partInfo.offset,
       minPos: 0,
       type: "normal"
     }));
     dispatch(setMarker({
-      markerId: `${partInfo.channelId}-${lastPartId}-r`,
+      markerId: `${nextPartId}-r`,
       channelId: partInfo.channelId,
-      partId: lastPartId,
+      partId: nextPartId,
       pos: partInfo.offset + partInfo.duration,
       minPos: partInfo.duration,
       type: "normal"
@@ -217,7 +214,7 @@ export const insertNewPart = (partInfo) => {
     // select the new part
     const lastPart = {
       channelId: partInfo.channelId,
-      partId: lastPartId,
+      partId: nextPartId,
       selected: true,
     };
     dispatch(selectPartOrImage(lastPart));
@@ -250,10 +247,10 @@ export const deleteSelectedPartAndMarkers = () => {
     if (selPart) {
       dispatch(deletePart(selPart));
       dispatch(deleteMarker({
-        markerId: `${selPart.channelId}-${selPart.partId}-l`
+        markerId: `${selPart.partId}-l`
       }));
       dispatch(deleteMarker({
-        markerId: `${selPart.channelId}-${selPart.partId}-r`
+        markerId: `${selPart.partId}-r`
       }));
       dispatch(deselect());
     }

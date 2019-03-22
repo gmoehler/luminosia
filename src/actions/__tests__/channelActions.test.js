@@ -134,9 +134,9 @@ describe("actions", () => {
       {
         type: types.SET_MARKER,
         payload: {
-          markerId: "2-1-l",
+          markerId: "2:1-l",
           channelId: 2,
-          partId: 1,
+          partId: "2:1",
           pos: 3.3,
           minPos: 0,
           type: "normal"
@@ -145,9 +145,9 @@ describe("actions", () => {
       {
         type: types.SET_MARKER,
         payload: {
-          markerId: "2-1-r",
+          markerId: "2:1-r",
           channelId: 2,
-          partId: 1,
+          partId: "2:1",
           pos: 11.21 + 3.3,
           minPos: 11.21,
           type: "normal"
@@ -191,7 +191,9 @@ describe("actions", () => {
       {
         type: types.SET_MARKER,
         payload: {
-          markerId: "2-1-l", // should be 2-2-l, but lastPartId not changed in test
+          markerId: "2:2-l", 
+          partId: "2:2",
+          channelId: 2,
           pos: 5.5,
           minPos: 0,
           type: "normal"
@@ -200,7 +202,9 @@ describe("actions", () => {
       {
         type: types.SET_MARKER,
         payload: {
-          markerId: "2-1-r", // should be 2-2-r, but lastPartId not changed in test
+          markerId: "2:2-r", 
+          partId: "2:2",
+          channelId: 2,
           pos: 55.5 + 5.55,
           minPos: 55.55,
           type: "normal"
@@ -210,7 +214,7 @@ describe("actions", () => {
         type: types.SELECT_PART_OR_IMAGE,
         payload: {
           channelId: 2,
-          partId: 1,
+          partId: "2:2",
           selected: true,
         },
       },
@@ -218,14 +222,16 @@ describe("actions", () => {
         type: types.SELECT_IMAGE_CHANNEL,
         payload: {
           channelId: 2,
-          partId: 1,
+          partId: "2:2",
           selected: true,
         }
       },
       {
         type: types.UPDATE_MARKER,
         payload: {
-          markerId: "2-1-l",
+          markerId: "2:2-l",
+          partId: "2:2",
+          channelId: 2,
           incr: 0,
           type: "selected"
         }
@@ -233,7 +239,9 @@ describe("actions", () => {
       {
         type: types.UPDATE_MARKER,
         payload: {
-          markerId: "2-1-r",
+          markerId: "2:2-r",
+          partId: "2:2",
+          channelId: 2,
           incr: 0,
           type: "selected"
         }

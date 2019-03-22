@@ -58,7 +58,7 @@ export const copyPart = () => ({
 
 const updateMarkers = (dispatch, part) => {
   const type = part.selected ? "selected" : "normal";
-  const markerIdPrefix = `${part.channelId}-${part.partId}`;
+  const markerIdPrefix = `${part.partId}`;
   dispatch(updateMarker({
     markerId: markerIdPrefix + "-l",
     channelId: part.channelId,

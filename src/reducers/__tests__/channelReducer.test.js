@@ -23,7 +23,8 @@ describe("channel reducer", () => {
         0: {
           ...audioChannelPayload,
           channelId: 0,
-          lastPartId: -1,
+          lastPartSeqNum: -1,
+          byPartId: {},
         }
       },
       lastChannelId: 0,
@@ -42,7 +43,8 @@ describe("channel reducer", () => {
         0: {
           ...imageChannelPayload,
           channelId: 0,
-          lastPartId: -1, // update is done by action not reducer
+          lastPartSeqNum: -1, // update is done by action not reducer
+          byPartId: {},
         }
       },
       lastChannelId: 0,
