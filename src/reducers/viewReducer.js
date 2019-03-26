@@ -192,3 +192,7 @@ export const isElementSelected = (state, elementInfo) => {
   return Object.keys(state.view.selectedElementsById).includes(elementInfo.partId) ||
     Object.keys(state.view.selectedElementsById).includes(elementInfo.imageId);
 };
+
+export const getSelectedElements= (state) => {
+  return Object.values(state.view.selectedElementsById);
+};

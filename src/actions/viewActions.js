@@ -1,6 +1,7 @@
 import { SELECT_RANGE, DESELECT_RANGE, SET_RESOLUTION, 
   UPDATE_MARKER, SET_MARKER, DELETE_MARKER, SELECT_PART_OR_IMAGE, 
-  DESELECT_PART_OR_IMAGE, CLEAR_VIEW, SELECT_IMAGE_CHANNEL, COPY_PART, ADD_ELEMENT_TO_SEL, REMOVE_ELEMENT_FROM_SEL } from "./types";
+  DESELECT_PART_OR_IMAGE, CLEAR_VIEW, SELECT_IMAGE_CHANNEL, COPY_PART, 
+  ADD_ELEMENT_TO_SEL, REMOVE_ELEMENT_FROM_SEL, CLEAR_SEL} from "./types";
 
 import { getSelectedPart, getSelectedImage, isElementSelected } from "../reducers/viewReducer";
 
@@ -46,6 +47,10 @@ export const addElemToSel = (elementInfo) => ({
 export const remElemFromSel = (elementInfo) => ({
   type: REMOVE_ELEMENT_FROM_SEL,
   payload: elementInfo
+});
+
+export const clearSel = () => ({
+  type: CLEAR_SEL
 });
 
 const setSelected = (partOrImageInfo) => ({
@@ -130,6 +135,50 @@ export const selectPartOrImage = ((partOrImageInfo) => {
     if (partOrImageInfo.partId) {
       // for parts only
       updateMarkers(dispatch, partOrImageInfo);
+    }
+  };
+});
+
+// partinfo is channelld, partId and selected
+// imageinfo is imageId
+export const toggleElementSelection = ((elementInfo) => {
+  return (dispatch, getState) => {
+    if (isElementSelected(getState(), elementInfo)) {
+      dispatch(clearSelectionWithMarkers());
+    } else {
+      clearSelectionWithMarkers());
+      dispatch(addElemToSel(elementInfo));
+      const elCopy = cloneDeep(elementInfo);
+      elCopy.selected = true;
+      updateMarkers(dispatch, elCopy);
+    }
+  };
+});
+
+// remove markers and clear selection
+const clearSelectionWithMarkers = () => {
+	return (dispatch, getState) => {
+	getSelectedElements(getState()).forEach((el) =>
+         el.selected = false;
+         updateMarkers(dispatch, el);
+    }
+    dispatch(clearSel());
+    }
+}
+
+export const toggleElementMultiSelection = ((elementInfo) => {
+  return (dispatch, getState) => {
+    
+    const elCopy = cloneDeep(elementInfo);
+    
+    if (isElementSelected(getState(), elementInfo)) {
+      dispatch(remElemFromSel(elementInfo));
+      elCopy.selected = false;
+      updateMarkers(dispatch, elCopy);
+    } else {
+      dispatch(addElemToSel(elementInfo));
+      elCopy.selected = true;
+      updateMarkers(dispatch, elCopy);
     }
   };
 });
