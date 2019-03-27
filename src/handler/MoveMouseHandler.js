@@ -10,7 +10,7 @@ export default class MoveMouseHandler {
     this.selected = false;
   }
 
-  // if TimeToPixels HOC wraps the Channel then pos is in secs
+  // TimeToPixels HOC wraps the Channel: pos is in secs
   handleMouseEvent = (eventName, evInfo) => {
     switch (eventName) {
 
@@ -52,6 +52,10 @@ export default class MoveMouseHandler {
         this.handleSelectionTo(evInfo, true);
         break;
 
+      case "crtl-mouseDown":
+        this.handleMultiSelect(evInfo);
+        break;
+
       default:
         break;
     }
@@ -64,7 +68,7 @@ export default class MoveMouseHandler {
   }
 
   handleMoveFrom = (evInfo) => {
-    this.handlerFunctions.selectPartOrImage({
+    this.handlerFunctions.toggleElementSelection({
       channelId: parseInt(evInfo.channelId),
       partId: evInfo.partId,
       selected: true // select
@@ -116,6 +120,13 @@ export default class MoveMouseHandler {
         this.selected = true;
       }
     }
+  }
+
+  handleMultiSelect = (evInfo) => {
+    this.handlerFunctions.toggleElementMultiSelection({
+      channelId: parseInt(evInfo.channelId),
+      partId: evInfo.partId,
+    });
   }
 
   deselectRange = () => {

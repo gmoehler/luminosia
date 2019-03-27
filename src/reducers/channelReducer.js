@@ -297,3 +297,13 @@ export const getActiveChannelIds = (state, type) => {
     .filter((channel) => channel.active && (!type || channel.type === type))
     .map((channel) => channel.channelId);
 };
+
+export function getElementType (elementInfo) {
+  if (elementInfo.partId) {
+    return "part";
+  }
+  if (elementInfo.imageId) {
+    return "image";
+  }
+  return null;
+}

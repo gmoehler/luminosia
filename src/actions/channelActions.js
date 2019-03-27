@@ -1,9 +1,9 @@
 import { PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL, ADD_PART, DELETE_PART, ADD_CHANNEL, CLEAR_CHANNELS, UPLOAD_AUDIO_STARTED, UPLOAD_AUDIO_SUCCESS, UPLOAD_AUDIO_FAILURE, DELETE_CHANNEL, SET_CHANNEL_ACTIVE, UNSET_CHANNEL_ACTIVE } from "./types";
 
-import { setMarker, deleteMarker, deselect, selectPartOrImage } from "./viewActions";
+import { setMarker, deleteMarker, toggleElementSelection, remElemFromSel } from "./viewActions";
 
-import { getNextPartId, getLastChannel, getActiveChannelIds, getMaxDuration, getChannelData, getPart } from "../reducers/channelReducer";
-import { getSelectedPart, getSelectedImage, getSelectedImageChannelId, getPartToCopy } from "../reducers/viewReducer";
+import { getNextPartId, getLastChannel, getActiveChannelIds, getMaxDuration, getChannelData, getPart, getElementType } from "../reducers/channelReducer";
+import { getSelectedImageChannelId, getPartsToCopy, getSelectedElements } from "../reducers/viewReducer";
 import { getImageDuration } from "../reducers/imageListReducer";
 import { removeImage } from "./imageListActions";
 import { defaultSampleRate } from "../components/ImageListContainer";
@@ -217,21 +217,22 @@ export const insertNewPart = (partInfo) => {
       partId: nextPartId,
       selected: true,
     };
-    dispatch(selectPartOrImage(lastPart));
+    dispatch(toggleElementSelection(lastPart));
   };
 };
 
 export const pastePart = () => {
   return (dispatch, getState) => {
-    const partToCopyInfo = getPartToCopy(getState());
-    const originialPart = getPart(getState(), partToCopyInfo.channelId, partToCopyInfo.partId);
-    const selectedImageChannelId = getSelectedImageChannelId(getState());
+      getPartsToCopy(getState()).forEach((part) => {
+      const originialPart = getPart(getState(), part.channelId, part.partId);
+      const selectedImageChannelId = getSelectedImageChannelId(getState());
 
-    const partToPaste = {
-      ...originialPart,
-      channelId: selectedImageChannelId,
-    };
-    dispatch(insertNewPart(partToPaste));
+      const partToPaste = {
+        ...originialPart,
+        channelId: selectedImageChannelId,
+      };
+      dispatch(insertNewPart(partToPaste));
+    });
   };
 };
 
@@ -242,21 +243,23 @@ export const addPart = (partInfo) => ({
 
 export const deleteSelectedPartAndMarkers = () => {
   return (dispatch, getState) => {
-    const selPart = getSelectedPart(getState());
-    const selImage = getSelectedImage(getState());
-    if (selPart) {
-      dispatch(deletePart(selPart));
-      dispatch(deleteMarker({
-        markerId: `${selPart.partId}-l`
-      }));
-      dispatch(deleteMarker({
-        markerId: `${selPart.partId}-r`
-      }));
-      dispatch(deselect());
-    }
-    if (selImage) {
-      dispatch(removeImage(selImage));
-    }
+    getSelectedElements(getState()).forEach((elemInfo) => {
+      const type = getElementType(elemInfo);
+
+      if (type === "part") {
+        dispatch(deletePart(elemInfo));
+        dispatch(deleteMarker({
+          markerId: `${elemInfo.partId}-l`
+        }));
+        dispatch(deleteMarker({
+          markerId: `${elemInfo.partId}-r`
+        }));
+        dispatch(remElemFromSel(elemInfo));
+      }
+      if (type === "image") {
+        dispatch(removeImage(elemInfo));
+      }
+    });
   };
 };
 
