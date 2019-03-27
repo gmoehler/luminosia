@@ -77,10 +77,11 @@ export default class ImageList extends PureComponent {
 		if (eventName === "mouseUp") {
 			let el = e.target;
 			const imageId = el.getAttribute("data-imageid");
-			this.props.selectImage({
-				imageId,
-				selected: true
-			});
+			if (e.ctrlKey) {
+				this.props.selectMultiImage({ imageId });
+			} else {
+				this.props.selectImage({ imageId });
+			}
 		} else if (eventName === "dragEnter") {
 			this.dragCounter++;
 			this.setState({
@@ -119,22 +120,23 @@ export default class ImageList extends PureComponent {
 
 		const { images, resolution } = this.props;
 
-		const imagesComponent = images
-			.map((img) => (<ImageInList id={ img.imageId }
-    key={ img.imageId }
-    src={ img.src }
-    data-imageid={ img.imageId }
-    borderColor={ this.props.selectedImage && img.imageId === this.props.selectedImage.imageId ?
-                                                                                                               "red" : "transparent" }
-    draggable
-    onDragStart={ (e) => {
-                                  	e.dataTransfer.setData("src", img.src);
-                                  	e.dataTransfer.setData("imageid", img.imageId);
-                                  	// transfer duration in pixels since this is going to be consumed 
-                                  	// in a Channel component which calculates in pixels
-                                  	e.dataTransfer.setData("duration", secondsToPixels(img.duration, resolution));
-                                  } } />)
-		);
+		const imagesComponent = images.map((img) => (
+			<ImageInList id={ img.imageId }
+    		key={ img.imageId }
+    		src={ img.src }
+    		data-imageid={ img.imageId }
+    		borderColor={ this.props.selectedImageIds.includes(img.imageId) ? 
+					"red" : "transparent" }              
+    		draggable
+    		onDragStart={ (e) => {
+					e.dataTransfer.setData("src", img.src);
+					e.dataTransfer.setData("imageid", img.imageId);
+					// transfer duration in pixels since this is going to be consumed 
+					// in a Channel component which calculates in pixels
+					e.dataTransfer.setData("duration", secondsToPixels(img.duration, resolution));
+				} } 
+			/>
+		));
 
 		const dropHereLabel = images.length > 0 ? null :
 			<DropHereLabel center> Drop your images here </DropHereLabel>;
@@ -161,5 +163,6 @@ ImageList.propTypes = {
 	resolution: PropTypes.number,
 	loadImagesfromStorage: PropTypes.func.isRequired,
 	selectImage: PropTypes.func.isRequired,
-	selectedImage: PropTypes.object,
+	selectMultiImage: PropTypes.func.isRequired,
+	selectedImageIds: PropTypes.arrayOf(PropTypes.string),
 };

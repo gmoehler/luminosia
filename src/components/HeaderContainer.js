@@ -8,7 +8,7 @@ import { downloadConfig, uploadConfigFile, uploadConfig, exportImageChannel } fr
 import { setResolution, copyPart } from "../actions/viewActions";
 import Header from "./Header";
 import { getChannelIds, allChannelsStopped } from "../reducers/channelReducer";
-import { getSelectedImage, getSelectedPart, getPartToCopy } from "../reducers/viewReducer";
+import { getPartsToCopy, getNumSelectedElements } from "../reducers/viewReducer";
 
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
 const audioContext = window.AudioContext && new window.AudioContext();
@@ -48,7 +48,7 @@ class HeaderContainer extends Component {
 
     const { channelIds, downloadConfigAction, uploadConfigFileAction, uploadAudioFileAction, deleteSelectedPartAndMarkersAction, 
       createImageChannelAction, exportImageChannelAction, deleteChannelAction, playChannelAndImageAction, stopChannelAction, 
-      selectedImageOrPart, enablePlay, enableStop, setChannelActiveAction, unsetChannelActiveAction, copyPartAction, pastePartAction, hasPartToCopy } = this.props;
+      numSelectedElems, enablePlay, enableStop, setChannelActiveAction, unsetChannelActiveAction, copyPartAction, pastePartAction, hasPartToCopy } = this.props;
 
     return (
       <Header init={ this.doInit }
@@ -64,7 +64,7 @@ class HeaderContainer extends Component {
           deleteChannel={ deleteChannelAction }
           playChannelAndImage={ playChannelAndImageAction }
           stopChannel={ stopChannelAction }
-          selectedImageOrPart={ selectedImageOrPart }
+          numSelectedElems={ numSelectedElems }
           enablePlay={ enablePlay }
           enableStop={ enableStop }
           setChannelActive={ setChannelActiveAction }
@@ -79,8 +79,8 @@ class HeaderContainer extends Component {
 
 const mapStateToProps = state => ({
   channelIds: getChannelIds(state),
-  selectedImageOrPart: getSelectedImage(state) || getSelectedPart(state),
-  hasPartToCopy: Boolean(getPartToCopy(state)),
+  numSelectedElems: getNumSelectedElements(state),
+  hasPartToCopy: Boolean(getPartsToCopy(state)),
   enablePlay: Boolean(getChannelIds(state).length > 0 && allChannelsStopped(state)),
   enableStop: Boolean(getChannelIds(state).length && !allChannelsStopped(state)),
 });
@@ -114,7 +114,7 @@ HeaderContainer.propTypes = {
   deleteChannelAction: PropTypes.func.isRequired,
   playChannelAndImageAction: PropTypes.func.isRequired,
   stopChannelAction: PropTypes.func.isRequired,
-  selectedImageOrPart: PropTypes.object,
+  numSelectedElems: PropTypes.number,
   enablePlay: PropTypes.bool.isRequired,
   enableStop: PropTypes.bool.isRequired,
   setChannelActiveAction: PropTypes.func.isRequired,

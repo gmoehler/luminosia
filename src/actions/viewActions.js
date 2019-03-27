@@ -1,8 +1,12 @@
 import { SELECT_RANGE, DESELECT_RANGE, SET_RESOLUTION, 
-  UPDATE_MARKER, SET_MARKER, DELETE_MARKER, SELECT_PART_OR_IMAGE, 
-  DESELECT_PART_OR_IMAGE, CLEAR_VIEW, SELECT_IMAGE_CHANNEL, COPY_PART } from "./types";
+  UPDATE_MARKER, SET_MARKER, DELETE_MARKER, 
+  CLEAR_VIEW, SELECT_IMAGE_CHANNEL, COPY_PART, 
+  ADD_ELEMENT_TO_SEL, REMOVE_ELEMENT_FROM_SEL, CLEAR_SEL } from "./types";
 
-import { getSelectedPart, getSelectedImage } from "../reducers/viewReducer";
+import { isElementSelected, getSelectedElements, getNumSelectedElements, getSelectionType } from "../reducers/viewReducer";
+
+import { cloneDeep } from "lodash";
+import { getElementType } from "../reducers/channelReducer";
 
 export const clearView = () => ({
   type: CLEAR_VIEW
@@ -38,13 +42,18 @@ export const updateMarker = (markerInfo) => ({
   payload: markerInfo
 });
 
-const setSelected = (partOrImageInfo) => ({
-  type: SELECT_PART_OR_IMAGE,
-  payload: partOrImageInfo
+export const addElemToSel = (elementInfo) => ({
+  type: ADD_ELEMENT_TO_SEL,
+  payload: elementInfo
 });
 
-export const deselect = () => ({
-  type: DESELECT_PART_OR_IMAGE,
+export const remElemFromSel = (elementInfo) => ({
+  type: REMOVE_ELEMENT_FROM_SEL,
+  payload: elementInfo
+});
+
+export const clearSel = () => ({
+  type: CLEAR_SEL
 });
 
 export const selectImageChannel = (channelInfo) => ({
@@ -58,7 +67,7 @@ export const copyPart = () => ({
 
 const updateMarkers = (dispatch, part) => {
   const type = part.selected ? "selected" : "normal";
-  const markerIdPrefix = `${part.channelId}-${part.partId}`;
+  const markerIdPrefix = `${part.partId}`;
   dispatch(updateMarker({
     markerId: markerIdPrefix + "-l",
     channelId: part.channelId,
@@ -75,43 +84,68 @@ const updateMarkers = (dispatch, part) => {
   }));
 };
 
-// partinfo is channelld, partId and selected
-// imageinfo is imageId
-export const selectPartOrImage = ((partOrImageInfo) => {
+export const toggleElementSelection = ((elementInfo) => {
   return (dispatch, getState) => {
-    const curSelPart = getSelectedPart(getState());
-    const curSelImage = getSelectedImage(getState());
 
-    if (curSelPart) {
-      // de-select markers of currently selected part
-      const curUnselPart = {
-        ...curSelPart
-      };
-      curUnselPart.selected = false;
-      updateMarkers(dispatch, curUnselPart);
+    dispatch(selectImageChannel(elementInfo));
 
-      // clicked on selected part to deselect
-      if (curSelPart.channelId === partOrImageInfo.channelId &&
-        curSelPart.partId === partOrImageInfo.partId) {
-        dispatch(deselect());
-        return;
+    const elemSelected = isElementSelected(getState(), elementInfo);
+    const numElemSelected = getNumSelectedElements(getState());
+
+    dispatch(clearSelectionWithMarkers());
+
+    if (!elemSelected || numElemSelected!==1) {
+      dispatch(addElemToSel(elementInfo));
+      // marker updates for parts only
+      if (getElementType(elementInfo) === "part") {
+        const elCopy = {
+          ...elementInfo,
+          selected: true
+        };
+        updateMarkers(dispatch, elCopy);
       }
     }
+  };
+});
 
-    if (curSelImage) {
-      // clicked on selected image to deselect
-      if (curSelImage.imageId === partOrImageInfo.imageId) {
-        dispatch(deselect());
-        return;
-      }
+// remove markers (parts only) and clear selection
+const clearSelectionWithMarkers = () => {
+  return (dispatch, getState) => {
+    // remove markers for parts only
+    if (getSelectionType(getState()) === "part") {
+      getSelectedElements(getState()).forEach((el) => {
+        el.selected = false;
+        updateMarkers(dispatch, el);
+      });
+    }
+    dispatch(clearSel()); 
+  };
+};
+
+export const toggleElementMultiSelection = ((elementInfo) => {
+  return (dispatch, getState) => {
+
+    dispatch(selectImageChannel(elementInfo));
+    const elCopy = cloneDeep(elementInfo);
+
+    // only keeps elements of the same type selected
+    // remove selection if element type difers
+    if (getElementType(elementInfo) !== getSelectionType(getState())){
+      dispatch(clearSelectionWithMarkers());
     }
 
-    // clicked on unselected part
-    dispatch(setSelected(partOrImageInfo));
-    dispatch(selectImageChannel(partOrImageInfo));
-    if (partOrImageInfo.partId) {
-      // for parts only
-      updateMarkers(dispatch, partOrImageInfo);
+    if (isElementSelected(getState(), elementInfo)) {
+      dispatch(remElemFromSel(elementInfo));
+      if (getElementType(elementInfo) === "part") {
+        elCopy.selected = false;
+        updateMarkers(dispatch, elCopy);
+      }
+    } else {
+      dispatch(addElemToSel(elementInfo));
+      if (getElementType(elementInfo) === "part") {
+        elCopy.selected = true;
+        updateMarkers(dispatch, elCopy);
+      }
     }
   };
 });

@@ -1,7 +1,8 @@
 import { cloneDeep } from "lodash";
 import { CLEAR_VIEW, SELECT_RANGE, DESELECT_RANGE, SET_RESOLUTION, 
-  SET_MARKER, UPDATE_MARKER, DELETE_MARKER, SELECT_PART_OR_IMAGE, 
-  DESELECT_PART_OR_IMAGE, SELECT_IMAGE_CHANNEL, COPY_PART } from "../actions/types";
+  SET_MARKER, UPDATE_MARKER, DELETE_MARKER, 
+  SELECT_IMAGE_CHANNEL, COPY_PART, ADD_ELEMENT_TO_SEL, REMOVE_ELEMENT_FROM_SEL, CLEAR_SEL } from "../actions/types";
+import { getElementType } from "./channelReducer";
 
 // export for tests
 export const initialState = {
@@ -11,10 +12,9 @@ export const initialState = {
   },
   byMarkerId: {},
   resolution: 80,
-  selectedPartOrImage: null,
-  currentById: {},
+  selectedElementsById: {},
   selectedImageChannelId: null,
-  partToCopy: null,
+  partsToCopy: null,
 };
 
 export default (state = initialState, action) => {
@@ -53,12 +53,8 @@ export default (state = initialState, action) => {
         byMarkerId: {
           ...state.byMarkerId,
           [action.payload.markerId]: {
-            markerId: action.payload.markerId,
-            channelId: action.payload.channelId,
-            partId: action.payload.partId,
-            pos: action.payload.pos,
+            ...action.payload,
             minPos: action.payload.minPos || 0,
-            type: action.payload.type,
           }
         }
       };
@@ -73,21 +69,20 @@ export default (state = initialState, action) => {
       };
 
     case UPDATE_MARKER:
-      // update marker type and pos by incr (no change in minPos)
-      const currentPos = state.byMarkerId[action.payload.markerId] ? state.byMarkerId[action.payload.markerId].pos : 0;
-      const currentMinPos = state.byMarkerId[action.payload.markerId] ? state.byMarkerId[action.payload.markerId].minPos : 0;
-      const currentType = state.byMarkerId[action.payload.markerId] ? state.byMarkerId[action.payload.markerId].type : "normal";
+      // update marker type and pos by incr
+      // if marker does not yet exist: create one
+      const markerExists = Boolean(state.byMarkerId[action.payload.markerId]);
+      const prevMarker = markerExists ? state.byMarkerId[action.payload.markerId] : 
+        { pos: 0, type: "normal", minPos: 0, ...action.payload }; // create one with default vals
+      delete prevMarker.incr;
       return {
         ...state,
         byMarkerId: {
           ...state.byMarkerId,
           [action.payload.markerId]: {
-            markerId: action.payload.markerId,
-            channelId: action.payload.channelId,
-            partId: action.payload.partId,
-            pos: Math.max(currentPos + action.payload.incr, currentMinPos),
-            minPos: currentMinPos,
-            type: action.payload.type ? action.payload.type : currentType,
+            ...prevMarker,
+            pos: Math.max(prevMarker.pos + action.payload.incr, prevMarker.minPos),
+            type: action.payload.type ? action.payload.type : prevMarker.type,
           }
         }
       };
@@ -98,26 +93,44 @@ export default (state = initialState, action) => {
         resolution: action.payload
       };
 
-    case SELECT_PART_OR_IMAGE:
-      const selPartOrImage = action.payload.selected ? action.payload : null;
+    case ADD_ELEMENT_TO_SEL:
+      const selElement = action.payload;
+      const id0 = action.payload.partId ? action.payload.partId : action.payload.imageId;
+      if (id0) { // should always be true
+        return {
+          ...state,
+          selectedElementsById: {
+            ...state.selectedElementsById,
+            [id0]: selElement
+          }
+        };
+      } else {
+        return state;
+      }
+
+    case REMOVE_ELEMENT_FROM_SEL:
+      const id1 = action.payload.partId ? action.payload.partId : action.payload.imageId;
+      const newSelectedElementsById = cloneDeep(state.selectedElementsById);
+      delete newSelectedElementsById[id1];
       return {
         ...state,
-        selectedPartOrImage: selPartOrImage
+        selectedElementsById: newSelectedElementsById
       };
 
-    case DESELECT_PART_OR_IMAGE:
+    case CLEAR_SEL:
       return {
         ...state,
-        selectedPartOrImage: null
+        selectedElementsById: {}
       };
 
     case COPY_PART:
-      const partToCopy = state.selectedPartOrImage && state.selectedPartOrImage.partId ? 
-        Object.assign({},state.selectedPartOrImage) : null;
-      delete partToCopy.selected; // dont need that
+      if (_getSelectionType(state) !== "part") {
+        return state;
+      }
+      const partsToCopy = _getSelectedElements(state).slice(0);;
       return {
         ...state,
-        partToCopy
+        partsToCopy
       };
 
     default:
@@ -148,8 +161,8 @@ export const getSelectedPart = (state) => {
   return null;
 };
 
-export const getPartToCopy = (state) => {
-  return state.view.partToCopy;
+export const getPartsToCopy = (state) => {
+  return state.view.partsToCopy;
 };
 
 export const getSelectedImage = (state) => {
@@ -160,10 +173,39 @@ export const getSelectedImage = (state) => {
   return null;
 };
 
-export const getCurrent = (state) => {
-  return state.view.currentById;
-};
-
 export const getSelectedImageChannelId = (state) => {
   return state.view.selectedImageChannelId;
 };
+
+export const isElementSelected = (state, elementInfo) => {
+  return Object.keys(state.view.selectedElementsById).includes(elementInfo.partId) ||
+    Object.keys(state.view.selectedElementsById).includes(elementInfo.imageId);
+};
+
+const _getSelectedElements = (viewState) => 
+  Object.values(viewState.selectedElementsById);
+export const getSelectedElements = (state) =>
+   _getSelectedElements(state.view);
+
+export const getSelectedImages = (state) => 
+  getSelectedElements(state).filter((elem) => elem.imageId != null);
+
+export const getSelectedImageIds = (state) => 
+  getSelectedImages(state).map((img) => img.imageId);
+
+const _getNumSelectedElements = (viewState) => 
+  viewState.selectedElementsById ? 
+    Object.values(viewState.selectedElementsById).length : 0;
+
+export const getNumSelectedElements = (state) => 
+  _getNumSelectedElements(state.view);
+
+
+const _getSelectionType = (viewState) => {
+  if (_getNumSelectedElements(viewState) === 0)
+    return null;
+  const firstSelElem = _getSelectedElements(viewState)[0];
+  return getElementType(firstSelElem);
+};
+export const getSelectionType = (state) => 
+ _getSelectionType(state.view);

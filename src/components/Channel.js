@@ -277,7 +277,7 @@ Channel.defaultProps = {
   length: 0,
   bits: 0,
   // height in CSS pixels of each canvas element a waveform is on.
-  waveHeight: 90,
+  waveHeight: 92,
   // all x pixel values are from 0 regardless of offset
   // width in CSS pixels of the progress on the channel  (not drawn on null)
   progress: null,

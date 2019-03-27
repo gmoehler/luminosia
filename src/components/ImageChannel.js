@@ -140,7 +140,14 @@ class Channel extends Component {
       const duration = e.dataTransfer && Number(e.dataTransfer.getData("duration"));
       const key = e.key;
       const shiftKey = e.shiftKey;
-      const adaptedEventName = shiftKey ? "shift-" + eventName : eventName;
+      const ctrlKey = e.ctrlKey;
+      
+      let adaptedEventName = eventName;
+      if (shiftKey) {
+        adaptedEventName = "shift-" + eventName;
+      } else if (ctrlKey) {
+        adaptedEventName = "crtl-" + eventName;
+      }
       const evInfo = {
         ...pos, // x pos, channelId, partId
         timestamp: e.timeStamp,
@@ -309,7 +316,7 @@ Channel.propTypes = {
   channelId: PropTypes.number.isRequired,
 	parts: PropTypes.arrayOf(
 		PropTypes.shape({
-      	partId: PropTypes.number.isRequired,
+      	partId: PropTypes.string.isRequired,
     	  offset: PropTypes.number, // might be zero
         duration:PropTypes.number.isRequired,
     })),
