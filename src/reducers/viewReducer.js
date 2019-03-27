@@ -53,12 +53,8 @@ export default (state = initialState, action) => {
         byMarkerId: {
           ...state.byMarkerId,
           [action.payload.markerId]: {
-            markerId: action.payload.markerId,
-            channelId: action.payload.channelId,
-            partId: action.payload.partId,
-            pos: action.payload.pos,
+            ...action.payload,
             minPos: action.payload.minPos || 0,
-            type: action.payload.type,
           }
         }
       };
@@ -73,21 +69,20 @@ export default (state = initialState, action) => {
       };
 
     case UPDATE_MARKER:
-      // update marker type and pos by incr (no change in minPos)
-      const currentPos = state.byMarkerId[action.payload.markerId] ? state.byMarkerId[action.payload.markerId].pos : 0;
-      const currentMinPos = state.byMarkerId[action.payload.markerId] ? state.byMarkerId[action.payload.markerId].minPos : 0;
-      const currentType = state.byMarkerId[action.payload.markerId] ? state.byMarkerId[action.payload.markerId].type : "normal";
+      // update marker type and pos by incr
+      // if marker does not yet exist: create one
+      const markerExists = Boolean(state.byMarkerId[action.payload.markerId]);
+      const prevMarker = markerExists ? state.byMarkerId[action.payload.markerId] : 
+        { pos: 0, type: "normal", minPos: 0, ...action.payload }; // create one with default vals
+      delete prevMarker.incr;
       return {
         ...state,
         byMarkerId: {
           ...state.byMarkerId,
           [action.payload.markerId]: {
-            markerId: action.payload.markerId,
-            channelId: action.payload.channelId,
-            partId: action.payload.partId,
-            pos: Math.max(currentPos + action.payload.incr, currentMinPos),
-            minPos: currentMinPos,
-            type: action.payload.type ? action.payload.type : currentType,
+            ...prevMarker,
+            pos: Math.max(prevMarker.pos + action.payload.incr, prevMarker.minPos),
+            type: action.payload.type ? action.payload.type : prevMarker.type,
           }
         }
       };
@@ -114,7 +109,7 @@ export default (state = initialState, action) => {
       }
 
     case REMOVE_ELEMENT_FROM_SEL:
-      const id1 = action.payload.partId ? action.payload.partId : action.payload.channelId;
+      const id1 = action.payload.partId ? action.payload.partId : action.payload.imageId;
       const newSelectedElementsById = cloneDeep(state.selectedElementsById);
       delete newSelectedElementsById[id1];
       return {

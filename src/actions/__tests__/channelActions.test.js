@@ -211,15 +211,18 @@ describe("actions", () => {
         }
       },
       {
-        type: types.SELECT_PART_OR_IMAGE,
+        type: types.SELECT_IMAGE_CHANNEL,
         payload: {
           channelId: 2,
           partId: "2:2",
           selected: true,
-        },
+        }
       },
       {
-        type: types.SELECT_IMAGE_CHANNEL,
+        type: types.CLEAR_SEL
+      },
+      {
+        type: types.ADD_ELEMENT_TO_SEL,
         payload: {
           channelId: 2,
           partId: "2:2",

@@ -2,7 +2,7 @@ import reducer from "../viewReducer";
 import { initialState } from "../viewReducer";
 import * as types from "../../actions/types";
 import { part, part2 } from "../../__fixtures__/channel.fixtures";
-import { marker1 } from "../../__fixtures__/view.fixtures";
+import { marker1, marker2 } from "../../__fixtures__/view.fixtures";
 
 describe("view reducer", () => {
   it("should return the initial state", () => 
@@ -81,7 +81,7 @@ it("should handle CLEAR_SEL for parts", () => {
 
     const expectedState2 = {
       ...initialState,
-      byMarkerId: {
+      selectedElementsById: {
         [part.partId]: part,
         [part2.partId]: part2
       }
@@ -102,7 +102,7 @@ it("should handle CLEAR_SEL for parts", () => {
       payload: part2
     });
 
-    const reducer3 = reducer(reducer1,  {
+    const reducer3 = reducer(reducer2,  {
       type: types.CLEAR_SEL
     });
 
@@ -118,13 +118,178 @@ it("should handle CLEAR_SEL for parts", () => {
         [marker1.markerId]: marker1,
       }
     };
+    const expectedState2 = {
+      ...initialState,
+      byMarkerId: {
+        [marker1.markerId]: marker1,
+        [marker2.markerId]: marker2,
+      }
+    };
+
 
     const reducer1 = reducer(reducer(undefined, {}), {
       type: types.SET_MARKER,
       payload: marker1
     });
+    const reducer2 = reducer(reducer1, {
+      type: types.SET_MARKER,
+      payload: marker2
+    });
+
+
+    expect(reducer1).toEqual(expectedState1);
+    expect(reducer2).toEqual(expectedState2);
+  });
+
+  it("should handle SET_MARKER with undefined minPos", () => {
+
+    const marker1b = {
+      ...marker1,
+      minPos: null,
+    };
+
+    const expectedState1 = {
+      ...initialState,
+      byMarkerId: {
+        [marker1.markerId]: {
+          ...marker1,
+          minPos: 0
+        }
+      }
+    };
+
+    const reducer1 = reducer(reducer(undefined, {}), {
+      type: types.SET_MARKER,
+      payload: marker1b
+    });
 
     expect(reducer1).toEqual(expectedState1);
   });
+
+  it("should handle DELETE_MARKER", () => {
+
+    const expectedState2 = {
+      ...initialState,
+      byMarkerId: {
+        [marker1.markerId]: marker1,
+        [marker2.markerId]: marker2,
+      }
+    };
+
+    const expectedState3 = {
+      ...initialState,
+      byMarkerId: {
+        [marker1.markerId]: marker1,
+      }
+    };
+
+
+    const reducer1 = reducer(reducer(undefined, {}), {
+      type: types.SET_MARKER,
+      payload: marker1
+    });
+    const reducer2 = reducer(reducer1, {
+      type: types.SET_MARKER,
+      payload: marker2
+    });
+    const reducer3 = reducer(reducer2, {
+      type: types.DELETE_MARKER,
+      payload: marker2
+    });
+
+    expect(reducer2).toEqual(expectedState2);
+    expect(reducer3).toEqual(expectedState3);
+  });
+
+  it("should handle UPDATE_MARKER", () => {
+
+    const expectedState2 = {
+      ...initialState,
+      byMarkerId: {
+        [marker1.markerId]: marker1,
+        [marker2.markerId]: marker2,
+      }
+    };
+
+    const expectedState3 = {
+      ...initialState,
+      byMarkerId: {
+        [marker1.markerId]: {
+          ...marker1,
+          pos: 31.5,
+          type: "newType"
+        },
+        [marker2.markerId]: marker2,
+      }
+    };
+
+    const reducer1 = reducer(reducer(undefined, {}), {
+      type: types.SET_MARKER,
+      payload: marker1
+    });
+    const reducer2 = reducer(reducer1, {
+      type: types.SET_MARKER,
+      payload: marker2
+    });
+    const reducer3 = reducer(reducer2, {
+      type: types.UPDATE_MARKER,
+      payload: {
+        markerId: marker1.markerId,
+        incr: 10,
+        type: "newType"
+      }
+    });
+
+    expect(reducer2).toEqual(expectedState2);
+    expect(reducer3).toEqual(expectedState3);
+  });
+
+  it("should handle UPDATE_MARKER with no prev marker", () => {
+
+    const marker3 = {
+      ...marker1,
+    };
+
+    delete marker3.pos;
+    delete marker3.minPos;
+    delete marker3.type;
+
+    const expectedState1 = {
+      ...initialState,
+      byMarkerId: {
+        [marker2.markerId]: marker2,
+      }
+    };
+
+    const expectedState3 = {
+      ...initialState,
+      byMarkerId: {
+        [marker1.markerId]: {
+          ...marker1,
+          pos: 10,
+          type: "normal",
+          minPos: 0,
+        },
+        [marker2.markerId]: marker2,
+      }
+    };
+
+    const reducer1 = reducer(reducer(undefined, {}), {
+      type: types.SET_MARKER,
+      payload: marker2
+    });
+    const reducer3 = reducer(reducer1, {
+      type: types.UPDATE_MARKER,
+      payload: {
+        ...marker3,
+        incr: 10,
+      }
+    });
+
+    expect(reducer1).toEqual(expectedState1);
+    expect(reducer3).toEqual(expectedState3);
+  });
+
+
 
 });
