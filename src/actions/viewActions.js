@@ -1,9 +1,6 @@
-import { SELECT_RANGE, DESELECT_RANGE, SET_RESOLUTION, 
-  UPDATE_MARKER, SET_MARKER, DELETE_MARKER, 
-  CLEAR_VIEW, SELECT_IMAGE_CHANNEL, COPY_PART, 
-  ADD_ELEMENT_TO_SEL, REMOVE_ELEMENT_FROM_SEL, CLEAR_SEL } from "./types";
+import { SELECT_RANGE, DESELECT_RANGE, SET_RESOLUTION, UPDATE_MARKER, SET_MARKER, DELETE_MARKER, CLEAR_VIEW, SELECT_IMAGE_CHANNEL, COPY_PART, ADD_ELEMENT_TO_SEL, REMOVE_ELEMENT_FROM_SEL, CLEAR_SEL } from "./types";
 
-import { isElementSelected, getSelectedElements, getNumSelectedElements, getSelectionType } from "../reducers/viewReducer";
+import { isElementSelected, getSelectedElements, getNumSelectedElements, getSelectionType, getSelectedParts } from "../reducers/viewReducer";
 
 import { cloneDeep } from "lodash";
 import { getElementType } from "../reducers/channelReducer";
@@ -42,7 +39,7 @@ export const updateMarker = (markerInfo) => ({
   payload: markerInfo
 });
 
-export const addElemToSel = (elementInfo) => ({
+const addElemToSel = (elementInfo) => ({
   type: ADD_ELEMENT_TO_SEL,
   payload: elementInfo
 });
@@ -68,20 +65,34 @@ export const copyPart = () => ({
 const updateMarkers = (dispatch, part) => {
   const type = part.selected ? "selected" : "normal";
   const markerIdPrefix = `${part.partId}`;
+  const incr = part.incr || 0;
   dispatch(updateMarker({
     markerId: markerIdPrefix + "-l",
     channelId: part.channelId,
     partId: part.partId,
-    incr: 0,
+    incr,
     type
   }));
   dispatch(updateMarker({
     markerId: markerIdPrefix + "-r",
     channelId: part.channelId,
     partId: part.partId,
-    incr: 0,
+    incr,
     type
   }));
+};
+
+export const updateSelectedMarkers = (moveInfo) => {
+  return (dispatch, getState) => {
+    getSelectedParts(getState()).forEach((part) => {
+      updateMarkers(dispatch, {
+        ...part,
+        incr: moveInfo.incr,
+        selected: true,
+      }
+      );
+    });
+  };
 };
 
 export const toggleElementSelection = ((elementInfo) => {
@@ -94,7 +105,7 @@ export const toggleElementSelection = ((elementInfo) => {
 
     dispatch(clearSelectionWithMarkers());
 
-    if (!elemSelected || numElemSelected!==1) {
+    if (!elemSelected || numElemSelected !== 1) {
       dispatch(addElemToSel(elementInfo));
       // marker updates for parts only
       if (getElementType(elementInfo) === "part") {
@@ -118,7 +129,7 @@ const clearSelectionWithMarkers = () => {
         updateMarkers(dispatch, el);
       });
     }
-    dispatch(clearSel()); 
+    dispatch(clearSel());
   };
 };
 
@@ -130,7 +141,7 @@ export const toggleElementMultiSelection = ((elementInfo) => {
 
     // only keeps elements of the same type selected
     // remove selection if element type difers
-    if (getElementType(elementInfo) !== getSelectionType(getState())){
+    if (getElementType(elementInfo) !== getSelectionType(getState())) {
       dispatch(clearSelectionWithMarkers());
     }
 
@@ -150,3 +161,15 @@ export const toggleElementMultiSelection = ((elementInfo) => {
   };
 });
 
+export const addPartToMultiSelection = ((elementInfo) => {
+  return (dispatch, getState) => {
+    if (!isElementSelected(getState(), elementInfo)) {
+      const elCopy = cloneDeep(elementInfo);
+      dispatch(addElemToSel(elementInfo));
+      if (getElementType(elementInfo) === "part") {
+        elCopy.selected = true;
+        updateMarkers(dispatch, elCopy);
+      }
+    }
+  };
+});

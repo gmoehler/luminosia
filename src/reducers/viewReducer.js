@@ -153,14 +153,6 @@ export const getMarkers = (state) => {
   return state.view.byMarkerId ? Object.values(state.view.byMarkerId) : [];
 };
 
-export const getSelectedPart = (state) => {
-  if (state.view.selectedPartOrImage &&
-    state.view.selectedPartOrImage.partId) {
-    return state.view.selectedPartOrImage;
-  }
-  return null;
-};
-
 export const getPartsToCopy = (state) => {
   return state.view.partsToCopy;
 };
@@ -189,9 +181,10 @@ export const getSelectedElements = (state) =>
 
 export const getSelectedImages = (state) => 
   getSelectedElements(state).filter((elem) => elem.imageId != null);
-
 export const getSelectedImageIds = (state) => 
   getSelectedImages(state).map((img) => img.imageId);
+export const getSelectedParts = (state) => 
+  getSelectedElements(state).filter((elem) => elem.partId != null);
 
 const _getNumSelectedElements = (viewState) => 
   viewState.selectedElementsById ? 
@@ -199,7 +192,6 @@ const _getNumSelectedElements = (viewState) =>
 
 export const getNumSelectedElements = (state) => 
   _getNumSelectedElements(state.view);
-
 
 const _getSelectionType = (viewState) => {
   if (_getNumSelectedElements(viewState) === 0)
