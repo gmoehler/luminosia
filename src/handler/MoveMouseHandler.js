@@ -29,8 +29,9 @@ export default class MoveMouseHandler {
         break;
 
       case "mouseUp":
-        this.handleToggleSelection(evInfo);
-        this.handleMoveTo(evInfo, true);
+        if (!this.handleMoveTo(evInfo, true)) {
+          this.handleToggleSelection(evInfo);
+        }
         break;
 
       case "mouseLeave":
@@ -83,6 +84,7 @@ export default class MoveMouseHandler {
   }
 
   handleMoveTo = (evInfo, finalizeSelection) => {
+    const hasMoved = false;
     if (this.moveFromX && this.partId && this.channelId) {
       // only when mouse down has occured
       // console.log(`move from ${this.moveFromX} to ${x}`);
@@ -95,6 +97,7 @@ export default class MoveMouseHandler {
         //const channelId = parseInt(this.channelId);
         //this.handlerFunctions.updateMarker(`${this.partId}-l`, channelId, this.partId, incrX); // type = null:
         //this.handlerFunctions.updateMarker(`${this.partId}-r`, channelId, this.partId, incrX); // dont change type
+        hasMoved = true;
       }
 
       if (finalizeSelection) {
@@ -104,6 +107,8 @@ export default class MoveMouseHandler {
         this.partId = null;
       }
     }
+    
+    return hasMoved;
   }
 
   handleSelectionFrom = (evInfo) => {
