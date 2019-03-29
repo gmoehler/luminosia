@@ -20,8 +20,6 @@ export function withEventHandler(WrappedComponent) {
         selectRange: this.props.selectRange,
         deselectRange: this.props.deselectRange,
         move: this.props.move,
-        updateMarker: this.props.updateMarker,
-        moveSelectedMarkers: this.props.moveSelectedMarkers,
         setMarker: this.props.setMarker,
         insertNewPart: this.props.insertNewPart,
         toggleElementSelection: this.props.toggleElementSelection,
@@ -32,8 +30,9 @@ export function withEventHandler(WrappedComponent) {
 
     render() {
 
-      const { selectRange, deselectRange, move, updateMarker, setMarker, insertNewPart, toggleElementSelection, 
-        deleteSelectedPartAndMarkers, toggleElementMultiSelection, ...passthruProps } = this.props;
+      const { selectRange, deselectRange, move, updateMarker, setMarker, 
+        insertNewPart, toggleElementSelection, deleteSelectedPartAndMarkers, 
+        toggleElementMultiSelection, ...passthruProps } = this.props;
 
       return (<WrappedComponent { ...passthruProps }
           handleMouseEvent={ (eventName, evInfo) => this.mousehandler.handleMouseEvent(eventName, evInfo, this.props.resolution) } />);
@@ -44,8 +43,6 @@ export function withEventHandler(WrappedComponent) {
     selectRange: PropTypes.func.isRequired,
     deselectRange: PropTypes.func.isRequired,
     move: PropTypes.func.isRequired,
-    updateMarker: PropTypes.func.isRequired,
-    moveSelectedMarkers: PropTypes.func.isRequired,
     setMarker: PropTypes.func.isRequired,
     insertNewPart: PropTypes.func.isRequired,
     toggleElementSelection: PropTypes.func.isRequired,

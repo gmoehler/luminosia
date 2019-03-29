@@ -261,19 +261,6 @@ it("should handle CLEAR_SEL for parts", () => {
       }
     };
 
-    const expectedState3 = {
-      ...initialState,
-      byMarkerId: {
-        [marker1.markerId]: {
-          ...marker1,
-          pos: 10,
-          type: "normal",
-          minPos: 0,
-        },
-        [marker2.markerId]: marker2,
-      }
-    };
-
     const reducer1 = reducer(reducer(undefined, {}), {
       type: types.SET_MARKER,
       payload: marker2
@@ -287,7 +274,8 @@ it("should handle CLEAR_SEL for parts", () => {
     });
 
     expect(reducer1).toEqual(expectedState1);
-    expect(reducer3).toEqual(expectedState3);
+    // no changes
+    expect(reducer3).toEqual(expectedState1);
   });
 
 

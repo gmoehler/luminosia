@@ -1,9 +1,9 @@
 import { PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL, ADD_PART, DELETE_PART, ADD_CHANNEL, CLEAR_CHANNELS, UPLOAD_AUDIO_STARTED, UPLOAD_AUDIO_SUCCESS, UPLOAD_AUDIO_FAILURE, DELETE_CHANNEL, SET_CHANNEL_ACTIVE, UNSET_CHANNEL_ACTIVE } from "./types";
 
-import { setMarker, deleteMarker, toggleElementSelection, remElemFromSel, toggleElementMultiSelection, addPartToMultiSelection } from "./viewActions";
+import { setMarker, deleteMarker, toggleElementSelection, remElemFromSel, addPartToMultiSelection, clearElementSelectionWithMarkers, updateMarkersForPart } from "./viewActions";
 
 import { getNextPartId, getLastChannel, getActiveChannelIds, getMaxDuration, getChannelData, getPart, getElementType } from "../reducers/channelReducer";
-import { getSelectedImageChannelId, getPartsToCopy, getSelectedElements, getSelectedParts } from "../reducers/viewReducer";
+import { getSelectedImageChannelId, getPartsToCopy, getSelectedElements, getSelectedParts, isElementSelected } from "../reducers/viewReducer";
 import { getImageDuration } from "../reducers/imageListReducer";
 import { removeImage } from "./imageListActions";
 import { defaultSampleRate } from "../components/ImageListContainer";
@@ -298,13 +298,22 @@ export const moveChannel = (moveInfo) => ({
   payload: moveInfo
 });
 
-export const moveSelectedParts = (moveInfo) => {
+export const moveSelectedPartsWithMarkers = (moveInfo) => {
   return (dispatch, getState) => {
-    dispatch(addPartToMultiSelection(moveInfo));
+    if (!isElementSelected(getState(), moveInfo)){
+      // if it was not selected then exclusively 
+      // select it for move
+      dispatch(clearElementSelectionWithMarkers());
+      dispatch(addPartToMultiSelection(moveInfo));
+    }
     getSelectedParts(getState()).forEach((part) => {
       dispatch(moveChannel({
         ...part,
         incr: moveInfo.incr,
+      }));
+      dispatch(updateMarkersForPart(part.partId, {
+        incr: moveInfo.incr,
+        selected: true,
       }));
     });
   };

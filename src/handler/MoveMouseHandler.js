@@ -30,15 +30,17 @@ export default class MoveMouseHandler {
         break;
 
       case "mouseUp":
-        this.handleMoveTo(evInfo, true));
-		if (!inMove) {
-		  // only change selection at a simple click (no move)
+        this.handleMoveTo(evInfo, true);
+        if (!this.inMove) {
+		      // only change selection at a simple click (no move)
           this.handleToggleSelection(evInfo);
+          this.inMove = false;
         }
         break;
 
       case "mouseLeave":
         this.handleMoveTo(evInfo, true);
+        this.inMove = false;
         break;
 
       case "shift-mouseDown":
@@ -95,11 +97,6 @@ export default class MoveMouseHandler {
       if (Math.abs(incrX) > 0) {
         this.handlerFunctions.move(this.partId, incrX);
         this.moveFromX = evInfo.x;
-        // also move the markers
-        this.handlerFunctions.moveSelectedMarkers(incrX);
-        //const channelId = parseInt(this.channelId);
-        //this.handlerFunctions.updateMarker(`${this.partId}-l`, channelId, this.partId, incrX); // type = null:
-        //this.handlerFunctions.updateMarker(`${this.partId}-r`, channelId, this.partId, incrX); // dont change type
         this.inMove = true;
       }
 
@@ -107,7 +104,7 @@ export default class MoveMouseHandler {
         this.xOrigin = null;
         this.moveFromX = null;
         this.partId = null;
-        this.inMove = false;
+        
       }
     }
   }

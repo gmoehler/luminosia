@@ -153,7 +153,7 @@ export default (state = initialState, action) => {
       };
 
     case MOVE_CHANNEL:
-      // not really implemented
+      // moving parts within a channel 
       const channel = state.byChannelId[action.payload.channelId];
       const part = channel.byPartId[action.payload.partId];
       const currentOffset = part.offset;

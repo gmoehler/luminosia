@@ -224,7 +224,6 @@ describe("actions", () => {
       {
         type: types.ADD_ELEMENT_TO_SEL,
         payload: {
-          channelId: 2,
           partId: "2:2",
           selected: true,
         }
@@ -233,9 +232,6 @@ describe("actions", () => {
         type: types.UPDATE_MARKER,
         payload: {
           markerId: "2:2-l",
-          partId: "2:2",
-          channelId: 2,
-          incr: 0,
           type: "selected"
         }
       },
@@ -243,9 +239,6 @@ describe("actions", () => {
         type: types.UPDATE_MARKER,
         payload: {
           markerId: "2:2-r",
-          partId: "2:2",
-          channelId: 2,
-          incr: 0,
           type: "selected"
         }
       },

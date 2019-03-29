@@ -1,8 +1,8 @@
-import { SELECT_RANGE, DESELECT_RANGE, SET_RESOLUTION, UPDATE_MARKER, SET_MARKER, DELETE_MARKER, CLEAR_VIEW, SELECT_IMAGE_CHANNEL, COPY_PART, ADD_ELEMENT_TO_SEL, REMOVE_ELEMENT_FROM_SEL, CLEAR_SEL } from "./types";
+import { SELECT_RANGE, DESELECT_RANGE, SET_RESOLUTION, UPDATE_MARKER, SET_MARKER, DELETE_MARKER, CLEAR_VIEW, 
+  SELECT_IMAGE_CHANNEL, COPY_PART, ADD_ELEMENT_TO_SEL, REMOVE_ELEMENT_FROM_SEL, CLEAR_SEL } from "./types";
 
 import { isElementSelected, getSelectedElements, getNumSelectedElements, getSelectionType, getSelectedParts } from "../reducers/viewReducer";
 
-import { cloneDeep } from "lodash";
 import { getElementType } from "../reducers/channelReducer";
 
 export const clearView = () => ({
@@ -62,114 +62,104 @@ export const copyPart = () => ({
   type: COPY_PART
 });
 
-const updateMarkers = (dispatch, part) => {
-  const type = part.selected ? "selected" : "normal";
-  const markerIdPrefix = `${part.partId}`;
-  const incr = part.incr || 0;
-  dispatch(updateMarker({
-    markerId: markerIdPrefix + "-l",
-    channelId: part.channelId,
-    partId: part.partId,
-    incr,
-    type
-  }));
-  dispatch(updateMarker({
-    markerId: markerIdPrefix + "-r",
-    channelId: part.channelId,
-    partId: part.partId,
-    incr,
-    type
-  }));
+// should contain partId and update info (inc or type)
+export const updateMarkersForPart = (partId, updateInfo) => {
+  return (dispatch, getState) => {
+    const type = updateInfo.selected ? "selected" : "normal"; 
+    const markerIdPrefix = `${partId}`;
+      dispatch(updateMarker({
+        markerId: markerIdPrefix + "-l",
+        incr: updateInfo.incr,
+        type
+      }));
+      dispatch(updateMarker({
+        markerId: markerIdPrefix + "-r",
+        incr: updateInfo.incr,
+        type
+      }));
+  };
 };
 
 export const updateSelectedMarkers = (moveInfo) => {
   return (dispatch, getState) => {
     getSelectedParts(getState()).forEach((part) => {
-      updateMarkers(dispatch, {
-        ...part,
+      dispatch(updateMarkersForPart(part.partId, {
         incr: moveInfo.incr,
         selected: true,
-      }
-      );
+      }));
     });
   };
 };
 
+// method to select/deselect an element with always one being selected
+// (e.g. on simple click)
 export const toggleElementSelection = ((elementInfo) => {
   return (dispatch, getState) => {
 
+    // always select the channel
     dispatch(selectImageChannel(elementInfo));
 
     const elemSelected = isElementSelected(getState(), elementInfo);
     const numElemSelected = getNumSelectedElements(getState());
 
-    dispatch(clearSelectionWithMarkers());
+    dispatch(clearElementSelectionWithMarkers());
 
     if (!elemSelected || numElemSelected !== 1) {
       dispatch(addElemToSel(elementInfo));
       // marker updates for parts only
       if (getElementType(elementInfo) === "part") {
-        const elCopy = {
-          ...elementInfo,
-          selected: true
-        };
-        updateMarkers(dispatch, elCopy);
+        dispatch(updateMarkersForPart(elementInfo.partId, { selected: true }));
       }
     }
   };
 });
 
 // remove markers (parts only) and clear selection
-const clearSelectionWithMarkers = () => {
+export const clearElementSelectionWithMarkers = () => {
   return (dispatch, getState) => {
     // remove markers for parts only
     if (getSelectionType(getState()) === "part") {
       getSelectedElements(getState()).forEach((el) => {
-        el.selected = false;
-        updateMarkers(dispatch, el);
+        dispatch(updateMarkersForPart(el.partId, { selected: false }));
       });
     }
+    // clear element selection in one shot
     dispatch(clearSel());
   };
 };
 
+// method to add/remove an element to selection 
+// (e.g. on ctrl click)
 export const toggleElementMultiSelection = ((elementInfo) => {
   return (dispatch, getState) => {
 
+    // always update channel selection
     dispatch(selectImageChannel(elementInfo));
-    const elCopy = cloneDeep(elementInfo);
 
     // only keeps elements of the same type selected
     // remove selection if element type difers
     if (getElementType(elementInfo) !== getSelectionType(getState())) {
-      dispatch(clearSelectionWithMarkers());
+      dispatch(clearElementSelectionWithMarkers());
     }
 
     if (isElementSelected(getState(), elementInfo)) {
       dispatch(remElemFromSel(elementInfo));
       if (getElementType(elementInfo) === "part") {
-        elCopy.selected = false;
-        updateMarkers(dispatch, elCopy);
+        dispatch(updateMarkersForPart(elementInfo.partId, { selected: false }));
       }
     } else {
       dispatch(addElemToSel(elementInfo));
       if (getElementType(elementInfo) === "part") {
-        elCopy.selected = true;
-        updateMarkers(dispatch, elCopy);
+        dispatch(updateMarkersForPart(elementInfo.partId, { selected: true }));
       }
     }
   };
 });
 
+// simple and fast add routine - no checks
 export const addPartToMultiSelection = ((elementInfo) => {
   return (dispatch, getState) => {
-    if (!isElementSelected(getState(), elementInfo)) {
-      const elCopy = cloneDeep(elementInfo);
-      dispatch(addElemToSel(elementInfo));
-      if (getElementType(elementInfo) === "part") {
-        elCopy.selected = true;
-        updateMarkers(dispatch, elCopy);
-      }
-    }
+    dispatch(addElemToSel(elementInfo));
+    dispatch(updateMarkersForPart(elementInfo.partId, { selected: true }));
   };
 });

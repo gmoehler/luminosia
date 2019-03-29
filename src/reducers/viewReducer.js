@@ -70,19 +70,24 @@ export default (state = initialState, action) => {
 
     case UPDATE_MARKER:
       // update marker type and pos by incr
-      // if marker does not yet exist: create one
-      const markerExists = Boolean(state.byMarkerId[action.payload.markerId]);
-      const prevMarker = markerExists ? state.byMarkerId[action.payload.markerId] : 
-        { pos: 0, type: "normal", minPos: 0, ...action.payload }; // create one with default vals
-      delete prevMarker.incr;
+      // expecting markerId and incr or type
+      // if marker does not yet exist: do nothing
+      if (!state.byMarkerId[action.payload.markerId]) {
+        return state;
+      }
+      const prevMarker = state.byMarkerId[action.payload.markerId];
+      const pos =  action.payload.incr 
+        ? Math.max(prevMarker.pos + action.payload.incr, prevMarker.minPos) 
+        : prevMarker.pos;
+      const type =  action.payload.type ? action.payload.type : prevMarker.type;
       return {
         ...state,
         byMarkerId: {
           ...state.byMarkerId,
           [action.payload.markerId]: {
             ...prevMarker,
-            pos: Math.max(prevMarker.pos + action.payload.incr, prevMarker.minPos),
-            type: action.payload.type ? action.payload.type : prevMarker.type,
+            pos,
+            type
           }
         }
       };
