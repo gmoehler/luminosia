@@ -70,19 +70,24 @@ export default (state = initialState, action) => {
 
     case UPDATE_MARKER:
       // update marker type and pos by incr
-      // if marker does not yet exist: create one
-      const markerExists = Boolean(state.byMarkerId[action.payload.markerId]);
-      const prevMarker = markerExists ? state.byMarkerId[action.payload.markerId] : 
-        { pos: 0, type: "normal", minPos: 0, ...action.payload }; // create one with default vals
-      delete prevMarker.incr;
+      // expecting markerId and incr or type
+      // if marker does not yet exist: do nothing
+      if (!state.byMarkerId[action.payload.markerId]) {
+        return state;
+      }
+      const prevMarker = state.byMarkerId[action.payload.markerId];
+      const pos =  action.payload.incr 
+        ? Math.max(prevMarker.pos + action.payload.incr, prevMarker.minPos) 
+        : prevMarker.pos;
+      const type =  action.payload.type ? action.payload.type : prevMarker.type;
       return {
         ...state,
         byMarkerId: {
           ...state.byMarkerId,
           [action.payload.markerId]: {
             ...prevMarker,
-            pos: Math.max(prevMarker.pos + action.payload.incr, prevMarker.minPos),
-            type: action.payload.type ? action.payload.type : prevMarker.type,
+            pos,
+            type
           }
         }
       };
@@ -153,14 +158,6 @@ export const getMarkers = (state) => {
   return state.view.byMarkerId ? Object.values(state.view.byMarkerId) : [];
 };
 
-export const getSelectedPart = (state) => {
-  if (state.view.selectedPartOrImage &&
-    state.view.selectedPartOrImage.partId) {
-    return state.view.selectedPartOrImage;
-  }
-  return null;
-};
-
 export const getPartsToCopy = (state) => {
   return state.view.partsToCopy;
 };
@@ -189,9 +186,10 @@ export const getSelectedElements = (state) =>
 
 export const getSelectedImages = (state) => 
   getSelectedElements(state).filter((elem) => elem.imageId != null);
-
 export const getSelectedImageIds = (state) => 
   getSelectedImages(state).map((img) => img.imageId);
+export const getSelectedParts = (state) => 
+  getSelectedElements(state).filter((elem) => elem.partId != null);
 
 const _getNumSelectedElements = (viewState) => 
   viewState.selectedElementsById ? 
@@ -199,7 +197,6 @@ const _getNumSelectedElements = (viewState) =>
 
 export const getNumSelectedElements = (state) => 
   _getNumSelectedElements(state.view);
-
 
 const _getSelectionType = (viewState) => {
   if (_getNumSelectedElements(viewState) === 0)

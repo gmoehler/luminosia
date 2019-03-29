@@ -24,7 +24,7 @@ const ImageChannelWithPlay = withEventHandler(withPlay(timeToPixels(ImageChannel
 
 // contains multiple AudioChannels
 export default class ChannelGroup extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
     this.groupRef = null;
     this.state = {
@@ -37,9 +37,9 @@ export default class ChannelGroup extends Component {
   }
 
   considerScroll = () => {
-    if ( this.props.playState === "playing" && this.groupRef ){
+    if (this.props.playState === "playing" && this.groupRef) {
       const scrolldiff = Math.abs(this.state.scrollLeft - this.groupRef.scrollLeft);
-      if (scrolldiff > 10 ) { // do it only once for all channels
+      if (scrolldiff > 10) { // do it only once for all channels
         this.groupRef.scrollLeft = this.state.scrollLeft;
       }
     }
@@ -49,9 +49,13 @@ export default class ChannelGroup extends Component {
     // check progress to do autoscrolling 
     const progressPx = secondsToPixels(progress, this.props.resolution);
     if (progressPx > this.groupRef.scrollLeft + this.groupRef.clientWidth) {
-      this.setState({ scrollLeft: progressPx });
+      this.setState({
+        scrollLeft: progressPx
+      });
     } else if (progressPx < this.groupRef.scrollLeft) {
-      this.setState({ scrollLeft: progressPx });
+      this.setState({
+        scrollLeft: progressPx
+      });
     }
   }
 
@@ -103,18 +107,17 @@ export default class ChannelGroup extends Component {
           <ImageChannelWithPlay { ...channelProps }
               selected={ selectedImageChannelId === channelId }
               setChannelPlayState={ playState => this.props.setChannelPlayState(channelId, playState) }
-              move={ (partId, incr) => this.props.move(channelId, partId, incr) } 
-          />);
+              move={ (partId, incr) => this.props.move(channelId, partId, incr)  } />);
 
 
       });
 
     return (
       <ChannelGroupWrapper drawerWidth={ this.props.drawerWidth || 0 }
-          ref={ (ref) => this.groupRef=ref }>
-        { channelComponents}
+          ref={ (ref) => this.groupRef = ref }>
+        { channelComponents }
       </ChannelGroupWrapper>
-    );
+      );
   }
 }
 

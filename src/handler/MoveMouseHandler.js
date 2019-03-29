@@ -8,6 +8,7 @@ export default class MoveMouseHandler {
     this.channelId = null;
     this.partId = null;
     this.selected = false;
+    this.inMove = false;
   }
 
   // TimeToPixels HOC wraps the Channel: pos is in secs
@@ -30,10 +31,16 @@ export default class MoveMouseHandler {
 
       case "mouseUp":
         this.handleMoveTo(evInfo, true);
+        if (!this.inMove) {
+		      // only change selection at a simple click (no move)
+          this.handleToggleSelection(evInfo);
+          this.inMove = false;
+        }
         break;
 
       case "mouseLeave":
         this.handleMoveTo(evInfo, true);
+        this.inMove = false;
         break;
 
       case "shift-mouseDown":
@@ -52,7 +59,7 @@ export default class MoveMouseHandler {
         this.handleSelectionTo(evInfo, true);
         break;
 
-      case "crtl-mouseDown":
+      case "crtl-mouseUp":
         this.handleMultiSelect(evInfo);
         break;
 
@@ -68,18 +75,21 @@ export default class MoveMouseHandler {
   }
 
   handleMoveFrom = (evInfo) => {
-    this.handlerFunctions.toggleElementSelection({
-      channelId: parseInt(evInfo.channelId),
-      partId: evInfo.partId,
-      selected: true // select
-    });
-
     this.moveFromX = evInfo.x;
     this.channelId = evInfo.channelId;
     this.partId = evInfo.partId;
   }
 
+  handleToggleSelection = (evInfo) => {
+    this.handlerFunctions.toggleElementSelection({
+      channelId: parseInt(evInfo.channelId),
+      partId: evInfo.partId,
+      selected: true // select
+    });
+  }
+
   handleMoveTo = (evInfo, finalizeSelection) => {
+    // only move selected when we select a part
     if (this.moveFromX && this.partId && this.channelId) {
       // only when mouse down has occured
       // console.log(`move from ${this.moveFromX} to ${x}`);
@@ -87,17 +97,14 @@ export default class MoveMouseHandler {
       if (Math.abs(incrX) > 0) {
         this.handlerFunctions.move(this.partId, incrX);
         this.moveFromX = evInfo.x;
-        // also move the markers
-        const channelId = parseInt(this.channelId);
-        this.handlerFunctions.updateMarker(`${this.partId}-l`, channelId, this.partId, incrX); // type = null:
-        this.handlerFunctions.updateMarker(`${this.partId}-r`, channelId, this.partId, incrX); // dont change type
+        this.inMove = true;
       }
 
       if (finalizeSelection) {
-        // leave part selected after move
         this.xOrigin = null;
         this.moveFromX = null;
         this.partId = null;
+        
       }
     }
   }

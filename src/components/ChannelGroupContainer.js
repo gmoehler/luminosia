@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import { connect } from "react-redux"; 
 
 import ChannelGroup from "./ChannelGroup";
-import { setChannelPlayState, moveChannel, insertNewPart, deleteSelectedPartAndMarkers } from "../actions/channelActions";
-import { selectRange, deselectRange, setMarker, updateMarker, toggleElementSelection, toggleElementMultiSelection } from "../actions/viewActions";
+import { setChannelPlayState, insertNewPart, deleteSelectedPartAndMarkers, moveSelectedPartsWithMarkers } from "../actions/channelActions";
+import { selectRange, deselectRange, setMarker, toggleElementSelection, toggleElementMultiSelection } from "../actions/viewActions";
 import { getMaxDuration, getAllChannelsData, allChannelsStopped } from "../reducers/channelReducer";
 import { getSelectionRange, getResolution, getMarkers, getSelectedImageChannelId } from "../reducers/viewReducer";
 import { getImageSources } from "../reducers/imageListReducer";
@@ -45,13 +45,6 @@ const mapDispatchToProps = dispatch => ({
     minPos,
     type
   })),
-  updateMarker: (markerId, channelId, partId, incr, type) => dispatch(updateMarker({
-    markerId,
-    channelId,
-    partId,
-    incr,
-    type
-  })),
   insertNewPart: (channelId, imageId, src, offset, duration) => dispatch(insertNewPart({
     channelId,
     imageId,
@@ -59,8 +52,8 @@ const mapDispatchToProps = dispatch => ({
     offset,
     duration,
   })),
-  move: (channelId, partId, incr) => dispatch(moveChannel({
-    channelId,
+  move: (channelId, partId, incr) => dispatch(moveSelectedPartsWithMarkers({
+    channelId, 
     partId,
     incr
   })),
