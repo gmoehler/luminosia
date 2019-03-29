@@ -8,6 +8,7 @@ export default class MoveMouseHandler {
     this.channelId = null;
     this.partId = null;
     this.selected = false;
+    this.inMove = false;
   }
 
   // TimeToPixels HOC wraps the Channel: pos is in secs
@@ -29,7 +30,9 @@ export default class MoveMouseHandler {
         break;
 
       case "mouseUp":
-        if (!this.handleMoveTo(evInfo, true)) {
+        this.handleMoveTo(evInfo, true));
+		if (!inMove) {
+		  // only change selection at a simple click (no move)
           this.handleToggleSelection(evInfo);
         }
         break;
@@ -84,7 +87,7 @@ export default class MoveMouseHandler {
   }
 
   handleMoveTo = (evInfo, finalizeSelection) => {
-    const hasMoved = false;
+    // only move selected when we select a part
     if (this.moveFromX && this.partId && this.channelId) {
       // only when mouse down has occured
       // console.log(`move from ${this.moveFromX} to ${x}`);
@@ -97,18 +100,16 @@ export default class MoveMouseHandler {
         //const channelId = parseInt(this.channelId);
         //this.handlerFunctions.updateMarker(`${this.partId}-l`, channelId, this.partId, incrX); // type = null:
         //this.handlerFunctions.updateMarker(`${this.partId}-r`, channelId, this.partId, incrX); // dont change type
-        hasMoved = true;
+        this.inMove = true;
       }
 
       if (finalizeSelection) {
-        // leave part selected after move
         this.xOrigin = null;
         this.moveFromX = null;
         this.partId = null;
+        this.inMove = false;
       }
     }
-    
-    return hasMoved;
   }
 
   handleSelectionFrom = (evInfo) => {
