@@ -8,6 +8,7 @@ import { withPlay } from "./withPlay";
 import { withEventHandler } from "./withEventHandler";
 import { timeToPixels } from "./timeToPixels";
 import { secondsToPixels } from "../utils/conversions";
+import TimeScale from "./TimeScale";
 
 const ChannelGroupWrapper = styled.div`
   width:  calc(95vw - ${props => props.drawerWidth}px);
@@ -21,6 +22,7 @@ const windowPixelRatio = window.devicePixelRatio;
 // add play functionality to audio channels
 const AudioChannelWithPlay = withEventHandler(withPlay(timeToPixels(Channel)));
 const ImageChannelWithPlay = withEventHandler(withPlay(timeToPixels(ImageChannel)));
+const TimeScaleInSecs = timeToPixels(TimeScale);
 
 // contains multiple AudioChannels
 export default class ChannelGroup extends Component {
@@ -115,6 +117,7 @@ export default class ChannelGroup extends Component {
     return (
       <ChannelGroupWrapper drawerWidth={ this.props.drawerWidth || 0 }
           ref={ (ref) => this.groupRef = ref }>
+          <TimeScaleInSecs duration={ this.props.maxDuration }></TimeScaleInSecs>
         { channelComponents }
       </ChannelGroupWrapper>
       );
