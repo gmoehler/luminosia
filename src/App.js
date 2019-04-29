@@ -22,6 +22,12 @@ import ImageExporter from "./components/ImageExporter";
 import AnimationPaneContainer from "./components/AnimationPaneContainer";
 import ChannelSelectorContainer from "./components/ChannelSelectorContainer";
 
+import fs from "fs";
+fs.readdir(".", (err, files) => {
+  files.forEach(file => {
+    console.log(file);
+  });
+});
 const drawerWidth = 400;
 const channelSelectorWidth = 96;
 
@@ -111,23 +117,30 @@ class App extends React.Component {
   };
 
   render() {
-    const {classes, theme} = this.props;
-    const {open} = this.state;
+    const { classes, theme } = this.props;
+    const { open } = this.state;
 
     return (
       <div className={ classes.root }>
         <CssBaseline />
-        <AppBar position="fixed" className={ classNames(classes.appBar, {
+        <AppBar position="fixed"
+            className={ classNames(classes.appBar, {
                                                [classes.appBarShift]: open,
                                              }) }>
           <Toolbar disableGutters={ !open }>
-            <Typography variant="h6" color="inherit" className={ classes.title } noWrap>
+            <Typography variant="h6"
+                color="inherit"
+                className={ classes.title }
+                noWrap>
               Luminosia Studio
             </Typography>
             <HeaderContainer />
             <div className={ classes.grow }></div>
             <Tooltip title="Work with images">
-              <IconButton color="inherit" aria-label="Open drawer" onClick={ this.handleDrawerOpen } className={ classNames(classes.menuButton, open && classes.hide) }>
+              <IconButton color="inherit"
+                  aria-label="Open drawer"
+                  onClick={ this.handleDrawerOpen }
+                  className={ classNames(classes.menuButton, open && classes.hide) }>
                 <BurstModeIcon />
               </IconButton>
             </Tooltip>
@@ -140,11 +153,16 @@ class App extends React.Component {
           <AnimationPaneContainer drawerWidth={ open ? drawerWidth : 0 } />
           <div className={ classes.channelPane }>
             <ChannelSelectorContainer />
-            <ChannelGroupContainer drawerWidth={ open ? drawerWidth + channelSelectorWidth : channelSelectorWidth } width={ channelSelectorWidth } />
+            <ChannelGroupContainer drawerWidth={ open ? drawerWidth + channelSelectorWidth : channelSelectorWidth }
+                width={ channelSelectorWidth } />
           </div>
           <ImageExporter drawerWidth={ open ? drawerWidth : 0 } />
         </main>
-        <Drawer className={ classes.drawer } variant="persistent" anchor="right" open={ open } classes={ { paper: classes.drawerPaper, } }>
+        <Drawer className={ classes.drawer }
+            variant="persistent"
+            anchor="right"
+            open={ open }
+            classes={ { paper: classes.drawerPaper, } }>
           <div className={ classes.drawerHeader }>
             <IconButton onClick={ this.handleDrawerClose }>
               { theme.direction === "rtl" ? <ChevronLeftIcon /> : <ChevronRightIcon /> }

@@ -129,6 +129,12 @@ export const exportImageChannel = (channelId) => {
     // binary download
     const data = getChannelExportData();
     downloadBinaryFile(`result-${channelId}.poi`, encodeImage(data));
+    
+    // binary file system save
+    //const root = fs.readdirSync("/");
+    // console.log(root);
+    // fs.writeFile(`result-${channelId}.poi`, encodeImage(data));
+    
     // image file download
     /* const canvas = document.getElementById("imageExportCanvas");
     const resultImage = canvas.toDataURL("image/png");
