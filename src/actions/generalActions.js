@@ -1,7 +1,10 @@
 
 import { UPLOAD_CONFIG_STARTED, UPLOAD_CONFIG_SUCCESS, UPLOAD_CONFIG_FAILURE } from "./types";
 
+import isElectron from "is-electron";
+
 import { downloadTextfile, readTextFile, /* downloadImagefile, */ downloadBinaryFile } from "../utils/fileUtils";
+
 import { getConfig } from "../reducers/rootReducer";
 
 import { addChannel, loadAChannel, updateChannelMarkersForLastAddedChannel } from "./channelActions";
@@ -128,12 +131,14 @@ export const exportImageChannel = (channelId) => {
     dispatch(drawExportImage(channelId, 0));
     // binary download
     const data = getChannelExportData();
-    downloadBinaryFile(`result-${channelId}.poi`, encodeImage(data));
     
-    // binary file system save
-    //const root = fs.readdirSync("/");
-    // console.log(root);
-    // fs.writeFile(`result-${channelId}.poi`, encodeImage(data));
+    // export/save binary encoded image for poi
+    if (isElectron()) {
+      require("../utils/fileUtilsElectron")
+        .saveBinaryFile("./data/channel.poi", encodeImage(data));
+    } else {
+      downloadBinaryFile(`result-${channelId}.poi`, encodeImage(data));
+    }
     
     // image file download
     /* const canvas = document.getElementById("imageExportCanvas");

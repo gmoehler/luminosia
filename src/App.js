@@ -22,12 +22,6 @@ import ImageExporter from "./components/ImageExporter";
 import AnimationPaneContainer from "./components/AnimationPaneContainer";
 import ChannelSelectorContainer from "./components/ChannelSelectorContainer";
 
-import fs from "fs";
-fs.readdir(".", (err, files) => {
-  files.forEach(file => {
-    console.log(file);
-  });
-});
 const drawerWidth = 400;
 const channelSelectorWidth = 96;
 
