@@ -7,7 +7,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import { Tooltip, IconButton } from "@material-ui/core";
 import { indigo } from "@material-ui/core/colors/indigo";
-import DownloadChannelIcon from "@material-ui/icons/SaveAlt";
+import UploadChannelIcon from "@material-ui/icons/Publish";
 import DeleteChannelIcon from "@material-ui/icons/DeleteForever";
 import ChannelDupIcon from "@material-ui/icons/FileCopy";
 
@@ -87,12 +87,12 @@ class CustomizedSwitches extends React.Component {
             }
           />
           <div className={ classes.lowerIcons }>
-          <Tooltip title="Export channel to binary file">
+          <Tooltip title="Upload channel to poi">
             <IconButton 
                 className={ classes.button }
                 size={ "large" }
                 onClick={ () => this.props.exportImageChannel(channel.channelId) }>
-              <DownloadChannelIcon className={ classes.icon } />
+              <UploadChannelIcon className={ classes.icon } />
             </IconButton>
             </Tooltip>
 
