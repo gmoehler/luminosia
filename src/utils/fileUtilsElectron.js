@@ -36,7 +36,7 @@ async function saveBinaryFile(filename, uint8array) {
 async function mkSpiffs(dir, filename) {
 
   console.log(`Generating spiffs image to ${filename}`);
-  const spawnProcess = spawn("./bin/mkspiffs", [ "-c", dir, "-b", "4096", "-p", "256", "-s", "0x2B0000", filename]);
+  const spawnProcess = spawn("./resources/bin/mkspiffs", [ "-c", dir, "-b", "4096", "-p", "256", "-s", "0x2B0000", filename]);
 
   spawnProcess.stdout.on("data", (data) => {
     var str = data.toString();
@@ -63,7 +63,7 @@ async function mkSpiffs(dir, filename) {
 
 async function uploadSpiffs(filename) {
 
-  const spawnProcess = spawn("bin/esptool.exe", ["--chip", "esp32", "--port", "COM4", "--baud", "921600",
+  const spawnProcess = spawn("./resources/bin/esptool.exe", ["--chip", "esp32", "--port", "COM4", "--baud", "921600",
     "write_flash", "-z", "0x150000", filename]);
 
   spawnProcess.stdout.on("data", (data) => {

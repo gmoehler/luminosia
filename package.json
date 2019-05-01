@@ -72,8 +72,8 @@
     "wait-on": "^3.2.0"
   },
   "build": {
-    "appId": "com.my-website.my-app",
-    "productName": "MyApp",
+    "appId": "com.luminosia.studio",
+    "productName": "LuminosiaStudio",
     "copyright": "Copyright © 2019 ${author}",
     "mac": {
       "category": "public.app-category.utilities"
@@ -81,6 +81,15 @@
     "files": [
       "build/**/*",
       "node_modules/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "./resources/bin",
+        "to": "bin",
+        "filter": [
+          "**/*"
+        ]
+      }
     ],
     "directories": {
       "buildResources": "assets"
