@@ -134,8 +134,8 @@ export const exportImageChannel = (channelId) => {
     
     // export/save binary encoded image for poi
     if (isElectron()) {
-      require("../utils/fileUtilsElectron")
-        .uploadChannel(encodeImage(data));
+      dispatch(require("../utils/fileUtilsElectron")
+        .uploadChannel(encodeImage(data)));
     } else {
       downloadBinaryFile(`result-${channelId}.poi`, encodeImage(data));
     }

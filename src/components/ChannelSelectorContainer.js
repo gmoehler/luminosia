@@ -12,19 +12,8 @@ class ChannelSelectorContainer extends Component {
 
   render() {
 
-    const { channelOverview, selectedImageChannelId, setChannelActiveAction, unsetChannelActiveAction,
-      exportImageChannelAction, deleteChannelAction, duplicateChannelAction } = this.props;
-
-    return (
-      <ChannelSelector
-          channelOverview={ channelOverview }
-          selectedImageChannelId={ selectedImageChannelId }
-          setChannelActive={ setChannelActiveAction }
-          unsetChannelActive={ unsetChannelActiveAction }
-          exportImageChannel={ exportImageChannelAction }
-          deleteChannel={ deleteChannelAction }
-          duplicateChannel={ duplicateChannelAction }
-      />);
+    return ( 
+	  <ChannelSelector {...this.props} />);
   }
 }
 
@@ -36,21 +25,25 @@ const mapStateToProps = (state, props) => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  setChannelActiveAction: (channelId) => dispatch(setChannelActive(channelId)),
-  unsetChannelActiveAction: (channelId) => dispatch(unsetChannelActive(channelId)),
-  exportImageChannelAction: (channelId) => dispatch(exportImageChannel(channelId)),
-  deleteChannelAction: (channelId) => dispatch(deleteChannel(channelId)),
-  duplicateChannelAction: (channelId) => dispatch(duplicateChannel(channelId)),
+  setChannelActive: (channelId) => dispatch(setChannelActive(channelId)),
+  unsetChannelActive: (channelId) => dispatch(unsetChannelActive(channelId)),
+  exportImageChannel: (channelId) => dispatch(exportImageChannel(channelId)),
+  deleteChannel: (channelId) => dispatch(deleteChannel(channelId)),
+  duplicateChannel: (channelId) => dispatch(duplicateChannel(channelId)),
+  addToUploadLog: (text) => dispatch(addToUploadLog(text)),
+  clearUploadLog: () => dispatch(clearUploadLog()),
 });
 
 ChannelSelectorContainer.propTypes = {
   channelOverview: PropTypes.array,
   selectedImageChannelId: PropTypes.number,
-  setChannelActiveAction: PropTypes.func.isRequired,
-  unsetChannelActiveAction: PropTypes.func.isRequired,
-  exportImageChannelAction: PropTypes.func.isRequired,
-  deleteChannelAction: PropTypes.func.isRequired,
-  duplicateChannelAction: PropTypes.func.isRequired,
+  setChannelActive: PropTypes.func.isRequired,
+  unsetChannelActive: PropTypes.func.isRequired,
+  exportImageChannel: PropTypes.func.isRequired,
+  deleteChannel: PropTypes.func.isRequired,
+  duplicateChannel: PropTypes.func.isRequired,
+  addToUploadLog: PropTypes.func.isRequired,
+  clearUploadLog: PropTypes.func.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChannelSelectorContainer);

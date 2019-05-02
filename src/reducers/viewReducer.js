@@ -15,6 +15,7 @@ export const initialState = {
   selectedElementsById: {},
   selectedImageChannelId: null,
   partsToCopy: null,
+  uploadLog: null,
 };
 
 export default (state = initialState, action) => {
@@ -137,6 +138,18 @@ export default (state = initialState, action) => {
         ...state,
         partsToCopy
       };
+      
+      case ADD_TO_UPLOAD_LOG:
+      return {
+      	...state,
+      	uploadLog: state.uploadLog + action.payload
+      };
+      
+      case CLEAR_UPLOAD_LOG:
+      return {
+      	...state,
+      	uploadLog: null
+      }
 
     default:
       return state;
@@ -206,3 +219,6 @@ const _getSelectionType = (viewState) => {
 };
 export const getSelectionType = (state) => 
  _getSelectionType(state.view);
+ 
+export const getUploadLog = (state) => 
+	return state.uploadLog;

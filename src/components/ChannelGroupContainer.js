@@ -5,7 +5,7 @@ import ChannelGroup from "./ChannelGroup";
 import { setChannelPlayState, insertNewPart, deleteSelectedPartAndMarkers, moveSelectedPartsWithMarkers } from "../actions/channelActions";
 import { selectRange, deselectRange, setMarker, toggleElementSelection, toggleElementMultiSelection } from "../actions/viewActions";
 import { getMaxDuration, getAllChannelsData, allChannelsStopped } from "../reducers/channelReducer";
-import { getSelectionRange, getResolution, getMarkers, getSelectedImageChannelId } from "../reducers/viewReducer";
+import { getSelectionRange, getResolution, getMarkers, getSelectedImageChannelId, getUploadLog } from "../reducers/viewReducer";
 import { getImageSources } from "../reducers/imageListReducer";
 
 class ChannelGroupContainer extends Component {
@@ -28,6 +28,7 @@ const mapStateToProps = (state, props) => {
     imageSources: getImageSources(state),
     playState: allChannelsStopped(state) ? "stopped" : "playing",
     selectedImageChannelId: getSelectedImageChannelId(state),
+    uploadLog: getUploadLog()
   };
 };
 

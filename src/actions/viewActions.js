@@ -163,3 +163,12 @@ export const addPartToMultiSelection = ((elementInfo) => {
     dispatch(updateMarkersForPart(elementInfo.partId, { selected: true }));
   };
 });
+
+export const addToUploadLog = (text) => ({
+  type: ADD_TO_UPLOAD_LOG,
+  payload: text
+});
+
+export const clearUploadLog = () => ({
+  type: CLEAR_UPLOAD_LOG
+});
