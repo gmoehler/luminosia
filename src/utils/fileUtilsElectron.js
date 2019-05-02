@@ -63,7 +63,7 @@ async function mkSpiffs(dir, filename) {
 
 async function uploadSpiffs(filename) {
 
-  const spawnProcess = spawn("./resources/bin/esptool.exe", ["--chip", "esp32", "--port", "COM4", "--baud", "921600",
+  const spawnProcess = spawn("./resources/bin/esptool.exe", ["--chip", "esp32", "--baud", "921600",
     "write_flash", "-z", "0x150000", filename]);
 
   spawnProcess.stdout.on("data", (data) => {
