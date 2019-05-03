@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import ImageList from "./ImageList";
 import { getImageList } from "../reducers/imageListReducer";
 import { getResolution, getSelectedImageIds } from "../reducers/viewReducer";
-import { saveImageToStorage, addImage, loadImagesfromStorage } from "../actions/imageListActions";
+import { saveImageToStorage, addImage, loadImagesFromStorage } from "../actions/imageListActions";
 import { toggleElementSelection, toggleElementMultiSelection } from "../actions/viewActions";
 
 export const defaultSampleRate = 100;
@@ -13,7 +13,11 @@ export const defaultSampleRate = 100;
 class ImageListContainer extends Component {
 
   render() {
-    return ( <ImageList { ...this.props } /> );
+    return ( <ImageList 
+        { ...this.props }
+        selectImage={ toggleElementSelection }
+        selectMultiImage={ toggleElementMultiSelection }
+    /> );
   }
 }
 
@@ -30,7 +34,7 @@ const mapDispatchToProps = dispatch => ({
   toggleElementSelection: (imageInfo) => dispatch(toggleElementSelection(imageInfo)),
   toggleElementMultiSelection: (imageInfo) => dispatch(toggleElementMultiSelection(imageInfo)),
   saveImageToStorage: (imageFile, key) => dispatch(saveImageToStorage(imageFile, key)),
-  loadImagesfromStorage: () => dispatch(loadImagesfromStorage()),
+  loadImagesFromStorage: () => dispatch(loadImagesFromStorage()),
 });
 
 ImageListContainer.propTypes = {
@@ -40,8 +44,7 @@ ImageListContainer.propTypes = {
   addImage: PropTypes.func.isRequired,
   toggleElementSelection: PropTypes.func.isRequired,
   toggleElementMultiSelection: PropTypes.func.isRequired,
-  loadImagesfromStorage: PropTypes.func.isRequired,
-  
+  loadImagesFromStorage: PropTypes.func.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ImageListContainer);

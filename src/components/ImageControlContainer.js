@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import { loadImagesfromStorage, saveImagesToStorage, clearImagesfromStorage, clearImageList } from "../actions/imageListActions";
+import { loadImagesFromStorage, saveImagesToStorage, clearImagesfromStorage, clearImageList } from "../actions/imageListActions";
 import ImageControl from "./ImageControl";
 
 class ImageControlContainer extends Component {
@@ -16,15 +16,15 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  loadImagesfromStorage: () => dispatch(loadImagesfromStorage()),
-  saveImagestoStorage: () => dispatch(saveImagesToStorage()),
+  loadImagesFromStorage: () => dispatch(loadImagesFromStorage()),
+  saveImagesToStorage: () => dispatch(saveImagesToStorage()),
   clearImagesfromStorage: () => dispatch(clearImagesfromStorage()),
   clearImageList: () => dispatch(clearImageList()),
 });
 
 ImageControlContainer.propTypes = {
-  loadImagesfromStorage: PropTypes.func.isRequired,
-  saveImagestoStorage:PropTypes.func.isRequired,
+  loadImagesFromStorage: PropTypes.func.isRequired,
+  saveImagesToStorage:PropTypes.func.isRequired,
   clearImageList: PropTypes.func.isRequired,
   clearImagesfromStorage: PropTypes.func.isRequired,
 };

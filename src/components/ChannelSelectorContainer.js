@@ -40,8 +40,6 @@ ChannelSelectorContainer.propTypes = {
   exportImageChannel: PropTypes.func.isRequired,
   deleteChannel: PropTypes.func.isRequired,
   duplicateChannel: PropTypes.func.isRequired,
-  addToUploadLog: PropTypes.func.isRequired,
-  clearUploadLog: PropTypes.func.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChannelSelectorContainer);
