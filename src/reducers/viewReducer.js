@@ -142,7 +142,7 @@ export default (state = initialState, action) => {
     case ADD_TO_UPLOAD_LOG:
       return {
       	...state,
-      	uploadLog: state.uploadLog + action.payload
+      	uploadLog: state.uploadLog ? state.uploadLog + action.payload : action.payload
       };
       
     case CLEAR_UPLOAD_LOG:

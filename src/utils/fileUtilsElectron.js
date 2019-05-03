@@ -5,20 +5,21 @@ import path from "path";
 
 let portCache = null;
 
-export async function uploadChannel(uint8array, addToLog) {
+export async function uploadChannel(uint8array, log) {
   const dataDir = tmp.dirSync({ unsafeCleanup: true });
   const filename = path.join(dataDir.name, "channel.poi");
   const spiffsFilename = tmp.tmpNameSync();
 
   // 3 steps for upload: save data, generate spiffs file and upload
   try {
-    addToLog("Starting upload");
-    await saveBinaryFile(filename, uint8array);
-    await mkSpiffs( dataDir.name, spiffsFilename);
-    await uploadSpiffs(spiffsFilename, portCache);
-    addToLog("Upload completed.");
+    log("Starting upload");
+    await saveBinaryFile(filename, uint8array, log);
+    await mkSpiffs( dataDir.name, spiffsFilename, log);
+    await uploadSpiffs(spiffsFilename, portCache, log);
+    log("Upload completed.");
   } catch (err) {
      console.error("Unable to upload channel data:", err);
+     log("Unable to upload channel data:", err);
      portCache = null;
   } 
 
@@ -32,47 +33,47 @@ export async function uploadChannel(uint8array, addToLog) {
   
 }
 
-async function saveBinaryFile(filename, uint8array) {
-  console.log(`Saving poi channel data to ${filename}`);
+async function saveBinaryFile(filename, uint8array, log) {
+  log(`Saving poi channel data to ${filename}`);
   await fs.writeFile(filename, uint8array);
-  console.log(`Poi channel data has been saved to ${filename}`);
+  log(`Poi channel data has been saved to ${filename}`);
 }
 
-async function mkSpiffs(dir, filename) {
+async function mkSpiffs(dir, filename, log) {
 
-  console.log(`Generating spiffs image to ${filename}`);
+  log(`Generating spiffs image to ${filename}`);
   const spawnProcess = spawn("./resources/bin/mkspiffs", [ "-c", dir, "-b", "4096", "-p", "256", "-s", "0x2B0000", filename]);
 
   spawnProcess.stdout.on("data", (data) => {
     const str = data.toString();
     const lines = str.split(/(\r?\n)/g);
-    console.log("mkSpiffs:", lines.join(""));
+    log(lines.join(""));
   });
   spawnProcess.stderr.on("data", (data) => {
     const str = data.toString();
     const lines = str.split(/(\r?\n)/g);
-    console.error("mkSpiffs err:", lines.join(""));
+    log("[Error]", lines.join(""));
   });
   spawnProcess.on("close", (code) => {
     if (code === 0) {
-      console.log(`mkSpiffs exited with code ${code}`);
-      console.log(`Generating spiffs image to ${filename}`);
+      log(`mkSpiffs exited with code ${code}`);
+      log(`Generating spiffs image to ${filename}`);
     } else {
-      console.error(`mkSpiffs exited with code ${code}`);
+      log(`[Error]mkSpiffs exited with code ${code}`);
     }
   });
 
   await spawnProcess;
-  console.log("done with mkSpiffs.");
+  log("done with mkSpiffs.");
 } 
 
-async function uploadSpiffs(filename, port) {
+async function uploadSpiffs(filename, port, log) {
 
   const params =  ["--chip", "esp32", "--baud", "921600", "write_flash", "-z", "0x150000", filename];
 
   if (port) {
     params.unshift("--port", port);
-    console.log(`Uploading spiffs image to port ${port}`);
+    log(`Uploading spiffs image to port ${port}`);
   }
 
   const spawnProcess = spawn("./resources/bin/esptool.exe", params);
@@ -83,26 +84,26 @@ async function uploadSpiffs(filename, port) {
     if (m) {
       portCache = m.length > 0 ? m[1] : null;
       if (portCache) {
-        console.log(`Port cache set to ${portCache}`);
+        log(`Port cache set to ${portCache}`);
       }
     }
     const str = data.toString();
     const lines = str.split(/(\r?\n)/g);
-    console.log("esptool:", lines.join(""));
+    log(lines.join(""));
   });
   spawnProcess.stderr.on("data", (data) => {
     const str = data.toString();
     const lines = str.split(/(\r?\n)/g);
-    console.error("esptool err:", lines.join(""));
+    log("[Error]", lines.join(""));
   });
   spawnProcess.on("close", (code) => {
     if (code === 0) {
-      console.log(`esptool exited with code ${code}`);
+      log(`esptool exited with code ${code}`);
     } else {
-      console.error(`esptool exited with code ${code}`);
+      log(`[Error]esptool exited with code ${code}`);
     }
   });
 
   await spawnProcess;
-  console.log("done with esptool.");
+  log("done with esptool.");
 } 
