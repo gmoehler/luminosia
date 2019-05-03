@@ -15,8 +15,8 @@ class ImageListContainer extends Component {
   render() {
     return ( <ImageList 
         { ...this.props }
-        selectImage={ toggleElementSelection }
-        selectMultiImage={ toggleElementMultiSelection }
+        selectImage={ this.props.toggleElementSelection }
+        selectMultiImage={ this.props.toggleElementMultiSelection }
     /> );
   }
 }
