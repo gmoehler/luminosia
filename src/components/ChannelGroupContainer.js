@@ -28,7 +28,7 @@ const mapStateToProps = (state, props) => {
     imageSources: getImageSources(state),
     playState: allChannelsStopped(state) ? "stopped" : "playing",
     selectedImageChannelId: getSelectedImageChannelId(state),
-    uploadLog: getUploadLog()
+    uploadLog: getUploadLog(state)
   };
 };
 

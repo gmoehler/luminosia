@@ -1,7 +1,7 @@
 import { cloneDeep } from "lodash";
 import { CLEAR_VIEW, SELECT_RANGE, DESELECT_RANGE, SET_RESOLUTION, 
   SET_MARKER, UPDATE_MARKER, DELETE_MARKER, 
-  SELECT_IMAGE_CHANNEL, COPY_PART, ADD_ELEMENT_TO_SEL, REMOVE_ELEMENT_FROM_SEL, CLEAR_SEL } from "../actions/types";
+  SELECT_IMAGE_CHANNEL, COPY_PART, ADD_ELEMENT_TO_SEL, REMOVE_ELEMENT_FROM_SEL, CLEAR_SEL, ADD_TO_UPLOAD_LOG, CLEAR_UPLOAD_LOG } from "../actions/types";
 import { getElementType } from "./channelReducer";
 
 // export for tests
@@ -139,17 +139,17 @@ export default (state = initialState, action) => {
         partsToCopy
       };
       
-      case ADD_TO_UPLOAD_LOG:
+    case ADD_TO_UPLOAD_LOG:
       return {
       	...state,
       	uploadLog: state.uploadLog + action.payload
       };
       
-      case CLEAR_UPLOAD_LOG:
+    case CLEAR_UPLOAD_LOG:
       return {
       	...state,
       	uploadLog: null
-      }
+      };
 
     default:
       return state;
@@ -183,9 +183,8 @@ export const getSelectedImage = (state) => {
   return null;
 };
 
-export const getSelectedImageChannelId = (state) => {
-  return state.view.selectedImageChannelId;
-};
+export const getSelectedImageChannelId = (state) => 
+  state.view.selectedImageChannelId;
 
 export const isElementSelected = (state, elementInfo) => {
   return Object.keys(state.view.selectedElementsById).includes(elementInfo.partId) ||
@@ -218,7 +217,7 @@ const _getSelectionType = (viewState) => {
   return getElementType(firstSelElem);
 };
 export const getSelectionType = (state) => 
- _getSelectionType(state.view);
+  _getSelectionType(state.view);
  
 export const getUploadLog = (state) => 
-	return state.uploadLog;
+  state.view.uploadLog;

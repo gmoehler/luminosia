@@ -12,6 +12,7 @@ import { addImage, loadImage } from "./imageListActions";
 import { getChannelData, getMaxDuration } from "../reducers/channelReducer";
 import { secondsToSamples } from "../utils/conversions";
 import { encodeImage } from "../utils/imageUtils";
+import { addToUploadLog } from "./viewActions";
 
 // load channels and images from config
 
@@ -134,8 +135,8 @@ export const exportImageChannel = (channelId) => {
     
     // export/save binary encoded image for poi
     if (isElectron()) {
-      dispatch(require("../utils/fileUtilsElectron")
-        .uploadChannel(encodeImage(data)));
+      require("../utils/fileUtilsElectron")
+        .uploadChannel(encodeImage(data), () => dispatch(addToUploadLog));
     } else {
       downloadBinaryFile(`result-${channelId}.poi`, encodeImage(data));
     }

@@ -3,23 +3,20 @@ import { spawn } from "promisify-child-process";
 import tmp from "tmp";
 import path from "path";
 
-import { addToUploadLog, clearUploadLog } from "../actions/viewActions";
-
 let portCache = null;
 
-export async function uploadChannel(uint8array) {
-return (dispatch, getState) => {
+export async function uploadChannel(uint8array, addToLog) {
   const dataDir = tmp.dirSync({ unsafeCleanup: true });
   const filename = path.join(dataDir.name, "channel.poi");
   const spiffsFilename = tmp.tmpNameSync();
 
   // 3 steps for upload: save data, generate spiffs file and upload
   try {
-    dispatch(addToUploadLog("Starting upload"));
+    addToLog("Starting upload");
     await saveBinaryFile(filename, uint8array);
     await mkSpiffs( dataDir.name, spiffsFilename);
     await uploadSpiffs(spiffsFilename, portCache);
-    dispatch(addToUploadLog("Upload completed."));
+    addToLog("Upload completed.");
   } catch (err) {
      console.error("Unable to upload channel data:", err);
      portCache = null;
@@ -33,7 +30,6 @@ return (dispatch, getState) => {
     // do nothing, when clean fails
   }
   
-  }
 }
 
 async function saveBinaryFile(filename, uint8array) {

@@ -13,7 +13,7 @@ class ChannelSelectorContainer extends Component {
   render() {
 
     return ( 
-	  <ChannelSelector {...this.props} />);
+	  <ChannelSelector { ...this.props } />);
   }
 }
 
@@ -30,8 +30,6 @@ const mapDispatchToProps = dispatch => ({
   exportImageChannel: (channelId) => dispatch(exportImageChannel(channelId)),
   deleteChannel: (channelId) => dispatch(deleteChannel(channelId)),
   duplicateChannel: (channelId) => dispatch(duplicateChannel(channelId)),
-  addToUploadLog: (text) => dispatch(addToUploadLog(text)),
-  clearUploadLog: () => dispatch(clearUploadLog()),
 });
 
 ChannelSelectorContainer.propTypes = {
