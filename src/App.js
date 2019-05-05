@@ -21,6 +21,7 @@ import { Tooltip } from "@material-ui/core";
 import ImageExporter from "./components/ImageExporter";
 import AnimationPaneContainer from "./components/AnimationPaneContainer";
 import ChannelSelectorContainer from "./components/ChannelSelectorContainer";
+import UploadLogViewContainer from "./components/UploadLogViewContainer";
 
 const drawerWidth = 400;
 const channelSelectorWidth = 96;
@@ -119,8 +120,8 @@ class App extends React.Component {
         <CssBaseline />
         <AppBar position="fixed"
             className={ classNames(classes.appBar, {
-                                               [classes.appBarShift]: open,
-                                             }) }>
+            [classes.appBarShift]: open,
+          }) }>
           <Toolbar disableGutters={ !open }>
             <Typography variant="h6"
                 color="inherit"
@@ -144,6 +145,7 @@ class App extends React.Component {
                             [classes.contentShift]: open,
                           }) }>
           <div className={ classes.drawerHeader } />
+          <UploadLogViewContainer />
           <AnimationPaneContainer drawerWidth={ open ? drawerWidth : 0 } />
           <div className={ classes.channelPane }>
             <ChannelSelectorContainer />

@@ -32,27 +32,31 @@ export class ImageControl extends Component {
 
   render() {
 
-    const {loadImagesFromStorage, saveImagesToStorage, clearImagesfromStorage, clearImageList} = this.props;
+    const { loadImagesFromStorage, saveImagesToStorage, clearImagesfromStorage, clearImageList } = this.props;
 
     return (
       <ImageControlWrapper>
         <Tooltip title="Restore images from store">
-          <IconButton color="primary" onClick={ loadImagesFromStorage }>
+          <IconButton color="primary"
+              onClick={ loadImagesFromStorage }>
             <RestoreImagesIcon />
           </IconButton>
         </Tooltip>
         <Tooltip title="Save images to store">
-          <IconButton color="primary" onClick={ saveImagesToStorage }>
+          <IconButton color="primary"
+              onClick={ saveImagesToStorage }>
             <SaveImagesIcon />
           </IconButton>
         </Tooltip>
         <Tooltip title="Clear store">
-          <IconButton color="primary" onClick={ clearImagesfromStorage }>
+          <IconButton color="primary"
+              onClick={ clearImagesfromStorage }>
             <ClearStoreIcon />
           </IconButton>
         </Tooltip>
         <Tooltip title="Clear images">
-          <IconButton color="primary" onClick={ clearImageList }>
+          <IconButton color="primary"
+              onClick={ clearImageList }>
             <ClearImagesIcon />
           </IconButton>
         </Tooltip>
