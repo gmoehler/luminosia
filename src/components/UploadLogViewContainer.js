@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import { getUploadLog } from "../reducers/viewReducer";
 import UploadLogView from "./UploadLogView";
 import { clearUploadLog } from "../actions/viewActions";
+import { cancelUpload } from "../actions/generalActions";
 
 class ImageControlContainer extends Component {
 
@@ -21,11 +22,13 @@ const mapStateToProps = (state, props) => {
 
 const mapDispatchToProps = dispatch => ({
   clearUploadLog: () => dispatch(clearUploadLog()),
+  cancelUpload: () => dispatch(cancelUpload()),
 });
 
 ImageControlContainer.propTypes = {
   uploadLog: PropTypes.string,
-  clearUploadLog: PropTypes.func.isRequired
+  clearUploadLog: PropTypes.func.isRequired,
+  cancelUpload: PropTypes.func.isRequired,
 };
 
 

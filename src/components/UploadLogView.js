@@ -37,9 +37,12 @@ const styles = theme => ({
   }
 });
 
-function hashCode(s){
-  return s.split("").reduce(function(a,b){a=((a<<5)-a)+b.charCodeAt(0);return a&a;},0);              
-};
+function hashCode(s) {
+  return s.split("").reduce(function(a, b) {
+    a = ((a << 5) - a) + b.charCodeAt(0);return a & a;
+  }, 0);
+}
+;
 
 export class UploadLogView extends Component {
 
@@ -48,7 +51,7 @@ export class UploadLogView extends Component {
   }
 
   handleCancel = () => {
-    return killCurrentProcess();
+    return this.props.cancelUpload();
   }
 
 
@@ -58,47 +61,40 @@ export class UploadLogView extends Component {
     const logLines = uploadLog ? uploadLog.split("\n") : [];
     const logLinesHtml = logLines.map((line) => (
       <p className={ classes.text }
-          id={ hashCode(classes.text) }> 
-        {line} 
+id={ hashCode(classes.text) }>
+        { line }
       </p>
     ));
 
     // hack because we do not have a async action with proper redux states for uploading yet
     const uploadFinished = uploadLog && (
-      uploadLog.includes(doneMessage) || uploadLog.includes(doneWithErrorMessage) 
+      uploadLog.includes(doneMessage) || uploadLog.includes(doneWithErrorMessage)
       || uploadLog.includes(doneWithCancelledMessage));
 
     return (
-      <Modal
-          open = { Boolean(uploadLog) }
-          aria-labelledby="simple-modal-title"
-          aria-describedby="simple-modal-description"
-          onClose={ this.handleClose }
-    >
-      <div 
-          className={ classes.paper }>
-        <Typography variant="h6"
-            id="modal-title">
-          Uploading channel data
-        </Typography>
-        <div 
-            className={ classes.textArea }>
-          <Typography variant="body2"
-              id="simple-modal-description">
-            {logLinesHtml}
+      <Modal open={ Boolean(uploadLog) }
+aria-labelledby="simple-modal-title"
+aria-describedby="simple-modal-description"
+onClose={ this.handleClose }>
+        <div className={ classes.paper }>
+          <Typography variant="h6"
+id="modal-title">
+            Uploading channel data
           </Typography>
+          <div className={ classes.textArea }>
+            <Typography variant="body2"
+id="simple-modal-description">
+              { logLinesHtml }
+            </Typography>
+          </div>
+          <div className={ classes.buttonArea }>
+            <Button disabled={ uploadFinished }
+onClick={ this.handleCancel }>Cancel upload</Button>
+            <Button disabled={ !uploadFinished }
+onClick={ this.handleClose }>Close</Button>
+          </div>
         </div>
-        <div
-            className={ classes.buttonArea }>
-          <Button 
-              disabled={ uploadFinished }
-              onClick={ this.handleCancel }>Cancel upload</Button>
-          <Button 
-              disabled={ !uploadFinished }
-              onClick={ this.handleClose }>Close</Button>
-        </div>
-      </div>
-    </Modal>
+      </Modal>
       );
   }
 }
@@ -107,7 +103,8 @@ UploadLogView.propTypes = {
   classes: PropTypes.object.isRequired,
   theme: PropTypes.object.isRequired,
   uploadLog: PropTypes.string,
-  clearUploadLog: PropTypes.func.isRequired
+  clearUploadLog: PropTypes.func.isRequired,
+  cancelUpload: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles, {

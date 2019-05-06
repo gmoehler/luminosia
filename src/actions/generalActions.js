@@ -176,3 +176,11 @@ export const getChannelExportData = ((fromTime, toTime, sampleRate) => {
   };
 });
 
+export const cancelUpload = () => {
+  return (dispatch, getState) => {
+    if (isElectron()) {
+      require("../utils/fileUtilsElectron")
+        .killCurrentProcess();
+    }
+  };
+};
