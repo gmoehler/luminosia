@@ -8,6 +8,9 @@ cache:
 
 matrix:
   include:
+    #########################################
+    # Static web deployment to github pages #
+    #########################################
     - language: node_js
       node_js:
       - "stable"
@@ -22,3 +25,20 @@ matrix:
         local_dir: build
         on:
           branch: master
+
+    #########################################
+    # Static web deployment to github pages #
+    #########################################
+    - language: node_js
+      node_js:
+      - "stable"
+      os: windows
+      script:
+      - npm electron-pack
+
+      deploy:
+        provider: releases
+        skip_cleanup: true
+        github_token: $GITHUB_TOKEN
+        on:
+          tags: true
