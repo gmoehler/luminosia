@@ -33,7 +33,7 @@ matrix:
     - name: electron
       language: node_js
       node_js:
-      - "lts"
+      - "stable"
       os: macOs
       script:
       - yarn electron-pack
