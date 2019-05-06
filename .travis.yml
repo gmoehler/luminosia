@@ -13,6 +13,8 @@ matrix:
     #########################################
     - name: static_web
       language: node_js
+      node_js:
+      - "stable"
       script:
       - npm test
       - npm run build
@@ -30,9 +32,7 @@ matrix:
     ############################################
     - name: electron
       language: node_js
-      node_js:
-      - "stable"
-      os: macOs
+      os: windows
       script:
       - npm electron-pack
 
