@@ -22,6 +22,7 @@ const styles = theme => ({
     display: "flex",
     flexDirection: "column-reverse", // to autoscroll to end
     height: "100%",
+    overflowX: "none",
     overflowY: "auto",
     border: "2px lightgrey solid",
     margin: "16px"
@@ -30,6 +31,7 @@ const styles = theme => ({
     fontSize: "13px",
     lineHeight: "normal",
     margin: "6px",
+    wordBreak: "break-all",
   },
   buttonArea: {
     marginRight: "16px",
@@ -61,7 +63,7 @@ export class UploadLogView extends Component {
     const logLines = uploadLog ? uploadLog.split("\n") : [];
     const logLinesHtml = logLines.map((line) => (
       <p className={ classes.text }
-id={ hashCode(classes.text) }>
+          id={ hashCode(classes.text) }>
         { line }
       </p>
     ));
@@ -73,25 +75,25 @@ id={ hashCode(classes.text) }>
 
     return (
       <Modal open={ Boolean(uploadLog) }
-aria-labelledby="simple-modal-title"
-aria-describedby="simple-modal-description"
-onClose={ this.handleClose }>
+          aria-labelledby="simple-modal-title"
+          aria-describedby="simple-modal-description"
+          onClose={ this.handleClose }>
         <div className={ classes.paper }>
           <Typography variant="h6"
-id="modal-title">
+              id="modal-title">
             Uploading channel data
           </Typography>
           <div className={ classes.textArea }>
             <Typography variant="body2"
-id="simple-modal-description">
+                id="simple-modal-description">
               { logLinesHtml }
             </Typography>
           </div>
           <div className={ classes.buttonArea }>
             <Button disabled={ uploadFinished }
-onClick={ this.handleCancel }>Cancel upload</Button>
+                onClick={ this.handleCancel }>Cancel upload</Button>
             <Button disabled={ !uploadFinished }
-onClick={ this.handleClose }>Close</Button>
+                onClick={ this.handleClose }>Close</Button>
           </div>
         </div>
       </Modal>
