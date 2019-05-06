@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
-import { Modal, Typography, Button } from "@material-ui/core";
-import { killCurrentProcess, doneMessage, doneWithErrorMessage, doneWithCancelledMessage } from "../utils/fileUtilsElectron";
+import { Modal, Typography, Button, CircularProgress } from "@material-ui/core";
+import { doneMessage, doneWithErrorMessage, doneWithCancelledMessage } from "../utils/fileUtilsElectron";
 
 const styles = theme => ({
   paper: {
@@ -17,6 +17,13 @@ const styles = theme => ({
     height: "70vh",
     display: "flex",
     flexDirection: "column"
+  },
+  headingArea: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginRight: "20px",
+    marginBottom: "10px",
   },
   textArea: {
     display: "flex",
@@ -79,10 +86,15 @@ export class UploadLogView extends Component {
           aria-describedby="simple-modal-description"
           onClose={ this.handleClose }>
         <div className={ classes.paper }>
+          <div  className={ classes.headingArea }>
           <Typography variant="h6"
               id="modal-title">
             Uploading channel data
           </Typography>
+          {uploadFinished ? null :
+            <CircularProgress className={ classes.progress } />
+          }
+          </div>
           <div className={ classes.textArea }>
             <Typography variant="body2"
                 id="simple-modal-description">
