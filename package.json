@@ -1,7 +1,8 @@
 {
   "name": "react-waveform-playlist",
   "version": "0.1.0",
-  "homepage": "./",
+  "homepage": ".",
+  "homepage-web": "https://gmoehler.github.io/luminosia",
   "license": "MIT",
   "author": {
     "name": "Gregor Moehler",

@@ -2,7 +2,10 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import { Modal, Typography, Button, CircularProgress } from "@material-ui/core";
-import { doneMessage, doneWithErrorMessage, doneWithCancelledMessage } from "../utils/fileUtilsElectron";
+
+export const doneMessage = "Upload completed.";
+export const doneWithErrorMessage = "Unable to upload channel data";
+export const doneWithCancelledMessage = "Upload cancelled.";
 
 const styles = theme => ({
   paper: {

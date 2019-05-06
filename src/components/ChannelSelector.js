@@ -8,8 +8,10 @@ import Switch from "@material-ui/core/Switch";
 import { Tooltip, IconButton } from "@material-ui/core";
 import { indigo } from "@material-ui/core/colors/indigo";
 import UploadChannelIcon from "@material-ui/icons/Publish";
+import DownloadChannelIcon from "@material-ui/icons/SaveAlt";
 import DeleteChannelIcon from "@material-ui/icons/DeleteForever";
 import ChannelDupIcon from "@material-ui/icons/FileCopy";
+import isElectron from "is-electron";
 
 const channelSelectorWidth = 96;
 
@@ -66,6 +68,7 @@ class CustomizedSwitches extends React.Component {
 
   render() {
     const { classes, selectedImageChannelId } = this.props;
+    const electronVersion = isElectron();
 
     const switches = this.props.channelOverview
       .map((channel) => 
@@ -87,12 +90,14 @@ class CustomizedSwitches extends React.Component {
             }
           />
           <div className={ classes.lowerIcons }>
-          <Tooltip title="Upload channel to poi">
+          <Tooltip title={ electronVersion ? "Upload channel to poi" : "Download binary channel data" }>
             <IconButton 
                 className={ classes.button }
                 size={ "large" }
                 onClick={ () => this.props.exportImageChannel(channel.channelId) }>
-              <UploadChannelIcon className={ classes.icon } />
+              { electronVersion ? 
+                <UploadChannelIcon className={ classes.icon } /> :
+                <DownloadChannelIcon className={ classes.icon } /> }
             </IconButton>
             </Tooltip>
 

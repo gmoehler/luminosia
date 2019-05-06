@@ -3,10 +3,7 @@ import { spawn } from "promisify-child-process";
 import tmp from "tmp";
 import path from "path";
 import kill from "tree-kill";
-
-export const doneMessage = "Upload completed.";
-export const doneWithErrorMessage = "Unable to upload channel data";
-export const doneWithCancelledMessage = "Upload cancelled.";
+import { doneMessage, doneWithErrorMessage, doneWithCancelledMessage } from "../components/UploadLogView";
 
 let portCache = null;
 let currentActiveProcess = null;
