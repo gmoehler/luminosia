@@ -8,6 +8,10 @@
     "name": "Gregor Moehler",
     "email": "gmoeh@gmx.de"
   },
+  "engines": {
+    "node": ">=10.0.0",
+    "npm": ">=6.0.0"
+  },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "1.2.13",
     "@fortawesome/free-solid-svg-icons": "5.7.0",
