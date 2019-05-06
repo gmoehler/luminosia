@@ -6,11 +6,6 @@ cache:
   directories:
   - node_modules
 
-addons:
-  apt:
-    packages:
-    - wine64
-
 matrix:
   include:
     #########################################
