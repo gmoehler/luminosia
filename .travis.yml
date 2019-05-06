@@ -33,14 +33,17 @@ matrix:
     - name: electron
       services:
       - docker
-      language: generic
+      language: node_js
       node_js:
-      - "stable"
+      - "10"
       cache:
         directories:
         - node_modules
         - $HOME/.cache/electron
         - $HOME/.cache/electron-builder
+
+      before_install:
+      - docker pull electronuserland/builder:wine
 
       script:
       - node --version
