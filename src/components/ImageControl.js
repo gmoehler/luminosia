@@ -32,13 +32,13 @@ export class ImageControl extends Component {
 
   render() {
 
-    const { loadImagesfromStorage, saveImagesToStorage, clearImagesfromStorage, clearImageList } = this.props;
+    const { loadImagesFromStorage, saveImagesToStorage, clearImagesfromStorage, clearImageList } = this.props;
 
     return (
       <ImageControlWrapper>
         <Tooltip title="Restore images from store">
           <IconButton color="primary"
-              onClick={ loadImagesfromStorage }>
+              onClick={ loadImagesFromStorage }>
             <RestoreImagesIcon />
           </IconButton>
         </Tooltip>
@@ -66,7 +66,7 @@ export class ImageControl extends Component {
 }
 
 ImageControl.propTypes = {
-  loadImagesfromStorage: PropTypes.func.isRequired,
+  loadImagesFromStorage: PropTypes.func.isRequired,
   saveImagesToStorage: PropTypes.func.isRequired,
   clearImagesfromStorage: PropTypes.func.isRequired,
   clearImageList: PropTypes.func.isRequired,

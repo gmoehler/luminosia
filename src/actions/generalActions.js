@@ -1,7 +1,10 @@
 
 import { UPLOAD_CONFIG_STARTED, UPLOAD_CONFIG_SUCCESS, UPLOAD_CONFIG_FAILURE } from "./types";
 
+import isElectron from "is-electron";
+
 import { downloadTextfile, readTextFile, /* downloadImagefile, */ downloadBinaryFile } from "../utils/fileUtils";
+
 import { getConfig } from "../reducers/rootReducer";
 
 import { addChannel, loadAChannel, updateChannelMarkersForLastAddedChannel } from "./channelActions";
@@ -9,6 +12,7 @@ import { addImage, loadImage } from "./imageListActions";
 import { getChannelData, getMaxDuration } from "../reducers/channelReducer";
 import { secondsToSamples } from "../utils/conversions";
 import { encodeImage } from "../utils/imageUtils";
+import { addToUploadLog } from "./viewActions";
 
 // load channels and images from config
 
@@ -128,7 +132,18 @@ export const exportImageChannel = (channelId) => {
     dispatch(drawExportImage(channelId, 0));
     // binary download
     const data = getChannelExportData();
-    downloadBinaryFile(`result-${channelId}.poi`, encodeImage(data));
+    
+    // export/save binary encoded image for poi
+    if (isElectron()) {
+      require("../utils/fileUtilsElectron")
+        .uploadChannel(encodeImage(data), (text) => {
+          console.log(text);
+          dispatch(addToUploadLog(text));
+        });
+    } else {
+      downloadBinaryFile(`result-${channelId}.poi`, encodeImage(data));
+    }
+    
     // image file download
     /* const canvas = document.getElementById("imageExportCanvas");
     const resultImage = canvas.toDataURL("image/png");
@@ -161,3 +176,11 @@ export const getChannelExportData = ((fromTime, toTime, sampleRate) => {
   };
 });
 
+export const cancelUpload = () => {
+  return (dispatch, getState) => {
+    if (isElectron()) {
+      require("../utils/fileUtilsElectron")
+        .killCurrentProcess();
+    }
+  };
+};
