@@ -32,7 +32,7 @@ matrix:
       language: node_js
       node_js:
       - "stable"
-      os: windows
+      os: macOs
       script:
       - npm electron-pack
 
