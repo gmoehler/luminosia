@@ -34,6 +34,8 @@ matrix:
       services:
       - docker
       language: generic
+      node_js:
+      - "stable"
       cache:
         directories:
         - node_modules
