@@ -11,9 +11,8 @@ matrix:
     #########################################
     # Static web deployment to github pages #
     #########################################
-    - language: node_js
-      node_js:
-      - "stable"
+    - name: static_web
+      language: node_js
       script:
       - npm test
       - npm run build
@@ -26,10 +25,11 @@ matrix:
         on:
           branch: master
 
-    #########################################
-    # Static web deployment to github pages #
-    #########################################
-    - language: node_js
+    ############################################
+    # Electron build and deploy to gh releases #
+    ############################################
+    - name: electron
+      language: node_js
       node_js:
       - "stable"
       os: windows
