@@ -32,9 +32,11 @@ matrix:
     ############################################
     - name: electron
       language: node_js
+      node_js:
+      - "lts"
       os: windows
       script:
-      - npm electron-pack
+      - yarn electron-pack
 
       deploy:
         provider: releases
