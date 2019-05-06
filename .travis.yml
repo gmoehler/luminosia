@@ -9,7 +9,7 @@ cache:
 addons:
   apt:
     packages:
-    - wine4.7
+    - wine4.5
 
 matrix:
   include:
