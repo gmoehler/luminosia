@@ -138,7 +138,7 @@ export const exportImageChannel = (channelId) => {
       require("../utils/fileUtilsElectron")
         .uploadChannel(encodeImage(data), (text) => {
           console.log(text);
-          dispatch(addToUploadLog(text+"\n"));
+          dispatch(addToUploadLog(text));
         });
     } else {
       downloadBinaryFile(`result-${channelId}.poi`, encodeImage(data));
