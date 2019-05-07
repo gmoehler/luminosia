@@ -2,15 +2,16 @@ branches:
   only:
     - master
 
+language: node_js
+node_js:
+  - "stable"
+
 matrix:
   include:
     #########################################
     # Static web deployment to github pages #
     #########################################
     - name: static_web
-      language: node_js
-      node_js:
-        - "stable"
       cache:
         directories:
           - node_modules
@@ -32,9 +33,6 @@ matrix:
     - name: electron
       services:
       - docker
-      language: node_js
-      node_js:
-        - "stable"
       cache:
         directories:
           - node_modules
