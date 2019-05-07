@@ -44,7 +44,9 @@ matrix:
 
       script:
         # replace version with next release
-        - nextver=`npx semantic-release --dryRun | sed 's/.*next release version is \([0-9.]\+\)*.*/\1/'`
+        - npx semantic-release --dryRun > dryrun.out
+        - cat dryrun.out
+        - nextver=`grep "The next release version is" dryrun.out | sed 's/.*next release version is \([0-9.]\+\)*.*/\1/'`
         - echo $nextver
         - [ -n "$nextver" ] && sed -i -e "s/0.0.0-semantic-release/$nextver/g" package.json
         - head package.json
