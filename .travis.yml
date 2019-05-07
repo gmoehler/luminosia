@@ -47,9 +47,10 @@ matrix:
         - echo $nextver
         - if [ -n "$nextver" ]; then sed -i -e "s/0.0.0-semantic-release/$nextver/g" package.json; fi
         - head package.json
-        - node --version
+        # setup env for docker build
         - env | grep -iE 'DEBUG|NODE_|ELECTRON_|YARN_|NPM_|CI|CIRCLE|TRAVIS_TAG|TRAVIS|TRAVIS_REPO_|TRAVIS_BUILD_|TRAVIS_BRANCH|TRAVIS_PULL_REQUEST_|APPVEYOR_|CSC_|GH_|GITHUB_|BT_|AWS_|STRIP|BUILD_' | grep -v '/home/travis' > .env
         - cat .env
+        # pull docker image
         - docker pull electronuserland/builder:wine
 
       script:
