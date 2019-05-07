@@ -60,19 +60,22 @@ matrix:
       - ls 
       - ls dist
 
-      before_deploy:
+      #before_deploy:
       # Set up git user name and tag this commit
-      - git config --local user.name "gmoehler"
-      - git config --local user.email "gregor.moehler@gmx.de"
-      - export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}
-      - git tag $TRAVIS_TAG
+      #- git config --local user.name "gmoehler"
+      #- git config --local user.email "gregor.moehler@gmx.de"
+      #- export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}
+      #- git tag $TRAVIS_TAG
 
       before_cache:
       - rm -rf $HOME/.cache/electron-builder/wine
 
       deploy:
-        provider: releases
+        provider: script
         skip_cleanup: true
         api_key: $GITHUB_TOKEN
         file_glob: true
         file: dist/LuminosiaStudio*
+        script: 
+        - nvm install lts/*
+        - npx semantic-release
