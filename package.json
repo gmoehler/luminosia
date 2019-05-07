@@ -54,7 +54,8 @@
     "electron-dev": "concurrently \"yarn run electron\" \"wait-on http://localhost:3000 && electron .\"",
     "postinstall": "electron-builder install-app-deps",
     "preelectron-pack": "yarn electron-build",
-    "electron-pack": "build -w"
+    "electron-pack": "build -w",
+    "semantic-release": "semantic-release"
   },
   "main": "public/electron.js",
   "eslintConfig": {
@@ -72,6 +73,7 @@
     "@rescripts/rescript-env": "0.0.5",
     "@semantic-release/git": "^7.0.8",
     "@semantic-release/github": "^5.2.10",
+    "@semantic-release/npm": "^5.1.4",
     "@storybook/addon-actions": "4.1.11",
     "@storybook/react": "4.1.11",
     "babel-loader": "8.0.5",
@@ -112,12 +114,10 @@
 
   "release": {
     "plugins": [
+      "@semantic-release/npm",
       "@semantic-release/commit-analyzer",
       "@semantic-release/release-notes-generator",
-      ["@semantic-release/git", {
-        "assets": ["dist/LuminosiaStudio*"],
-        "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
-      }],
+      "@semantic-release/git",
       ["@semantic-release/github", {
         "assets": ["dist/LuminosiaStudio*"]
       }]
