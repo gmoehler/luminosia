@@ -33,7 +33,10 @@ matrix:
     - name: electron
       services:
       - docker
-      language: generic
+      language: go
+      go:
+      - 1.6
+      - 1.7 
       cache:
         directories:
         - node_modules
