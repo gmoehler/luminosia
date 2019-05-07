@@ -1,10 +1,6 @@
 branches:
   only:
-  - master
-
-cache:
-  directories:
-  - node_modules
+    - master
 
 matrix:
   include:
@@ -14,10 +10,13 @@ matrix:
     - name: static_web
       language: node_js
       node_js:
-      - "stable"
+        - "stable"
+      cache:
+        directories:
+          - node_modules
       script:
-      - npm test
-      - npm run build
+        - npm test
+        - npm run build
 
       deploy:
         provider: pages
@@ -35,33 +34,33 @@ matrix:
       - docker
       language: go
       go:
-      - 1.6
-      - 1.7 
+        - 1.6
+        - 1.7 
       cache:
         directories:
-        - node_modules
-        - $HOME/.cache/electron
-        - $HOME/.cache/electron-builder
+          - node_modules
+          - $HOME/.cache/electron
+          - $HOME/.cache/electron-builder
 
       before_install:
-      - docker pull electronuserland/builder:wine
+        - docker pull electronuserland/builder:wine
 
       script:
-      - node --version
-      - env | grep -iE 'DEBUG|NODE_|ELECTRON_|YARN_|NPM_|CI|CIRCLE|TRAVIS_TAG|TRAVIS|TRAVIS_REPO_|TRAVIS_BUILD_|TRAVIS_BRANCH|TRAVIS_PULL_REQUEST_|APPVEYOR_|CSC_|GH_|GITHUB_|BT_|AWS_|STRIP|BUILD_' | grep -v '/home/travis' > .env
-      - cat .env
-      - |
-        docker run --rm \
-          --env-file .env \
-          --env ELECTRON_CACHE="/root/.cache/electron" \
-          --env ELECTRON_BUILDER_CACHE="/root/.cache/electron-builder" \
-          -v ${PWD}:/project \
-          -v ${PWD##*/}-node-modules:/project/node_modules \
-          -v ~/.cache/electron:/root/.cache/electron \
-          -v ~/.cache/electron-builder:/root/.cache/electron-builder \
-          electronuserland/builder:wine bash -c "yarn && yarn electron-pack"
-      - ls 
-      - ls dist
+        - node --version
+        - env | grep -iE 'DEBUG|NODE_|ELECTRON_|YARN_|NPM_|CI|CIRCLE|TRAVIS_TAG|TRAVIS|TRAVIS_REPO_|TRAVIS_BUILD_|TRAVIS_BRANCH|TRAVIS_PULL_REQUEST_|APPVEYOR_|CSC_|GH_|GITHUB_|BT_|AWS_|STRIP|BUILD_' | grep -v '/home/travis' > .env
+        - cat .env
+        - |
+          docker run --rm \
+            --env-file .env \
+            --env ELECTRON_CACHE="/root/.cache/electron" \
+            --env ELECTRON_BUILDER_CACHE="/root/.cache/electron-builder" \
+            -v ${PWD}:/project \
+            -v ${PWD##*/}-node-modules:/project/node_modules \
+            -v ~/.cache/electron:/root/.cache/electron \
+            -v ~/.cache/electron-builder:/root/.cache/electron-builder \
+            electronuserland/builder:wine bash -c "yarn && yarn electron-pack"
+        - ls 
+        - ls dist
 
       #before_deploy:
       # Set up git user name and tag this commit
@@ -71,7 +70,7 @@ matrix:
       #- git tag $TRAVIS_TAG
 
       before_cache:
-      - rm -rf $HOME/.cache/electron-builder/wine
+        - rm -rf $HOME/.cache/electron-builder/wine
 
       deploy:
         provider: script
@@ -80,5 +79,5 @@ matrix:
         file_glob: true
         file: dist/LuminosiaStudio*
         script: 
-        - nvm install lts/*
-        - npx semantic-release
+          - nvm install lts/*
+          - npx semantic-release
