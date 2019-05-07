@@ -76,5 +76,3 @@ matrix:
         github_token: $GITHUB_TOKEN
         file_glob: true
         file: dist/LuminosiaStudio*
-        on:
-          tags: true
