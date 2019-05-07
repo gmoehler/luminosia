@@ -1,6 +1,6 @@
 {
   "name": "react-waveform-playlist",
-  "version": "0.1.0",
+  "version": "0.0.0-semantic-release",
   "homepage": ".",
   "homepage-web": "https://gmoehler.github.io/luminosia",
   "license": "MIT",
@@ -70,6 +70,7 @@
     "@babel/core": "7.2.2",
     "@rescripts/cli": "^0.0.10",
     "@rescripts/rescript-env": "0.0.5",
+    "@semantic-release/git": "^7.0.8",
     "@storybook/addon-actions": "4.1.11",
     "@storybook/react": "4.1.11",
     "babel-loader": "8.0.5",
@@ -107,7 +108,7 @@
       "buildResources": "assets"
     }
   },
-  
+
   "release": {
     "plugins": [
       "@semantic-release/commit-analyzer",
