@@ -32,10 +32,9 @@ matrix:
     - name: electron
       services:
       - docker
-      language: go
-      go:
-        - 1.6
-        - 1.7 
+      language: node_js
+      node_js:
+        - "stable"
       cache:
         directories:
           - node_modules
@@ -79,5 +78,4 @@ matrix:
         file_glob: true
         file: dist/LuminosiaStudio*
         script: 
-          - nvm install lts/*
           - npx semantic-release
