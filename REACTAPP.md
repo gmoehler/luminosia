@@ -1,4 +1,4 @@
-# react-waveform-playlist
+# luminosia
 A port of Waveform Playlist to React.
 
 

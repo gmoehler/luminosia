@@ -15,6 +15,7 @@ class ImageListContainer extends Component {
   render() {
     return ( <ImageList 
         { ...this.props }
+        sampleRate={ defaultSampleRate }
         selectImage={ this.props.toggleElementSelection }
         selectMultiImage={ this.props.toggleElementMultiSelection }
     /> );
@@ -25,7 +26,7 @@ const mapStateToProps = (state, props) => {
   return {
     images: getImageList(state),
     resolution: getResolution(state),
-    selectedImageIds: getSelectedImageIds(state)
+    selectedImageIds: getSelectedImageIds(state),
   };
 };
 

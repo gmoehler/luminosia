@@ -10,10 +10,34 @@ import { getImageSources } from "../reducers/imageListReducer";
 
 class ChannelGroupContainer extends Component {
 
+  static getDerivedStateFromError(error) {
+    return { error };
+  }
+
+  constructor(props) {
+    super(props);
+    this.state = { error: null };
+  }
+
+  componentDidCatch(error, state) {
+    this.setState({ error });
+  }
+
   render() {
 
+    if (this.state.error){
+      return (
+        <div>
+          <p> ERROR! Cannot continue. </p>
+          {this.state.error.message ?  <p> {this.state.error.message} </p> : null}
+          {this.state.error.stack ?  <p> {this.state.error.stack} </p> : null}
+        </div>
+        );
+    }
+
     return (
-      <ChannelGroup { ...this.props } />);
+      <ChannelGroup { ...this.props } />
+      );
   }
 }
 
