@@ -90,6 +90,7 @@
     "validate-commit-message": "3.0.1",
     "wait-on": "^3.2.0"
   },
+  
   "build": {
     "appId": "com.luminosia.studio",
     "productName": "LuminosiaStudio",
