@@ -41,8 +41,7 @@ matrix:
 
       before_install:
         # replace version with next release
-        - npx semantic-release --dryRun > dryrun.out
-        - cat dryrun.out
+        - npx semantic-release --dryRun 2>&1 | tee dryrun.out
         - nextver=`grep "The next release version is" dryrun.out | sed 's/.*next release version is \([0-9.]\+\)*.*/\1/'`
         - echo $nextver
         - if [ -n "$nextver" ]; then sed -i -e "s/0.0.0-semantic-release/$nextver/g" package.json; fi
