@@ -86,6 +86,7 @@
     "redux-mock-store": "1.5.3",
     "semantic-release": "^15.13.3",
     "typescript": "^3.4.5",
+    "validate-commit-message": "3.0.1",
     "wait-on": "^3.2.0"
   },
   "build": {
@@ -115,7 +116,7 @@
 
   "husky": {
     "hooks": {
-      "pre-commit": "yarn run semantic-release --plugins @semantic-release/commit-analyzer"
+      "commitmsg": "validate-commit-message"
     }
   },
 
