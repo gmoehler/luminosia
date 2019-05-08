@@ -168,4 +168,5 @@ ImageList.propTypes = {
   selectImage: PropTypes.func.isRequired,
   selectMultiImage: PropTypes.func.isRequired,
   selectedImageIds: PropTypes.arrayOf(PropTypes.string),
+  sampleRate: PropTypes.number.isRequired,
 };
