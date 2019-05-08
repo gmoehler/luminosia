@@ -114,6 +114,12 @@
     }
   },
 
+  "config": {
+    "validate-commit-msg": {
+      "types": ["feat", "fix", "docs", "test", "build", "chore"]
+    }
+  },
+
   "husky": {
     "hooks": {
       "commitmsg": "validate-commit-message"
