@@ -56,7 +56,8 @@
     "postinstall": "electron-builder install-app-deps",
     "preelectron-pack": "yarn electron-build",
     "electron-pack": "build -w",
-    "semantic-release": "semantic-release"
+    "semantic-release": "semantic-release",
+    "commitmsg": "validate-commit-msg"
   },
   "main": "public/electron.js",
   "eslintConfig": {
@@ -122,7 +123,7 @@
 
   "husky": {
     "hooks": {
-      "commitmsg": "validate-commit-message"
+      "commit-msg": "npm run commitmsg"
     }
   },
 
