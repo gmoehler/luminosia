@@ -4,7 +4,7 @@ import { withStyles } from "@material-ui/core/styles";
 import { Modal, Typography, Button, CircularProgress } from "@material-ui/core";
 
 export const doneMessage = "Upload completed.";
-export const doneWithErrorMessage = "Unable to upload channel data";
+export const doneWithErrorMessage = "Unable to complete upload.";
 export const doneWithCancelledMessage = "Upload cancelled.";
 
 const styles = theme => ({
@@ -49,12 +49,6 @@ const styles = theme => ({
   }
 });
 
-function hashCode(s) {
-  return s.split("").reduce(function(a, b) {
-    a = ((a << 5) - a) + b.charCodeAt(0);return a & a;
-  }, 0);
-}
-;
 
 export class UploadLogView extends Component {
 
@@ -71,11 +65,12 @@ export class UploadLogView extends Component {
 
     const { uploadLog, classes } = this.props;
     const logLines = uploadLog ? uploadLog.split("\n") : [];
+    let i=0;
     const logLinesHtml = logLines.map((line) => (
-      <p className={ classes.text }
-          id={ hashCode(classes.text) }>
+      <Typography className={ classes.text }
+          key={ i++ }>
         { line }
-      </p>
+      </Typography>
     ));
 
     // hack because we do not have a async action with proper redux states for uploading yet
@@ -87,22 +82,23 @@ export class UploadLogView extends Component {
       <Modal open={ Boolean(uploadLog) }
           aria-labelledby="simple-modal-title"
           aria-describedby="simple-modal-description"
+          disableBackdropClick={ true }
           onClose={ this.handleClose }>
         <div className={ classes.paper }>
           <div  className={ classes.headingArea }>
           <Typography variant="h6"
               id="modal-title">
-            Uploading channel data
+            Poi upload
           </Typography>
           {uploadFinished ? null :
             <CircularProgress className={ classes.progress } />
           }
           </div>
           <div className={ classes.textArea }>
-            <Typography variant="body2"
+            <div variant="body2"
                 id="simple-modal-description">
               { logLinesHtml }
-            </Typography>
+            </div>
           </div>
           <div className={ classes.buttonArea }>
             <Button disabled={ uploadFinished }

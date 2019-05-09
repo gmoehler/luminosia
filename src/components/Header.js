@@ -12,6 +12,7 @@ import ZoomInIcon from "@material-ui/icons/ZoomIn";
 import ZoomOutIcon from "@material-ui/icons/ZoomOut";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import StopIcon from "@material-ui/icons/Stop";
+import Autorenew from "@material-ui/icons/Autorenew";
 import { ContentCopy, ContentPaste } from "mdi-material-ui";
 
 const HeaderWrapper = styled.div`
@@ -78,7 +79,8 @@ export class Header extends Component {
   render() {
 
     const { createImageChannel, downloadConfig, enablePlay, playChannelAndImage, enableStop, 
-      stopChannel, zoomIn, zoomOut, numSelectedElems, deleteSelectedPart, copyPart, pastePart, hasPartToCopy } = this.props;
+      stopChannel, zoomIn, zoomOut, numSelectedElems, deleteSelectedPart, copyPart, pastePart, updateFirmware, 
+      hasPartToCopy } = this.props;
 
     return (
       <HeaderWrapper>
@@ -170,6 +172,16 @@ export class Header extends Component {
             </IconButton>
           </Tooltip>
         </div>
+        <div style={ { margin: "0 10px" } }>
+        <Tooltip title="Update firmware">
+          <IconButton color="secondary"
+              onClick={ updateFirmware }>
+            <Autorenew />
+          </IconButton>
+        </Tooltip>
+        
+      </div>
+
       </HeaderWrapper>
       );
   }
@@ -195,6 +207,7 @@ Header.propTypes = {
   uploadAudioFile: PropTypes.func.isRequired,
   copyPart: PropTypes.func.isRequired,
   pastePart: PropTypes.func.isRequired,
+  updateFirmware: PropTypes.func.isRequired,
   hasPartToCopy: PropTypes.bool,
 };
 
