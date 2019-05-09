@@ -4,6 +4,7 @@ import tmp from "tmp";
 import path from "path";
 import kill from "tree-kill";
 import { doneMessage, doneWithErrorMessage, doneWithCancelledMessage } from "../components/UploadLogView";
+import downloadRelease from "download-github-release";
 
 let portCache = null;
 let currentActiveProcess = null;
@@ -18,7 +19,7 @@ export async function uploadChannel(uint8array, log) {
     await saveBinaryFile(filename, uint8array, log);
     await mkSpiffs( dataDir.name, spiffsFilename, log);
     if (currentActiveProcess) {
-      await uploadSpiffs(spiffsFilename, portCache, log);
+      await upload(spiffsFilename, "0x150000", portCache, log);
       log(`${doneMessage}\n`);
     } else {
       throw (new Error("cancelled"));
@@ -39,6 +40,38 @@ export async function uploadChannel(uint8array, log) {
   try {
     dataDir.removeCallback();
     await fs.unlink(spiffsFilename);
+  } catch(err) {
+    // do nothing, when clean fails
+  }
+  
+}
+
+export async function updateFirmware(log) {
+  const downloadDir = tmp.dirSync({ unsafeCleanup: true });
+  const assetName = "firmware.bin";
+  const downloadedAsset = path.join(downloadDirr.name, assetName);
+
+  // 2 steps for update firmware: download firmware and upload
+  try {
+  	await downloadFirmware(assetName, downloadDir);
+      await upload(downloadedAsset, "0x00010000", portCache, log);
+      log(`${doneMessage}\n`);
+    }
+  } catch (err) {
+    if (currentActiveProcess) {
+     console.error("Unable to update firmware:", err);
+     log(`${doneWithErrorMessage}:`, err);
+     portCache = null;
+    }
+    else {
+      log(`${doneWithCancelledMessage}.`);
+    }
+  } 
+
+  // cleanup
+  currentActiveProcess = null;
+  try {
+    downloadDir.removeCallback();
   } catch(err) {
     // do nothing, when clean fails
   }
@@ -76,9 +109,9 @@ async function mkSpiffs(dir, filename, log) {
   log("Done generating spiffs image.\n");
 } 
 
-async function uploadSpiffs(filename, port, log) {
+async function upload(filename, addr, port, log) {
 
-  const params =  ["--chip", "esp32", "--baud", "921600", "write_flash", "-z", "0x150000", filename];
+  const params =  ["--chip", "esp32", "--baud", addr, "write_flash", "-z", "0x150000", filename];
 
   if (port) {
     params.unshift("--port", port);
@@ -114,8 +147,29 @@ async function uploadSpiffs(filename, port, log) {
   });
 
   await currentActiveProcess;
-  log("Done uploading channel data.\n");
+  log("Done uploading data.\n");
 } 
+
+async function downloadFirmware(assetName, outputdir) {
+ 
+  const user = "gmoehler";
+  const repo = "ledpoi";
+  const leaveZipped = false;
+ 
+  // Define a function to filter releases.
+  function filterRelease(release) {
+    return release.prerelease === false;
+  }
+ 
+  // Define a function to filter assets.
+  function filterAsset(asset) {
+    return asset.name === assetName;
+  }
+  
+  log(`Downloading firmware ${assetName} to ${outputdir}...");
+  await downloadRelease(user, repo, outputdir, filterRelease, filterAsset, leaveZipped);
+  log("Done.\n");
+}
 
 export function killCurrentProcess() {
   if (currentActiveProcess) {
