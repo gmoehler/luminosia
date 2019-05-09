@@ -12,6 +12,7 @@ import ZoomInIcon from "@material-ui/icons/ZoomIn";
 import ZoomOutIcon from "@material-ui/icons/ZoomOut";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import StopIcon from "@material-ui/icons/Stop";
+import Autorenew from "@material-ui/icons/Autorenew";
 import { ContentCopy, ContentPaste } from "mdi-material-ui";
 
 const HeaderWrapper = styled.div`
@@ -170,6 +171,16 @@ export class Header extends Component {
             </IconButton>
           </Tooltip>
         </div>
+        <div style={ { margin: "0 10px" } }>
+        <Tooltip title="Update firmware">
+          <IconButton color="inherit"
+              onClick={ zoomIn }>
+            <Autorenew />
+          </IconButton>
+        </Tooltip>
+        
+      </div>
+
       </HeaderWrapper>
       );
   }

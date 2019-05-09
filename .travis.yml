@@ -68,8 +68,8 @@ matrix:
 
       #before_deploy:
       # Set up git user name and tag this commit
-      #- git config --local user.name "gmoehler"
-      #- git config --local user.email "gregor.moehler@gmx.de"
+      #- git config --local user.name "me"
+      #- git config --local user.email "email@me.com"
       #- export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}
       #- git tag $TRAVIS_TAG
 
