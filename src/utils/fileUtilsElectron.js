@@ -165,7 +165,14 @@ async function downloadFirmware(assetName, outputdir, log) {
   }
   
   log(`Downloading firmware '${assetName}' to ${outputdir}...`);
-  await downloadRelease(user, repo, outputdir, filterRelease, filterAsset, leaveZipped);
+  try {
+    await downloadRelease(user, repo, outputdir, filterRelease, filterAsset, leaveZipped);
+  } catch (err) {
+    // not sure err is set
+    currentActiveProcess=true; // hack to show real error
+    throw err;
+  }
+  
   log("Done.\n");
 }
 
