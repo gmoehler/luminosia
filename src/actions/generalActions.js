@@ -184,3 +184,18 @@ export const cancelUpload = () => {
     }
   };
 };
+
+export const updateFirmware = (configData, audioContext) => {
+  return (dispatch, getState) => {
+    if (isElectron()) {
+      require("../utils/fileUtilsElectron")
+        .updateFirmware((text) => {
+          console.log(text);
+          dispatch(addToUploadLog(text));
+        });
+    } else {
+      console.error("Firmware update only implemented for Electron.");
+    }
+
+  };
+};

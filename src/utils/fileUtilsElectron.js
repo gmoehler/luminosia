@@ -49,14 +49,13 @@ export async function uploadChannel(uint8array, log) {
 export async function updateFirmware(log) {
   const downloadDir = tmp.dirSync({ unsafeCleanup: true });
   const assetName = "firmware.bin";
-  const downloadedAsset = path.join(downloadDirr.name, assetName);
+  const downloadedAsset = path.join(downloadDir.name, assetName);
 
   // 2 steps for update firmware: download firmware and upload
   try {
-  	await downloadFirmware(assetName, downloadDir);
-      await upload(downloadedAsset, "0x00010000", portCache, log);
-      log(`${doneMessage}\n`);
-    }
+    await downloadFirmware(assetName, downloadDir.name, log);
+    await upload(downloadedAsset, "0x00010000", portCache, log);
+    log(`${doneMessage}\n`);
   } catch (err) {
     if (currentActiveProcess) {
      console.error("Unable to update firmware:", err);
@@ -111,13 +110,13 @@ async function mkSpiffs(dir, filename, log) {
 
 async function upload(filename, addr, port, log) {
 
-  const params =  ["--chip", "esp32", "--baud", addr, "write_flash", "-z", "0x150000", filename];
+  const params =  ["--chip", "esp32", "--baud", "921600", "write_flash", "-z", addr, filename];
 
   if (port) {
     params.unshift("--port", port);
-    log(`Uploading spiffs image to port ${port}...\n`);
+    log(`Uploading to port ${port}...\n`);
   } else {
-    log("Detecting port and uploading image...\n");
+    log("Autodetecting port for upload...\n");
   }
 
   currentActiveProcess = spawn("./resources/bin/esptool.exe", params);
@@ -147,10 +146,9 @@ async function upload(filename, addr, port, log) {
   });
 
   await currentActiveProcess;
-  log("Done uploading data.\n");
 } 
 
-async function downloadFirmware(assetName, outputdir) {
+async function downloadFirmware(assetName, outputdir, log) {
  
   const user = "gmoehler";
   const repo = "ledpoi";
@@ -166,7 +164,7 @@ async function downloadFirmware(assetName, outputdir) {
     return asset.name === assetName;
   }
   
-  log(`Downloading firmware ${assetName} to ${outputdir}...");
+  log(`Downloading firmware '${assetName}' to ${outputdir}...`);
   await downloadRelease(user, repo, outputdir, filterRelease, filterAsset, leaveZipped);
   log("Done.\n");
 }
