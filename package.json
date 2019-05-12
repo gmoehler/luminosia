@@ -56,7 +56,7 @@
     "electron-dev": "concurrently \"yarn run electron\" \"wait-on http://localhost:3000 && electron .\"",
     "postinstall": "electron-builder install-app-deps",
     "preelectron-pack": "yarn electron-build",
-    "electron-pack": "build -w -l",
+    "electron-pack": "build -win -linux -deb",
     "semantic-release": "semantic-release",
     "commitmsg": "validate-commit-msg"
   },
@@ -128,7 +128,7 @@
       "@semantic-release/commit-analyzer",
       "@semantic-release/release-notes-generator",
       ["@semantic-release/github", {
-        "assets": ["dist/LuminosiaStudio*"]
+        "assets": ["dist/LuminosiaStudio*", "dist/luminosia*"]
       }]
     ]
   }
