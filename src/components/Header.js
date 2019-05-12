@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import styled /*, { withTheme } */ from "styled-components";
 import { withStyles } from "@material-ui/core/styles";
 import { Tooltip, IconButton } from "@material-ui/core";
 import PlaylistAddIcon from "@material-ui/icons/PlaylistAdd";
@@ -15,26 +14,21 @@ import StopIcon from "@material-ui/icons/Stop";
 import Autorenew from "@material-ui/icons/Autorenew";
 import { ContentCopy, ContentPaste } from "mdi-material-ui";
 
-const HeaderWrapper = styled.div`
-  display: flex
-  justify-content: center;
-  flex-direction: row;
-  margin: 0;
-  padding: 0 30px;
-  white-space: nowrap;
-`;
-
 const styles = theme => ({
   root: {
     color: "white",
   },
-  formControl: {
-    margin: theme.spacing.unit,
-    minWidth: 80,
+  wrapper: {
+    display: "flex",
+    justifyContent: "center",
+    flexDirection: "row",
+    margin: 0,
+    padding: "0 30px",
+    whiteSpace: "nowrap",
   },
-  controlgroup: {
-    padding: "0 30",
-  }
+  headergroup: {
+    margin: "0 10px",
+  },
 });
 
 export class Header extends Component {
@@ -78,13 +72,13 @@ export class Header extends Component {
 
   render() {
 
-    const { createImageChannel, downloadConfig, enablePlay, playChannelAndImage, enableStop, 
+    const { classes, createImageChannel, downloadConfig, enablePlay, playChannelAndImage, enableStop, 
       stopChannel, zoomIn, zoomOut, numSelectedElems, deleteSelectedPart, copyPart, pastePart, updateFirmware, 
       hasPartToCopy } = this.props;
 
     return (
-      <HeaderWrapper>
-        <div style={ { margin: "0 10px" } }>
+      <div className={ classes.wrapper }>
+        <div className= { classes.headergroup }>
           <input type="file"
               accept="audio/*"
               hidden
@@ -121,7 +115,7 @@ export class Header extends Component {
             </IconButton>
           </Tooltip>
         </div>
-        <div style={ { margin: "0 10px" } }>
+        <div  className= { classes.headergroup }>
           <Tooltip title="Play">
             <IconButton color="inherit"
                 disabled={ !enablePlay }
@@ -172,7 +166,7 @@ export class Header extends Component {
             </IconButton>
           </Tooltip>
         </div>
-        <div style={ { margin: "0 10px" } }>
+        <div className= { classes.headergroup }>
         <Tooltip title="Update firmware">
           <IconButton color="secondary"
               onClick={ updateFirmware }>
@@ -182,12 +176,13 @@ export class Header extends Component {
         
       </div>
 
-      </HeaderWrapper>
+      </div>
       );
   }
 }
 
 Header.propTypes = {
+  classes: PropTypes.object.isRequired,
   channelIds: PropTypes.array,
   createImageChannel: PropTypes.func.isRequired,
   downloadConfig: PropTypes.func.isRequired,
