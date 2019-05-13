@@ -103,7 +103,12 @@
       "node_modules/**/*"
     ],
     "linux":{
-      "target": ["deb", "rpm", "AppImage", "snap"]
+      "target": [
+        {"target": "deb"}, 
+        {"target": "rpm"}, 
+        {"target": "AppImage"}, 
+        {"target": "snap"}
+      ]
     },
     "extraResources": [
       {
