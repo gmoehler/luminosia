@@ -48,10 +48,8 @@ class HeaderContainer extends Component {
 
     return (
       <Header { ...this.props }
-          init={ this.doInit }
           zoomIn={ this.zoomIn }
           zoomOut={ this.zoomOut }
-          deleteSelectedPart={ deleteSelectedPartAndMarkers }
           />
       );
   }
@@ -86,6 +84,7 @@ const mapDispatchToProps = dispatch => ({
 
 HeaderContainer.propTypes = {
   setResolution: PropTypes.func.isRequired,
+  deleteSelectedPartAndMarkers: PropTypes.func.isRequired,
 };
 
 
