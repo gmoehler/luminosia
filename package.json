@@ -55,7 +55,7 @@
     "electron-dev": "concurrently \"yarn run electron\" \"wait-on http://localhost:3000 && electron .\"",
     "postinstall": "electron-builder install-app-deps",
     "preelectron-pack": "yarn electron-build",
-    "electron-pack": "build -win -linux -deb",
+    "electron-pack": "build -win -linux",
     "semantic-release": "semantic-release",
     "commitmsg": "validate-commit-msg"
   },
@@ -102,6 +102,9 @@
       "build/**/*",
       "node_modules/**/*"
     ],
+    "linux":{
+      "target": ["deb", "rpm", "AppImage", "snap"]
+    },
     "extraResources": [
       {
         "from": "./resources/bin",
