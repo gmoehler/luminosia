@@ -95,23 +95,52 @@ const styles = theme => ({
 });
 
 class App extends React.Component {
-  state = {
-    open: false,
-  };
+  static getDerivedStateFromError(error) {
+    return { error };
+  }
+
+  constructor(props) {
+    super(props);
+    this.state = { 
+      error: null,
+      open: false,
+    };
+  }
+
+  componentDidCatch(error, state) {
+    this.setState({ 
+      ...this.state,
+      error 
+    });
+  }
+
 
   handleDrawerOpen = () => {
     this.setState({
+      ...this.state,
       open: true
     });
   };
 
   handleDrawerClose = () => {
     this.setState({
+      ...this.state,
       open: false
     });
   };
 
   render() {
+
+    if (this.state.error){
+      return (
+        <div>
+          <p> ERROR! Cannot continue. </p>
+          {this.state.error.message ?  <p> {this.state.error.message} </p> : null}
+          {this.state.error.stack ?  <p> {this.state.error.stack} </p> : null}
+        </div>
+        );
+    }
+
     const { classes, theme } = this.props;
     const { open } = this.state;
 

@@ -219,12 +219,7 @@ export const getAllChannelsData = (state) => {
     .sort((ch1, ch2) => {
       const str1 = ch1.type + ch1.channelId;
       const str2 = ch2.type + ch2.channelId;
-      if (str1 < str2) {
-        return -1;
-      } else if (str2 > str1) {
-        return 1;
-      }
-      return 0;
+      return str1.localeCompare(str2);
     });
 };
 
