@@ -50,7 +50,6 @@ class HeaderContainer extends Component {
       <Header { ...this.props }
           zoomIn={ this.zoomIn }
           zoomOut={ this.zoomOut }
-          deleteSelectedPart={ this.props.deleteSelectedPartAndMarkers }
           />
       );
   }

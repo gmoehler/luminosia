@@ -79,7 +79,7 @@ export class Header extends Component {
   render() {
 
     const { createImageChannel, downloadConfig, enablePlay, playChannelAndImage, enableStop, 
-      stopChannel, zoomIn, zoomOut, numSelectedElems, deleteSelectedPart, copyPart, pastePart, updateFirmware, 
+      stopChannel, zoomIn, zoomOut, numSelectedElems, deleteSelectedPartAndMarkers, copyPart, pastePart, updateFirmware, 
       hasPartToCopy } = this.props;
 
     return (
@@ -167,7 +167,7 @@ export class Header extends Component {
           <Tooltip title="Delete selected">
             <IconButton disabled={ numSelectedElems === 0 }
                 color="inherit"
-                onClick={ deleteSelectedPart }>
+                onClick={ deleteSelectedPartAndMarkers }>
               <DeleteIcon />
             </IconButton>
           </Tooltip>
@@ -200,7 +200,7 @@ Header.propTypes = {
   zoomIn: PropTypes.func.isRequired,
   zoomOut: PropTypes.func.isRequired,
   numSelectedElems: PropTypes.number,
-  deleteSelectedPart: PropTypes.func.isRequired,
+  deleteSelectedPartAndMarkers: PropTypes.func.isRequired,
   uploadConfigFile: PropTypes.func.isRequired,
   unsetChannelActive: PropTypes.func.isRequired,
   setChannelActive: PropTypes.func.isRequired,
