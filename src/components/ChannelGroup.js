@@ -16,8 +16,6 @@ const ChannelGroupWrapper = styled.div`
 	white-space: nowrap;
 `;
 
-const windowPixelRatio = window.devicePixelRatio;
-
 // add play functionality to audio channels
 const AudioChannelWithPlay = withEventHandler(withPlay(timeToPixels(Channel)));
 const ImageChannelWithPlay = withEventHandler(withPlay(timeToPixels(ImageChannel)));
@@ -93,7 +91,6 @@ export default class ChannelGroup extends Component {
           resolution,
           buffer: channelData && channelData.buffer,
           parts: channelData.byPartId ? Object.values(channelData.byPartId) : [],
-          scale: windowPixelRatio,
           reportProgress: this.reportProgress,
         };
 
@@ -128,4 +125,5 @@ ChannelGroup.propTypes = {
   move: PropTypes.func.isRequired,
   drawerWidth: PropTypes.number.isRequired,
   selectedImageChannelId: PropTypes.number,
+  playState: PropTypes.string,
 };
