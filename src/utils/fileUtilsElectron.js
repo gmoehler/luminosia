@@ -119,7 +119,7 @@ async function upload(filename, addr, port, log) {
     log("Autodetecting port for upload...\n");
   }
 
-  currentActiveProcess = spawn("./resources/bin/esptool.exe", params);
+  currentActiveProcess = spawn("./resources/bin/esptool", params);
 
   currentActiveProcess.stdout.on("data", (data) => {
     // potentially update port cache
