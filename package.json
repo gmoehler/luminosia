@@ -104,10 +104,18 @@
     ],
     "linux":{
       "target": [
-        {"target": "deb"}, 
-        {"target": "rpm"}, 
-        {"target": "AppImage"}, 
-        {"target": "snap"}
+        {"target": "deb", 
+          "arch": [
+          "x64", "ia32"
+        ]}, 
+        {"target": "AppImage", 
+          "arch": [
+          "x64", "ia32"
+        ]}, 
+        {"target": "snap", 
+          "arch": [
+          "x64", "ia32"
+        ]}
       ]
     },
     "extraResources": [
