@@ -47,7 +47,7 @@ matrix:
         - if [ -n "$nextver" ]; then sed -i -e "s/0.0.0-semantic-release/$nextver/g" package.json; fi
         - head package.json
         # make scripts executable
-        - chmod ugo+x ./resources/bin/*
+        - chmod a+x ./resources/bin/*
         # setup env for docker build
         - env | grep -iE 'DEBUG|NODE_|ELECTRON_|YARN_|NPM_|CI|CIRCLE|TRAVIS_TAG|TRAVIS|TRAVIS_REPO_|TRAVIS_BUILD_|TRAVIS_BRANCH|TRAVIS_PULL_REQUEST_|APPVEYOR_|CSC_|GH_|GITHUB_|BT_|AWS_|STRIP|BUILD_' | grep -v '/home/travis' > .env
         - cat .env
@@ -65,14 +65,7 @@ matrix:
             -v ~/.cache/electron:/root/.cache/electron \
             -v ~/.cache/electron-builder:/root/.cache/electron-builder \
             electronuserland/builder:wine bash -c "yarn && yarn electron-pack"
-        - ls dist
-
-      #before_deploy:
-      # Set up git user name and tag this commit
-      #- git config --local user.name "me"
-      #- git config --local user.email "email@me.com"
-      #- export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}
-      #- git tag $TRAVIS_TAG
+        - ls -l dist
 
       before_cache:
         - rm -rf $HOME/.cache/electron-builder/wine
