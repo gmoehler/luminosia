@@ -60,11 +60,11 @@ export async function updateFirmware(log) {
   } catch (err) {
     if (currentActiveProcess) {
      console.error("Unable to update firmware:", err);
-     log(`${doneWithErrorMessage}:`, err);
+     log(`${doneWithErrorMessage}: ${err}\n`);
      portCache = null;
     }
     else {
-      log(`${doneWithCancelledMessage}.`);
+      log(`${doneWithCancelledMessage}.\n`);
     }
   } 
 
@@ -86,8 +86,12 @@ async function saveBinaryFile(filename, uint8array, log) {
 
 async function mkSpiffs(dir, filename, log) {
 
+  log(`dirname: ${__dirname}\m`);
+  log(`process.cwd(): ${process.cwd()}\n`);
+
   log(`Generating spiffs image ${filename}...\n`);
-  currentActiveProcess = spawn("./resources/bin/mkspiffs", [ "-c", dir, "-b", "4096", "-p", "256", "-s", "0x2B0000", filename]);
+  const exe = path.join(process.cwd(), "resources", "bin", "mkspiffs");
+  currentActiveProcess = spawn(exe, [ "-c", dir, "-b", "4096", "-p", "256", "-s", "0x2B0000", filename]);
 
   currentActiveProcess.stdout.on("data", (data) => {
     const str = data.toString();
@@ -97,7 +101,13 @@ async function mkSpiffs(dir, filename, log) {
   currentActiveProcess.stderr.on("data", (data) => {
     const str = data.toString();
     const lines = str.split(/(\r?\n)/g);
-    log("[Error]", lines.join("\n"));
+    const logStr = lines.join("\n");
+    console.error(logStr);
+    log(`[Error] ${logStr}`);
+  });
+  currentActiveProcess.stderr.on("error", (err) => {
+    console.error(err);
+    log(`[Error] ${err}`);
   });
   currentActiveProcess.on("close", (code) => {
     if (code > 1) {
@@ -111,12 +121,10 @@ async function mkSpiffs(dir, filename, log) {
 
 async function upload(filename, addr, port, log) {
 
-  if (process.platform === "linux") {
-    log("Making esptool executable");
-    currentActiveProcess = spawn("chmod a+x ./resources/bin/esptool");
-    await currentActiveProcess;
-  }
-
+  log(`dirname: ${__dirname}\n`);
+  log(`process.cwd(): ${process.cwd()}\n`);
+  
+  const exe = path.join(process.cwd(), "resources", "bin", "esptool");
   const params =  ["--chip", "esp32", "--baud", "921600", "write_flash", "-z", addr, filename];
 
   if (port) {
@@ -126,7 +134,7 @@ async function upload(filename, addr, port, log) {
     log("Autodetecting port for upload...\n");
   }
 
-  currentActiveProcess = spawn("./resources/bin/esptool", params);
+  currentActiveProcess = spawn(exe, params);
 
   currentActiveProcess.stdout.on("data", (data) => {
     // potentially update port cache
@@ -144,8 +152,15 @@ async function upload(filename, addr, port, log) {
   currentActiveProcess.stderr.on("data", (data) => {
     const str = data.toString();
     const lines = str.split(/(\r?\n)/g);
-    log("[Error]", lines.join(""));
+    const logStr = lines.join("\n");
+    console.error(logStr);
+    log(`[Error] ${logStr}`);
   });
+  currentActiveProcess.stderr.on("error", (err) => {
+    console.error(err);
+    log(`[Error] ${err}`);
+  });
+
   currentActiveProcess.on("close", (code) => {
     if (code > 1) {
       log(`[Error]esptool exited with code ${code}.\n`);
