@@ -27,7 +27,9 @@ export async function uploadChannel(uint8array, log) {
   } catch (err) {
     if (currentActiveProcess) {
      console.error("Unable to upload channel data:", err);
-     log(`${doneWithErrorMessage}:`, err);
+     console.trace();
+     const errorInfo = err.stack ? err.stack : err.toString();
+     log(`${doneWithErrorMessage}: ${errorInfo`);
      portCache = null;
     }
     else {
