@@ -105,7 +105,7 @@ async function mkSpiffs(dir, filename, log) {
     console.error(logStr);
     log(`[Error] ${logStr}`);
   });
-  currentActiveProcess.stderr.on("error", (err) => {
+  currentActiveProcess.on("error", (err) => {
     console.error(err);
     log(`[Error] ${err}`);
   });
@@ -156,7 +156,7 @@ async function upload(filename, addr, port, log) {
     console.error(logStr);
     log(`[Error] ${logStr}`);
   });
-  currentActiveProcess.stderr.on("error", (err) => {
+  currentActiveProcess.on("error", (err) => {
     console.error(err);
     log(`[Error] ${err}`);
   });
