@@ -110,6 +110,12 @@ async function mkSpiffs(dir, filename, log) {
 
 async function upload(filename, addr, port, log) {
 
+  if (process.platform === "linux") {
+    log("Making esptool executable");
+    currentActiveProcess = spawn("chmod a+x ./resources/bin/esptool");
+    await currentActiveProcess;
+  }
+
   const params =  ["--chip", "esp32", "--baud", "921600", "write_flash", "-z", addr, filename];
 
   if (port) {
