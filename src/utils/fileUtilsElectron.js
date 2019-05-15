@@ -88,12 +88,9 @@ async function saveBinaryFile(filename, uint8array, log) {
 
 async function mkSpiffs(dir, filename, log) {
 
-  log(`remote.app.getAppPath()): ${remote.app.getAppPath()}\n`);
-  log(`dirname: ${__dirname}\n`);
-  log(`process.cwd(): ${process.cwd()}\n`);
-
   log(`Generating spiffs image ${filename}...\n`);
-  const exe = path.join(process.cwd(), "resources", "bin", "mkspiffs");
+  const baseDir = process.platform === "linux" ? "/opt/LuminosiaStudio" : process.cwd();
+  const exe = path.join(baseDir, "resources", "bin", "mkspiffs");
   currentActiveProcess = spawn(exe, [ "-c", dir, "-b", "4096", "-p", "256", "-s", "0x2B0000", filename]);
 
   currentActiveProcess.stdout.on("data", (data) => {
@@ -124,11 +121,8 @@ async function mkSpiffs(dir, filename, log) {
 
 async function upload(filename, addr, port, log) {
 
-  log(`remote.app.getAppPath()): ${remote.app.getAppPath()}\n`);
-  log(`dirname: ${__dirname}\n`);
-  log(`process.cwd(): ${process.cwd()}\n`);
-  
-  const exe = path.join(process.cwd(), "resources", "bin", "esptool");
+  const baseDir = process.platform === "linux" ? "/opt/LuminosiaStudio" : process.cwd();
+  const exe = path.join(baseDir, "resources", "bin", "esptool");
   const params =  ["--chip", "esp32", "--baud", "921600", "write_flash", "-z", addr, filename];
 
   if (port) {
