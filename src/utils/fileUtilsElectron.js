@@ -5,6 +5,9 @@ import path from "path";
 import kill from "tree-kill";
 import { doneMessage, doneWithErrorMessage, doneWithCancelledMessage } from "../components/UploadLogView";
 import downloadRelease from "download-github-release";
+import os from "os";
+
+const { remote } = window.require("electron");
 
 let portCache = null;
 let currentActiveProcess = null;
@@ -86,8 +89,10 @@ async function saveBinaryFile(filename, uint8array, log) {
 
 async function mkSpiffs(dir, filename, log) {
 
-  log(`dirname: ${__dirname}`);
+  log(`remote.app.getAppPath()): ${remote.app.getAppPath()}\n`);
+  log(`dirname: ${__dirname}\n`);
   log(`process.cwd(): ${process.cwd()}\n`);
+  // log(`os.cwd(): ${os.cwd()}\n`);
 
   log(`Generating spiffs image ${filename}...\n`);
   const exe = path.join(process.cwd(), "resources", "bin", "mkspiffs");
@@ -121,8 +126,10 @@ async function mkSpiffs(dir, filename, log) {
 
 async function upload(filename, addr, port, log) {
 
+  log(`remote.app.getAppPath()): ${remote.app.getAppPath()}\n`);
   log(`dirname: ${__dirname}\n`);
   log(`process.cwd(): ${process.cwd()}\n`);
+  // log(`os.cwd(): ${os.cwd()}\n`);
   
   const exe = path.join(process.cwd(), "resources", "bin", "esptool");
   const params =  ["--chip", "esp32", "--baud", "921600", "write_flash", "-z", addr, filename];
