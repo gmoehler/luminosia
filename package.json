@@ -1,5 +1,6 @@
 {
   "name": "luminosia",
+  "description": "Luminosia Studio",
   "version": "0.0.0-semantic-release",
   "homepage": ".",
   "homepage-web": "https://gmoehler.github.io/luminosia",

@@ -86,7 +86,7 @@ async function saveBinaryFile(filename, uint8array, log) {
 
 async function mkSpiffs(dir, filename, log) {
 
-  log(`dirname: ${__dirname}\m`);
+  log(`dirname: ${__dirname}`);
   log(`process.cwd(): ${process.cwd()}\n`);
 
   log(`Generating spiffs image ${filename}...\n`);
