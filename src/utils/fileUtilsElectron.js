@@ -29,11 +29,10 @@ export async function uploadChannel(uint8array, log) {
      console.error("Unable to upload channel data:", err);
      console.trace();
      const errorInfo = err.stack ? err.stack : err.toString();
-     log(`${doneWithErrorMessage}: ${errorInfo`);
+     log(`${doneWithErrorMessage}: ${errorInfo}\n`);
      portCache = null;
-    }
-    else {
-      log(`${doneWithCancelledMessage}.`);
+    } else {
+      log(`${doneWithCancelledMessage}\n`);
     }
   } 
 
