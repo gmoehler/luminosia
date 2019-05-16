@@ -67,7 +67,8 @@ matrix:
             electronuserland/builder:wine bash -c "yarn && yarn electron-pack"
         - ls -l dist
         - ls -l resources/bin
-        - cp resources/bin/luminosia_${nextver}_amd64.deb resources/bin/luminosia_latest_amd64.deb
+        - if [ -f "resources/bin/luminosia ${nextver} amd64.deb" ]; then cp "resources/bin/luminosia ${nextver} amd64.deb" resources/bin/luminosia_amd64.deb
+        - if [ -f "LuminosiaStudio.Setup.${nextver}.exe" ]; then cp "LuminosiaStudio.Setup.${nextver}.exe" resources/bin/LuminosiaStudio.Setup.exe
         - ls -l resources/bin
 
       before_cache:
