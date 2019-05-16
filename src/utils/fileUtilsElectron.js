@@ -86,6 +86,19 @@ async function saveBinaryFile(filename, uint8array, log) {
 
 async function mkSpiffs(dir, filename, log) {
 
+  const { app } = require("electron").remote;
+  if (app) {
+    const userDataPath = app.getPath("userData");
+    console.log(`userDataPath:: ${userDataPath}`);
+    log(`userDataPath:: ${userDataPath}`);
+    const exePath = app.getPath("exe");
+    console.log(`exePath:: ${exePath}`);
+    log(`exePath:: ${exePath}`);
+    const appPath = app.getAppPath();
+    console.log(`appPath:: ${appPath}`);
+    log(`appPath:: ${appPath}`);
+  }
+
   log(`Generating spiffs image ${filename}...\n`);
   const baseDir = process.platform === "linux" ? "/opt/LuminosiaStudio" : process.cwd();
   const exe = path.join(baseDir, "resources", "bin", "mkspiffs");
