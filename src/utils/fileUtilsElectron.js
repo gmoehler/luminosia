@@ -97,7 +97,10 @@ async function mkSpiffs(dir, filename, log) {
     const appPath = app.getAppPath();
     console.log(`appPath:: ${appPath}`);
     log(`appPath:: ${appPath}`);
-  }
+  } else {
+    console.log(`app:: ${app}`);
+    log(`app:: ${app}`);
+}
 
   log(`Generating spiffs image ${filename}...\n`);
   const baseDir = process.platform === "linux" ? "/opt/LuminosiaStudio" : process.cwd();
