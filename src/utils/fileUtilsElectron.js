@@ -86,11 +86,6 @@ async function saveBinaryFile(filename, uint8array, log) {
 
 async function mkSpiffs(dir, filename, log) {
 
-  const remote = require("remote"), 
-  app = remote.require("app");
-  var basepath = app.getAppPath();
-  log(`basepath ${basepath}\n`);
-
   log(`Generating spiffs image ${filename}...\n`);
   const baseDir = process.platform === "linux" ? "/opt/LuminosiaStudio" : process.cwd();
   const exe = path.join(baseDir, "resources", "bin", "mkspiffs");
