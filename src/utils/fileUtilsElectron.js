@@ -90,16 +90,16 @@ async function mkSpiffs(dir, filename, log) {
   if (app) {
     const userDataPath = app.getPath("userData");
     console.log(`userDataPath:: ${userDataPath}`);
-    log(`userDataPath:: ${userDataPath}`);
+    log(`userDataPath:: ${userDataPath}\n`);
     const exePath = app.getPath("exe");
     console.log(`exePath:: ${exePath}`);
-    log(`exePath:: ${exePath}`);
+    log(`exePath:: ${exePath}\n`);
     const appPath = app.getAppPath();
     console.log(`appPath:: ${appPath}`);
-    log(`appPath:: ${appPath}`);
+    log(`appPath:: ${appPath}\n`);
   } else {
     console.log(`app:: ${app}`);
-    log(`app:: ${app}`);
+    log(`app:: ${app}\n`);
 }
 
   log(`Generating spiffs image ${filename}...\n`);
