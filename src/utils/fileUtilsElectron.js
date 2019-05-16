@@ -97,6 +97,12 @@ async function mkSpiffs(dir, filename, log) {
     const appPath = app.getAppPath();
     console.log(`appPath:: ${appPath}`);
     log(`appPath:: ${appPath}\n`);
+    const name = app.getName();
+    log(`name:: ${name}\n`);
+    const ver = app.getVersion();
+    log(`ver:: ${ver}\n`);
+    const metrics = app.getAppMetrics();
+    log(`metrics:: ${metrics}\n`);
   } else {
     console.log(`app:: ${app}`);
     log(`app:: ${app}\n`);
