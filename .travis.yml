@@ -66,6 +66,7 @@ matrix:
             -v ~/.cache/electron-builder:/root/.cache/electron-builder \
             electronuserland/builder:wine bash -c "yarn && yarn electron-pack"
         - ls -l dist
+        - cp resources/bin/luminosia_${$nextver}_amd64.deb resources/bin/luminosia_latest_amd64.deb
         - ls -l resources/bin
 
       before_cache:
