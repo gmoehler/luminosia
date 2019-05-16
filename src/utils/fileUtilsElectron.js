@@ -6,8 +6,6 @@ import kill from "tree-kill";
 import { doneMessage, doneWithErrorMessage, doneWithCancelledMessage } from "../components/UploadLogView";
 import downloadRelease from "download-github-release";
 
-const { remote } = window.require("electron");
-
 let portCache = null;
 let currentActiveProcess = null;
 
