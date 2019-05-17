@@ -86,6 +86,8 @@ async function saveBinaryFile(filename, uint8array, log) {
 
 async function mkSpiffs(dir, filename, log) {
 
+  let baseDir = process.cwd();
+
   const { app } = require("electron").remote;
   if (app) {
     const userDataPath = app.getPath("userData");
@@ -94,6 +96,8 @@ async function mkSpiffs(dir, filename, log) {
     const exePath = app.getPath("exe");
     console.log(`exePath:: ${exePath}`);
     log(`exePath:: ${exePath}\n`);
+    baseDir = path.dirname(exePath);
+
     const appPath = app.getAppPath();
     console.log(`appPath:: ${appPath}`);
     log(`appPath:: ${appPath}\n`);
@@ -102,14 +106,13 @@ async function mkSpiffs(dir, filename, log) {
     const ver = app.getVersion();
     log(`ver:: ${ver}\n`);
     const metrics = app.getAppMetrics();
-    log(`metrics:: ${metrics}\n`);
+    log(`metrics:: ${JSON.stringify(metrics)}\n`);
   } else {
     console.log(`app:: ${app}`);
     log(`app:: ${app}\n`);
 }
 
   log(`Generating spiffs image ${filename}...\n`);
-  const baseDir = process.platform === "linux" ? "/opt/LuminosiaStudio" : process.cwd();
   const exe = path.join(baseDir, "resources", "bin", "mkspiffs");
   currentActiveProcess = spawn(exe, [ "-c", dir, "-b", "4096", "-p", "256", "-s", "0x2B0000", filename]);
 
@@ -141,7 +144,20 @@ async function mkSpiffs(dir, filename, log) {
 
 async function upload(filename, addr, port, log) {
 
-  const baseDir = process.platform === "linux" ? "/opt/LuminosiaStudio" : process.cwd();
+  let baseDir = process.cwd();
+
+  const { app } = require("electron").remote;
+  if (app) {
+
+    const exePath = app.getPath("exe");
+    console.log(`exePath:: ${exePath}`);
+    log(`exePath:: ${exePath}\n`);
+    baseDir = path.dirname(exePath);
+  } else {
+    console.log(`app:: ${app}`);
+    log(`app:: ${app}\n`);
+}
+
   const exe = path.join(baseDir, "resources", "bin", "esptool");
   const params =  ["--chip", "esp32", "--baud", "921600", "write_flash", "-z", addr, filename];
 
