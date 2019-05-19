@@ -16,6 +16,8 @@ export async function uploadChannel(uint8array, log) {
   const filename = path.join(dataDir.name, "channel.poi");
   const spiffsFilename = tmp.tmpNameSync();
 
+  log(`App Version: ${app? app.getVersion() : "unknown"}\n`);
+
   // 3 steps for upload: save data, generate spiffs file and upload
   try {
     await saveBinaryFile(filename, uint8array, log);
