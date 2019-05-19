@@ -5,7 +5,9 @@ import path from "path";
 import kill from "tree-kill";
 import { doneMessage, doneWithErrorMessage, doneWithCancelledMessage } from "../components/UploadLogView";
 import downloadRelease from "download-github-release";
+import isDev  from "electron-is-dev";
 
+const { app } = require("electron").remote;
 let portCache = null;
 let currentActiveProcess = null;
 
@@ -52,6 +54,8 @@ export async function updateFirmware(log) {
   const assetName = "firmware.bin";
   const downloadedAsset = path.join(downloadDir.name, assetName);
 
+  log(`App Version: ${app? app.getVersion() : "unknown"}\n`);
+
   // 2 steps for update firmware: download firmware and upload
   try {
     await downloadFirmware(assetName, downloadDir.name, log);
@@ -84,35 +88,25 @@ async function saveBinaryFile(filename, uint8array, log) {
   log("Done\n");
 }
 
-async function mkSpiffs(dir, filename, log) {
+function getScriptsBaseDir() {
+  if (isDev) {
+    return process.cwd();
+  }
 
-  let baseDir = process.cwd();
-
-  const { app } = require("electron").remote;
   if (app) {
-    const userDataPath = app.getPath("userData");
-    console.log(`userDataPath:: ${userDataPath}`);
-    log(`userDataPath:: ${userDataPath}\n`);
     const exePath = app.getPath("exe");
-    console.log(`exePath:: ${exePath}`);
-    log(`exePath:: ${exePath}\n`);
-    baseDir = path.dirname(exePath);
+    return path.dirname(exePath);
+  }
 
-    const appPath = app.getAppPath();
-    console.log(`appPath:: ${appPath}`);
-    log(`appPath:: ${appPath}\n`);
-    const name = app.getName();
-    log(`name:: ${name}\n`);
-    const ver = app.getVersion();
-    log(`ver:: ${ver}\n`);
-    const metrics = app.getAppMetrics();
-    log(`metrics:: ${JSON.stringify(metrics)}\n`);
-  } else {
-    console.log(`app:: ${app}`);
-    log(`app:: ${app}\n`);
+  return process.cwd();
 }
 
+async function mkSpiffs(dir, filename, log) {
+
   log(`Generating spiffs image ${filename}...\n`);
+
+  let baseDir = getScriptsBaseDir();
+  log(`Script path: ${baseDir}\n`);
   const exe = path.join(baseDir, "resources", "bin", "mkspiffs");
   currentActiveProcess = spawn(exe, [ "-c", dir, "-b", "4096", "-p", "256", "-s", "0x2B0000", filename]);
 
@@ -144,20 +138,8 @@ async function mkSpiffs(dir, filename, log) {
 
 async function upload(filename, addr, port, log) {
 
-  let baseDir = process.cwd();
-
-  const { app } = require("electron").remote;
-  if (app) {
-
-    const exePath = app.getPath("exe");
-    console.log(`exePath:: ${exePath}`);
-    log(`exePath:: ${exePath}\n`);
-    baseDir = path.dirname(exePath);
-  } else {
-    console.log(`app:: ${app}`);
-    log(`app:: ${app}\n`);
-}
-
+  let baseDir = getScriptsBaseDir();
+  log(`Script path: ${baseDir}\n`);
   const exe = path.join(baseDir, "resources", "bin", "esptool");
   const params =  ["--chip", "esp32", "--baud", "921600", "write_flash", "-z", addr, filename];
 
