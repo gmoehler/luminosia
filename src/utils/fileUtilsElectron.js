@@ -103,13 +103,20 @@ function getScriptsBaseDir() {
   return process.cwd();
 }
 
+function getScriptsDir() {
+  const baseDir = getScriptsBaseDir();
+  const platform = process.platform;
+  const arch = process.arch;
+  return path.join(baseDir, "resources", platform, arch);
+}
+
 async function mkSpiffs(dir, filename, log) {
 
   log(`Generating spiffs image ${filename}...\n`);
 
-  let baseDir = getScriptsBaseDir();
-  log(`Script path: ${baseDir}\n`);
-  const exe = path.join(baseDir, "resources", "bin", "mkspiffs");
+  const scriptDir = getScriptsDir();
+  log(`Script path: ${scriptDir}\n`);
+  const exe = path.join(scriptDir, "mkspiffs");
   currentActiveProcess = spawn(exe, [ "-c", dir, "-b", "4096", "-p", "256", "-s", "0x2B0000", filename]);
 
   currentActiveProcess.stdout.on("data", (data) => {
@@ -140,9 +147,9 @@ async function mkSpiffs(dir, filename, log) {
 
 async function upload(filename, addr, port, log) {
 
-  let baseDir = getScriptsBaseDir();
-  log(`Script path: ${baseDir}\n`);
-  const exe = path.join(baseDir, "resources", "bin", "esptool");
+  const scriptDir = getScriptsDir();
+  log(`Script path: ${scriptDir}\n`);
+  const exe = path.join(scriptDir, "esptool");
   const params =  ["--chip", "esp32", "--baud", "921600", "write_flash", "-z", addr, filename];
 
   if (port) {
