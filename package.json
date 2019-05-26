@@ -122,6 +122,20 @@
         "filter": [
           "**/*"
         ]
+      },
+      {
+        "from": "./resources/linux",
+        "to": "linux",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": "./resources/win32",
+        "to": "win32",
+        "filter": [
+          "**/*"
+        ]
       }
     ],
     "directories": {
