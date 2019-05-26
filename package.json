@@ -117,13 +117,6 @@
     },
     "extraResources": [
       {
-        "from": "./resources/bin",
-        "to": "bin",
-        "filter": [
-          "**/*"
-        ]
-      },
-      {
         "from": "./resources/linux",
         "to": "linux",
         "filter": [
