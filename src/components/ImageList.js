@@ -59,7 +59,7 @@ export default class ImageList extends PureComponent {
     };
     img.onload = function() {
     	
-      if (img.height) !== 30 {
+      if (img.height !== 30) {
       	that.props.setMessage("Can only add images with a height of 30 pixels.");
       } else {
       const newImage = {
