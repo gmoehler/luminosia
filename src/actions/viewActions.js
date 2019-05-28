@@ -161,7 +161,7 @@ export const addPartToMultiSelection = ((elementInfo) => {
   return (dispatch, getState) => {
     dispatch(addElemToSel(elementInfo));
     dispatch(updateMarkersForPart(elementInfo.partId, { selected: true }));
-  };
+2  };
 });
 
 export const addToUploadLog = (text) => ({
@@ -172,3 +172,13 @@ export const addToUploadLog = (text) => ({
 export const clearUploadLog = () => ({
   type: CLEAR_UPLOAD_LOG
 });
+
+export const setMessage = (text) => ({
+  type: SET_MESSAGE,
+  payload: text
+});
+
+export const clearMessage = () => ({
+  type: CLEAR_MESSAGE
+});
+
