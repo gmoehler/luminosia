@@ -40,7 +40,7 @@ const styles = theme => ({
 });
 
 
-export class Message extends Component {
+export class MessageView extends Component {
 
   handleClose = () => {
     return this.props.clearMessage();
@@ -50,11 +50,14 @@ export class Message extends Component {
   render() {
 
     const { message, classes } = this.props;
-    const messageHtml = (
+
+    const messageTitle = (message && message.title) ? 
+      message.title : "Message";
+
+    const messageHtml = (message && message.text) ? (
       <Typography className={ classes.text }>
-        { message }
-      </Typography>
-    );
+        { message.text }
+      </Typography>) : null;  
 
     return (
       <Modal open={ Boolean(message) }
@@ -66,7 +69,7 @@ export class Message extends Component {
           <div  className={ classes.headingArea }>
           <Typography variant="h6"
               id="modal-title">
-            Message
+            { messageTitle }
           </Typography>
 
           </div>
@@ -86,13 +89,17 @@ export class Message extends Component {
   }
 }
 
-Message.propTypes = {
+MessageView.propTypes = {
   classes: PropTypes.object.isRequired,
   theme: PropTypes.object.isRequired,
-  message: PropTypes.string,
+  message: PropTypes.objectOf({
+    text: PropTypes.string,
+    type: PropTypes.string,
+    title: PropTypes.string,
+  }),
   clearMessage: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles, {
   withTheme: true
-})(Message);
+})(MessageView);

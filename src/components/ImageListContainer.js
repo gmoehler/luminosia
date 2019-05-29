@@ -6,7 +6,7 @@ import ImageList from "./ImageList";
 import { getImageList } from "../reducers/imageListReducer";
 import { getResolution, getSelectedImageIds } from "../reducers/viewReducer";
 import { saveImageToStorage, addImage, loadImagesFromStorage } from "../actions/imageListActions";
-import { toggleElementSelection, toggleElementMultiSelection, setMessage} from "../actions/viewActions";
+import { toggleElementSelection, toggleElementMultiSelection, setMessage } from "../actions/viewActions";
 
 export const defaultSampleRate = 100;
 
@@ -32,7 +32,7 @@ const mapStateToProps = (state, props) => {
 
 const mapDispatchToProps = dispatch => ({
   addImage: (image) => dispatch(addImage(image)),
-  setMessage: (text) => dispatch(setMessage(text)),
+  setMessage: (text, type, title) => dispatch(setMessage({ text, type, title })),
   toggleElementSelection: (imageInfo) => dispatch(toggleElementSelection(imageInfo)),
   toggleElementMultiSelection: (imageInfo) => dispatch(toggleElementMultiSelection(imageInfo)),
   saveImageToStorage: (imageFile, key) => dispatch(saveImageToStorage(imageFile, key)),

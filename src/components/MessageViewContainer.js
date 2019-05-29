@@ -4,12 +4,12 @@ import { connect } from "react-redux";
 
 import { clearMessage } from "../actions/viewActions";
 import { getMessage } from "../reducers/viewReducer";
-import Message from "./Message";
+import MessageView from "./MessageView";
 
-class MessageContainer extends Component {
+class MessageViewContainer extends Component {
 
   render() {
-    return ( <Message { ...this.props } /> );
+    return ( <MessageView { ...this.props } /> );
   }
 }
 
@@ -23,10 +23,10 @@ const mapDispatchToProps = dispatch => ({
   clearMessage: () => dispatch(clearMessage()),
 });
 
-MessageContainer.propTypes = {
-  message: PropTypes.string,
+MessageViewContainer.propTypes = {
+  message: PropTypes.object,
   clearMessage: PropTypes.func.isRequired,
 };
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(MessageContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(MessageViewContainer);
