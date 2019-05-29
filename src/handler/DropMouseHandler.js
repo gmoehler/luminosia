@@ -47,6 +47,8 @@ export default class SelectionMouseHandler {
     if (evInfo.channelId && evInfo.imageId && evInfo.duration) {
       const channelId = parseInt(evInfo.channelId);
       this.handlerFunctions.insertNewPart(channelId, evInfo.imageId, evInfo.src, evInfo.x, evInfo.duration);
+    } else {
+    	this.handlerFunctions.setMessage("You cannot drop an image directly, drop it into the image drawer first.");
     }
     this.prevPosX = null;
     this.prevTimestamp = 0;
