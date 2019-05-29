@@ -12,8 +12,6 @@ const styles = theme => ({
     outline: "none",
     top: "20%",
     left: "20%",
-    width: "60%",
-    height: "70vh",
     display: "flex",
     flexDirection: "column"
   },
@@ -25,16 +23,12 @@ const styles = theme => ({
     marginBottom: "10px",
   },
   textArea: {
-    display: "flex",
-    flexDirection: "column-reverse", // to autoscroll to end
     height: "100%",
-    overflowX: "none",
-    overflowY: "auto",
-    border: "2px lightgrey solid",
+    overflow: "auto",
     margin: "16px"
   },
   text: {
-    fontSize: "13px",
+    fontSize: "14px",
     lineHeight: "normal",
     margin: "6px",
     wordBreak: "break-all",
@@ -92,7 +86,7 @@ export class Message extends Component {
   }
 }
 
-Message = {
+Message.propTypes = {
   classes: PropTypes.object.isRequired,
   theme: PropTypes.object.isRequired,
   message: PropTypes.string,
