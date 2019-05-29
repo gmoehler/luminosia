@@ -183,6 +183,7 @@ export const insertNewPart = (partInfo) => {
 
     // clone, but remove src if existing
     // remove src is probably no longer required
+    // since we always get the image from the ImageList
     const partWithoutSrc = {
       ...partInfo
     };
