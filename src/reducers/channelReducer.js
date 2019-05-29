@@ -78,6 +78,9 @@ export default (state = initialState, action) => {
       };
 
     case ADD_PART:
+      if (!action.payload.imageId){
+        return state;
+      }
       const partSeqNum1 = state.byChannelId[action.payload.channelId].lastPartSeqNum + 1;
       const partId = generatePartId(action.payload.channelId, partSeqNum1);
       const maxDuration = Math.max(state.byChannelId[action.payload.channelId].duration,

@@ -58,6 +58,10 @@ export default class ImageList extends PureComponent {
       img.src = reader.result;
     };
     img.onload = function() {
+    	
+      if (img.height !== 30) {
+      	that.props.setMessage("Can only add images with a height of 30 pixels.", "error", "Wrong image" );
+      } else {
       const newImage = {
         width: img.width,
         height: img.height,
@@ -67,6 +71,7 @@ export default class ImageList extends PureComponent {
         duration: samplesToSeconds(img.width, that.props.sampleRate)
       };
       that.props.addImage(newImage);
+      }
     };
     reader.readAsDataURL(fileName);
   }
@@ -169,4 +174,6 @@ ImageList.propTypes = {
   selectMultiImage: PropTypes.func.isRequired,
   selectedImageIds: PropTypes.arrayOf(PropTypes.string),
   sampleRate: PropTypes.number.isRequired,
+  addImage: PropTypes.func.isRequired,
+  setMessage: PropTypes.func.isRequired,
 };

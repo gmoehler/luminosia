@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 
 import ChannelGroup from "./ChannelGroup";
 import { setChannelPlayState, insertNewPart, deleteSelectedPartAndMarkers, moveSelectedPartsWithMarkers } from "../actions/channelActions";
-import { selectRange, deselectRange, setMarker, toggleElementSelection, toggleElementMultiSelection } from "../actions/viewActions";
+import { selectRange, deselectRange, setMarker, toggleElementSelection, toggleElementMultiSelection, setMessage } from "../actions/viewActions";
 import { getMaxDuration, getAllChannelsData, allChannelsStopped } from "../reducers/channelReducer";
 import { getSelectionRange, getResolution, getMarkers, getSelectedImageChannelId, getUploadLog } from "../reducers/viewReducer";
 import { getImageSources } from "../reducers/imageListReducer";
@@ -58,36 +58,26 @@ const mapStateToProps = (state, props) => {
 
 const mapDispatchToProps = dispatch => ({
   selectRange: (from, to) => dispatch(selectRange({
-    from,
-    to
+    from, to
   })),
   deselectRange: () => dispatch(deselectRange()),
   setMarker: (markerId, channelId, partId, pos, minPos, type) => dispatch(setMarker({
-    markerId,
-    channelId,
-    partId,
-    pos,
-    minPos,
-    type
+    markerId, channelId, partId, pos, minPos, type
   })),
   insertNewPart: (channelId, imageId, src, offset, duration) => dispatch(insertNewPart({
-    channelId,
-    imageId,
-    src,
-    offset,
-    duration,
+    channelId, imageId, src, offset, duration, 
   })),
   move: (channelId, partId, incr) => dispatch(moveSelectedPartsWithMarkers({
-    channelId, 
-    partId,
-    incr
+    channelId, partId, incr 
   })),
   toggleElementSelection: (partInfo) => dispatch(toggleElementSelection(partInfo)),
   toggleElementMultiSelection: (partInfo) => dispatch(toggleElementMultiSelection(partInfo)),
   deleteSelectedPartAndMarkers: () => dispatch(deleteSelectedPartAndMarkers()),
   setChannelPlayState: (channelId, playState) => dispatch(setChannelPlayState({
-    channelId,
-    playState
+    channelId, playState
+  })),
+  setMessage: (text, type, title) => dispatch(setMessage({
+    text, type, title 
   })),
 });
 

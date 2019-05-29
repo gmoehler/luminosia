@@ -25,6 +25,7 @@ export function withEventHandler(WrappedComponent) {
         toggleElementSelection: this.props.toggleElementSelection,
         toggleElementMultiSelection: this.props.toggleElementMultiSelection,
         deleteSelectedPartAndMarkers: this.props.deleteSelectedPartAndMarkers,
+        setMessage:this.props.setMessage,
       });
     }
 
@@ -48,7 +49,8 @@ export function withEventHandler(WrappedComponent) {
     toggleElementSelection: PropTypes.func.isRequired,
     toggleElementMultiSelection: PropTypes.func.isRequired,
     deleteSelectedPartAndMarkers: PropTypes.func.isRequired,
-    resolution: PropTypes.number.isRequired
+    resolution: PropTypes.number.isRequired,
+    setMessage: PropTypes.func.isRequired,
   };
 
   return WithEventHandler;

@@ -22,6 +22,7 @@ import ImageExporter from "./components/ImageExporter";
 import AnimationPaneContainer from "./components/AnimationPaneContainer";
 import ChannelSelectorContainer from "./components/ChannelSelectorContainer";
 import UploadLogViewContainer from "./components/UploadLogViewContainer";
+import MessageViewContainer from "./components/MessageViewContainer";
 
 const drawerWidth = 400;
 const channelSelectorWidth = 96;
@@ -174,6 +175,7 @@ class App extends React.Component {
                             [classes.contentShift]: open,
                           }) }>
           <div className={ classes.drawerHeader } />
+          <MessageViewContainer />
           <UploadLogViewContainer />
           <AnimationPaneContainer drawerWidth={ open ? drawerWidth : 0 } />
           <div className={ classes.channelPane }>
