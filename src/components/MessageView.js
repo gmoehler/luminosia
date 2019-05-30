@@ -19,22 +19,19 @@ const styles = theme => ({
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
-    marginRight: "20px",
-    marginBottom: "10px",
+    marginBottom: theme.spacing.unit * 2,
   },
   textArea: {
+    marginBottom: theme.spacing.unit * 2,
     height: "100%",
     overflow: "auto",
-    margin: "16px"
   },
   text: {
     fontSize: "14px",
     lineHeight: "normal",
-    margin: "6px",
     wordBreak: "break-all",
   },
   buttonArea: {
-    marginRight: "16px",
     alignSelf: "flex-end",
   }
 });
