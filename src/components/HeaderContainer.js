@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 
 import { stopChannel, deleteSelectedPartAndMarkers, createImageChannel, uploadAudioFile, deleteChannel, playChannelAndImage, setChannelActive, unsetChannelActive, pastePart } from "../actions/channelActions";
 
-import { downloadConfig, uploadConfigFile, uploadConfig, exportImageChannel } from "../actions/generalActions";
+import { downloadConfig, uploadConfigFile, uploadConfig, exportImageChannel, updateFirmware } from "../actions/generalActions";
 import { setResolution, copyPart } from "../actions/viewActions";
 import Header from "./Header";
 import { getChannelIds, allChannelsStopped } from "../reducers/channelReducer";
@@ -25,53 +25,31 @@ class HeaderContainer extends Component {
 
   resetZoom = () => {
     this.resolutionIdx = defaultResolutionIdx;
-    this.props.setResolutionAction(
+    this.props.setResolution(
       resolutions[this.resolutionIdx]
     );
   }
 
   zoomIn = () => {
     this.resolutionIdx = Math.min(Math.max(parseInt(this.resolutionIdx) - 1, 0), resolutions.length - 1);
-    this.props.setResolutionAction(
+    this.props.setResolution(
       resolutions[this.resolutionIdx]
     );
   }
 
   zoomOut = () => {
     this.resolutionIdx = Math.min(Math.max(parseInt(this.resolutionIdx) + 1, 0), resolutions.length - 1);
-    this.props.setResolutionAction(
+    this.props.setResolution(
       resolutions[this.resolutionIdx]
     );
   }
 
   render() {
 
-    const { channelIds, downloadConfigAction, uploadConfigFileAction, uploadAudioFileAction, deleteSelectedPartAndMarkersAction, 
-      createImageChannelAction, exportImageChannelAction, deleteChannelAction, playChannelAndImageAction, stopChannelAction, 
-      numSelectedElems, enablePlay, enableStop, setChannelActiveAction, unsetChannelActiveAction, copyPartAction, pastePartAction, hasPartToCopy } = this.props;
-
     return (
-      <Header init={ this.doInit }
+      <Header { ...this.props }
           zoomIn={ this.zoomIn }
           zoomOut={ this.zoomOut }
-          channelIds={ channelIds }
-          downloadConfig={ downloadConfigAction }
-          uploadConfigFile={ uploadConfigFileAction }
-          uploadAudioFile={ uploadAudioFileAction }
-          deleteSelectedPart={ deleteSelectedPartAndMarkersAction }
-          createImageChannel={ createImageChannelAction }
-          exportImageChannel={ exportImageChannelAction }
-          deleteChannel={ deleteChannelAction }
-          playChannelAndImage={ playChannelAndImageAction }
-          stopChannel={ stopChannelAction }
-          numSelectedElems={ numSelectedElems }
-          enablePlay={ enablePlay }
-          enableStop={ enableStop }
-          setChannelActive={ setChannelActiveAction }
-          unsetChannelActive={ unsetChannelActiveAction } 
-          copyPart={ copyPartAction }
-          pastePart={ pastePartAction }
-          hasPartToCopy={ hasPartToCopy }
           />
       );
   }
@@ -86,43 +64,27 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  downloadConfigAction: () => dispatch(downloadConfig()),
-  uploadConfigFileAction: (configFile) => dispatch(uploadConfigFile(configFile, audioContext)),
-  uploadAudioFileAction: (audioFile) => dispatch(uploadAudioFile(audioFile, audioContext)),
+  downloadConfig: () => dispatch(downloadConfig()),
+  uploadConfigFile: (configFile) => dispatch(uploadConfigFile(configFile, audioContext)),
+  uploadAudioFile: (audioFile) => dispatch(uploadAudioFile(audioFile, audioContext)),
   uploadConfigAction: (config) => dispatch(uploadConfig(config, audioContext)),
-  createImageChannelAction: () => dispatch(createImageChannel()),
-  exportImageChannelAction: (channelId) => dispatch(exportImageChannel(channelId)),
-  deleteChannelAction: (channelId) => dispatch(deleteChannel(channelId)),
-  playChannelAndImageAction: (channelId) => dispatch(playChannelAndImage(channelId)),
-  stopChannelAction: () => dispatch(stopChannel()),
-  setResolutionAction: (resolution) => dispatch(setResolution(resolution)),
-  deleteSelectedPartAndMarkersAction: () => dispatch(deleteSelectedPartAndMarkers()),
-  setChannelActiveAction: (channelId) => dispatch(setChannelActive(channelId)),
-  unsetChannelActiveAction: (channelId) => dispatch(unsetChannelActive(channelId)),
-  copyPartAction: () => dispatch(copyPart()),
-  pastePartAction: () => dispatch(pastePart())
+  createImageChannel: () => dispatch(createImageChannel()),
+  exportImageChannel: (channelId) => dispatch(exportImageChannel(channelId)),
+  deleteChannel: (channelId) => dispatch(deleteChannel(channelId)),
+  playChannelAndImage: (channelId) => dispatch(playChannelAndImage(channelId)),
+  stopChannel: () => dispatch(stopChannel()),
+  setResolution: (resolution) => dispatch(setResolution(resolution)),
+  deleteSelectedPartAndMarkers: () => dispatch(deleteSelectedPartAndMarkers()),
+  setChannelActive: (channelId) => dispatch(setChannelActive(channelId)),
+  unsetChannelActive: (channelId) => dispatch(unsetChannelActive(channelId)),
+  copyPart: () => dispatch(copyPart()),
+  pastePart: () => dispatch(pastePart()),
+  updateFirmware: () => dispatch(updateFirmware()),
 });
 
 HeaderContainer.propTypes = {
-  channelIds: PropTypes.array,
-  downloadConfigAction: PropTypes.func.isRequired,
-  uploadConfigFileAction: PropTypes.func.isRequired,
-  uploadAudioFileAction: PropTypes.func.isRequired,
-  deleteSelectedPartAndMarkersAction: PropTypes.func.isRequired,
-  createImageChannelAction: PropTypes.func.isRequired,
-  exportImageChannelAction: PropTypes.func.isRequired,
-  deleteChannelAction: PropTypes.func.isRequired,
-  playChannelAndImageAction: PropTypes.func.isRequired,
-  stopChannelAction: PropTypes.func.isRequired,
-  numSelectedElems: PropTypes.number,
-  enablePlay: PropTypes.bool.isRequired,
-  enableStop: PropTypes.bool.isRequired,
-  setChannelActiveAction: PropTypes.func.isRequired,
-  unsetChannelActiveAction: PropTypes.func.isRequired,
-  setResolutionAction: PropTypes.func.isRequired,
-  copyPartAction: PropTypes.func.isRequired,
-  pastePartAction: PropTypes.func.isRequired,
-  hasPartToCopy: PropTypes.bool,
+  setResolution: PropTypes.func.isRequired,
+  deleteSelectedPartAndMarkers: PropTypes.func.isRequired,
 };
 
 

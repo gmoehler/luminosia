@@ -74,6 +74,9 @@ typings/
 # cache
 /.cache
 
+# electron dist
+/dist
+
 # misc
 .DS_Store
 .env.local

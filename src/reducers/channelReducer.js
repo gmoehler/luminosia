@@ -78,6 +78,9 @@ export default (state = initialState, action) => {
       };
 
     case ADD_PART:
+      if (!action.payload.imageId){
+        return state;
+      }
       const partSeqNum1 = state.byChannelId[action.payload.channelId].lastPartSeqNum + 1;
       const partId = generatePartId(action.payload.channelId, partSeqNum1);
       const maxDuration = Math.max(state.byChannelId[action.payload.channelId].duration,
@@ -219,12 +222,7 @@ export const getAllChannelsData = (state) => {
     .sort((ch1, ch2) => {
       const str1 = ch1.type + ch1.channelId;
       const str2 = ch2.type + ch2.channelId;
-      if (str1 < str2) {
-        return -1;
-      } else if (str2 > str1) {
-        return 1;
-      }
-      return 0;
+      return str1.localeCompare(str2);
     });
 };
 

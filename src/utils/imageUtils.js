@@ -15,10 +15,12 @@ export function runtimeEncodeImage(a) {
   let cnt = 0; // number of pixel with same value
   let prev = [-1, -1, -1]; // remember prev value
 
-  // output header: encoding-id(1), width, height
+  // output header: encoding-id(1), width, height (16bit)
   output[o++] = 1;
   output[o++] = a.height;
-  output[o++] = a.width;
+  const widthUpper = Math.floor(a.width/256);
+  output[o++] = widthUpper;
+  output[o++] = a.width - (widthUpper * 256);
 
   for (let col = 0; col < a.width; col++) {
     // initialize prev value with first value of column
@@ -79,7 +81,9 @@ export function runtimeDecodeImage(a) {
     throw new Error("image not runtime encoded");
   }
   const height = a[i++];
-  const width = a[i++];
+  const widthUpper = a[i++];
+  const widthLower = a[i++];
+  const width = widthLower + widthUpper * 256;
   // console.log(`${width}x${height}`);
 
   const buffer = new ArrayBuffer(4 * width * height); 

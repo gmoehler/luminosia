@@ -15,6 +15,7 @@ describe("image utils", () => {
     };
     
     const encodedImg = utils.runtimeEncodeImage(img);
+    console.log(encodedImg);
     const finalImg = utils.runtimeDecodeImage(encodedImg);
     
     expect( Array.from(finalImg)).toEqual(img.data);

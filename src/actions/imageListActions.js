@@ -39,7 +39,7 @@ export function saveImagesToStorage(image) {
 }
 
 // load images from localstorage and add them to the store
-export function loadImagesfromStorage() {
+export function loadImagesFromStorage() {
   return (dispatch, getState) => {
     return Object.keys(localStorage)
       .filter((k) => k.startsWith("image_"))

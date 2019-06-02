@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import styled /*, { withTheme } */ from "styled-components";
 import { withStyles } from "@material-ui/core/styles";
 import { Tooltip, IconButton } from "@material-ui/core";
 import PlaylistAddIcon from "@material-ui/icons/PlaylistAdd";
@@ -12,28 +11,27 @@ import ZoomInIcon from "@material-ui/icons/ZoomIn";
 import ZoomOutIcon from "@material-ui/icons/ZoomOut";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import StopIcon from "@material-ui/icons/Stop";
+import Autorenew from "@material-ui/icons/Autorenew";
 import { ContentCopy, ContentPaste } from "mdi-material-ui";
-
-const HeaderWrapper = styled.div`
-  display: flex
-  justify-content: center;
-  flex-direction: row;
-  margin: 0;
-  padding: 0 30px;
-  white-space: nowrap;
-`;
 
 const styles = theme => ({
   root: {
     color: "white",
   },
-  formControl: {
-    margin: theme.spacing.unit,
-    minWidth: 80,
+  wrapper: {
+    display: "flex",
+    justifyContent: "center",
+    flexDirection: "row",
+    margin: 0,
+    padding: "0 30px",
+    whiteSpace: "nowrap",
   },
-  controlgroup: {
-    padding: "0 30",
-  }
+  headergroup: {
+    display: "flex",
+    justifyContent: "center",
+    flexDirection: "row",
+    margin: "0 10px",
+  },
 });
 
 export class Header extends Component {
@@ -77,12 +75,14 @@ export class Header extends Component {
 
   render() {
 
-    const { createImageChannel, downloadConfig, enablePlay, playChannelAndImage, enableStop, 
-      stopChannel, zoomIn, zoomOut, numSelectedElems, deleteSelectedPart, copyPart, pastePart, hasPartToCopy } = this.props;
+    const { classes, 
+      createImageChannel, downloadConfig, enablePlay, playChannelAndImage, enableStop, 
+      stopChannel, zoomIn, zoomOut, numSelectedElems, deleteSelectedPartAndMarkers, 
+      copyPart, pastePart, updateFirmware, hasPartToCopy } = this.props;
 
     return (
-      <HeaderWrapper>
-        <div style={ { margin: "0 10px" } }>
+      <div className={ classes.wrapper }>
+        <div className= { classes.headergroup }>
           <input type="file"
               accept="audio/*"
               hidden
@@ -119,23 +119,27 @@ export class Header extends Component {
             </IconButton>
           </Tooltip>
         </div>
-        <div style={ { margin: "0 10px" } }>
+        <div  className= { classes.headergroup }>
           <Tooltip title="Play">
+            <div>
             <IconButton color="inherit"
                 disabled={ !enablePlay }
                 onClick={ () => playChannelAndImage(this.state.channelId) }>
               <PlayArrowIcon />
             </IconButton>
+            </div>
           </Tooltip>
           <Tooltip title="Stop">
+          <div>
             <IconButton color="inherit"
                 disabled={ !enableStop }
                 onClick={ stopChannel }>
               <StopIcon />
             </IconButton>
+            </div>
           </Tooltip>
         </div>
-        <div style={ { margin: "0 10px" } }>
+        <div className= { classes.headergroup }>
           <Tooltip title="Zoom in">
             <IconButton color="inherit"
                 onClick={ zoomIn }>
@@ -149,33 +153,50 @@ export class Header extends Component {
             </IconButton>
           </Tooltip>
           <Tooltip title="Copy selected part">
+          <div>
             <IconButton disabled={ numSelectedElems === 0 }
                 color="inherit"
                 onClick={ copyPart }>
               <ContentCopy />
             </IconButton>
+            </div>
           </Tooltip>
           <Tooltip title="Paste part">
+          <div>
             <IconButton disabled={ !hasPartToCopy }
                 color="inherit"
                 onClick={ pastePart }>
               <ContentPaste />
             </IconButton>
+            </div>
           </Tooltip>
           <Tooltip title="Delete selected">
+          <div>
             <IconButton disabled={ numSelectedElems === 0 }
                 color="inherit"
-                onClick={ deleteSelectedPart }>
+                onClick={ deleteSelectedPartAndMarkers }>
               <DeleteIcon />
             </IconButton>
+            </div>
           </Tooltip>
         </div>
-      </HeaderWrapper>
+        <div className= { classes.headergroup }>
+        <Tooltip title="Update firmware">
+          <IconButton color="secondary"
+              onClick={ updateFirmware }>
+            <Autorenew />
+          </IconButton>
+        </Tooltip>
+        
+      </div>
+
+      </div>
       );
   }
 }
 
 Header.propTypes = {
+  classes: PropTypes.object.isRequired,
   channelIds: PropTypes.array,
   createImageChannel: PropTypes.func.isRequired,
   downloadConfig: PropTypes.func.isRequired,
@@ -188,13 +209,14 @@ Header.propTypes = {
   zoomIn: PropTypes.func.isRequired,
   zoomOut: PropTypes.func.isRequired,
   numSelectedElems: PropTypes.number,
-  deleteSelectedPart: PropTypes.func.isRequired,
+  deleteSelectedPartAndMarkers: PropTypes.func.isRequired,
   uploadConfigFile: PropTypes.func.isRequired,
   unsetChannelActive: PropTypes.func.isRequired,
   setChannelActive: PropTypes.func.isRequired,
   uploadAudioFile: PropTypes.func.isRequired,
   copyPart: PropTypes.func.isRequired,
   pastePart: PropTypes.func.isRequired,
+  updateFirmware: PropTypes.func.isRequired,
   hasPartToCopy: PropTypes.bool,
 };
 

@@ -1,29 +1,45 @@
 {
-  "name": "react-waveform-playlist",
-  "version": "0.1.0",
-  "homepage": "https://gmoehler.github.io/luminosia",
+  "name": "luminosia",
+  "description": "Luminosia Studio",
+  "version": "0.0.0-semantic-release",
+  "homepage": ".",
+  "homepage-web": "https://gmoehler.github.io/luminosia",
   "license": "MIT",
+  "author": {
+    "name": "Gregor Moehler",
+    "email": "gmoeh@gmx.de"
+  },
+  "engines": {
+    "node": ">=10.0.0",
+    "npm": ">=6.0.0"
+  },
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "1.2.13",
-    "@fortawesome/free-solid-svg-icons": "5.7.0",
-    "@fortawesome/react-fontawesome": "0.1.4",
-    "@material-ui/core": "3.9.1",
-    "@material-ui/icons": "^3.0.0",
+    "@fortawesome/fontawesome-svg-core": "^1.2.18",
+    "@fortawesome/free-solid-svg-icons": "^5.8.2",
+    "@fortawesome/react-fontawesome": "^0.1.4",
+    "@material-ui/core": "^3.9.3",
+    "@material-ui/icons": "^3.0.2",
     "@material-ui/lab": "3.0.0-alpha.30",
+    "download-github-release": "0.3.2",
+    "electron-is-dev": "^1.1.0",
+    "electron-devtools-installer": "2.2.4",
     "fade-maker": "1.0.3",
-    "gh-pages": "2.0.1",
     "file-saver": "2.0.1",
+    "gh-pages": "2.0.1",
     "i": "0.3.6",
     "input-range-scss": "1.5.1",
-    "mdi-material-ui": "5.10.0",
-    "pngjs": "3.3.3",
+    "is-electron": "^2.2.0",
+    "mdi-material-ui": "5.11.0",
+    "promisify-child-process": "^3.1.0",
     "react": "16.7.0",
     "react-dom": "16.7.0",
     "react-redux": "5.1.0",
-    "react-scripts": "2.1.3",
+    "react-scripts": "2.1.4",
     "redux": "4.0.1",
     "redux-thunk": "2.3.0",
-    "styled-components": "4.1.3",
+    "styled-components": "4.2.0",
+    "tmp": "^0.1.0",
+    "tree-kill": "^1.2.1",
     "webaudio-peaks": "^0.0.6"
   },
   "scripts": {
@@ -33,8 +49,18 @@
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
-    "storybook": "start-storybook -p 9001 -c .storybook"
+    "storybook": "start-storybook -p 9001 -c .storybook",
+    "electron": "rescripts start",
+    "electron-build": "rescripts build",
+    "electron-test": "rescripts test",
+    "electron-dev": "concurrently \"yarn run electron\" \"wait-on http://localhost:3000 && electron .\"",
+    "postinstall": "electron-builder install-app-deps",
+    "preelectron-pack": "yarn electron-build",
+    "electron-pack": "build --win --linux",
+    "semantic-release": "semantic-release",
+    "commitmsg": "validate-commit-msg"
   },
+  "main": "public/electron.js",
   "eslintConfig": {
     "extends": "react-app"
   },
@@ -45,10 +71,84 @@
     "not op_mini all"
   ],
   "devDependencies": {
+    "@babel/core": "7.2.2",
+    "@rescripts/cli": "^0.0.10",
+    "@rescripts/rescript-env": "0.0.5",
+    "@semantic-release/git": "^7.0.8",
+    "@semantic-release/github": "^5.2.10",
+    "@semantic-release/npm": "^5.1.4",
     "@storybook/addon-actions": "4.1.11",
     "@storybook/react": "4.1.11",
-    "@babel/core": "7.2.2",
-    "babel-loader": "8.0.4",
-    "redux-mock-store": "1.5.3"
+    "babel-loader": "8.0.5",
+    "concurrently": "^4.1.0",
+    "electron": "^4.1.5",
+    "electron-builder": "^20.39.0",
+    "eslint": "5.12.0",
+    "husky": "2.2.0",
+    "redux-mock-store": "1.5.3",
+    "semantic-release": "^15.13.3",
+    "typescript": "^3.4.5",
+    "validate-commit-message": "3.0.1",
+    "wait-on": "^3.2.0"
+  },
+
+  "build": {
+    "appId": "com.luminosia.studio",
+    "productName": "LuminosiaStudio",
+    "copyright": "Copyright © 2019 ${author}",
+    "mac": {
+      "category": "public.app-category.utilities"
+    },
+    "files": [
+      "build/**/*",
+      "node_modules/**/*"
+    ],
+    "linux":{
+      "target": [
+        {"target": "deb", 
+          "arch": [
+          "x64", "ia32"
+        ]}, 
+        {"target": "AppImage", 
+          "arch": [
+          "x64"
+        ]}
+      ]
+    },
+    "extraResources": [
+      {
+        "from": "./resources/linux",
+        "to": "linux",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": "./resources/win32",
+        "to": "win32",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
+    "directories": {
+      "buildResources": "assets"
+    }
+  },
+
+  "husky": {
+    "hooks": {
+      "commit-msg": "validate-commit-message"
+    }
+  },
+
+  "release": {
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      ["@semantic-release/github", {
+        "assets": ["dist/LuminosiaStudio*", "dist/luminosia*"]
+      }]
+    ]
   }
 }
