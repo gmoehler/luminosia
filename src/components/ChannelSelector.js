@@ -16,6 +16,10 @@ import isElectron from "is-electron";
 const channelSelectorWidth = 96;
 
 const styles = () => ({
+  formGroup: {
+    paddingTop: "30px",
+    background: "#3f51b5",
+  },
   channelSelectorWrapper: {
     display: "flex",
     justifyContent: "space-between",
@@ -74,9 +78,9 @@ class CustomizedSwitches extends React.Component {
       .map((channel) => 
         (<div key={ channel.channelId }
             className={ classNames(
-          classes.channelSelectorWrapper,
-          channel.active && classes.wrapperActive,
-          selectedImageChannelId === channel.channelId && classes.wrapperSelected) }
+              classes.channelSelectorWrapper,
+              channel.active && classes.wrapperActive,
+              selectedImageChannelId === channel.channelId && classes.wrapperSelected) }
             background = { indigo }>
           <FormControlLabel
               className={ classes.switchWrapper }
@@ -122,7 +126,7 @@ class CustomizedSwitches extends React.Component {
       );
 
     return (
-      <FormGroup>
+      <FormGroup className={ classes.formGroup }>
         {switches}
       </FormGroup>
     );
