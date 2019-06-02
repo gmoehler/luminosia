@@ -61,7 +61,7 @@ const styles = () => ({
   }
 });
 
-class CustomizedSwitches extends React.Component {
+class ChannelSelector extends React.Component {
 
   handleChange = channelId => event => {
     const active = event.target.checked;
@@ -135,7 +135,7 @@ class CustomizedSwitches extends React.Component {
   }
 }
 
-CustomizedSwitches.propTypes = {
+ChannelSelector.propTypes = {
   classes: PropTypes.object.isRequired,
   channelOverview: PropTypes.array,
   setChannelActive: PropTypes.func.isRequired,
@@ -146,4 +146,4 @@ CustomizedSwitches.propTypes = {
   selectedImageChannelId: PropTypes.number,
 };
 
-export default withStyles(styles)(CustomizedSwitches);
+export default withStyles(styles)(ChannelSelector);
