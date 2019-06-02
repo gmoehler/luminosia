@@ -11,6 +11,8 @@ App
     Header
 
   ChannelGroupContainer
+    time2pixels
+      TimeScale
     ChannelGroup
       withEventHandler
         withPlay
@@ -24,7 +26,7 @@ App
   ImageListContainer
     ImageList
 
-```
+  ChannelSelectorContainer
+    ChannelSelector
 
-Todos:
-- only load img once initially
+```

@@ -16,6 +16,10 @@ import isElectron from "is-electron";
 const channelSelectorWidth = 96;
 
 const styles = () => ({
+  formGroup: {
+    paddingTop: "30px",
+    background: "#2c387e",
+  },
   channelSelectorWrapper: {
     display: "flex",
     justifyContent: "space-between",
@@ -25,6 +29,8 @@ const styles = () => ({
     background: "darkgrey",
     height: "92px",
     width: `${channelSelectorWidth}px`,
+    borderTop: "1px #2c387e solid",
+    borderBottom: "1px #2c387e solid",
   },
   wrapperActive: {
     background: "#3f51b5",
@@ -55,7 +61,7 @@ const styles = () => ({
   }
 });
 
-class CustomizedSwitches extends React.Component {
+class ChannelSelector extends React.Component {
 
   handleChange = channelId => event => {
     const active = event.target.checked;
@@ -74,9 +80,9 @@ class CustomizedSwitches extends React.Component {
       .map((channel) => 
         (<div key={ channel.channelId }
             className={ classNames(
-          classes.channelSelectorWrapper,
-          channel.active && classes.wrapperActive,
-          selectedImageChannelId === channel.channelId && classes.wrapperSelected) }
+              classes.channelSelectorWrapper,
+              channel.active && classes.wrapperActive,
+              selectedImageChannelId === channel.channelId && classes.wrapperSelected) }
             background = { indigo }>
           <FormControlLabel
               className={ classes.switchWrapper }
@@ -122,14 +128,14 @@ class CustomizedSwitches extends React.Component {
       );
 
     return (
-      <FormGroup>
+      <FormGroup className={ classes.formGroup }>
         {switches}
       </FormGroup>
     );
   }
 }
 
-CustomizedSwitches.propTypes = {
+ChannelSelector.propTypes = {
   classes: PropTypes.object.isRequired,
   channelOverview: PropTypes.array,
   setChannelActive: PropTypes.func.isRequired,
@@ -140,4 +146,4 @@ CustomizedSwitches.propTypes = {
   selectedImageChannelId: PropTypes.number,
 };
 
-export default withStyles(styles)(CustomizedSwitches);
+export default withStyles(styles)(ChannelSelector);
