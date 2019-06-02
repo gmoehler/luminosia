@@ -50,7 +50,37 @@ const styles = theme => ({
     marginRight: drawerWidth,
   },
   title: {
+    display: "flex",
+    flexDirection: "row",
     paddingLeft: 20,
+    minWidth: "6em",
+  },
+  title1: {
+    color: "#f44336",
+  },
+  title2: {
+    color: "#ffc107",
+  },
+  title3: {
+    color: "#e91e63",
+  },
+  title4: {
+    color: "#8bc34a",
+  },
+  title5: {
+    color: "#00bcd4",
+  },
+  title6: {
+    color: "#8bc34a",
+  },
+  title7: {
+    color: "#af52bf",
+  },
+  title8: {
+    color: "#d7e360",
+  },
+  title9: {
+    color: "#ffc107",
   },
   menuButton: {
     marginLeft: 12,
@@ -153,12 +183,27 @@ class App extends React.Component {
             [classes.appBarShift]: open,
           }) }>
           <Toolbar disableGutters={ !open }>
-            <Typography variant="h6"
-                color="inherit"
-                className={ classes.title }
-                noWrap>
-              Luminosia Studio
-            </Typography>
+            <div className={ classes.title }>
+              <Typography
+                  variant="h6"
+                  className={ classes.title1 }>L</Typography>
+              <Typography variant="h6"
+                  className={ classes.title2 }>u</Typography>
+              <Typography variant="h6"
+                  className={ classes.title3 }>m</Typography>
+              <Typography variant="h6"
+                  className={ classes.title4 }>i</Typography>
+              <Typography variant="h6"
+                  className={ classes.title5 }>n</Typography>
+              <Typography variant="h6"
+                  className={ classes.title6 }>o</Typography>
+              <Typography variant="h6"
+                  className={ classes.title7 }>s</Typography>
+              <Typography variant="h6"
+                  className={ classes.title8 }>i</Typography>
+              <Typography variant="h6"
+                  className={ classes.title9 }>a</Typography>
+            </div>
             <HeaderContainer />
             <div className={ classes.grow }></div>
             <Tooltip title="Work with images">

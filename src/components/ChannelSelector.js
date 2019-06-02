@@ -18,7 +18,7 @@ const channelSelectorWidth = 96;
 const styles = () => ({
   formGroup: {
     paddingTop: "30px",
-    background: "#3f51b5",
+    background: "#2c387e",
   },
   channelSelectorWrapper: {
     display: "flex",
@@ -29,6 +29,8 @@ const styles = () => ({
     background: "darkgrey",
     height: "92px",
     width: `${channelSelectorWidth}px`,
+    borderTop: "1px #2c387e solid",
+    borderBottom: "1px #2c387e solid",
   },
   wrapperActive: {
     background: "#3f51b5",

@@ -81,7 +81,7 @@ const PlaylistTimeScale = styled.div`
   left: 0;
   right: 0;
   height: 30px;
-  background: #3f51b5;
+  background: #2c387e;
   color: white;
 `;
 
@@ -138,7 +138,6 @@ class TimeScale extends Component {
     });
   }
 
-  // duration, samplesPerPixel, sampleRate, controlWidth, color
   render() {
     const { maxWidth, resolution, scale, timeScaleHeight } = this.props;
 
