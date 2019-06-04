@@ -58,27 +58,38 @@ const mapStateToProps = (state, props) => {
 
 const mapDispatchToProps = dispatch => ({
   selectRange: (from, to) => dispatch(selectRange({
-    from, to
+    from,
+    to
   })),
   deselectRange: () => dispatch(deselectRange()),
   setMarker: (markerId, channelId, partId, pos, minPos, type) => dispatch(setMarker({
-    markerId, channelId, partId, pos, minPos, type
+    markerId,
+    channelId,
+    partId,
+    pos,
+    minPos,
+    type
   })),
   insertNewPart: (channelId, imageId, src, offset, duration) => dispatch(insertNewPart({
-    channelId, imageId, src, offset, duration, 
+    channelId,
+    imageId,
+    src,
+    offset,
+    duration,
   })),
   move: (channelId, partId, incr) => dispatch(moveSelectedPartsWithMarkers({
-    channelId, partId, incr 
+    channelId, 
+    partId,
+    incr
   })),
   toggleElementSelection: (partInfo) => dispatch(toggleElementSelection(partInfo)),
   toggleElementMultiSelection: (partInfo) => dispatch(toggleElementMultiSelection(partInfo)),
   deleteSelectedPartAndMarkers: () => dispatch(deleteSelectedPartAndMarkers()),
   setChannelPlayState: (channelId, playState) => dispatch(setChannelPlayState({
-    channelId, playState
+    channelId,
+    playState
   })),
-  setMessage: (text, type, title) => dispatch(setMessage({
-    text, type, title 
-  })),
+  setMessage: (text) => dispatch(setMessage(text)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChannelGroupContainer);

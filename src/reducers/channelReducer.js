@@ -280,7 +280,7 @@ export const getMaxDuration = (state) => {
 // saving the config will return this channel information
 // array of all channels with a given list of keys (e.g. not including audio buffer)
 export const getChannelsConfig = (state) => {
-  const allowedProps = ["type", "names", "src", "sampleRate", "offset", "selected", "duration", "active"];
+  const allowedProps = ["type", "names", "src", "sampleRate", "offset", "gain", "selected", "duration", "active"];
   const propsToArray = {
     "byPartId": "parts"
   };

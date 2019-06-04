@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 
 import styled, { withTheme } from "styled-components";
+import { secondsToPixels } from "../utils/conversions";
 
 const TIME_INFO = {
   20000: {
@@ -55,7 +56,7 @@ function getScaleInfo(resolution) {
   keys = keys.sort((a, b) => a - b);
 
   for (let i = 0; i < keys.length; i += 1) {
-    if (48000 / resolution <= keys[i]) {
+    if (resolution <= keys[i]) {
       return TIME_INFO[keys[i]];
     }
   }
@@ -76,13 +77,11 @@ function formatTime(milliseconds) {
 }
 
 const PlaylistTimeScale = styled.div`
-  width: ${props => props.cssWidth}px;
+  margin-left: ${props => props.controlWidth}px;
   position: relative;
   left: 0;
   right: 0;
   height: 30px;
-  background: #2c387e;
-  color: white;
 `;
 
 const PlaylistTimeScaleScroll = styled.div`
@@ -138,26 +137,26 @@ class TimeScale extends Component {
     });
   }
 
+  // duration, samplesPerPixel, sampleRate, controlWidth, color
   render() {
-    const { maxWidth, resolution, scale, timeScaleHeight } = this.props;
-
-    const scaleInfo = getScaleInfo(resolution);
+    const { duration, samplesPerPixel, sampleRate, controlWidth, scale, timeScaleHeight } = this.props;
+    const widthX = secondsToPixels(duration, samplesPerPixel, sampleRate);
+    const pixPerSec = sampleRate / samplesPerPixel;
+    const scaleInfo = getScaleInfo(samplesPerPixel);
     const canvasInfo = {};
     const timeMarkers = [];
     let counter = 0;
 
-    for (let i = 0; i < maxWidth; i += (resolution * scaleInfo.secondStep)) {
+    for (let i = 0; i < widthX; i += (pixPerSec * scaleInfo.secondStep)) {
       const pix = Math.floor(i);
 
       // put a timestamp every 30 seconds.
       if (scaleInfo.marker && (counter % scaleInfo.marker === 0)) {
         const timestamp = formatTime(counter);
-        timeMarkers.push(
-          <TimeStamp 
-              key={ timestamp }
-              pix={ pix }>
-              { timestamp }
-          </TimeStamp>);
+        timeMarkers.push(<TimeStamp key={ timestamp }
+            pix={ pix }>
+                           { timestamp }
+                         </TimeStamp>);
         canvasInfo[pix] = timeScaleHeight;
       } else if (scaleInfo.bigStep && (counter % scaleInfo.bigStep === 0)) {
         canvasInfo[pix] = Math.floor(timeScaleHeight / 2);
@@ -169,16 +168,16 @@ class TimeScale extends Component {
     }
 
     this.canvasInfo = canvasInfo;
+    this.width = widthX;
 
     return (
-      <PlaylistTimeScale cssWidth={ maxWidth }>
-        <PlaylistTimeScaleScroll cssWidth={ maxWidth }>
+      <PlaylistTimeScale controlWidth={ controlWidth }>
+        <PlaylistTimeScaleScroll width={ widthX }>
           { timeMarkers }
-          <TimeTicks cssWidth={ maxWidth }
-              width={ maxWidth * scale }
+          <TimeTicks cssWidth={ widthX }
+              width={ widthX * scale }
               height={ timeScaleHeight * scale }
-              ref={ this.setCanvasRef }
-          />
+              ref={ this.setCanvasRef }></TimeTicks>
         </PlaylistTimeScaleScroll>
       </PlaylistTimeScale>
       );
@@ -186,8 +185,9 @@ class TimeScale extends Component {
 }
 
 TimeScale.propTypes = {
-  maxWidth: PropTypes.number,
-  resolution: PropTypes.number.isRequired,
+  duration: PropTypes.number,
+  samplesPerPixel: PropTypes.number,
+  sampleRate: PropTypes.number,
   controlWidth: PropTypes.number,
   theme: PropTypes.object,
   scale: PropTypes.number,
@@ -205,7 +205,8 @@ TimeScale.defaultProps = {
   // time length in seconds
   duration: 0,
   samplesPerPixel: 1000,
-  // sampleRate: 48000,
+  sampleRate: 48000,
+  controlWidth: 0,
   timeScaleHeight: 10,
 };
 

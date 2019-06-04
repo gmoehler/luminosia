@@ -55,7 +55,6 @@ export function timeToPixels(WrappedComponent) {
           markers={ markersPx }
           select={ this.select }
           move={ this.move }
-          resolution={ resolution } // needed by TimeScale (?)
           handleMouseEvent={ (eventName, evInfo) => this.handleMouseEvent(eventName, evInfo, resolution) } />);
     }
   }

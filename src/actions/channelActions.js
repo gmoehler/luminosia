@@ -27,6 +27,7 @@ export const createImageChannel = () => {
       sampleRate: defaultSampleRate,
       active: true,
       playState: "stopped",
+      gain: 1.0,
       duration,
     }));
   };
@@ -75,7 +76,7 @@ export function loadAChannel(channelConfig, audioContext, state) {
 function loadImageChannel(channelConfig, state) {
 
   // first normalize the parts
-  // an icremented 'curid' is the part id used as key
+  // an incremented temporary 'curid' is the part id used as key
   const normalizedParts = channelConfig.parts ?
     channelConfig.parts.reduce((res, part) => {
       part.partId = res.curid;
@@ -88,12 +89,12 @@ function loadImageChannel(channelConfig, state) {
       curid: 0
     }) : {};
 
-  // incremented id no longer required
-  normalizedParts &&
-  delete normalizedParts.curid;
+  // incremented was only required temporarily
+  normalizedParts && delete normalizedParts.curid;
   delete channelConfig.parts;
   channelConfig.lastPartSeqNum = Object.keys(normalizedParts).length - 1;
   channelConfig.playState = "stopped";
+  channelConfig.gain = channelConfig.gain && 1.0;
 
   return Promise.resolve({
     ...channelConfig,
@@ -114,6 +115,7 @@ export const uploadAudioFile = (audioFile, audioContext) => {
           playState: "stopped",
           src: audioFile.name,
           offset: 0,
+          gain: 1.0,
           sampleRate: audioBuffer.sampleRate,
           buffer: audioBuffer,
           duration: audioBuffer.duration,

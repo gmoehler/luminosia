@@ -268,7 +268,7 @@ Channel.defaultProps = {
     selectedMarkerColor: "rgba(255,165, 0, 1)", // orange
     selectionColor: "rgba(0,0,255,0.5)",
     borderColorSelected: "#3f51b5",
-    borderColor: "#2c387e",
+    borderColor: "darkgrey",
   },
   // checking `window.devicePixelRatio` when drawing to canvas.
   scale: 1,
