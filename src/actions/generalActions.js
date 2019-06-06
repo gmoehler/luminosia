@@ -122,9 +122,9 @@ export const drawExportImage = (channelId, idx) => {
         cc.drawImage(img, 0, 0, widthPx, 30, offsetPx, idx * 30, widthPx, 30);
       });
       if (data.gain && data.gain < .99) {
-          const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+          const imageData = cc.getImageData(0, 0, canvas.width, canvas.height);
   	    applyGain(data.gain, imageData.data);
-          context.putImageData(imageData, 0,0);
+          cc.putImageData(imageData, 0,0);
       }
     }
   };
