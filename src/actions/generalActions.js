@@ -11,7 +11,7 @@ import { addChannel, loadAChannel, updateChannelMarkersForLastAddedChannel } fro
 import { addImage, loadImage } from "./imageListActions";
 import { getChannelData, getMaxDuration } from "../reducers/channelReducer";
 import { secondsToSamples } from "../utils/conversions";
-import { encodeImage } from "../utils/imageUtils";
+import { encodeImage, applyGain } from "../utils/imageUtils";
 import { addToUploadLog } from "./viewActions";
 
 // load channels and images from config
@@ -121,6 +121,12 @@ export const drawExportImage = (channelId, idx) => {
         const widthPx = part.duration ? secondsToSamples(part.duration, data.sampleRate) : 0;
         cc.drawImage(img, 0, 0, widthPx, 30, offsetPx, idx * 30, widthPx, 30);
       });
+
+      if (data.gain && data.gain < .99) {
+        const imageData = cc.getImageData(0, 0, canvas.width, canvas.height);
+        applyGain(data.gain, imageData.data);
+        cc.putImageData(imageData, 0,0);
+    }
     }
   };
 };
