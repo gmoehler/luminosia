@@ -118,19 +118,21 @@ class ImageChannel extends Component {
 
         cc.scale(scale, scale);
         if (img.src) {
+          cc.globalAlpha = gain;
           img.onload = cc.drawImage(img, imageOffset, 0, sourceWidth, img.height,
             0, 0, targetWidth, targetHeight);
         } else {
+          cc.globalAlpha = 1.0;
           cc.fillStyle = "#FF0000"; // red rectangle if image is missing
           cc.fillRect(0, 0, targetWidth, targetHeight);
         }
 
         // apply gain by adding a transparent black rectangle on top of the parts
-        if (gain && gain < .99) {
+     /*   if (gain && gain < .99) {
           cc.fillStyle = "black";
           cc.globalAlpha = 1.0 - gain;
-          cc.fillRect(0, idx * 30, canvas.width, 30);
-        }
+          cc.fillRect(0, 0, targetWidth, targetHeight);
+        } */
 
         canvasOffset += MAX_CANVAS_WIDTH;
       }
