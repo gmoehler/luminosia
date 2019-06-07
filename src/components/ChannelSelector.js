@@ -4,8 +4,8 @@ import classNames from "classnames";
 import { withStyles } from "@material-ui/core/styles";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Switch from "@material-ui/core/Switch";
 import { Tooltip, IconButton } from "@material-ui/core";
+import Slider from "@material-ui/lab/Slider";
 import { indigo } from "@material-ui/core/colors/indigo";
 import UploadChannelIcon from "@material-ui/icons/Publish";
 import DownloadChannelIcon from "@material-ui/icons/SaveAlt";
@@ -38,10 +38,10 @@ const styles = () => ({
   wrapperSelected: {
     background: "cornflowerblue",
   },
-  switchWrapper: {
+  sliderWrapper: {
     display: "flex",
     justifyContent: "flex-end",
-    margin: 0,
+    margin: "20px 10px",
     padding: 0,
   },
   icon: {
@@ -72,23 +72,14 @@ class ChannelSelector extends React.Component {
     	this.props.unsetChannelActive(channelId);
     } else if (val > 0 && !active){
     	this.props.setChannelActive(channelId);
-    }
-  };
-
-  handleSwitchChange = channelId => event => {
-    const active = event.target.checked;
-    if (active){
-      this.props.setChannelActive(channelId);
-    } else {
-      this.props.unsetChannelActive(channelId);
-    }
+    } 
   };
 
   render() {
-    const { classes, selectedImageChannelId } = this.props;
+    const { classes, selectedImageChannelId, channelOverview } = this.props;
     const electronVersion = isElectron();
 
-    const switches = this.props.channelOverview
+    const switches = channelOverview
       .map((channel) => 
         (<div key={ channel.channelId }
             className={ classNames(
@@ -97,17 +88,15 @@ class ChannelSelector extends React.Component {
               selectedImageChannelId === channel.channelId && classes.wrapperSelected) }
             background = { indigo }>
           <FormControlLabel
-              className={ classes.switchWrapper }
+              className={ classes.sliderWrapper }
               control={
-              <Tooltip title={ channel.active?"Mute":"Unmute" }>
-                <Slider value={ channel.gain }
-                   onChange={ this.handleChange(channel.channelId, channel.active) }
-                   min={0} max={1} />
-                <Switch disabled={ channel.type === "audio" }
-                    checked={ channel.active }
-                    onChange={ this.handleSwitchChange(channel.channelId) }
-                />
-                </Tooltip>
+              <Tooltip title={ "brightness" }>
+                <Slider className={ classes.slider }
+                    value={ channel.gain }
+                    onChange={ this.handleChange(channel.channelId, channel.active) }
+                    min={ 0 }
+                    max={ 1 } />
+              </Tooltip>
             }
           />
           <div className={ classes.lowerIcons }>
@@ -155,6 +144,7 @@ ChannelSelector.propTypes = {
   channelOverview: PropTypes.array,
   setChannelActive: PropTypes.func.isRequired,
   unsetChannelActive: PropTypes.func.isRequired,
+  updateChannel: PropTypes.func.isRequired,
   duplicateChannel: PropTypes.func.isRequired,
   deleteChannel: PropTypes.func.isRequired,
   exportImageChannel: PropTypes.func.isRequired,

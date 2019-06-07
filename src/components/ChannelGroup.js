@@ -89,6 +89,7 @@ export default class ChannelGroup extends Component {
           playState: channelData.playState,
           offset: channelData.offset,
           selected: channelData.selected,
+          gain: channelData.gain,
           sampleRate,
           resolution,
           buffer: channelData && channelData.buffer,
