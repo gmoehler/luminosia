@@ -104,6 +104,7 @@ describe("actions", () => {
           playState: "stopped",
           src: audioFile.name,
           offset: 0,
+          gain: 1,
           sampleRate: 44100,
           buffer: {
             duration: 21.21,
