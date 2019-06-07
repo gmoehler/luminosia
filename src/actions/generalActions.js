@@ -11,7 +11,7 @@ import { addChannel, loadAChannel, updateChannelMarkersForLastAddedChannel } fro
 import { addImage, loadImage } from "./imageListActions";
 import { getChannelData, getMaxDuration } from "../reducers/channelReducer";
 import { secondsToSamples } from "../utils/conversions";
-import { encodeImage, applyGain } from "../utils/imageUtils";
+import { encodeImage } from "../utils/imageUtils";
 import { addToUploadLog } from "./viewActions";
 
 // load channels and images from config
