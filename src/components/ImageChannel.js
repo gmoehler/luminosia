@@ -68,7 +68,7 @@ const ImageChannelWrapper = styled.div`
   border: 1px solid ${props => props.borderColor};
 `;
 
-class Channel extends Component {
+class ImageChannel extends Component {
   constructor(props) {
     super(props);
     this.canvases = [];
@@ -91,7 +91,7 @@ class Channel extends Component {
   }   
 
   draw = () => {
-    const { imageHeight, scale, factor } = this.props;
+    const { imageHeight, scale, factor, gain } = this.props;
 
     Object.keys(this.images).forEach((idx) => {
 
@@ -123,6 +123,13 @@ class Channel extends Component {
         } else {
           cc.fillStyle = "#FF0000"; // red rectangle if image is missing
           cc.fillRect(0, 0, targetWidth, targetHeight);
+        }
+
+        // apply gain by adding a transparent black rectangle on top of the parts
+        if (gain && gain < .99) {
+          cc.fillStyle = "black";
+          cc.globalAlpha = 1.0 - gain;
+          cc.fillRect(0, idx * 30, canvas.width, 30);
         }
 
         canvasOffset += MAX_CANVAS_WIDTH;
@@ -312,7 +319,7 @@ class Channel extends Component {
   }
 }
 
-Channel.propTypes = {
+ImageChannel.propTypes = {
   channelId: PropTypes.number.isRequired,
 	parts: PropTypes.arrayOf(
 		PropTypes.shape({
@@ -335,9 +342,10 @@ Channel.propTypes = {
   selected: PropTypes.bool,
   handleMouseEvent: PropTypes.func,
   factor: PropTypes.number,
+  gain: PropTypes.number,
 };
 
-Channel.defaultProps = {
+ImageChannel.defaultProps = {
   theme: {
     waveProgressColor: "transparent", // 'rgb(255,255,255,0.3)', // transparent white
     waveProgressBorderColor: "rgb(255,255,255,1)", // transparent white
@@ -368,6 +376,8 @@ Channel.defaultProps = {
   selection: null,
   // positions of the markers in CSS pixels from the left of channel (null: do not draw)
   markers: [],
+  // brightness gain of the window: 1 is fully bright, 0 is black
+  gain: 1.0
 };
 
-export default withTheme(Channel);
+export default withTheme(ImageChannel);

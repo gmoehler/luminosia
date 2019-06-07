@@ -122,11 +122,12 @@ export const drawExportImage = (channelId, idx) => {
         cc.drawImage(img, 0, 0, widthPx, 30, offsetPx, idx * 30, widthPx, 30);
       });
 
+      // apply gain by adding a transparent black rectangle on top of the parts
       if (data.gain && data.gain < .99) {
-        const imageData = cc.getImageData(0, 0, canvas.width, canvas.height);
-        applyGain(data.gain, imageData.data);
-        cc.putImageData(imageData, 0,0);
-    }
+        cc.fillStyle = "black";
+        cc.globalAlpha = 1.0 - data.gain;
+        cc.fillRect(0, idx * 30, canvas.width, 30);
+      }
     }
   };
 };
