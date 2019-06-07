@@ -52,6 +52,11 @@ export const unsetChannelActive = (channelInfo) => ({
   payload: channelInfo
 });
 
+export const updateChannel = (channelInfo) => ({
+  type: UPDATE_CHANNEL,
+  payload: channelInfo
+});
+
 const uploadAudioStarted = startInfo => ({
   type: UPLOAD_AUDIO_STARTED
 });

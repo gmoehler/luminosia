@@ -63,7 +63,14 @@ const styles = () => ({
 
 class ChannelSelector extends React.Component {
 
-  handleChange = channelId => event => {
+  handleChange = channelId => (event, val) => {
+    this.props.updateChannel({
+    	channelId,
+        gain: val
+    });
+  };
+
+  handleSwitchChange = channelId => event => {
     const active = event.target.checked;
     if (active){
       this.props.setChannelActive(channelId);
@@ -88,9 +95,12 @@ class ChannelSelector extends React.Component {
               className={ classes.switchWrapper }
               control={
               <Tooltip title={ channel.active?"Mute":"Unmute" }>
+                <Slider value={ channel.gain }
+                   onChange={ this.handleChange(channel.channelId) }
+                   min={0} max={1} />
                 <Switch disabled={ channel.type === "audio" }
                     checked={ channel.active }
-                    onChange={ this.handleChange(channel.channelId) }
+                    onChange={ this.handleSwitchChange(channel.channelId) }
                 />
                 </Tooltip>
             }

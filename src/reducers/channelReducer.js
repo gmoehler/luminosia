@@ -64,6 +64,18 @@ export default (state = initialState, action) => {
           }
         }
       };
+      
+    case UPDATE_CHANNEL:
+      return {
+        ...state,
+        byChannelId: {
+          ...state.byChannelId,
+          [action.payload.channelId]: {
+            ...state.byChannelId[action.payload.channelId],
+            ....action.payload
+          }
+        }
+      };
 
     case UNSET_CHANNEL_ACTIVE:
       return {
