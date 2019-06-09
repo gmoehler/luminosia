@@ -5,6 +5,24 @@ import { getChannelExportData } from "../actions/generalActions";
 import { samplesToRad } from "../utils/conversions";
 import Slider from "@material-ui/lab/Slider";
 
+import MuiThemeProvider from "@material-ui/core/styles/MuiThemeProvider";
+import { createMuiTheme } from "@material-ui/core/styles";
+import yellow from "@material-ui/core/colors/yellow";
+
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: "#ffffff"
+    },
+    secondary: yellow
+  },
+  overrides: {
+    MuiSlider: {
+      thumb: { backgroundColor: "red" }
+    }
+  },
+});
+
 const minRotationSpeed = 0.1;
 const maxRotationSpeed = 9.9;
 
@@ -127,11 +145,13 @@ export default class AnimationPane extends PureComponent {
 		return (
 			<AnimationPaneWrapper drawerWidth={ drawerWidth }>
      <AnimationControl>
-       { rotationSpeed.toFixed(1) }
-       <Slider value={ this.speed2slider(rotationSpeed) }
+			 { rotationSpeed.toFixed(1) }
+			 <MuiThemeProvider theme= { theme }>
+       	<Slider value={ this.speed2slider(rotationSpeed) }
            onChange={ this.handleChange }
            vertical
            style={ { width: 0 } } />
+				</MuiThemeProvider>
      </AnimationControl>
      <AnimationCanvas id="animationPaneCanvas"
          height={ resolution * 80 }

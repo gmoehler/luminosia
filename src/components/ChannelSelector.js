@@ -13,6 +13,24 @@ import DeleteChannelIcon from "@material-ui/icons/DeleteForever";
 import ChannelDupIcon from "@material-ui/icons/FileCopy";
 import isElectron from "is-electron";
 
+import MuiThemeProvider from "@material-ui/core/styles/MuiThemeProvider";
+import { createMuiTheme } from "@material-ui/core/styles";
+import yellow from "@material-ui/core/colors/yellow";
+
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: "#ffffff"
+    },
+    secondary: yellow
+  },
+  overrides: {
+    MuiSlider: {
+      thumb: { backgroundColor: "red" }
+    }
+  },
+});
+
 const channelSelectorWidth = 96;
 
 const styles = () => ({
@@ -39,6 +57,7 @@ const styles = () => ({
     background: "cornflowerblue",
   },
   sliderWrapper: {
+    backgroundColor: "red",
     display: "flex",
     justifyContent: "flex-end",
     margin: "20px 10px",
@@ -85,17 +104,20 @@ class ChannelSelector extends React.Component {
             className={ classNames(
               classes.channelSelectorWrapper,
               channel.active && classes.wrapperActive,
-              selectedImageChannelId === channel.channelId && classes.wrapperSelected) }
+              selectedImageChannelId === channel.channelId && classes.wrapperSelected) 
+            }
             background = { indigo }>
           <FormControlLabel
               className={ classes.sliderWrapper }
               control={
               <Tooltip title={ "brightness" }>
-                <Slider className={ classes.slider }
-                    value={ channel.gain }
-                    onChange={ this.handleChange(channel.channelId, channel.active) }
-                    min={ 0 }
-                    max={ 1 } />
+                <MuiThemeProvider theme={ theme }>
+                  <Slider className={ classes.slider }
+                      value={ channel.gain }
+                      onChange={ this.handleChange(channel.channelId, channel.active) }
+                      min={ 0 }
+                      max={ 1 } />
+                    </MuiThemeProvider>
               </Tooltip>
             }
           />
