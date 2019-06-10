@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import classNames from "classnames";
 import { withStyles } from "@material-ui/core/styles";
 import FormGroup from "@material-ui/core/FormGroup";
-import { Tooltip, IconButton, Typography } from "@material-ui/core";
+import { Tooltip, IconButton } from "@material-ui/core";
 import Slider from "@material-ui/lab/Slider";
 import { indigo } from "@material-ui/core/colors/indigo";
 import UploadChannelIcon from "@material-ui/icons/Publish";
@@ -74,7 +74,7 @@ const styles = () => ({
     justifyContent: "space-between",
   },
   actionsRow2: {
-    paddingTop: "8px",
+    padding: "8px 0 2px 0",
   },
 });
 
@@ -111,7 +111,6 @@ class ChannelSelector extends React.Component {
             <Tooltip title={ electronVersion ? "Upload channel to poi" : "Download binary channel data" }>
               <IconButton 
                   className={ classes.button }
-                  size={ "large" }
                   onClick={ () => this.props.exportImageChannel(channel.channelId) }>
                 { electronVersion ? 
                   <UploadChannelIcon className={ classes.icon } /> :
@@ -140,13 +139,14 @@ class ChannelSelector extends React.Component {
           </div>
         </div>
         <div className={ classes.sliderWrapper }>
-        <Tooltip title={ channel.gain === 0 ? "off" : channel.gain }>
+        <Tooltip title={ channel.gain === 0 ? "channel off" : `gain: ${channel.gain.toPrecision(2)}` }>
           <WhiteSlider vertical 
               className={ classes.slider }
               value={ channel.gain }
               onChange={ this.handleChange(channel.channelId, channel.active) }
               min={ 0 }
-              max={ 1 } />
+              max={ 1 } 
+              step={ 0.05 } />
         </Tooltip>
       </div>
 

@@ -14,6 +14,10 @@ import { secondsToSamples } from "../utils/conversions";
 import { encodeImage } from "../utils/imageUtils";
 import { addToUploadLog } from "./viewActions";
 
+import LogScale from "log-scale";
+
+var logScale = new LogScale(0, 100);
+
 // load channels and images from config
 
 const uploadConfigStarted = startInfo => ({
@@ -106,7 +110,7 @@ export const clearExportImage = (numChannels) => {
 };
 
 // draw a channel to the export at position idx
-export const drawExportImage = (channelId, idx) => {
+export const drawExportImage = (channelId, idx, applyLog) => {
   return (dispatch, getState) => {
     const data = getChannelData(getState(), channelId);
     if (data && data.byPartId) {
@@ -124,8 +128,11 @@ export const drawExportImage = (channelId, idx) => {
 
       // apply gain by adding a transparent black rectangle on top of the parts
       if (data.gain && data.gain < .99) {
+        // use log gain because otherwise it fades to strongly
+        const gain = applyLog ? logScale.linearToLogarithmic(data.gain) / 100 : data.gain;
+
         cc.fillStyle = "black";
-        cc.globalAlpha = 1.0 - data.gain;
+        cc.globalAlpha = 1.0 - gain;
         cc.fillRect(0, idx * 30, canvas.width, 30);
       }
     }
@@ -136,7 +143,7 @@ export const drawExportImage = (channelId, idx) => {
 export const exportImageChannel = (channelId) => {
   return (dispatch, getState) => {
     dispatch(clearExportImage(1));
-    dispatch(drawExportImage(channelId, 0));
+    dispatch(drawExportImage(channelId, 0, true));
     // binary download
     const data = getChannelExportData();
     

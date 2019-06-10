@@ -91,7 +91,7 @@ class ImageChannel extends Component {
   }   
 
   draw = () => {
-    const { imageHeight, scale, factor, gain } = this.props;
+    const { imageHeight, scale, factor } = this.props;
 
     Object.keys(this.images).forEach((idx) => {
 
@@ -118,11 +118,9 @@ class ImageChannel extends Component {
 
         cc.scale(scale, scale);
         if (img.src) {
-          cc.globalAlpha = gain; // use alpha to show gain
           img.onload = cc.drawImage(img, imageOffset, 0, sourceWidth, img.height,
             0, 0, targetWidth, targetHeight);
         } else {
-          cc.globalAlpha = 1.0;
           cc.fillStyle = "#FF0000"; // red rectangle if image is missing
           cc.fillRect(0, 0, targetWidth, targetHeight);
         }

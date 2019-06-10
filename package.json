@@ -30,6 +30,7 @@
     "i": "0.3.6",
     "input-range-scss": "1.5.1",
     "is-electron": "^2.2.0",
+    "log-scale": "1.0.1",
     "mdi-material-ui": "6.0.0",
     "promisify-child-process": "^3.1.0",
     "react": "16.8.6",
