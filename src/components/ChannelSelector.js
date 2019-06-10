@@ -30,6 +30,8 @@ const styles = () => ({
   formGroup: {
     paddingTop: "30px",
     background: "#2c387e",
+    borderTop: "1px #3949ab solid",
+    borderBottom: "1px #3949ab solid",
   },
   channelSelectorWrapper: {
     display: "flex",
@@ -38,9 +40,8 @@ const styles = () => ({
     padding: "12px",
     height: "92px",
     width: `${channelSelectorWidth}px`,
-    borderColor: "#3949ab",
-    borderTop: "1px #2c387e solid",
-    borderBottom: "1px #2c387e solid",
+    borderTop: "1px #3949ab solid",
+    borderBottom: "1px #3949ab solid",
   },
   wrapperInActive: {
     background: "#212121",
