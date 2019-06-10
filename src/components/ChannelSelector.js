@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import classNames from "classnames";
 import { withStyles } from "@material-ui/core/styles";
 import FormGroup from "@material-ui/core/FormGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
 import { Tooltip, IconButton } from "@material-ui/core";
 import Slider from "@material-ui/lab/Slider";
 import { indigo } from "@material-ui/core/colors/indigo";
@@ -12,24 +11,18 @@ import DownloadChannelIcon from "@material-ui/icons/SaveAlt";
 import DeleteChannelIcon from "@material-ui/icons/DeleteForever";
 import ChannelDupIcon from "@material-ui/icons/FileCopy";
 import isElectron from "is-electron";
+import styled from "styled-components";
 
-import MuiThemeProvider from "@material-ui/core/styles/MuiThemeProvider";
-import { createMuiTheme } from "@material-ui/core/styles";
-import yellow from "@material-ui/core/colors/yellow";
-
-const theme = createMuiTheme({
-  palette: {
-    primary: {
-      main: "#ffffff"
-    },
-    secondary: yellow
-  },
-  overrides: {
-    MuiSlider: {
-      thumb: { backgroundColor: "red" }
+const WhiteSlider = styled(Slider) `
+  .MuiSlider-track {
+    background-color: white;
+  }
+  .MuiSlider-thumbWrapper {
+    button {
+      background-color: white;
     }
-  },
-});
+  }
+`;
 
 const channelSelectorWidth = 96;
 
@@ -42,22 +35,19 @@ const styles = () => ({
     display: "flex",
     justifyContent: "space-between",
     flexDirection: "column",
-    margin: 0,
-    padding: 0,
-    background: "darkgrey",
     height: "92px",
     width: `${channelSelectorWidth}px`,
+    borderColor: "#3949ab",
     borderTop: "1px #2c387e solid",
     borderBottom: "1px #2c387e solid",
   },
-  wrapperActive: {
-    background: "#3f51b5",
+  wrapperInActive: {
+    background: "#212121",
   },
   wrapperSelected: {
-    background: "cornflowerblue",
+    background: "#8c9eff",
   },
   sliderWrapper: {
-    backgroundColor: "red",
     display: "flex",
     justifyContent: "flex-end",
     margin: "20px 10px",
@@ -103,24 +93,19 @@ class ChannelSelector extends React.Component {
         (<div key={ channel.channelId }
             className={ classNames(
               classes.channelSelectorWrapper,
-              channel.active && classes.wrapperActive,
-              selectedImageChannelId === channel.channelId && classes.wrapperSelected) 
+              selectedImageChannelId === channel.channelId && channel.active && classes.wrapperSelected,
+              !channel.active && classes.wrapperInActive) 
             }
             background = { indigo }>
-          <FormControlLabel
-              className={ classes.sliderWrapper }
-              control={
-              <Tooltip title={ "brightness" }>
-                <MuiThemeProvider theme={ theme }>
-                  <Slider className={ classes.slider }
-                      value={ channel.gain }
-                      onChange={ this.handleChange(channel.channelId, channel.active) }
-                      min={ 0 }
-                      max={ 1 } />
-                    </MuiThemeProvider>
+            <div className={ classes.sliderWrapper }>
+              <Tooltip title={ channel.gain }>
+                <WhiteSlider className={ classes.slider }
+                    value={ channel.gain }
+                    onChange={ this.handleChange(channel.channelId, channel.active) }
+                    min={ 0 }
+                    max={ 1 } />
               </Tooltip>
-            }
-          />
+            </div>
           <div className={ classes.lowerIcons }>
           <Tooltip title={ electronVersion ? "Upload channel to poi" : "Download binary channel data" }>
             <IconButton 
