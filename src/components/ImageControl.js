@@ -22,7 +22,7 @@ const styles = theme => ({
     color: "white",
   },
   formControl: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing(1),
     minWidth: 80,
   }
 });

@@ -1,4 +1,6 @@
-import { PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL, ADD_PART, DELETE_PART, ADD_CHANNEL, CLEAR_CHANNELS, UPLOAD_AUDIO_STARTED, UPLOAD_AUDIO_SUCCESS, UPLOAD_AUDIO_FAILURE, DELETE_CHANNEL, SET_CHANNEL_ACTIVE, UNSET_CHANNEL_ACTIVE } from "./types";
+import { PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL, ADD_PART, DELETE_PART, 
+  ADD_CHANNEL, CLEAR_CHANNELS, UPLOAD_AUDIO_STARTED, UPLOAD_AUDIO_SUCCESS, UPLOAD_AUDIO_FAILURE, 
+  DELETE_CHANNEL, SET_CHANNEL_ACTIVE, UNSET_CHANNEL_ACTIVE, UPDATE_CHANNEL } from "./types";
 
 import { setMarker, deleteMarker, toggleElementSelection, remElemFromSel, addPartToMultiSelection, clearElementSelectionWithMarkers, updateMarkersForPart } from "./viewActions";
 
@@ -27,6 +29,7 @@ export const createImageChannel = () => {
       sampleRate: defaultSampleRate,
       active: true,
       playState: "stopped",
+      gain: 1.0,
       duration,
     }));
   };
@@ -48,6 +51,11 @@ export const setChannelActive = (channelInfo) => ({
 
 export const unsetChannelActive = (channelInfo) => ({
   type: UNSET_CHANNEL_ACTIVE,
+  payload: channelInfo
+});
+
+export const updateChannel = (channelInfo) => ({
+  type: UPDATE_CHANNEL,
   payload: channelInfo
 });
 
@@ -75,7 +83,7 @@ export function loadAChannel(channelConfig, audioContext, state) {
 function loadImageChannel(channelConfig, state) {
 
   // first normalize the parts
-  // an icremented 'curid' is the part id used as key
+  // an incremented 'curid' is the part id used as key
   const normalizedParts = channelConfig.parts ?
     channelConfig.parts.reduce((res, part) => {
       part.partId = res.curid;
@@ -89,11 +97,11 @@ function loadImageChannel(channelConfig, state) {
     }) : {};
 
   // incremented id no longer required
-  normalizedParts &&
-  delete normalizedParts.curid;
+  normalizedParts && delete normalizedParts.curid;
   delete channelConfig.parts;
   channelConfig.lastPartSeqNum = Object.keys(normalizedParts).length - 1;
   channelConfig.playState = "stopped";
+  channelConfig.gain = channelConfig.gain || 1.0;
 
   return Promise.resolve({
     ...channelConfig,
@@ -115,6 +123,7 @@ export const uploadAudioFile = (audioFile, audioContext) => {
           src: audioFile.name,
           offset: 0,
           sampleRate: audioBuffer.sampleRate,
+          gain: 1.0,
           buffer: audioBuffer,
           duration: audioBuffer.duration,
           active: true,

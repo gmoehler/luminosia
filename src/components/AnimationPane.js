@@ -3,22 +3,33 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 import { getChannelExportData } from "../actions/generalActions";
 import { samplesToRad } from "../utils/conversions";
+import { Typography } from "@material-ui/core";
 import Slider from "@material-ui/lab/Slider";
 
 const minRotationSpeed = 0.1;
 const maxRotationSpeed = 9.9;
 
+const WhiteSlider = styled(Slider) `
+  .MuiSlider-track {
+    background-color: white;
+  }
+  .MuiSlider-thumbWrapper {
+    button {
+      background-color: white;
+    }
+  }
+`;
 
 const AnimationPaneWrapper = styled.div`
 	width:  calc(95vw - ${props => props.drawerWidth}px);
-	background: black;
+	background-color: black;
 	display: flex;
 	flex-direction: row;
 `;
 
 const AnimationControl = styled.div`
 	width:  96px;
-	background: darkgrey;
+	background-color: #2c387e;
 	display: flex;
 	flex-direction: row;
 	justify-content: space-around;
@@ -126,17 +137,19 @@ export default class AnimationPane extends PureComponent {
 		const { drawerWidth, activeChannels, resolution } = this.props;
 		return (
 			<AnimationPaneWrapper drawerWidth={ drawerWidth }>
-     <AnimationControl>
-       { rotationSpeed.toFixed(1) }
-       <Slider value={ this.speed2slider(rotationSpeed) }
-           onChange={ this.handleChange }
-           vertical
-           style={ { width: 0 } } />
-     </AnimationControl>
-     <AnimationCanvas id="animationPaneCanvas"
-         height={ resolution * 80 }
-         width={ activeChannels.length * resolution * 80 } />
-   </AnimationPaneWrapper>
+				<AnimationControl>
+					<Typography>	{ rotationSpeed.toFixed(1) }</Typography>
+				
+					<WhiteSlider 
+    value={ this.speed2slider(rotationSpeed) }
+    onChange={ this.handleChange }
+    vertical
+    style={ { width: 0 } } />
+				</AnimationControl>
+				<AnimationCanvas id="animationPaneCanvas"
+    height={ resolution * 80 }
+    width={ activeChannels.length * resolution * 80 } />
+			</AnimationPaneWrapper>
 
 			);
 	}

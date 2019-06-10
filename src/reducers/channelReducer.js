@@ -1,6 +1,8 @@
 import { merge, cloneDeep } from "lodash";
 
-import { ADD_CHANNEL, CLEAR_CHANNELS, PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL, ADD_PART, DELETE_PART, DELETE_CHANNEL, SET_CHANNEL_ACTIVE, UNSET_CHANNEL_ACTIVE } from "../actions/types";
+import { ADD_CHANNEL, CLEAR_CHANNELS, PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, 
+  MOVE_CHANNEL, ADD_PART, DELETE_PART, DELETE_CHANNEL, SET_CHANNEL_ACTIVE, 
+  UNSET_CHANNEL_ACTIVE, UPDATE_CHANNEL } from "../actions/types";
 
 import { filterObjectByKeys } from "../utils/miscUtils";
 
@@ -61,6 +63,18 @@ export default (state = initialState, action) => {
           [action.payload]: {
             ...state.byChannelId[action.payload],
             active: true
+          }
+        }
+      };
+      
+    case UPDATE_CHANNEL:
+      return {
+        ...state,
+        byChannelId: {
+          ...state.byChannelId,
+          [action.payload.channelId]: {
+            ...state.byChannelId[action.payload.channelId],
+            ...action.payload
           }
         }
       };
@@ -232,6 +246,7 @@ export const getAllChannelsOverview = (state) => {
       channelId: channel.channelId,
       type: channel.type,
       active: channel.active,
+      gain: channel.gain,
     }));
 };
 

@@ -28,6 +28,7 @@ export const initialImageChannelPayload = {
   type: "image",
   sampleRate: 100,
   active: true,
+  gain: 1,
   duration: 10,
   playState: "stopped",
 };

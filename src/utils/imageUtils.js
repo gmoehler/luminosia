@@ -135,3 +135,9 @@ export function encodeImagePlain(a) {
   }
   return output;
 }
+
+// appy a gain (<.99) to canvas image data
+export function applyGain(gain, data) {
+
+}
+

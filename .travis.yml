@@ -47,7 +47,7 @@ matrix:
         - if [ -n "$nextver" ]; then sed -i -e "s/0.0.0-semantic-release/$nextver/g" package.json; fi
         - head package.json
         # make scripts executable
-        - chmod a+x ./resources/bin/*
+        - chmod a+x ./resources/linux/*/*
         # setup env for docker build
         - env | grep -iE 'DEBUG|NODE_|ELECTRON_|YARN_|NPM_|CI|CIRCLE|TRAVIS_TAG|TRAVIS|TRAVIS_REPO_|TRAVIS_BUILD_|TRAVIS_BRANCH|TRAVIS_PULL_REQUEST_|APPVEYOR_|CSC_|GH_|GITHUB_|BT_|AWS_|STRIP|BUILD_' | grep -v '/home/travis' > .env
         - cat .env
@@ -66,7 +66,6 @@ matrix:
             -v ~/.cache/electron-builder:/root/.cache/electron-builder \
             electronuserland/builder:wine bash -c "yarn && yarn electron-pack"
         - ls -l dist
-        - ls -l resources/bin
 
       before_cache:
         - rm -rf $HOME/.cache/electron-builder/wine

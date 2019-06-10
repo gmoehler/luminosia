@@ -3,15 +3,26 @@ import PropTypes from "prop-types";
 import classNames from "classnames";
 import { withStyles } from "@material-ui/core/styles";
 import FormGroup from "@material-ui/core/FormGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Switch from "@material-ui/core/Switch";
 import { Tooltip, IconButton } from "@material-ui/core";
+import Slider from "@material-ui/lab/Slider";
 import { indigo } from "@material-ui/core/colors/indigo";
 import UploadChannelIcon from "@material-ui/icons/Publish";
 import DownloadChannelIcon from "@material-ui/icons/SaveAlt";
 import DeleteChannelIcon from "@material-ui/icons/DeleteForever";
 import ChannelDupIcon from "@material-ui/icons/FileCopy";
 import isElectron from "is-electron";
+import styled from "styled-components";
+
+const WhiteSlider = styled(Slider) `
+  .MuiSlider-track {
+    background-color: white;
+  }
+  .MuiSlider-thumbWrapper {
+    button {
+      background-color: white;
+    }
+  }
+`;
 
 const channelSelectorWidth = 96;
 
@@ -23,26 +34,24 @@ const styles = () => ({
   channelSelectorWrapper: {
     display: "flex",
     justifyContent: "space-between",
-    flexDirection: "column",
-    margin: 0,
-    padding: 0,
-    background: "darkgrey",
+    flexDirection: "row",
+    padding: "12px",
     height: "92px",
     width: `${channelSelectorWidth}px`,
+    borderColor: "#3949ab",
     borderTop: "1px #2c387e solid",
     borderBottom: "1px #2c387e solid",
   },
-  wrapperActive: {
-    background: "#3f51b5",
+  wrapperInActive: {
+    background: "#212121",
   },
   wrapperSelected: {
-    background: "cornflowerblue",
+    background: "#8c9eff",
   },
-  switchWrapper: {
+  sliderWrapper: {
     display: "flex",
     justifyContent: "flex-end",
-    margin: 0,
-    padding: 0,
+    padding: "4px",
   },
   icon: {
     fill: "white",
@@ -52,77 +61,94 @@ const styles = () => ({
     padding: 0,
     margin: 0,
   },
-  lowerIcons: {
-  	display: "flex",
+  actionsWrapper:{
+    width: "100%",
+    paddingRight: "18px",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "flex-end",
+  },
+  actionsRow: {
+    display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
-    margin: "0 9px 12px 9px",
-    fill: "white",
-  }
+  },
+  actionsRow2: {
+    padding: "8px 0 2px 0",
+  },
 });
 
 class ChannelSelector extends React.Component {
 
-  handleChange = channelId => event => {
-    const active = event.target.checked;
-    if (active){
-      this.props.setChannelActive(channelId);
-    } else {
-      this.props.unsetChannelActive(channelId);
-    }
+  handleChange = (channelId, active) => (event, val) => {
+    this.props.updateChannel({
+    	channelId,
+        gain: val
+    });
+    if (val === 0 && active) {
+    	this.props.unsetChannelActive(channelId);
+    } else if (val > 0 && !active){
+    	this.props.setChannelActive(channelId);
+    } 
   };
 
   render() {
-    const { classes, selectedImageChannelId } = this.props;
+    const { classes, selectedImageChannelId, channelOverview } = this.props;
     const electronVersion = isElectron();
 
-    const switches = this.props.channelOverview
+    const switches = channelOverview
       .map((channel) => 
         (<div key={ channel.channelId }
             className={ classNames(
               classes.channelSelectorWrapper,
-              channel.active && classes.wrapperActive,
-              selectedImageChannelId === channel.channelId && classes.wrapperSelected) }
-            background = { indigo }>
-          <FormControlLabel
-              className={ classes.switchWrapper }
-              control={
-              <Tooltip title={ channel.active?"Mute":"Unmute" }>
-                <Switch disabled={ channel.type === "audio" }
-                    checked={ channel.active }
-                    onChange={ this.handleChange(channel.channelId) }
-                />
-                </Tooltip>
+              selectedImageChannelId === channel.channelId && channel.active && classes.wrapperSelected,
+              !channel.active && classes.wrapperInActive) 
             }
-          />
-          <div className={ classes.lowerIcons }>
-          <Tooltip title={ electronVersion ? "Upload channel to poi" : "Download binary channel data" }>
-            <IconButton 
-                className={ classes.button }
-                size={ "large" }
-                onClick={ () => this.props.exportImageChannel(channel.channelId) }>
-              { electronVersion ? 
-                <UploadChannelIcon className={ classes.icon } /> :
-                <DownloadChannelIcon className={ classes.icon } /> }
-            </IconButton>
+            background = { indigo }>
+
+          <div className={ classes.actionsWrapper }>
+            <div className={ classes.actionsRow }>
+            <Tooltip title={ electronVersion ? "Upload channel to poi" : "Download binary channel data" }>
+              <IconButton 
+                  className={ classes.button }
+                  onClick={ () => this.props.exportImageChannel(channel.channelId) }>
+                { electronVersion ? 
+                  <UploadChannelIcon className={ classes.icon } /> :
+                  <DownloadChannelIcon className={ classes.icon } /> }
+              </IconButton>
+              </Tooltip>
+            </div>
+
+            <div className={ classNames(
+              classes.actionsRow, classes.actionsRow2) }>
+              <Tooltip title="Duplicate channel">
+                <IconButton 
+                    className={ classes.button }
+                    onClick={ () => this.props.duplicateChannel(channel.channelId) }>
+                  <ChannelDupIcon className={ classes.icon } />
+                </IconButton>
+              </Tooltip>
+
+              <Tooltip title="Delete channel">
+              <IconButton 
+                  className={ classes.button }
+                  onClick={ () => this.props.deleteChannel(channel.channelId) }>
+                <DeleteChannelIcon className={ classes.icon } />
+              </IconButton>
             </Tooltip>
-
-          <Tooltip title="Duplicate channel">
-            <IconButton 
-                className={ classes.button }
-                onClick={ () => this.props.duplicateChannel(channel.channelId) }>
-              <ChannelDupIcon className={ classes.icon } />
-            </IconButton>
-          </Tooltip>
-
-          <Tooltip title="Delete channel">
-          <IconButton 
-              className={ classes.button }
-              onClick={ () => this.props.deleteChannel(channel.channelId) }>
-            <DeleteChannelIcon className={ classes.icon } />
-          </IconButton>
-        </Tooltip>
+          </div>
         </div>
+        <div className={ classes.sliderWrapper }>
+        <Tooltip title={ channel.gain === 0 ? "channel off" : `gain: ${channel.gain.toPrecision(2)}` }>
+          <WhiteSlider vertical 
+              className={ classes.slider }
+              value={ channel.gain }
+              onChange={ this.handleChange(channel.channelId, channel.active) }
+              min={ 0 }
+              max={ 1 } 
+              step={ 0.05 } />
+        </Tooltip>
+      </div>
 
         </div>)
       );
@@ -140,6 +166,7 @@ ChannelSelector.propTypes = {
   channelOverview: PropTypes.array,
   setChannelActive: PropTypes.func.isRequired,
   unsetChannelActive: PropTypes.func.isRequired,
+  updateChannel: PropTypes.func.isRequired,
   duplicateChannel: PropTypes.func.isRequired,
   deleteChannel: PropTypes.func.isRequired,
   exportImageChannel: PropTypes.func.isRequired,
