@@ -1,8 +1,8 @@
-import { combineReducers } from 'redux';
+import { combineReducers } from "redux";
 
-import imageListReducer, { getImageListConfig } from './imageListReducer';
-import channelReducer, { getChannelsConfig } from './channelReducer';
-import viewReducer from './viewReducer';
+import imageListReducer, { getImageListConfig } from "./imageListReducer";
+import channelReducer, { getChannelsConfig } from "./channelReducer";
+import viewReducer from "./viewReducer";
 
 export default combineReducers({
     images: imageListReducer,
