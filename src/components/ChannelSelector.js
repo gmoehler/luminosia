@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import classNames from "classnames";
 import { withStyles } from "@material-ui/core/styles";
 import FormGroup from "@material-ui/core/FormGroup";
-import { Tooltip, IconButton } from "@material-ui/core";
+import { Tooltip, IconButton, Typography } from "@material-ui/core";
 import Slider from "@material-ui/lab/Slider";
 import { indigo } from "@material-ui/core/colors/indigo";
 import UploadChannelIcon from "@material-ui/icons/Publish";
@@ -34,7 +34,8 @@ const styles = () => ({
   channelSelectorWrapper: {
     display: "flex",
     justifyContent: "space-between",
-    flexDirection: "column",
+    flexDirection: "row",
+    padding: "12px",
     height: "92px",
     width: `${channelSelectorWidth}px`,
     borderColor: "#3949ab",
@@ -50,8 +51,7 @@ const styles = () => ({
   sliderWrapper: {
     display: "flex",
     justifyContent: "flex-end",
-    margin: "20px 10px",
-    padding: 0,
+    padding: "4px",
   },
   icon: {
     fill: "white",
@@ -61,13 +61,21 @@ const styles = () => ({
     padding: 0,
     margin: 0,
   },
-  lowerIcons: {
-  	display: "flex",
+  actionsWrapper:{
+    width: "100%",
+    paddingRight: "18px",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "flex-end",
+  },
+  actionsRow: {
+    display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
-    margin: "0 9px 12px 9px",
-    fill: "white",
-  }
+  },
+  actionsRow2: {
+    paddingTop: "8px",
+  },
 });
 
 class ChannelSelector extends React.Component {
@@ -97,43 +105,50 @@ class ChannelSelector extends React.Component {
               !channel.active && classes.wrapperInActive) 
             }
             background = { indigo }>
-            <div className={ classes.sliderWrapper }>
-              <Tooltip title={ channel.gain }>
-                <WhiteSlider className={ classes.slider }
-                    value={ channel.gain }
-                    onChange={ this.handleChange(channel.channelId, channel.active) }
-                    min={ 0 }
-                    max={ 1 } />
+
+          <div className={ classes.actionsWrapper }>
+            <div className={ classes.actionsRow }>
+            <Tooltip title={ electronVersion ? "Upload channel to poi" : "Download binary channel data" }>
+              <IconButton 
+                  className={ classes.button }
+                  size={ "large" }
+                  onClick={ () => this.props.exportImageChannel(channel.channelId) }>
+                { electronVersion ? 
+                  <UploadChannelIcon className={ classes.icon } /> :
+                  <DownloadChannelIcon className={ classes.icon } /> }
+              </IconButton>
               </Tooltip>
             </div>
-          <div className={ classes.lowerIcons }>
-          <Tooltip title={ electronVersion ? "Upload channel to poi" : "Download binary channel data" }>
-            <IconButton 
-                className={ classes.button }
-                size={ "large" }
-                onClick={ () => this.props.exportImageChannel(channel.channelId) }>
-              { electronVersion ? 
-                <UploadChannelIcon className={ classes.icon } /> :
-                <DownloadChannelIcon className={ classes.icon } /> }
-            </IconButton>
+
+            <div className={ classNames(
+              classes.actionsRow, classes.actionsRow2) }>
+              <Tooltip title="Duplicate channel">
+                <IconButton 
+                    className={ classes.button }
+                    onClick={ () => this.props.duplicateChannel(channel.channelId) }>
+                  <ChannelDupIcon className={ classes.icon } />
+                </IconButton>
+              </Tooltip>
+
+              <Tooltip title="Delete channel">
+              <IconButton 
+                  className={ classes.button }
+                  onClick={ () => this.props.deleteChannel(channel.channelId) }>
+                <DeleteChannelIcon className={ classes.icon } />
+              </IconButton>
             </Tooltip>
-
-          <Tooltip title="Duplicate channel">
-            <IconButton 
-                className={ classes.button }
-                onClick={ () => this.props.duplicateChannel(channel.channelId) }>
-              <ChannelDupIcon className={ classes.icon } />
-            </IconButton>
-          </Tooltip>
-
-          <Tooltip title="Delete channel">
-          <IconButton 
-              className={ classes.button }
-              onClick={ () => this.props.deleteChannel(channel.channelId) }>
-            <DeleteChannelIcon className={ classes.icon } />
-          </IconButton>
-        </Tooltip>
+          </div>
         </div>
+        <div className={ classes.sliderWrapper }>
+        <Tooltip title={ channel.gain === 0 ? "off" : channel.gain }>
+          <WhiteSlider vertical 
+              className={ classes.slider }
+              value={ channel.gain }
+              onChange={ this.handleChange(channel.channelId, channel.active) }
+              min={ 0 }
+              max={ 1 } />
+        </Tooltip>
+      </div>
 
         </div>)
       );
