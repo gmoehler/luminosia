@@ -15,7 +15,7 @@ export function withEventHandler(WrappedComponent) {
     }
 
     componentDidMount() {
-      // mouse handler setup
+      // add functions that the mouse handler can call
       this.mousehandler = new MouseHandler({
         selectRange: this.props.selectRange,
         deselectRange: this.props.deselectRange,

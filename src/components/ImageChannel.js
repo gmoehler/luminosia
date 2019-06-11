@@ -28,6 +28,7 @@ const ImageMarker = styled.div`
   width: 1px;
   left: ${props => props.markerPos}px;
   height: ${props => props.height}px;
+  cursor: ${props => props.cursor};
 `;
 
 const ImageSelection = styled.div`
@@ -55,6 +56,7 @@ const ImageCanvases = styled.div`
   float: left;
   position: absolute;
   left: ${props => props.offset}px;
+  cursor: ${props => props.cursor};
 `;
 
 // need position:relative so children will respect parent margin/padding
@@ -221,7 +223,8 @@ class ImageChannel extends Component {
           <ImageCanvases key={ partId }
               className="ImageCanvases"
               theme={ theme }
-              offset={ offset }>
+              offset={ offset }
+              cursor={ "e-resize" } >
             { canvasImages }
           </ImageCanvases>
         );
@@ -258,12 +261,14 @@ class ImageChannel extends Component {
     const markerElems = markers && Array.isArray(markers) ?
       markers.map((marker) => { 
         let color = theme.markerColor;
+        let cursor = "default";
         // marker color depends on type (insert / normal), selection status
         //  and whether the part belongs to this channel
         if ( marker.type  === "insert" || marker.markerId  === "insert" ) {
           color = theme.insertMarkerColor;
         } else if ( marker.type  === "selected"  && marker.channelId === channelId) {
           color = theme.selectedMarkerColor;
+          cursor = "col-resize";
         } else if ( marker.type  === "selected") {
           color = theme.selectedMarkerColorOther;
         } else if (marker.channelId !== channelId) {
@@ -274,6 +279,7 @@ class ImageChannel extends Component {
           className="Marker" 
           markerPos={ marker.pos } 
           markerColor={ color } 
+          cursor={ cursor }
           theme={ theme } 
           height={ imageHeight }
         />);
