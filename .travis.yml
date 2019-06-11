@@ -66,6 +66,7 @@ matrix:
             -v ~/.cache/electron-builder:/root/.cache/electron-builder \
             electronuserland/builder:wine bash -c "yarn && yarn electron-pack"
         - ls -l dist
+        - ls -l resources/*/*/*
 
       before_cache:
         - rm -rf $HOME/.cache/electron-builder/wine
