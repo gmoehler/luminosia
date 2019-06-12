@@ -3,6 +3,7 @@ export function getMouseEventPosition(e, className, channelId) {
   // find div with className
   let el = e.target;
   const partId = el.getAttribute("data-partid");
+  const markerId = el.getAttribute("data-markerid");
   while (el && el.classList && el.classList[0] !== className) {
     el = el.parentNode;
   }
@@ -11,6 +12,7 @@ export function getMouseEventPosition(e, className, channelId) {
     return {
       x: Math.max(0, e.clientX - el.offsetLeft + parentScroll),
       partId,
+      markerId,
       channelId: String(channelId) // to allow simple boolean comparisons
     };
   }
@@ -18,6 +20,7 @@ export function getMouseEventPosition(e, className, channelId) {
   return {
     x: 0,
     partId,
+    markerId,
     channelId: String(channelId)
   };
 }

@@ -150,7 +150,7 @@ class ImageChannel extends Component {
         adaptedEventName = "crtl-" + eventName;
       }
       const evInfo = {
-        ...pos, // x pos, channelId, partId
+        ...pos, // x pos, channelId, partId, markerId
         timestamp: e.timeStamp,
         src, // drag source path
         imageId,
@@ -224,7 +224,7 @@ class ImageChannel extends Component {
               className="ImageCanvases"
               theme={ theme }
               offset={ offset }
-              cursor={ "e-resize" } >
+              cursor={ "hand" } >
             { canvasImages }
           </ImageCanvases>
         );
@@ -282,6 +282,7 @@ class ImageChannel extends Component {
           cursor={ cursor }
           theme={ theme } 
           height={ imageHeight }
+          data-markerid={ marker.markerId }
         />);
       }) : null;
 
