@@ -308,6 +308,14 @@ export const moveChannel = (moveInfo) => ({
   payload: moveInfo
 });
 
+export const resizePartWithMarkers = (resizeInfo) => {
+  return (dispatch, getState) => {
+
+    //TODO
+    console.log("resizing...", resizeInfo);
+
+};
+
 export const moveSelectedPartsWithMarkers = (moveInfo) => {
   return (dispatch, getState) => {
     if (!isElementSelected(getState(), moveInfo)){

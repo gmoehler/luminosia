@@ -70,6 +70,9 @@ const mapDispatchToProps = dispatch => ({
   move: (channelId, partId, incr) => dispatch(moveSelectedPartsWithMarkers({
     channelId, partId, incr 
   })),
+  resize: (channelId, partId, markerId, incr) => dispatch(resizePartWithMarkers({
+    channelId, partId, markerId, incr 
+  })),
   toggleElementSelection: (partInfo) => dispatch(toggleElementSelection(partInfo)),
   toggleElementMultiSelection: (partInfo) => dispatch(toggleElementMultiSelection(partInfo)),
   deleteSelectedPartAndMarkers: () => dispatch(deleteSelectedPartAndMarkers()),
