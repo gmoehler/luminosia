@@ -132,7 +132,7 @@ ChannelGroup.propTypes = {
   resolution: PropTypes.number.isRequired,
   setChannelPlayState: PropTypes.func.isRequired,
   move: PropTypes.func.isRequired,
-  resoze: PropTypes.func.isRequired,
+  resize: PropTypes.func.isRequired,
   drawerWidth: PropTypes.number.isRequired,
   selectedImageChannelId: PropTypes.number,
   playState: PropTypes.string,

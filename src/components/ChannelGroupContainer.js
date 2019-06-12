@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux"; 
 
 import ChannelGroup from "./ChannelGroup";
-import { setChannelPlayState, insertNewPart, deleteSelectedPartAndMarkers, moveSelectedPartsWithMarkers } from "../actions/channelActions";
+import { setChannelPlayState, insertNewPart, deleteSelectedPartAndMarkers, moveSelectedPartsWithMarkers, resizePartWithMarkers } from "../actions/channelActions";
 import { selectRange, deselectRange, setMarker, toggleElementSelection, toggleElementMultiSelection, setMessage } from "../actions/viewActions";
 import { getMaxDuration, getAllChannelsData, allChannelsStopped } from "../reducers/channelReducer";
 import { getSelectionRange, getResolution, getMarkers, getSelectedImageChannelId, getUploadLog } from "../reducers/viewReducer";

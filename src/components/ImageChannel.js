@@ -283,6 +283,7 @@ class ImageChannel extends Component {
           theme={ theme } 
           height={ imageHeight }
           data-markerid={ marker.markerId }
+          data-partid={ marker.partId }
         />);
       }) : null;
 

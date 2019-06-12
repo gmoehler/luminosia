@@ -110,7 +110,7 @@ export default class MoveMouseHandler {
         this.xOrigin = null;
         this.moveFromX = null;
         this.partId = null;
-        
+        this.markerId = null;
       }
     }
   }

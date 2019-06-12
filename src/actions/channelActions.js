@@ -313,7 +313,7 @@ export const resizePartWithMarkers = (resizeInfo) => {
 
     //TODO
     console.log("resizing...", resizeInfo);
-
+  };
 };
 
 export const moveSelectedPartsWithMarkers = (moveInfo) => {
