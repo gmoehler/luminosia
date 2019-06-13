@@ -173,9 +173,9 @@ export default (state = initialState, action) => {
       // moving parts within a channel 
       const channel = state.byChannelId[action.payload.channelId];
       const part = channel.byPartId[action.payload.partId];
-      const currentOffset = part.offset;
-      const offsetIncr = action.payload.incr;
-      const updatedOffset = currentOffset ? currentOffset + offsetIncr : offsetIncr;
+      const currentOffset = part.offset || 0;
+      const offsetIncr = action.payload.incr || 0;
+      const updatedOffset = currentOffset + offsetIncr;
       const mergedPart = {
         ...part,
         offset: Math.max(0, updatedOffset),
@@ -202,6 +202,13 @@ export default (state = initialState, action) => {
         const channel1 = state.byChannelId[action.payload.channelId];
         const part1 = channel1.byPartId[action.payload.partId];
         const updatedDuration1 = part1.duration + action.payload.incr;
+        const currentOffset = part.offset || 0;
+        let updatedOffset = currentOffset;
+        // left marker moved
+        if (action.payload.marker && action.payload.marker.contains("l")) {
+          const offsetIncr = action.payload.incr || 0;
+          updatedOffset += offsetIncr;
+        }
         const mergedPart1 = {
           ...part1,
           duration: updatedDuration1,
