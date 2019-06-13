@@ -114,7 +114,7 @@ class ImageChannel extends Component {
         const imageOffset = canvasOffset / factor;
 
         const targetWidth = canvas.width;
-        const sourceWidth = targetWidth / factor;
+        const sourceWidth = img.width / factor;
 
         const targetHeight = imageHeight;
 

@@ -313,17 +313,16 @@ export const resizePart = (resizeInfo) => ({
   payload: resizeInfo
 });
 
-
 export const resizePartWithMarkers = (resizeInfo) => {
   return (dispatch, getState) => {
 
     dispatch(resizePart(resizeInfo));
     if ( resizeInfo.markerId){
-      const leftMarker = resizeInfo.markerId.includes("l");
+      const isLeftMarker = resizeInfo.markerId.includes("l");
       dispatch(updateMarkersForPart(resizeInfo.partId, {
         incr: resizeInfo.incr,
         selected: true,
-      }, leftMarker, !leftMarker));
+      }, isLeftMarker, !isLeftMarker));
     }
   };
 };
