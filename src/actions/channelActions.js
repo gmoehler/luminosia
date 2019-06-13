@@ -1,6 +1,6 @@
 import { PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_PART, ADD_PART, DELETE_PART, 
   ADD_CHANNEL, CLEAR_CHANNELS, UPLOAD_AUDIO_STARTED, UPLOAD_AUDIO_SUCCESS, UPLOAD_AUDIO_FAILURE, 
-  DELETE_CHANNEL, SET_CHANNEL_ACTIVE, UNSET_CHANNEL_ACTIVE, UPDATE_CHANNEL, RESIZE_PART_RIGHT } from "./types";
+  DELETE_CHANNEL, SET_CHANNEL_ACTIVE, UNSET_CHANNEL_ACTIVE, UPDATE_CHANNEL, RESIZE_PART } from "./types";
 
 import { setMarker, deleteMarker, toggleElementSelection, remElemFromSel, addPartToMultiSelection, clearElementSelectionWithMarkers, updateMarkersForPart } from "./viewActions";
 
@@ -308,8 +308,8 @@ export const movePart = (moveInfo) => ({
   payload: moveInfo
 });
 
-export const resizePartRight = (resizeInfo) => ({
-  type: RESIZE_PART_RIGHT,
+export const resizePart = (resizeInfo) => ({
+  type: RESIZE_PART,
   payload: resizeInfo
 });
 
@@ -317,11 +317,14 @@ export const resizePartRight = (resizeInfo) => ({
 export const resizePartWithMarkers = (resizeInfo) => {
   return (dispatch, getState) => {
 
-    dispatch(resizePartRight(resizeInfo));
-    dispatch(updateMarkersForPart(resizeInfo.partId, {
-      incr: resizeInfo.incr,
-      selected: true,
-    }));
+    dispatch(resizePart(resizeInfo));
+    if ( resizeInfo.markerId){
+      const leftMarker = resizeInfo.markerId.includes("l");
+      dispatch(updateMarkersForPart(resizeInfo.partId, {
+        incr: resizeInfo.incr,
+        selected: true,
+      }, leftMarker, !leftMarker));
+    }
   };
 };
 

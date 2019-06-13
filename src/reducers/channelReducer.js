@@ -1,7 +1,7 @@
 import { merge, cloneDeep } from "lodash";
 
 import { ADD_CHANNEL, CLEAR_CHANNELS, PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, 
-  MOVE_PART, RESIZE_PART_RIGHT, ADD_PART, DELETE_PART, DELETE_CHANNEL, SET_CHANNEL_ACTIVE, 
+  MOVE_PART, RESIZE_PART, ADD_PART, DELETE_PART, DELETE_CHANNEL, SET_CHANNEL_ACTIVE, 
   UNSET_CHANNEL_ACTIVE, UPDATE_CHANNEL } from "../actions/types";
 
 import { filterObjectByKeys } from "../utils/miscUtils";
@@ -197,21 +197,22 @@ export default (state = initialState, action) => {
         }
       };
 
-      case RESIZE_PART_RIGHT:
+      case RESIZE_PART:
         // moving parts within a channel 
         const channel1 = state.byChannelId[action.payload.channelId];
         const part1 = channel1.byPartId[action.payload.partId];
         const updatedDuration1 = part1.duration + action.payload.incr;
-        const currentOffset = part.offset || 0;
-        let updatedOffset = currentOffset;
+        const currentOffset1 = part1.offset || 0;
+        let updatedOffset1 = currentOffset1;
         // left marker moved
-        if (action.payload.marker && action.payload.marker.contains("l")) {
-          const offsetIncr = action.payload.incr || 0;
-          updatedOffset += offsetIncr;
+        if (action.payload.marker && action.payload.marker.includes("l")) {
+          const offsetIncr1 = action.payload.incr || 0;
+          updatedOffset1 += offsetIncr1;
         }
         const mergedPart1 = {
           ...part1,
           duration: updatedDuration1,
+          offset: updatedOffset1,
         };
         const mergedResizeChannelState1 = merge({},
           channel1,

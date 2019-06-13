@@ -63,16 +63,16 @@ export const copyPart = () => ({
 });
 
 // should contain partId and update info (inc or type)
-export const updateMarkersForPart = (partId, updateInfo) => {
+export const updateMarkersForPart = (partId, updateInfo, left=true, right=true) => {
   return (dispatch, getState) => {
     const type = updateInfo.selected ? "selected" : "normal"; 
     const markerIdPrefix = `${partId}`;
-      dispatch(updateMarker({
+      left && dispatch(updateMarker({
         markerId: markerIdPrefix + "-l",
         incr: updateInfo.incr,
         type
       }));
-      dispatch(updateMarker({
+      right && dispatch(updateMarker({
         markerId: markerIdPrefix + "-r",
         incr: updateInfo.incr,
         type
