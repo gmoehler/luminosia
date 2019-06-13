@@ -30,3 +30,6 @@ App
     ChannelSelector
 
 ```
+
+Todos:
+- Redux: Make parts a first level state

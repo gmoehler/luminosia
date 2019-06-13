@@ -206,8 +206,8 @@ export default (state = initialState, action) => {
           ...part1,
           duration: updatedDuration1,
         };
-        const mergedMoveChannelState1 = merge({},
-          channel,
+        const mergedResizeChannelState1 = merge({},
+          channel1,
           {
             byPartId: {
               [action.payload.partId]: mergedPart1
@@ -219,7 +219,7 @@ export default (state = initialState, action) => {
           ...state,
           byChannelId: {
             ...state.byChannelId,
-            [action.payload.channelId]: mergedMoveChannelState1
+            [action.payload.channelId]: mergedResizeChannelState1
           }
         };
 
