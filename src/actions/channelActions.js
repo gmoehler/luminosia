@@ -1,6 +1,6 @@
-import { PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_CHANNEL, ADD_PART, DELETE_PART, 
+import { PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_PART, ADD_PART, DELETE_PART, 
   ADD_CHANNEL, CLEAR_CHANNELS, UPLOAD_AUDIO_STARTED, UPLOAD_AUDIO_SUCCESS, UPLOAD_AUDIO_FAILURE, 
-  DELETE_CHANNEL, SET_CHANNEL_ACTIVE, UNSET_CHANNEL_ACTIVE, UPDATE_CHANNEL } from "./types";
+  DELETE_CHANNEL, SET_CHANNEL_ACTIVE, UNSET_CHANNEL_ACTIVE, UPDATE_CHANNEL, RESIZE_PART_RIGHT } from "./types";
 
 import { setMarker, deleteMarker, toggleElementSelection, remElemFromSel, addPartToMultiSelection, clearElementSelectionWithMarkers, updateMarkersForPart } from "./viewActions";
 
@@ -303,16 +303,25 @@ export const setChannelPlayState = (stateInfo) => ({
   payload: stateInfo
 });
 
-export const moveChannel = (moveInfo) => ({
-  type: MOVE_CHANNEL,
+export const movePart = (moveInfo) => ({
+  type: MOVE_PART,
   payload: moveInfo
 });
+
+export const resizePartRight = (resizeInfo) => ({
+  type: RESIZE_PART_RIGHT,
+  payload: resizeInfo
+});
+
 
 export const resizePartWithMarkers = (resizeInfo) => {
   return (dispatch, getState) => {
 
-    //TODO
-    console.log("resizing...", resizeInfo);
+    dispatch(resizePartRight(resizeInfo));
+    dispatch(updateMarkersForPart(resizeInfo.partId, {
+      incr: resizeInfo.incr,
+      selected: true,
+    }));
   };
 };
 
@@ -325,7 +334,7 @@ export const moveSelectedPartsWithMarkers = (moveInfo) => {
       dispatch(addPartToMultiSelection(moveInfo));
     }
     getSelectedParts(getState()).forEach((part) => {
-      dispatch(moveChannel({
+      dispatch(movePart({
         ...part,
         incr: moveInfo.incr,
       }));

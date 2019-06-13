@@ -19,7 +19,8 @@ export const UPLOAD_AUDIO_FAILURE = "UPLOAD_AUDIO_FAILURE";
 
 export const PLAY_CHANNELS = "PLAY_CHANNELS";
 export const STOP_CHANNELS = "STOP_CHANNELS";
-export const MOVE_CHANNEL = "MOVE_CHANNEL";
+export const MOVE_PART = "MOVE_PART";
+export const RESIZE_PART_RIGHT = "RESIZE_PART_RIGHT";
 export const ADD_PART = "ADD_PART";
 export const DELETE_PART = "DELETE_PART";
 export const PASTE_PART = "PASTE_PART";
