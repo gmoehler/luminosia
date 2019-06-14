@@ -123,7 +123,7 @@ export const drawExportImage = (channelId, idx, applyLog) => {
         const img = document.getElementById(part.imageId);
         const offsetPx = part.offset ? secondsToSamples(part.offset, data.sampleRate) : 0;
         const widthPx = part.duration ? secondsToSamples(part.duration, data.sampleRate) : 0;
-        cc.drawImage(img, 0, 0, widthPx, 30, offsetPx, idx * 30, widthPx, 30);
+        cc.drawImage(img, 0, 0, img.width, 30, offsetPx, idx * 30, widthPx, 30);
       });
 
       // apply gain by adding a transparent black rectangle on top of the parts
