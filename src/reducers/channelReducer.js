@@ -198,20 +198,32 @@ export default (state = initialState, action) => {
       };
 
       case RESIZE_PART:
-        // moving parts within a channel 
+        // sizing part by moving either left or right marker
         const channel1 = state.byChannelId[action.payload.channelId];
         const part1 = channel1.byPartId[action.payload.partId];
         const currentOffset1 = part1.offset || 0;
+
         let updatedOffset1 = currentOffset1;
         let updatedDuration1 = part1.duration;
 
         // left marker moved
         if (action.payload.markerId && action.payload.markerId.includes("l")) {
-          const offsetIncr1 = action.payload.incr || 0;
-          updatedOffset1 = Math.max(1, updatedOffset1 + offsetIncr1);
-          updatedDuration1 = Math.max(1,updatedDuration1 -  action.payload.incr);
+          const maxOffset = part1.offset + part1.duration;
+          if (action.payload.incr > 0) { // moving right: cannot exceed right end of part
+            updatedDuration1 = Math.max(0,updatedDuration1 -  action.payload.incr);
+            if (updatedDuration1 === 0) { // never allow duration 0
+              updatedDuration1 = part1.duration;
+            }
+            updatedOffset1 = maxOffset - updatedDuration1;
+          } else { // move left: cannot be left to 0
+            updatedOffset1 = Math.max(0,updatedOffset1 + action.payload.incr);
+            updatedDuration1 = maxOffset - updatedOffset1;
+          }
         } else { // right marker moved
-          updatedDuration1 = Math.max(1,updatedDuration1 +  action.payload.incr);
+          updatedDuration1 = Math.max(0,updatedDuration1 +  action.payload.incr);
+          if (updatedDuration1 === 0) { // never allow duration 0
+            updatedDuration1 = part1.duration;
+          }
         }
 
         const mergedPart1 = {

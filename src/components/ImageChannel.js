@@ -25,7 +25,7 @@ const ImageCursor = styled.div`
 const ImageMarker = styled.div`
   position: absolute;
   background: ${props => props.markerColor || props.theme.markerColor};
-  width: 1px;
+  width: 2px;
   left: ${props => props.markerPos}px;
   height: ${props => props.height}px;
   cursor: ${props => props.cursor};
@@ -111,20 +111,16 @@ class ImageChannel extends Component {
 
         const cc = canvas.getContext("2d");
         cc.clearRect(0, 0, canvas.width, canvas.height);
+
         const imageOffset = canvasOffset / factor;
-
-        const targetWidth = canvas.width;
-        const sourceWidth = img.width / factor;
-
-        const targetHeight = imageHeight;
 
         cc.scale(scale, scale);
         if (img.src) {
-          img.onload = cc.drawImage(img, imageOffset, 0, sourceWidth, img.height,
-            0, 0, targetWidth, targetHeight);
+          img.onload = cc.drawImage(img, imageOffset, 0, img.width, img.height,
+            0, 0, canvas.width, imageHeight);
         } else {
           cc.fillStyle = "#FF0000"; // red rectangle if image is missing
-          cc.fillRect(0, 0, targetWidth, targetHeight);
+          cc.fillRect(0, 0, canvas.width, imageHeight);
         }
         canvasOffset += MAX_CANVAS_WIDTH;
       }
