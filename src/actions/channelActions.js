@@ -2,7 +2,7 @@ import { PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_PART, ADD_PA
   ADD_CHANNEL, CLEAR_CHANNELS, UPLOAD_AUDIO_STARTED, UPLOAD_AUDIO_SUCCESS, UPLOAD_AUDIO_FAILURE, 
   DELETE_CHANNEL, SET_CHANNEL_ACTIVE, UNSET_CHANNEL_ACTIVE, UPDATE_CHANNEL, RESIZE_PART } from "./types";
 
-import { setMarker, deleteMarker, toggleElementSelection, remElemFromSel, addPartToMultiSelection, clearElementSelectionWithMarkers, updateMarkersForPart, syncMarkersForPart } from "./viewActions";
+import { setMarker, deleteMarker, toggleElementSelection, remElemFromSel, addPartToMultiSelection, clearElementSelectionWithMarkers, syncMarkersForPart } from "./viewActions";
 
 import { getNextPartId, getLastChannel, getActiveChannelIds, getMaxDuration, getChannelData, getPart, getElementType } from "../reducers/channelReducer";
 import { getSelectedImageChannelId, getPartsToCopy, getSelectedElements, getSelectedParts, isElementSelected } from "../reducers/viewReducer";
