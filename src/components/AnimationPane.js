@@ -39,6 +39,10 @@ const AnimationControl = styled.div`
 	font-weight: 600;
 `;
 
+const RotationSpeed = styled(Typography)`
+	color: white
+`;
+
 const AnimationCanvas = styled.canvas`
 `;
 
@@ -138,13 +142,12 @@ export default class AnimationPane extends PureComponent {
 		return (
 			<AnimationPaneWrapper drawerWidth={ drawerWidth }>
 				<AnimationControl>
-					<Typography>	{ rotationSpeed.toFixed(1) }</Typography>
+					<RotationSpeed>	{ rotationSpeed.toFixed(1) }</RotationSpeed>
 				
-					<WhiteSlider 
-    value={ this.speed2slider(rotationSpeed) }
-    onChange={ this.handleChange }
-    vertical
-    style={ { width: 0 } } />
+					<WhiteSlider value={ this.speed2slider(rotationSpeed) }
+    				onChange={ this.handleChange }
+    				vertical
+    				style={ { width: 0 } } />
 				</AnimationControl>
 				<AnimationCanvas id="animationPaneCanvas"
     height={ resolution * 80 }
