@@ -240,8 +240,31 @@ it("should handle CLEAR_SEL for parts", () => {
       }
     });
 
+    const expectedState4 = {
+      ...initialState,
+      byMarkerId: {
+        [marker1.markerId]: {
+          ...marker1,
+          pos: 40,
+          type: "newType"
+        },
+        [marker2.markerId]: marker2,
+      }
+    };
+
+    const reducer4 = reducer(reducer3, {
+      type: types.UPDATE_MARKER,
+      payload: {
+        markerId: marker1.markerId,
+        pos: 40,
+        type: "newType"
+      }
+    });
+
+
     expect(reducer2).toEqual(expectedState2);
     expect(reducer3).toEqual(expectedState3);
+    expect(reducer4).toEqual(expectedState4);
   });
 
   it("should handle UPDATE_MARKER with no prev marker", () => {

@@ -134,8 +134,7 @@ export default class ImageList extends PureComponent {
           key={ img.imageId }
           src={ img.src }
           data-imageid={ img.imageId }
-          borderColor={ this.props.selectedImageIds.includes(img.imageId) ?
-                                                                                                               "red" : "transparent" }
+          borderColor={ this.props.selectedImageIds.includes(img.imageId) ? "red" : "transparent" }
           draggable
           onDragStart={ (e) => {
                         e.dataTransfer.setData("src", img.src);

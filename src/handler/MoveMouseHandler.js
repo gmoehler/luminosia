@@ -7,6 +7,7 @@ export default class MoveMouseHandler {
     this.moveFromX = null;
     this.channelId = null;
     this.partId = null;
+    this.markerId = null;
     this.selected = false;
     this.inMove = false;
   }
@@ -78,6 +79,7 @@ export default class MoveMouseHandler {
     this.moveFromX = evInfo.x;
     this.channelId = evInfo.channelId;
     this.partId = evInfo.partId;
+    this.markerId = evInfo.markerId; // for resize
   }
 
   handleToggleSelection = (evInfo) => {
@@ -88,23 +90,27 @@ export default class MoveMouseHandler {
     });
   }
 
-  handleMoveTo = (evInfo, finalizeSelection) => {
+  handleMoveTo = (evInfo, finalizeAction) => {
     // only move selected when we select a part
     if (this.moveFromX && this.partId && this.channelId) {
       // only when mouse down has occured
       // console.log(`move from ${this.moveFromX} to ${x}`);
       const incrX = evInfo.x - this.moveFromX;
       if (Math.abs(incrX) > 0) {
-        this.handlerFunctions.move(this.partId, incrX);
-        this.moveFromX = evInfo.x;
-        this.inMove = true;
+      	if(this.markerId) {
+      	  this.handlerFunctions.resize(this.partId, this.markerId, incrX);
+          } else {
+            this.handlerFunctions.move(this.partId, incrX);
+          }
+          this.moveFromX = evInfo.x;
+          this.inMove = true;
       }
 
-      if (finalizeSelection) {
+      if (finalizeAction) {
         this.xOrigin = null;
         this.moveFromX = null;
         this.partId = null;
-        
+        this.markerId = null;
       }
     }
   }
@@ -114,7 +120,7 @@ export default class MoveMouseHandler {
     this.handlerFunctions.selectRange(evInfo.x, evInfo.x);
   }
 
-  handleSelectionTo = (evInfo, finalizeSelection) => {
+  handleSelectionTo = (evInfo, finalizeAction) => {
     if (this.selectFromX) { // only when mouse down has occured
       // console.log('selection to: ', x);
       if (this.selectFromX < evInfo.x) {
@@ -122,7 +128,7 @@ export default class MoveMouseHandler {
       } else {
         this.handlerFunctions.selectRange(evInfo.x, this.selectFromX);
       }
-      if (finalizeSelection) {
+      if (finalizeAction) {
         this.selectFromX = null;
         this.selected = true;
       }

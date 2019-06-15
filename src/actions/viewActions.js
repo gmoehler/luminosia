@@ -3,7 +3,7 @@ import { SELECT_RANGE, DESELECT_RANGE, SET_RESOLUTION, UPDATE_MARKER, SET_MARKER
 
 import { isElementSelected, getSelectedElements, getNumSelectedElements, getSelectionType, getSelectedParts } from "../reducers/viewReducer";
 
-import { getElementType } from "../reducers/channelReducer";
+import { getElementType, getPart } from "../reducers/channelReducer";
 
 export const clearView = () => ({
   type: CLEAR_VIEW
@@ -70,13 +70,30 @@ export const updateMarkersForPart = (partId, updateInfo) => {
       dispatch(updateMarker({
         markerId: markerIdPrefix + "-l",
         incr: updateInfo.incr,
+        pos: updateInfo.pos,
         type
       }));
       dispatch(updateMarker({
         markerId: markerIdPrefix + "-r",
         incr: updateInfo.incr,
+        pos: updateInfo.pos,
         type
       }));
+  };
+};
+
+export const syncMarkersForPart = (channelId, partId) => {
+  return (dispatch, getState) => {
+    const part = getPart(getState(), channelId, partId);
+    const markerIdPrefix = `${partId}`;
+    dispatch(updateMarker({
+      markerId: markerIdPrefix + "-l",
+      pos: part.offset,
+    }));
+    dispatch(updateMarker({
+      markerId: markerIdPrefix + "-r",
+      pos: part.offset + part.duration,
+    }));
   };
 };
 

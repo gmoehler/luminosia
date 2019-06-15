@@ -25,9 +25,10 @@ const ImageCursor = styled.div`
 const ImageMarker = styled.div`
   position: absolute;
   background: ${props => props.markerColor || props.theme.markerColor};
-  width: 1px;
+  width: 2px;
   left: ${props => props.markerPos}px;
   height: ${props => props.height}px;
+  cursor: ${props => props.cursor};
 `;
 
 const ImageSelection = styled.div`
@@ -55,6 +56,7 @@ const ImageCanvases = styled.div`
   float: left;
   position: absolute;
   left: ${props => props.offset}px;
+  cursor: ${props => props.cursor};
 `;
 
 // need position:relative so children will respect parent margin/padding
@@ -109,20 +111,16 @@ class ImageChannel extends Component {
 
         const cc = canvas.getContext("2d");
         cc.clearRect(0, 0, canvas.width, canvas.height);
+
         const imageOffset = canvasOffset / factor;
-
-        const targetWidth = canvas.width;
-        const sourceWidth = targetWidth / factor;
-
-        const targetHeight = imageHeight;
 
         cc.scale(scale, scale);
         if (img.src) {
-          img.onload = cc.drawImage(img, imageOffset, 0, sourceWidth, img.height,
-            0, 0, targetWidth, targetHeight);
+          img.onload = cc.drawImage(img, imageOffset, 0, img.width, img.height,
+            0, 0, canvas.width, imageHeight);
         } else {
           cc.fillStyle = "#FF0000"; // red rectangle if image is missing
-          cc.fillRect(0, 0, targetWidth, targetHeight);
+          cc.fillRect(0, 0, canvas.width, imageHeight);
         }
         canvasOffset += MAX_CANVAS_WIDTH;
       }
@@ -148,7 +146,7 @@ class ImageChannel extends Component {
         adaptedEventName = "crtl-" + eventName;
       }
       const evInfo = {
-        ...pos, // x pos, channelId, partId
+        ...pos, // x pos, channelId, partId, markerId
         timestamp: e.timeStamp,
         src, // drag source path
         imageId,
@@ -221,7 +219,8 @@ class ImageChannel extends Component {
           <ImageCanvases key={ partId }
               className="ImageCanvases"
               theme={ theme }
-              offset={ offset }>
+              offset={ offset }
+              cursor={ "hand" } >
             { canvasImages }
           </ImageCanvases>
         );
@@ -258,12 +257,14 @@ class ImageChannel extends Component {
     const markerElems = markers && Array.isArray(markers) ?
       markers.map((marker) => { 
         let color = theme.markerColor;
+        let cursor = "default";
         // marker color depends on type (insert / normal), selection status
         //  and whether the part belongs to this channel
         if ( marker.type  === "insert" || marker.markerId  === "insert" ) {
           color = theme.insertMarkerColor;
         } else if ( marker.type  === "selected"  && marker.channelId === channelId) {
           color = theme.selectedMarkerColor;
+          cursor = "col-resize";
         } else if ( marker.type  === "selected") {
           color = theme.selectedMarkerColorOther;
         } else if (marker.channelId !== channelId) {
@@ -274,8 +275,11 @@ class ImageChannel extends Component {
           className="Marker" 
           markerPos={ marker.pos } 
           markerColor={ color } 
+          cursor={ cursor }
           theme={ theme } 
           height={ imageHeight }
+          data-markerid={ marker.markerId }
+          data-partid={ marker.partId }
         />);
       }) : null;
 
