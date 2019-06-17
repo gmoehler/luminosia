@@ -59,11 +59,13 @@ export const imageChannelState = {
   } // channel
 };
 
+
+
 export const part = {
-  partId: "2:3",
+  partId: "2:1",
   channelId: 2,
-  offset: 5.5,
-  duration: 55.55,
+  offset: 3.3,
+  duration: 11.21,
   sampleRate: 100,
 };
 
