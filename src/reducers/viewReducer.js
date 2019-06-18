@@ -138,7 +138,8 @@ export default (state = initialState, action) => {
       if (_getSelectionType(state) !== "part") {
         return state;
       }
-      const partsToCopy = _getSelectedElements(state).slice(0);;
+      // duplicate parts array
+      const partsToCopy = _getSelectedElements(state).slice(0);
       return {
         ...state,
         partsToCopy
