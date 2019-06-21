@@ -1,0 +1,102 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`simple component tests AnimationPane component 1`] = `
+<div
+  className="sc-ifAKCX kuDDyM"
+>
+  <div
+    className="sc-EHOje kRjwTe"
+  >
+    <p
+      className="MuiTypography-root sc-bZQynM ebBIAI MuiTypography-body1"
+    >
+       
+      2.0
+    </p>
+    <div
+      className="MuiSlider-root sc-bxivhb dKSUMk MuiSlider-vertical"
+      onClick={[Function]}
+      onMouseDown={[Function]}
+      onTouchMove={[Function]}
+      onTouchStartCapture={[Function]}
+      style={
+        Object {
+          "width": 0,
+        }
+      }
+    >
+      <div
+        className="MuiSlider-container MuiSlider-vertical"
+      >
+        <div
+          className="MuiSlider-track MuiSlider-trackBefore MuiSlider-vertical"
+          style={
+            Object {
+              "transform": "translateX(-50%) scaleY(0.19387755102040813)",
+            }
+          }
+        />
+        <div
+          className="MuiSlider-thumbWrapper MuiSlider-vertical"
+          style={
+            Object {
+              "transform": "translateY(80.61224489795919%)",
+            }
+          }
+        >
+          <button
+            aria-orientation="vertical"
+            aria-valuemax={100}
+            aria-valuemin={0}
+            aria-valuenow={19.387755102040813}
+            className="MuiButtonBase-root MuiSlider-thumb MuiSlider-vertical"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseLeave={[Function]}
+            onMouseUp={[Function]}
+            onTouchEnd={[Function]}
+            onTouchMove={[Function]}
+            onTouchStart={[Function]}
+            onTouchStartCapture={[Function]}
+            role="slider"
+            tabIndex={0}
+            type="button"
+          />
+        </div>
+        <div
+          className="MuiSlider-track MuiSlider-trackAfter MuiSlider-vertical"
+          style={
+            Object {
+              "transform": "translateX(-50%) scaleY(0.8061224489795918)",
+            }
+          }
+        />
+      </div>
+    </div>
+  </div>
+  <canvas
+    className="sc-gzVnrw fgSTpW"
+    height={8000}
+    id="animationPaneCanvas"
+    width={16000}
+  />
+</div>
+`;
+
+exports[`simple component tests Channel component 1`] = `
+<div
+  className="ChannelWrapper sc-jTzLTM hsYvS"
+  onMouseDown={[Function]}
+  onMouseLeave={[Function]}
+  onMouseMove={[Function]}
+  onMouseUp={[Function]}
+>
+  <div
+    className="WaveformCanvases sc-VigVT dnCORY"
+    offset={0}
+  />
+</div>
+`;

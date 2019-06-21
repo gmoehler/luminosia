@@ -120,9 +120,9 @@ class Channel extends Component {
       const shiftKey = e.shiftKey;
       const adaptedEventName = shiftKey ? "shift-" + eventName : eventName;
       const eventInfo = {
-      	...pos, // x pos, channelId, partId
-      	timestamp: e.timeStamp,
-      	// no drag source path
+        ...pos, // x pos, channelId, partId
+        timestamp: e.timeStamp,
+      // no drag source path
       };
       this.props.handleMouseEvent(adaptedEventName, eventInfo);
 
@@ -137,8 +137,7 @@ class Channel extends Component {
   }
 
   render() {
-    const { length, waveHeight, scale, progress, cursorPos, 
-      selection, markers, theme, offset, selected } = this.props;
+    const { length, waveHeight, scale, progress, cursorPos, selection, markers, theme, offset, selected } = this.props;
 
     let totalWidth = length;
     let waveformCount = 0;
@@ -146,57 +145,56 @@ class Channel extends Component {
     while (totalWidth > 0) {
       const currentWidth = Math.min(totalWidth, MAX_CANVAS_WIDTH);
       const waveform = (<Waveform key={ `${length}-${waveformCount}` }
-          cssWidth={ currentWidth }
-          width={ currentWidth * scale }
-          height={ waveHeight * scale }
-          waveHeight={ waveHeight }
-          ref={ this.createCanvasRef(waveformCount) }
-      />);
+cssWidth={ currentWidth }
+width={ currentWidth * scale }
+height={ waveHeight * scale }
+waveHeight={ waveHeight }
+ref={ this.createCanvasRef(waveformCount) }
+                        />);
 
       waveforms.push(waveform);
       totalWidth -= currentWidth;
       waveformCount += 1;
     }
 
-    const progressElem = progress ? 
+    const progressElem = progress ?
       (<Progress className="Progress"
-          progress={ progress }
-          theme={ theme }
-          waveHeight={ waveHeight }
-          offset={ offset } />)
+progress={ progress }
+theme={ theme }
+waveHeight={ waveHeight }
+offset={ offset } />)
       : null;
 
-    const selectionElem = selection && selection.from && selection.to ? 
+    const selectionElem = selection && selection.from && selection.to ?
       (<Selection className="Selection"
-          selection={ selection }
-          theme={ theme }
-          waveHeight={ waveHeight }
-          offset={ offset } />)
+selection={ selection }
+theme={ theme }
+waveHeight={ waveHeight }
+offset={ offset } />)
       : null;
 
-    const cursorElem = cursorPos ? 
+    const cursorElem = cursorPos ?
       (<Cursor className="Cursor"
-          cursorPos={ cursorPos }
-          theme={ theme }
-          waveHeight={ waveHeight }
-          offset={ offset } />)
+cursorPos={ cursorPos }
+theme={ theme }
+waveHeight={ waveHeight }
+offset={ offset } />)
       : null;
-      
+
     const markerElems = markers && Array.isArray(markers) ?
       markers.map((marker) => {
         let color = theme.markerColor;
-        if ( marker.type  === "insert" || marker.markerId  === "insert" ) {
+        if (marker.type === "insert" || marker.markerId === "insert") {
           color = theme.insertMarkerColor;
-        } else if ( marker.type  === "selected" ) {
+        } else if (marker.type === "selected") {
           color = theme.selectedMarkerColor;
         }
-        return (<Marker 
-            className="Marker" 
-            key={ marker.markerId } 
-            markerPos= { marker.pos } 
-            markerColor={ color } 
-            theme={ theme } 
-            waveHeight={ waveHeight } 
+        return (<Marker className="Marker"
+key={ marker.markerId }
+markerPos={ marker.pos }
+markerColor={ color }
+theme={ theme }
+waveHeight={ waveHeight }
             offset={ offset } />);
       }
       ) : null;
@@ -204,30 +202,24 @@ class Channel extends Component {
     const borderColor = selected ? theme.borderColorSelected : theme.borderColor;
 
     return (
-      <ChannelWrapper 
-          className="ChannelWrapper" 
-          onMouseDown={ (e) => this.handleMouseEvent(e, "mouseDown") } 
-          onMouseUp={ (e) => this.handleMouseEvent(e, "mouseUp") } 
-          onMouseMove={ (e) => this.handleMouseEvent(e, "mouseMove") } 
-          onMouseLeave={ (e) => this.handleMouseEvent(e, "mouseLeave") }
-
-          cssWidth={ length } 
-          theme={ theme } 
-          waveHeight={ waveHeight }
-
-          borderColor={ borderColor }>
-
+      <ChannelWrapper className="ChannelWrapper"
+onMouseDown={ (e) => this.handleMouseEvent(e, "mouseDown") }
+onMouseUp={ (e) => this.handleMouseEvent(e, "mouseUp") }
+onMouseMove={ (e) => this.handleMouseEvent(e, "mouseMove") }
+onMouseLeave={ (e) => this.handleMouseEvent(e, "mouseLeave") }
+          cssWidth={ length }
+theme={ theme }
+waveHeight={ waveHeight }
+borderColor={ borderColor }>
         <WaveformCanvases className="WaveformCanvases"
-            theme={ theme }
-            offset={ offset } >
+theme={ theme }
+offset={ offset }>
           { waveforms }
         </WaveformCanvases>
-        
         { progressElem }
         { selectionElem }
         { cursorElem }
         { markerElems }
-        
       </ChannelWrapper>
       );
   }
@@ -237,21 +229,21 @@ Channel.propTypes = {
   channelId: PropTypes.number.isRequired,
   scale: PropTypes.number,
   progress: PropTypes.number,
-  cursorPos: PropTypes.number, 
+  cursorPos: PropTypes.number,
   selection: PropTypes.exact({
     from: PropTypes.number,
-    to: PropTypes.number 
+    to: PropTypes.number
   }).isRequired,
-	markers: PropTypes.arrayOf(PropTypes.object),
-	theme:PropTypes.object,
-  maxWidth:PropTypes.number,
+  markers: PropTypes.arrayOf(PropTypes.object),
+  theme: PropTypes.object,
+  maxWidth: PropTypes.number,
   selected: PropTypes.bool,
   handleMouseEvent: PropTypes.func,
   factor: PropTypes.number,
   length: PropTypes.number,
   offset: PropTypes.number,
-  peaks: PropTypes.object, 
-  bits: PropTypes.number, 
+  peaks: PropTypes.array,
+  bits: PropTypes.number,
   waveHeight: PropTypes.number,
 };
 

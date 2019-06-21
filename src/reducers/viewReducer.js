@@ -1,8 +1,5 @@
 import { cloneDeep } from "lodash";
-import { CLEAR_VIEW, SELECT_RANGE, DESELECT_RANGE, SET_RESOLUTION, 
-  SET_MARKER, UPDATE_MARKER, DELETE_MARKER, 
-  SELECT_IMAGE_CHANNEL, COPY_PART, ADD_ELEMENT_TO_SEL, REMOVE_ELEMENT_FROM_SEL, CLEAR_SEL, 
-  ADD_TO_UPLOAD_LOG, CLEAR_UPLOAD_LOG, SET_MESSAGE, CLEAR_MESSAGE } from "../actions/types";
+import { CLEAR_VIEW, SELECT_RANGE, DESELECT_RANGE, SET_RESOLUTION, SET_MARKER, UPDATE_MARKER, DELETE_MARKER, SELECT_IMAGE_CHANNEL, COPY_PART, ADD_ELEMENT_TO_SEL, REMOVE_ELEMENT_FROM_SEL, CLEAR_SEL, ADD_TO_UPLOAD_LOG, CLEAR_UPLOAD_LOG, SET_MESSAGE, CLEAR_MESSAGE } from "../actions/types";
 import { getElementType } from "./channelReducer";
 
 // export for tests
@@ -85,7 +82,7 @@ export default (state = initialState, action) => {
       } else if (typeof action.payload.pos == "number") {
         pos = action.payload.pos;
       }
-      const type =  action.payload.type ? action.payload.type : prevMarker.type;
+      const type = action.payload.type ? action.payload.type : prevMarker.type;
       return {
         ...state,
         byMarkerId: {
@@ -144,29 +141,29 @@ export default (state = initialState, action) => {
         ...state,
         partsToCopy
       };
-      
+
     case ADD_TO_UPLOAD_LOG:
       return {
-      	...state,
-      	uploadLog: state.uploadLog ? state.uploadLog + action.payload : action.payload
+        ...state,
+        uploadLog: state.uploadLog ? state.uploadLog + action.payload : action.payload
       };
 
     case CLEAR_UPLOAD_LOG:
       return {
-      	...state,
-      	uploadLog: null
+        ...state,
+        uploadLog: null
       };
-      
+
     case SET_MESSAGE:
       return {
-      	...state,
-      	message: action.payload
+        ...state,
+        message: action.payload
       };
-      
+
     case CLEAR_MESSAGE:
       return {
-      	...state,
-      	message: null
+        ...state,
+        message: null
       };
 
     default:
@@ -201,32 +198,24 @@ export const getSelectedImage = (state) => {
   return null;
 };
 
-export const getSelectedImageChannelId = (state) => 
-  state.view.selectedImageChannelId;
+export const getSelectedImageChannelId = (state) => state.view.selectedImageChannelId;
 
 export const isElementSelected = (state, elementInfo) => {
   return Object.keys(state.view.selectedElementsById).includes(elementInfo.partId) ||
     Object.keys(state.view.selectedElementsById).includes(elementInfo.imageId);
 };
 
-const _getSelectedElements = (viewState) => 
-  Object.values(viewState.selectedElementsById);
-export const getSelectedElements = (state) =>
-   _getSelectedElements(state.view);
+const _getSelectedElements = (viewState) => Object.values(viewState.selectedElementsById);
+export const getSelectedElements = (state) => _getSelectedElements(state.view);
 
-export const getSelectedImages = (state) => 
-  getSelectedElements(state).filter((elem) => elem.imageId != null);
-export const getSelectedImageIds = (state) => 
-  getSelectedImages(state).map((img) => img.imageId);
-export const getSelectedParts = (state) => 
-  getSelectedElements(state).filter((elem) => elem.partId != null);
+export const getSelectedImages = (state) => getSelectedElements(state).filter((elem) => elem.imageId != null);
+export const getSelectedImageIds = (state) => getSelectedImages(state).map((img) => img.imageId);
+export const getSelectedParts = (state) => getSelectedElements(state).filter((elem) => elem.partId != null);
 
-const _getNumSelectedElements = (viewState) => 
-  viewState.selectedElementsById ? 
-    Object.values(viewState.selectedElementsById).length : 0;
+const _getNumSelectedElements = (viewState) => viewState.selectedElementsById ?
+  Object.values(viewState.selectedElementsById).length : 0;
 
-export const getNumSelectedElements = (state) => 
-  _getNumSelectedElements(state.view);
+export const getNumSelectedElements = (state) => _getNumSelectedElements(state.view);
 
 const _getSelectionType = (viewState) => {
   if (_getNumSelectedElements(viewState) === 0)
@@ -234,11 +223,8 @@ const _getSelectionType = (viewState) => {
   const firstSelElem = _getSelectedElements(viewState)[0];
   return getElementType(firstSelElem);
 };
-export const getSelectionType = (state) => 
-  _getSelectionType(state.view);
- 
-export const getUploadLog = (state) => 
-  state.view.uploadLog;
+export const getSelectionType = (state) => _getSelectionType(state.view);
 
-export const getMessage = (state) => 
-  state.view.message;
+export const getUploadLog = (state) => state.view.uploadLog;
+
+export const getMessage = (state) => state.view.message;
