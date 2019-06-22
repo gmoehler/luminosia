@@ -166,19 +166,22 @@ export function withPlay(WrappedComponent) {
       const peaksDataMono = Array.isArray(data) ? data[0] : []; // only one channel for now
 
       // time to pixel conversion is done in HOC TimeToPixel
-      return (<WrappedComponent { ...passthruProps }
-          progress={ this.state.progress }
-          handleMouseEvent={ this.props.handleMouseEvent }
-          factor={ this.props.resolution / this.props.sampleRate }
-          peaks={ peaksDataMono }
-          bits={ bits }
-          length={ length } /* only for audio */ />);
+      return (
+        <WrappedComponent { ...passthruProps }
+progress={ this.state.progress }
+handleMouseEvent={ this.props.handleMouseEvent }
+factor={ this.props.resolution / this.props.sampleRate }
+peaks={ peaksDataMono }
+            bits={ bits }
+length={ length } /* only for audio */ />);
     }
   }
   ;
 
   WithPlay.propTypes = {
     type: PropTypes.oneOf(["audio", "image", "animation"]),
+    offset: PropTypes.number,
+    buffer: PropTypes.object,
     sampleRate: PropTypes.number.isRequired,
     resolution: PropTypes.number.isRequired,
     playState: PropTypes.oneOf(["stopped", "playing"]).isRequired,
