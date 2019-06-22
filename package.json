@@ -87,13 +87,13 @@
     "electron-builder": "^20.39.0",
     "eslint": "^5.16.0",
     "husky": "2.2.0",
+    "react-test-renderer": "16.8.6",
     "redux-mock-store": "1.5.3",
     "semantic-release": "^15.13.3",
     "typescript": "^3.4.5",
     "validate-commit-message": "3.0.1",
     "wait-on": "^3.2.0"
   },
-
   "build": {
     "appId": "com.luminosia.studio",
     "productName": "LuminosiaStudio",
@@ -105,16 +105,21 @@
       "build/**/*",
       "node_modules/**/*"
     ],
-    "linux":{
+    "linux": {
       "target": [
-        {"target": "deb", 
+        {
+          "target": "deb",
           "arch": [
-          "x64", "ia32"
-        ]}, 
-        {"target": "AppImage", 
+            "x64",
+            "ia32"
+          ]
+        },
+        {
+          "target": "AppImage",
           "arch": [
-          "x64"
-        ]}
+            "x64"
+          ]
+        }
       ]
     },
     "extraResources": [
@@ -137,20 +142,24 @@
       "buildResources": "assets"
     }
   },
-
   "husky": {
     "hooks": {
       "commit-msg": "validate-commit-message"
     }
   },
-
   "release": {
     "plugins": [
       "@semantic-release/commit-analyzer",
       "@semantic-release/release-notes-generator",
-      ["@semantic-release/github", {
-        "assets": ["dist/LuminosiaStudio*", "dist/luminosia*"]
-      }]
+      [
+        "@semantic-release/github",
+        {
+          "assets": [
+            "dist/LuminosiaStudio*",
+            "dist/luminosia*"
+          ]
+        }
+      ]
     ]
   }
 }

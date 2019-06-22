@@ -62,8 +62,9 @@ export default class AnimationPane extends PureComponent {
 		this.draw();
 	}
 
-	componentDidUpdate() {
-		this.draw();
+	componentDidUpdate(prevProps) {
+		const initiallyBlack =  this.props.progress && !prevProps.progress;
+		this.draw(initiallyBlack);
 	}
 
 	drawArc(cc, arcIdx, color, radius, fromRad, toRad) {
@@ -81,7 +82,7 @@ export default class AnimationPane extends PureComponent {
 		cc.stroke();
 	}
 
-	draw() {
+	draw(initiallyBlack=false) {
 
 		const { progress, sampleRate, activeChannels } = this.props;
 
@@ -91,7 +92,12 @@ export default class AnimationPane extends PureComponent {
 
 			const canvas = document.getElementById("animationPaneCanvas");
 			// canvas.height = 2* (2*this.innerRadius + 60) + 20;
+
 			const cc = canvas.getContext("2d");
+			if (initiallyBlack) {
+				cc.fillStyle = "black";
+				cc.fillRect(0, 0, canvas.width, canvas.height);
+			}
 
 			const oneSampleRad = samplesToRad(1, sampleRate, this.state.rotationSpeed);
 			const d = expData.data;
@@ -149,9 +155,10 @@ export default class AnimationPane extends PureComponent {
     				vertical
     				style={ { width: 0 } } />
 				</AnimationControl>
-				<AnimationCanvas id="animationPaneCanvas"
-    height={ resolution * 80 }
-    width={ activeChannels.length * resolution * 80 } />
+				<AnimationCanvas 
+    			id="animationPaneCanvas"
+    			height={ resolution * 80 }
+    			width={ activeChannels.length * resolution * 80 } />
 			</AnimationPaneWrapper>
 
 			);

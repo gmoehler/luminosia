@@ -1,6 +1,4 @@
-import { PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_PART, ADD_PART, DELETE_PART, 
-  ADD_CHANNEL, CLEAR_CHANNELS, UPLOAD_AUDIO_STARTED, UPLOAD_AUDIO_SUCCESS, UPLOAD_AUDIO_FAILURE, 
-  DELETE_CHANNEL, SET_CHANNEL_ACTIVE, UNSET_CHANNEL_ACTIVE, UPDATE_CHANNEL, RESIZE_PART } from "./types";
+import { PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_PART, ADD_PART, DELETE_PART, ADD_CHANNEL, CLEAR_CHANNELS, UPLOAD_AUDIO_STARTED, UPLOAD_AUDIO_SUCCESS, UPLOAD_AUDIO_FAILURE, DELETE_CHANNEL, SET_CHANNEL_ACTIVE, UNSET_CHANNEL_ACTIVE, UPDATE_CHANNEL, RESIZE_PART } from "./types";
 
 import { setMarker, deleteMarker, toggleElementSelection, remElemFromSel, addPartToMultiSelection, clearElementSelectionWithMarkers, syncMarkersForPart } from "./viewActions";
 
@@ -97,7 +95,8 @@ function loadImageChannel(channelConfig, state) {
     }) : {};
 
   // incremented id no longer required
-  normalizedParts && delete normalizedParts.curid;
+  normalizedParts &&
+  delete normalizedParts.curid;
   delete channelConfig.parts;
   channelConfig.lastPartSeqNum = Object.keys(normalizedParts).length - 1;
   channelConfig.playState = "stopped";
@@ -233,7 +232,7 @@ export const insertNewPart = (partInfo) => {
 
 export const pastePart = () => {
   return (dispatch, getState) => {
-      getPartsToCopy(getState()).forEach((part) => {
+    getPartsToCopy(getState()).forEach((part) => {
       const originialPart = getPart(getState(), part.channelId, part.partId);
       const selectedImageChannelId = getSelectedImageChannelId(getState());
 
@@ -316,7 +315,7 @@ export const resizePart = (resizeInfo) => ({
 export const resizePartWithMarkers = (resizeInfo) => {
   return (dispatch, getState) => {
 
-     // exclusively select part for resizing
+    // exclusively select part for resizing
     dispatch(clearElementSelectionWithMarkers());
     dispatch(addPartToMultiSelection(resizeInfo));
 
@@ -327,7 +326,7 @@ export const resizePartWithMarkers = (resizeInfo) => {
 
 export const moveSelectedPartsWithMarkers = (moveInfo) => {
   return (dispatch, getState) => {
-    if (!isElementSelected(getState(), moveInfo)){
+    if (!isElementSelected(getState(), moveInfo)) {
       // if part was not selected then exclusively 
       // select it for move
       dispatch(clearElementSelectionWithMarkers());

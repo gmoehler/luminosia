@@ -174,6 +174,7 @@ describe("actions", () => {
       ...part,
       channelId: 2,
     };
+
     const expectedActions = [
       // commented out lines are not relevant
       {
@@ -195,7 +196,7 @@ describe("actions", () => {
           markerId: "2:2-l", 
           partId: "2:2",
           channelId: 2,
-          pos: 5.5,
+          pos: 3.3,
           minPos: 0,
           type: "normal"
         }
@@ -206,8 +207,8 @@ describe("actions", () => {
           markerId: "2:2-r", 
           partId: "2:2",
           channelId: 2,
-          pos: 55.5 + 5.55,
-          minPos: 55.55,
+          pos: 3.3 + 11.21,
+          minPos: 11.21,
           type: "normal"
         }
       },

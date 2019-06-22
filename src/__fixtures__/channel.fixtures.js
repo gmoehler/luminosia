@@ -37,6 +37,17 @@ export const imageChannelState = {
   channel: {
     lastChannelId: 2,
     byChannelId: {
+      1: {
+        channelId: 1,
+        type: "image",
+        playState: "stopped",
+        sampleRate: 100,
+        duration: 21.21,
+        active: true,
+        lastPartSeqNum: 1,
+        byPartId: {
+        }, // byPartId
+      },
       2: {
         channelId: 2,
         type: "image",
@@ -60,10 +71,10 @@ export const imageChannelState = {
 };
 
 export const part = {
-  partId: "2:3",
+  partId: "2:1",
   channelId: 2,
-  offset: 5.5,
-  duration: 55.55,
+  offset: 3.3,
+  duration: 11.21,
   sampleRate: 100,
 };
 
