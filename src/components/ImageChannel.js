@@ -326,7 +326,8 @@ ImageChannel.propTypes = {
   cursorPos: PropTypes.number,
   selection: PropTypes.exact({
     from: PropTypes.number,
-    to: PropTypes.number
+    to: PropTypes.number,
+    type: PropTypes.string
   }).isRequired,
   markers: PropTypes.arrayOf(PropTypes.object),
   theme: PropTypes.object,
@@ -347,7 +348,7 @@ ImageChannel.defaultProps = {
     insertMarkerColor: "rgba(255,165, 0, 0.5)", // transparent orange
     selectedMarkerColor: "rgba(255,165, 0, 1)", // orange
     selectedMarkerColorOther: "rgba(255,165, 0, 0.3)", // orange slightly transp
-    selectionColor: "rgba(0,0,255,0.5)",
+    selectionColor: "rgba(200,200,255,0.5)",
     tempSelectionColor: "rgba(80,80,80,0.5)",
     imageBackgroundColor: "black",
     borderColorSelected: "cornflowerblue",
