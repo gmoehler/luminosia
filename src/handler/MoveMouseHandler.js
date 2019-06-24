@@ -5,6 +5,7 @@ export default class MoveMouseHandler {
   constructor(handlerFunctions) {
     this.handlerFunctions = handlerFunctions;
     this.moveFromX = null;
+    this.selectFromX = null;
     this.channelId = null;
     this.partId = null;
     this.markerId = null;
@@ -22,6 +23,7 @@ export default class MoveMouseHandler {
 
       // also handles click selection
       case "mouseDown":
+        this.inMove = false;
         this.deselectRange();
         this.handleMoveFrom(evInfo);
         break;
@@ -33,9 +35,8 @@ export default class MoveMouseHandler {
       case "mouseUp":
         this.handleMoveTo(evInfo, true);
         if (!this.inMove) {
-		      // only change selection at a simple click (no move)
+          // only change selection at a simple click (no move)
           this.handleToggleSelection(evInfo);
-          this.inMove = false;
         }
         break;
 
@@ -45,19 +46,35 @@ export default class MoveMouseHandler {
         break;
 
       case "shift-mouseDown":
-        this.handleSelectionFrom(evInfo);
+        this.handleMultiSelectFrom(evInfo);
         break;
 
       case "shift-mouseMove":
-        this.handleSelectionTo(evInfo, false);
+        this.handleMultiSelectTo(evInfo, false);
         break;
 
       case "shift-mouseUp":
-        this.handleSelectionTo(evInfo, true);
+        this.handleMultiSelectTo(evInfo, true);
         break;
 
       case "shift-mouseLeave":
-        this.handleSelectionTo(evInfo, true);
+        this.handleMultiSelectTo(evInfo, true);
+        break;
+
+      case "crtl-shift-mouseDown":
+        this.handleRangeFrom(evInfo);
+        break;
+
+      case "crtl-shift-mouseMove":
+        this.handleRangeTo(evInfo, false);
+        break;
+
+      case "crtl-shift-mouseUp":
+        this.handleRangeTo(evInfo, true);
+        break;
+
+      case "crtl-shift-mouseLeave":
+        this.handleRangeTo(evInfo, true);
         break;
 
       case "crtl-mouseUp":
@@ -86,7 +103,7 @@ export default class MoveMouseHandler {
     this.handlerFunctions.toggleElementSelection({
       channelId: parseInt(evInfo.channelId),
       partId: evInfo.partId,
-      selected: true // select
+    // selected: true // select
     });
   }
 
@@ -97,13 +114,13 @@ export default class MoveMouseHandler {
       // console.log(`move from ${this.moveFromX} to ${x}`);
       const incrX = evInfo.x - this.moveFromX;
       if (Math.abs(incrX) > 0) {
-      	if(this.markerId) {
-      	  this.handlerFunctions.resize(this.partId, this.markerId, incrX);
-          } else {
-            this.handlerFunctions.move(this.partId, incrX);
-          }
-          this.moveFromX = evInfo.x;
-          this.inMove = true;
+        if (this.markerId) {
+          this.handlerFunctions.resize(this.partId, this.markerId, incrX);
+        } else {
+          this.handlerFunctions.move(this.partId, incrX);
+        }
+        this.moveFromX = evInfo.x;
+        this.inMove = true;
       }
 
       if (finalizeAction) {
@@ -115,12 +132,12 @@ export default class MoveMouseHandler {
     }
   }
 
-  handleSelectionFrom = (evInfo) => {
+  handleRangeFrom = (evInfo) => {
     this.selectFromX = evInfo.x;
     this.handlerFunctions.selectRange(evInfo.x, evInfo.x);
   }
 
-  handleSelectionTo = (evInfo, finalizeAction) => {
+  handleRangeTo = (evInfo, finalizeAction) => {
     if (this.selectFromX) { // only when mouse down has occured
       // console.log('selection to: ', x);
       if (this.selectFromX < evInfo.x) {
@@ -134,6 +151,32 @@ export default class MoveMouseHandler {
       }
     }
   }
+
+  handleMultiSelectFrom = (evInfo) => {
+    this.selectFromX = evInfo.x;
+    this.handlerFunctions.selectRange(evInfo.x, evInfo.x, "temp");
+    this.handlerFunctions.selectInInterval(evInfo.x, evInfo.x);
+  }
+
+  handleMultiSelectTo = (evInfo, finalizeAction) => {
+    if (this.selectFromX) { // only when mouse down has occured
+      // console.log('selection to: ', x);
+      if (this.selectFromX < evInfo.x) {
+        this.handlerFunctions.selectRange(this.selectFromX, evInfo.x, "temp");
+        this.handlerFunctions.selectInInterval(this.selectFromX, evInfo.x);
+      } else {
+        this.handlerFunctions.selectRange(evInfo.x, this.selectFromX, "temp");
+        this.handlerFunctions.selectInInterval(evInfo.x, this.selectFromX);
+      }
+      if (finalizeAction) {
+        // range selection is only temporarily
+        this.handlerFunctions.deselectRange();
+        this.selectFromX = null;
+        this.selected = true;
+      }
+    }
+  }
+
 
   handleMultiSelect = (evInfo) => {
     this.handlerFunctions.toggleElementMultiSelection({

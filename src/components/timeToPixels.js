@@ -29,7 +29,8 @@ export function timeToPixels(WrappedComponent) {
       const progressPx = progress ? secondsToPixels(progress, resolution) - offsetPx : null;
       const selectionPx = selection ? {
         from: selection.from ? secondsToPixels(selection.from, resolution) - offsetPx : null,
-        to: selection.to ? secondsToPixels(selection.to, resolution) - offsetPx : null
+        to: selection.to ? secondsToPixels(selection.to, resolution) - offsetPx : null,
+        type: selection.type
       } : null;
       const cursorPosPx = selection && selection.from ? secondsToPixels(selection.from, resolution) - offsetPx : null;
       const maxWidthPx = maxDuration ? secondsToPixels(maxDuration, resolution) : null;
@@ -46,17 +47,17 @@ export function timeToPixels(WrappedComponent) {
       });
 
       return (<WrappedComponent { ...passthruProps }
-          offset={ offsetPx }
-          progress={ progressPx }
-          cursorPos={ cursorPosPx }
-          selection={ selectionPx }
-          maxWidth={ maxWidthPx }
-          parts={ partsPx }
-          markers={ markersPx }
-          select={ this.select }
-          move={ this.move }
-          resolution={ resolution } // needed by TimeScale (?)
-          handleMouseEvent={ (eventName, evInfo) => this.handleMouseEvent(eventName, evInfo, resolution) } />);
+	offset={ offsetPx }
+	progress={ progressPx }
+	cursorPos={ cursorPosPx }
+	selection={ selectionPx }
+	maxWidth={ maxWidthPx }
+	parts={ partsPx }
+	markers={ markersPx }
+	select={ this.select }
+	move={ this.move }
+	resolution={ resolution } // needed by TimeScale (?)
+	handleMouseEvent={ (eventName, evInfo) => this.handleMouseEvent(eventName, evInfo, resolution) } />);
     }
   }
   ;

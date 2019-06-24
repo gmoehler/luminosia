@@ -6,7 +6,8 @@ import { getElementType } from "./channelReducer";
 export const initialState = {
   selection: {
     from: null,
-    to: null
+    to: null,
+    type: null,
   },
   byMarkerId: {},
   resolution: 80,
@@ -28,7 +29,8 @@ export default (state = initialState, action) => {
         ...state,
         selection: {
           from: action.payload.from,
-          to: action.payload.to
+          to: action.payload.to,
+          type: action.payload.type
         }
       };
 
@@ -37,7 +39,8 @@ export default (state = initialState, action) => {
         ...state,
         selection: {
           from: null,
-          to: null
+          to: null,
+          type: null,
         }
       };
 
@@ -175,6 +178,7 @@ export const getSelectionRange = (state) => {
   return {
     from: state.view.selection.from,
     to: state.view.selection.to,
+    type: state.view.selection.type,
   };
 };
 

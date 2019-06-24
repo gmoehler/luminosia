@@ -195,7 +195,7 @@ markerPos={ marker.pos }
 markerColor={ color }
 theme={ theme }
 waveHeight={ waveHeight }
-            offset={ offset } />);
+	offset={ offset } />);
       }
       ) : null;
 
@@ -207,7 +207,7 @@ onMouseDown={ (e) => this.handleMouseEvent(e, "mouseDown") }
 onMouseUp={ (e) => this.handleMouseEvent(e, "mouseUp") }
 onMouseMove={ (e) => this.handleMouseEvent(e, "mouseMove") }
 onMouseLeave={ (e) => this.handleMouseEvent(e, "mouseLeave") }
-          cssWidth={ length }
+	cssWidth={ length }
 theme={ theme }
 waveHeight={ waveHeight }
 borderColor={ borderColor }>
@@ -232,7 +232,8 @@ Channel.propTypes = {
   cursorPos: PropTypes.number,
   selection: PropTypes.exact({
     from: PropTypes.number,
-    to: PropTypes.number
+    to: PropTypes.number,
+    type: PropTypes.string,
   }).isRequired,
   markers: PropTypes.arrayOf(PropTypes.object),
   theme: PropTypes.object,
@@ -242,7 +243,7 @@ Channel.propTypes = {
   factor: PropTypes.number,
   length: PropTypes.number,
   offset: PropTypes.number,
-  peaks: PropTypes.array,
+  peaks: PropTypes.object,
   bits: PropTypes.number,
   waveHeight: PropTypes.number,
 };

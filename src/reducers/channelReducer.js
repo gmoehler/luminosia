@@ -311,6 +311,21 @@ export const getPart = (state, channelId, partId) => {
   return state.channel.byChannelId[channelId].byPartId[partId];
 };
 
+export const getPartRefsInInterval = (state, channelId, from, to) => {
+  const ch = state.channel.byChannelId[channelId];
+  if (ch && Object.keys(ch.byPartId) && Object.keys(ch.byPartId).length > 0) {
+    return Object.values(ch.byPartId).filter(
+      (part) => part.offset + part.duration > from && part.offset < to
+    ).map((part) => ({
+      channelId,
+      partId: part.partId
+    }));
+  } else {
+    return [];
+  }
+
+};
+
 export const getLastChannelId = (state) => {
   return state.channel.lastChannelId;
 };

@@ -172,7 +172,7 @@ progress={ this.state.progress }
 handleMouseEvent={ this.props.handleMouseEvent }
 factor={ this.props.resolution / this.props.sampleRate }
 peaks={ peaksDataMono }
-            bits={ bits }
+	bits={ bits }
 length={ length } /* only for audio */ />);
     }
   }
@@ -189,6 +189,7 @@ length={ length } /* only for audio */ />);
     selection: PropTypes.exact({
       from: PropTypes.number,
       to: PropTypes.number,
+      type: PropTypes.string,
     }),
     setChannelPlayState: PropTypes.func.isRequired,
     parts: PropTypes.array,
