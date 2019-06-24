@@ -337,7 +337,7 @@ export const moveSelectedPartsWithMarkers = (moveInfo) => {
         ...part,
         incr: moveInfo.incr,
       }));
-      dispatch(syncMarkersForPart(moveInfo.channelId, moveInfo.partId));
+      dispatch(syncMarkersForPart(part.channelId, part.partId));
     });
   };
 };

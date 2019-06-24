@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import { connect } from "react-redux"; 
+import { connect } from "react-redux";
 
 import ChannelGroup from "./ChannelGroup";
 import { setChannelPlayState, insertNewPart, deleteSelectedPartAndMarkers, moveSelectedPartsWithMarkers, resizePartWithMarkers } from "../actions/channelActions";
-import { selectRange, deselectRange, setMarker, toggleElementSelection, toggleElementMultiSelection, setMessage } from "../actions/viewActions";
+import { selectRange, deselectRange, setMarker, toggleElementSelection, toggleElementMultiSelection, setMessage, selectInInterval } from "../actions/viewActions";
 import { getMaxDuration, getAllChannelsData, allChannelsStopped } from "../reducers/channelReducer";
 import { getSelectionRange, getResolution, getMarkers, getSelectedImageChannelId, getUploadLog } from "../reducers/viewReducer";
 import { getImageSources } from "../reducers/imageListReducer";
@@ -11,26 +11,34 @@ import { getImageSources } from "../reducers/imageListReducer";
 class ChannelGroupContainer extends Component {
 
   static getDerivedStateFromError(error) {
-    return { error };
+    return {
+      error
+    };
   }
 
   constructor(props) {
     super(props);
-    this.state = { error: null };
+    this.state = {
+      error: null
+    };
   }
 
   componentDidCatch(error, state) {
-    this.setState({ error });
+    this.setState({
+      error
+    });
   }
 
   render() {
 
-    if (this.state.error){
+    if (this.state.error) {
       return (
         <div>
           <p> ERROR! Cannot continue. </p>
-          {this.state.error.message ?  <p> {this.state.error.message} </p> : null}
-          {this.state.error.stack ?  <p> {this.state.error.stack} </p> : null}
+          { this.state.error.message ? <p>
+                                         { this.state.error.message } </p> : null }
+          { this.state.error.stack ? <p>
+                                       { this.state.error.stack } </p> : null }
         </div>
         );
     }
@@ -58,29 +66,48 @@ const mapStateToProps = (state, props) => {
 
 const mapDispatchToProps = dispatch => ({
   selectRange: (from, to) => dispatch(selectRange({
-    from, to
+    from,
+    to
   })),
   deselectRange: () => dispatch(deselectRange()),
+  selectInInterval: (from, to) => dispatch(selectInInterval(from, to)),
   setMarker: (markerId, channelId, partId, pos, minPos, type) => dispatch(setMarker({
-    markerId, channelId, partId, pos, minPos, type
+    markerId,
+    channelId,
+    partId,
+    pos,
+    minPos,
+    type
   })),
   insertNewPart: (channelId, imageId, src, offset, duration) => dispatch(insertNewPart({
-    channelId, imageId, src, offset, duration, 
+    channelId,
+    imageId,
+    src,
+    offset,
+    duration,
   })),
   move: (channelId, partId, incr) => dispatch(moveSelectedPartsWithMarkers({
-    channelId, partId, incr 
+    channelId,
+    partId,
+    incr
   })),
   resize: (channelId, partId, markerId, incr) => dispatch(resizePartWithMarkers({
-    channelId, partId, markerId, incr 
+    channelId,
+    partId,
+    markerId,
+    incr
   })),
   toggleElementSelection: (partInfo) => dispatch(toggleElementSelection(partInfo)),
   toggleElementMultiSelection: (partInfo) => dispatch(toggleElementMultiSelection(partInfo)),
   deleteSelectedPartAndMarkers: () => dispatch(deleteSelectedPartAndMarkers()),
   setChannelPlayState: (channelId, playState) => dispatch(setChannelPlayState({
-    channelId, playState
+    channelId,
+    playState
   })),
   setMessage: (text, type, title) => dispatch(setMessage({
-    text, type, title 
+    text,
+    type,
+    title
   })),
 });
 

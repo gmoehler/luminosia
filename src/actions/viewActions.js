@@ -1,8 +1,8 @@
 import { SELECT_RANGE, DESELECT_RANGE, SET_RESOLUTION, UPDATE_MARKER, SET_MARKER, DELETE_MARKER, CLEAR_VIEW, SELECT_IMAGE_CHANNEL, COPY_PART, ADD_ELEMENT_TO_SEL, REMOVE_ELEMENT_FROM_SEL, CLEAR_SEL, ADD_TO_UPLOAD_LOG, CLEAR_UPLOAD_LOG, SET_MESSAGE, CLEAR_MESSAGE } from "./types";
 
-import { isElementSelected, getSelectedElements, getNumSelectedElements, getSelectionType, getSelectedParts } from "../reducers/viewReducer";
+import { isElementSelected, getSelectedElements, getNumSelectedElements, getSelectionType, getSelectedParts, getSelectedImageChannelId } from "../reducers/viewReducer";
 
-import { getElementType, getPart } from "../reducers/channelReducer";
+import { getElementType, getPart, getPartRefsInInterval } from "../reducers/channelReducer";
 
 export const clearView = () => ({
   type: CLEAR_VIEW
@@ -177,6 +177,14 @@ export const toggleElementMultiSelection = ((elementInfo) => {
         }));
       }
     }
+  };
+});
+
+export const selectInInterval = ((from, to) => {
+  return (dispatch, getState) => {
+    const selectedChannelId = getSelectedImageChannelId(getState());
+    const parts = getPartRefsInInterval(getState(), selectedChannelId, from, to);
+    parts.forEach((part) => dispatch(addPartToMultiSelection(part)));
   };
 });
 

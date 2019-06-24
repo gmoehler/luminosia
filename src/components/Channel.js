@@ -195,7 +195,7 @@ markerPos={ marker.pos }
 markerColor={ color }
 theme={ theme }
 waveHeight={ waveHeight }
-            offset={ offset } />);
+	offset={ offset } />);
       }
       ) : null;
 
@@ -207,7 +207,7 @@ onMouseDown={ (e) => this.handleMouseEvent(e, "mouseDown") }
 onMouseUp={ (e) => this.handleMouseEvent(e, "mouseUp") }
 onMouseMove={ (e) => this.handleMouseEvent(e, "mouseMove") }
 onMouseLeave={ (e) => this.handleMouseEvent(e, "mouseLeave") }
-          cssWidth={ length }
+	cssWidth={ length }
 theme={ theme }
 waveHeight={ waveHeight }
 borderColor={ borderColor }>

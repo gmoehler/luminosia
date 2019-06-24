@@ -22,6 +22,7 @@ export default class MoveMouseHandler {
 
       // also handles click selection
       case "mouseDown":
+        this.inMove = false;
         this.deselectRange();
         this.handleMoveFrom(evInfo);
         break;
@@ -33,9 +34,8 @@ export default class MoveMouseHandler {
       case "mouseUp":
         this.handleMoveTo(evInfo, true);
         if (!this.inMove) {
-		      // only change selection at a simple click (no move)
+          // only change selection at a simple click (no move)
           this.handleToggleSelection(evInfo);
-          this.inMove = false;
         }
         break;
 
@@ -86,7 +86,7 @@ export default class MoveMouseHandler {
     this.handlerFunctions.toggleElementSelection({
       channelId: parseInt(evInfo.channelId),
       partId: evInfo.partId,
-      selected: true // select
+    // selected: true // select
     });
   }
 
@@ -97,13 +97,13 @@ export default class MoveMouseHandler {
       // console.log(`move from ${this.moveFromX} to ${x}`);
       const incrX = evInfo.x - this.moveFromX;
       if (Math.abs(incrX) > 0) {
-      	if(this.markerId) {
-      	  this.handlerFunctions.resize(this.partId, this.markerId, incrX);
-          } else {
-            this.handlerFunctions.move(this.partId, incrX);
-          }
-          this.moveFromX = evInfo.x;
-          this.inMove = true;
+        if (this.markerId) {
+          this.handlerFunctions.resize(this.partId, this.markerId, incrX);
+        } else {
+          this.handlerFunctions.move(this.partId, incrX);
+        }
+        this.moveFromX = evInfo.x;
+        this.inMove = true;
       }
 
       if (finalizeAction) {
@@ -118,6 +118,7 @@ export default class MoveMouseHandler {
   handleSelectionFrom = (evInfo) => {
     this.selectFromX = evInfo.x;
     this.handlerFunctions.selectRange(evInfo.x, evInfo.x);
+    this.handlerFunctions.selectInInterval(evInfo.x, evInfo.x);
   }
 
   handleSelectionTo = (evInfo, finalizeAction) => {
@@ -125,8 +126,10 @@ export default class MoveMouseHandler {
       // console.log('selection to: ', x);
       if (this.selectFromX < evInfo.x) {
         this.handlerFunctions.selectRange(this.selectFromX, evInfo.x);
+        this.handlerFunctions.selectInInterval(this.selectFromX, evInfo.x);
       } else {
         this.handlerFunctions.selectRange(evInfo.x, this.selectFromX);
+        this.handlerFunctions.selectInInterval(evInfo.x, this.selectFromX);
       }
       if (finalizeAction) {
         this.selectFromX = null;
