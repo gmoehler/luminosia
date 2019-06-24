@@ -65,9 +65,10 @@ const mapStateToProps = (state, props) => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  selectRange: (from, to) => dispatch(selectRange({
+  selectRange: (from, to, type) => dispatch(selectRange({
     from,
-    to
+    to,
+    type
   })),
   deselectRange: () => dispatch(deselectRange()),
   selectInInterval: (from, to) => dispatch(selectInInterval(from, to)),

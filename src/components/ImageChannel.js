@@ -34,7 +34,8 @@ const ImageMarker = styled.div`
 const ImageSelection = styled.div`
   position: absolute;
   left: ${props => props.selection.from}px;
-  background: ${props => props.theme.selectionColor};
+  background: ${props => props.selection.type === "temp" ?  props.theme.tempSelectionColor : 
+    props.theme.selectionColor};
   width: ${props => props.selection.to - props.selection.from}px;
   height: ${props => props.height}px;
 `;
@@ -347,6 +348,7 @@ ImageChannel.defaultProps = {
     selectedMarkerColor: "rgba(255,165, 0, 1)", // orange
     selectedMarkerColorOther: "rgba(255,165, 0, 0.3)", // orange slightly transp
     selectionColor: "rgba(0,0,255,0.5)",
+    tempSelectionColor: "rgba(80,80,80,0.5)",
     imageBackgroundColor: "black",
     borderColorSelected: "cornflowerblue",
     borderColor: "#3f51b5",
