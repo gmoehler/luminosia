@@ -34,7 +34,7 @@ const ImageMarker = styled.div`
 const ImageSelection = styled.div`
   position: absolute;
   left: ${props => props.selection.from}px;
-  background: ${props => props.selection.type === "temp" ?  props.theme.tempSelectionColor : 
+  background: ${props => props.selection.type === "temp" ? props.theme.tempSelectionColor :
     props.theme.selectionColor};
   width: ${props => props.selection.to - props.selection.from}px;
   height: ${props => props.height}px;
@@ -93,7 +93,7 @@ class ImageChannel extends Component {
     document.removeEventListener("keydown", (e) => this.handleMouseEvent(e, "keyDown"));
   }
 
-  draw = () => {
+  draw() {
     const { imageHeight, scale, factor } = this.props;
 
     Object.keys(this.images).forEach((idx) => {
@@ -128,7 +128,7 @@ class ImageChannel extends Component {
     });
   }
 
-  handleMouseEvent = (e, eventName) => {
+  handleMouseEvent(e, eventName) {
     if (this.props.handleMouseEvent) {
       e.preventDefault();
       const pos = eventName !== "keyDown" ?
@@ -202,13 +202,11 @@ class ImageChannel extends Component {
 
         while (totalWidth > 0) {
           const currentWidth = Math.min(totalWidth, MAX_CANVAS_WIDTH);
-          const canvasImage = (
-          <ImageCanvas key={ String(partId) + "-" + String(canvasCount) }
-cssWidth={ currentWidth }
-width={ currentWidth * scale }
-height={ imageHeight + 2 }
-ref={ this.createCanvasRef(partId, canvasCount) }
-data-partid={ partId }
+          const canvasImage = (<ImageCanvas key={String(partId) + "-" + String(canvasCount)}
+            cssWidth={currentWidth}
+            width={currentWidth * scale}
+            height={imageHeight + 2}
+            ref={this.createCanvasRef(partId, canvasCount)} data-partid={partId}
           />
           );
 
@@ -217,42 +215,44 @@ data-partid={ partId }
           canvasCount += 1;
         }
         allImageCanvases.push(
-          <ImageCanvases key={ partId }
-className="ImageCanvases"
-theme={ theme }
-offset={ offset }
-cursor={ "hand" }>
-            { canvasImages }
+          <ImageCanvases key={partId}
+            className="ImageCanvases"
+            theme={theme}
+            offset={offset}
+            cursor={"hand"}>
+            {canvasImages}
           </ImageCanvases>
         );
         allCanvasRefImages.push(
-          <CanvasRefImage key={ partId }
-src={ src }
-className="hidden"
-ref={ this.createImageRef(partId) } />
+          <CanvasRefImage
+            key={partId}
+            src={src}
+            className="hidden"
+            ref={this.createImageRef(partId)} />
         );
       });
     }
 
     const progressElem = progress ?
       (<ImageProgress className="Progress"
-progress={ progress }
-theme={ theme }
-height={ imageHeight } />)
+        progress={progress}
+        theme={theme}
+        height={imageHeight} />)
       : null;
 
     const selectionElem = selection && selection.from && selection.to ?
-      (<ImageSelection className="Selection"
-selection={ selection }
-theme={ theme }
-height={ imageHeight } />)
+      (<ImageSelection
+        className="Selection"
+        selection={selection}
+        theme={theme}
+        height={imageHeight} />)
       : null;
 
     const cursorElem = cursorPos ?
       (<ImageCursor className="Cursor"
-cursorPos={ cursorPos }
-theme={ theme }
-height={ imageHeight } />)
+        cursorPos={cursorPos}
+        theme={theme}
+        height={imageHeight} />)
       : null;
 
     const markerElems = markers && Array.isArray(markers) ?
@@ -271,43 +271,23 @@ height={ imageHeight } />)
         } else if (marker.channelId !== channelId) {
           color = theme.markerColorOther;
         }
-        return (<ImageMarker key={ marker.markerId }
-className="Marker"
-markerPos={ marker.pos }
-markerColor={ color }
-cursor={ cursor }
-theme={ theme }
-	height={ imageHeight }
-data-markerid={ marker.markerId }
-data-partid={ marker.partId } />);
+        return (<ImageMarker key={marker.markerId} className="Marker" markerPos={marker.pos} markerColor={color} cursor={cursor} theme={theme}
+          height={imageHeight} data-markerid={marker.markerId} data-partid={marker.partId} />);
       }) : null;
 
     return (
-      <ImageChannelWrapper className="ChannelWrapper"
-onMouseDown={ (e) => this.handleMouseEvent(e, "mouseDown") }
-onMouseUp={ (e) => this.handleMouseEvent(e, "mouseUp") }
-onMouseMove={ (e) => this.handleMouseEvent(e, "mouseMove") }
-onMouseLeave={ (e) => this.handleMouseEvent(e, "mouseLeave") }
-	onDragEnter={ (e) => this.handleMouseEvent(e, "dragEnter") }
-onDragEnd={ (e) => this.handleMouseEvent(e, "dragEnd") }
-onDragExit={ (e) => this.handleMouseEvent(e, "dragExit") }
-onDragLeave={ (e) => this.handleMouseEvent(e, "dragLeave") }
-onDragOver={ (e) => this.handleMouseEvent(e, "dragOver") }
-	onDragStart={ (e) => this.handleMouseEvent(e, "dragStart") }
-onDrop={ (e) => this.handleMouseEvent(e, "drop") }
-cssWidth={ maxWidth }
-theme={ theme }
-height={ 2 + imageHeight } // add border
-	tabIndex={ 0 }
-borderColor={ selected ? theme.borderColorSelected : theme.borderColor }>
-        { allCanvasRefImages }
-        { allImageCanvases }
-        { progressElem }
-        { selectionElem }
-        { cursorElem }
-        { markerElems }
+      <ImageChannelWrapper className="ChannelWrapper" onMouseDown={(e) => this.handleMouseEvent(e, "mouseDown")} onMouseUp={(e) => this.handleMouseEvent(e, "mouseUp")} onMouseMove={(e) => this.handleMouseEvent(e, "mouseMove")} onMouseLeave={(e) => this.handleMouseEvent(e, "mouseLeave")}
+        onDragEnter={(e) => this.handleMouseEvent(e, "dragEnter")} onDragEnd={(e) => this.handleMouseEvent(e, "dragEnd")} onDragExit={(e) => this.handleMouseEvent(e, "dragExit")} onDragLeave={(e) => this.handleMouseEvent(e, "dragLeave")} onDragOver={(e) => this.handleMouseEvent(e, "dragOver")}
+        onDragStart={(e) => this.handleMouseEvent(e, "dragStart")} onDrop={(e) => this.handleMouseEvent(e, "drop")} cssWidth={maxWidth} theme={theme} height={2 + imageHeight} // add border
+        tabIndex={0} borderColor={selected ? theme.borderColorSelected : theme.borderColor}>
+        {allCanvasRefImages}
+        {allImageCanvases}
+        {progressElem}
+        {selectionElem}
+        {cursorElem}
+        {markerElems}
       </ImageChannelWrapper>
-      );
+    );
   }
 }
 
