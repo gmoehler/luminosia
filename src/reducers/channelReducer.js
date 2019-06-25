@@ -1,6 +1,8 @@
 import { merge, cloneDeep } from "lodash";
 
-import { ADD_CHANNEL, CLEAR_CHANNELS, PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_PART, RESIZE_PART, ADD_PART, DELETE_PART, DELETE_CHANNEL, SET_CHANNEL_ACTIVE, UNSET_CHANNEL_ACTIVE, UPDATE_CHANNEL } from "../actions/types";
+import {
+  ADD_CHANNEL, CLEAR_CHANNELS, PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_PART, RESIZE_PART, ADD_PART, DELETE_PART, DELETE_CHANNEL, SET_CHANNEL_ACTIVE, UNSET_CHANNEL_ACTIVE, UPDATE_CHANNEL,
+} from "../actions/types";
 
 import { filterObjectByKeys } from "../utils/miscUtils";
 
@@ -8,7 +10,7 @@ import { filterObjectByKeys } from "../utils/miscUtils";
 
 const initialState = {
   byChannelId: {},
-  lastChannelId: -1
+  lastChannelId: -1,
 };
 
 export default (state = initialState, action) => {
@@ -40,9 +42,9 @@ export default (state = initialState, action) => {
             ...action.payload,
             channelId,
             lastPartSeqNum: partSeqNum,
-            byPartId: newByPartId
-          }
-        }
+            byPartId: newByPartId,
+          },
+        },
       };
 
     case DELETE_CHANNEL:
@@ -50,7 +52,7 @@ export default (state = initialState, action) => {
       delete channels[action.payload];
       return {
         ...state,
-        byChannelId: channels
+        byChannelId: channels,
       };
 
     case SET_CHANNEL_ACTIVE:
@@ -60,9 +62,9 @@ export default (state = initialState, action) => {
           ...state.byChannelId,
           [action.payload]: {
             ...state.byChannelId[action.payload],
-            active: true
-          }
-        }
+            active: true,
+          },
+        },
       };
 
     case UPDATE_CHANNEL:
@@ -72,9 +74,9 @@ export default (state = initialState, action) => {
           ...state.byChannelId,
           [action.payload.channelId]: {
             ...state.byChannelId[action.payload.channelId],
-            ...action.payload
-          }
-        }
+            ...action.payload,
+          },
+        },
       };
 
     case UNSET_CHANNEL_ACTIVE:
@@ -84,9 +86,9 @@ export default (state = initialState, action) => {
           ...state.byChannelId,
           [action.payload]: {
             ...state.byChannelId[action.payload],
-            active: false
-          }
-        }
+            active: false,
+          },
+        },
       };
 
     case ADD_PART:
@@ -113,10 +115,10 @@ export default (state = initialState, action) => {
                 imageId: action.payload.imageId,
                 offset: action.payload.offset,
                 duration: action.payload.duration,
-              }
-            }
-          }
-        }
+              },
+            },
+          },
+        },
       };
 
     case DELETE_PART:
@@ -129,46 +131,46 @@ export default (state = initialState, action) => {
           ...state.byChannelId,
           [action.payload.channelId]: {
             ...state.byChannelId[action.payload.channelId],
-            byPartId: parts
-          }
-        }
+            byPartId: parts,
+          },
+        },
       };
 
     case PLAY_CHANNELS:
       if (_allChannelsStopped(state)) {
         return {
           ...state,
-          byChannelId: _allChannelsStopped(state) && mergePlayStateIntoToChannels(state, "playing")
+          byChannelId: _allChannelsStopped(state) && mergePlayStateIntoToChannels(state, "playing"),
         };
       }
       return {
-        ...state
+        ...state,
       };
 
     case STOP_CHANNELS:
       return {
         ...state,
-        byChannelId: mergePlayStateIntoToChannels(state, "stopped")
+        byChannelId: mergePlayStateIntoToChannels(state, "stopped"),
       };
 
     case SET_CHANNEL_PLAY_STATE:
       const mergedChannelState = merge({},
         state.byChannelId[action.payload.channelId],
         {
-          playState: action.payload.playState
-        }
+          playState: action.payload.playState,
+        },
       );
 
       return {
         ...state,
         byChannelId: {
           ...state.byChannelId,
-          [action.payload.channelId]: mergedChannelState
-        }
+          [action.payload.channelId]: mergedChannelState,
+        },
       };
 
     case MOVE_PART:
-      // moving parts within a channel 
+      // moving parts within a channel
       const channel = state.byChannelId[action.payload.channelId];
       const part = channel.byPartId[action.payload.partId];
       const currentOffset = part.offset || 0;
@@ -182,17 +184,17 @@ export default (state = initialState, action) => {
         channel,
         {
           byPartId: {
-            [action.payload.partId]: mergedPart
-          }
-        }
+            [action.payload.partId]: mergedPart,
+          },
+        },
       );
 
       return {
         ...state,
         byChannelId: {
           ...state.byChannelId,
-          [action.payload.channelId]: mergedMoveChannelState
-        }
+          [action.payload.channelId]: mergedMoveChannelState,
+        },
       };
 
     case RESIZE_PART:
@@ -233,17 +235,17 @@ export default (state = initialState, action) => {
         channel1,
         {
           byPartId: {
-            [action.payload.partId]: mergedPart1
-          }
-        }
+            [action.payload.partId]: mergedPart1,
+          },
+        },
       );
 
       return {
         ...state,
         byChannelId: {
           ...state.byChannelId,
-          [action.payload.channelId]: mergedResizeChannelState1
-        }
+          [action.payload.channelId]: mergedResizeChannelState1,
+        },
       };
 
     default:
@@ -255,13 +257,11 @@ export default (state = initialState, action) => {
 
 function mergePlayStateIntoToChannels(state, playState) {
   const channelPlayStatesStopped = Object.keys(state.byChannelId)
-    .map((key) => {
-      return {
-        [key]: {
-          playState: playState
-        }
-      };
-    })
+    .map(key => ({
+      [key]: {
+        playState,
+      },
+    }))
     .reduce((a, b) => Object.assign({}, a, b));
   const mergedState = merge({}, state.byChannelId, channelPlayStatesStopped);
   return mergedState;
@@ -280,58 +280,46 @@ export function allChannelsStopped(state) {
 }
 
 // channel data sorted by type and id
-export const getAllChannelsData = (state) => {
-  return Object.values(state.channel.byChannelId)
-    .sort((ch1, ch2) => {
-      const str1 = ch1.type + ch1.channelId;
-      const str2 = ch2.type + ch2.channelId;
-      return str1.localeCompare(str2);
-    });
-};
+export const getAllChannelsData = state => Object.values(state.channel.byChannelId)
+  .sort((ch1, ch2) => {
+    const str1 = ch1.type + ch1.channelId;
+    const str2 = ch2.type + ch2.channelId;
+    return str1.localeCompare(str2);
+  });
 
-export const getAllChannelsOverview = (state) => {
-  return getAllChannelsData(state)
-    .map((channel) => ({
-      channelId: channel.channelId,
-      type: channel.type,
-      active: channel.active,
-      gain: channel.gain,
-    }));
-};
+export const getAllChannelsOverview = state => getAllChannelsData(state)
+  .map(channel => ({
+    channelId: channel.channelId,
+    type: channel.type,
+    active: channel.active,
+    gain: channel.gain,
+  }));
 
-export const getChannelData = (state, channelId) => {
-  return state.channel.byChannelId[channelId];
-};
+export const getChannelData = (state, channelId) => state.channel.byChannelId[channelId];
 
-export const getChannelIds = (state) => {
-  return Object.keys(state.channel.byChannelId);
-};
+export const getChannelIds = state => Object.keys(state.channel.byChannelId);
 
-export const getPart = (state, channelId, partId) => {
-  return state.channel.byChannelId[channelId].byPartId[partId];
-};
+export const getPart = (state, channelId, partId) => state.channel.byChannelId[channelId].byPartId[partId];
 
 export const getPartRefsInInterval = (state, channelId, from, to) => {
   const ch = state.channel.byChannelId[channelId];
   if (ch && Object.keys(ch.byPartId) && Object.keys(ch.byPartId).length > 0) {
     return Object.values(ch.byPartId).filter(
-      (part) => part.offset + part.duration > from && part.offset < to
-    ).map((part) => ({
+      part => part.offset + part.duration > from && part.offset < to,
+    ).map(part => ({
       channelId,
-      partId: part.partId
+      partId: part.partId,
     }));
-  } else {
-    return [];
   }
+  return [];
+
 
 };
 
-export const getLastChannelId = (state) => {
-  return state.channel.lastChannelId;
-};
+export const getLastChannelId = state => state.channel.lastChannelId;
 
 export const getLastChannel = (state) => {
-  const lastChannelId = state.channel.lastChannelId;
+  const { lastChannelId } = state.channel;
   return state.channel.byChannelId[lastChannelId];
 };
 
@@ -350,30 +338,24 @@ function getDuration(state, channelId) {
   return channelData.duration + offset;
 }
 
-export const getMaxDuration = (state) => {
-  return state.channel.byChannelId === {} ? 0 :
-    Object.keys(state.channel.byChannelId)
-      .reduce((duration, channeld) => Math.max(duration, getDuration(state, channeld)), 0);
-};
+export const getMaxDuration = state => (state.channel.byChannelId === {} ? 0
+  : Object.keys(state.channel.byChannelId)
+    .reduce((duration, channeld) => Math.max(duration, getDuration(state, channeld)), 0));
 
 // saving the config will return this channel information
 // array of all channels with a given list of keys (e.g. not including audio buffer)
 export const getChannelsConfig = (state) => {
   const allowedProps = ["type", "names", "src", "sampleRate", "offset", "selected", "duration", "active", "gain"];
   const propsToArray = {
-    "byPartId": "parts"
+    byPartId: "parts",
   };
   const channels = state.channel.byChannelId ? Object.values(state.channel.byChannelId) : [];
-  return channels.map((ch) => {
-    return filterObjectByKeys(ch, allowedProps, propsToArray);
-  });
+  return channels.map(ch => filterObjectByKeys(ch, allowedProps, propsToArray));
 };
 
-export const getActiveChannelIds = (state, type) => {
-  return Object.values(state.channel.byChannelId)
-    .filter((channel) => channel.active && (!type || channel.type === type))
-    .map((channel) => channel.channelId);
-};
+export const getActiveChannelIds = (state, type) => Object.values(state.channel.byChannelId)
+  .filter(channel => channel.active && (!type || channel.type === type))
+  .map(channel => channel.channelId);
 
 export function getElementType(elementInfo) {
   if (elementInfo.partId) {
