@@ -69,3 +69,6 @@ export const getImageListConfig = (state) => {
   return images.map((img) => filterObjectByKeys(img, allowedProps));
 
 };
+
+export const imageExists = 
+	(state, id) => Object.keys(state.images.byImageId).includes(id);

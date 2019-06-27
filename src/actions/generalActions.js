@@ -54,17 +54,20 @@ export const uploadConfigFile = (configFile, audioContext) => (dispatch, getStat
     });
 };
 
-export const uploadConfig = (configData, audioContext) => (dispatch, getState) => {
+export const uploadConfig = 
+(configData, audioContext) => (dispatch, getState) => {
 
   console.log(configData);
   // dispatch(clearView());
   // dispatch(clearImageList());
   // dispatch(clearChannels());
 
-  // load all images and save them to store
-  const imageListPromises = configData.images.map(imageData => loadImage(imageData)
+  // load all non-existing images and save them to store
+  const imageListPromises = configData.images
+	.filter(imageData => !imageExists(imageData.imageId))
+	.map(imageData => loadImage(imageData)
     .then((img) => {
-      dispatch(addImage(img));
+      return dispatch(addImage(img));
     }));
 
   return Promise.all(imageListPromises)
@@ -75,8 +78,9 @@ export const uploadConfig = (configData, audioContext) => (dispatch, getState) =
         .then((channelInfo) => {
           if (channelInfo) { // audio channels are not loaded yet
             dispatch(addChannel(channelInfo));
-            dispatch(updateChannelMarkersForLastAddedChannel()); // channelInfo does not know the channel id here...
+            return dispatch(updateChannelMarkersForLastAddedChannel()); // channelInfo does not know the channel id here...
           }
+          return Promise.resolve(); 
         }));
 
       return Promise.all(channelPromises);
