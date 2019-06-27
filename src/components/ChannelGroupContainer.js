@@ -5,7 +5,7 @@ import ChannelGroup from "./ChannelGroup";
 import { setChannelPlayState, insertNewPart, deleteSelectedPartAndMarkers, moveSelectedPartsWithMarkers, resizePartWithMarkers } from "../actions/channelActions";
 import { selectRange, deselectRange, setMarker, toggleElementSelection, toggleElementMultiSelection, setMessage, selectInInterval } from "../actions/viewActions";
 import { getMaxDuration, getAllChannelsData, allChannelsStopped } from "../reducers/channelReducer";
-import { getSelectionRange, getResolution, getMarkers, getSelectedImageChannelId, getUploadLog } from "../reducers/viewReducer";
+import { getSelectionRange, getResolution, getMarkers, getSelectedImageChannelId, getUploadLog, isUploadingConfig } from "../reducers/viewReducer";
 import { getImageSources } from "../reducers/imageListReducer";
 
 class ChannelGroupContainer extends Component {
@@ -35,17 +35,17 @@ class ChannelGroupContainer extends Component {
       return (
         <div>
           <p> ERROR! Cannot continue. </p>
-          { this.state.error.message ? <p>
-                                         { this.state.error.message } </p> : null }
-          { this.state.error.stack ? <p>
-                                       { this.state.error.stack } </p> : null }
+          {this.state.error.message ? <p>
+            {this.state.error.message} </p> : null}
+          {this.state.error.stack ? <p>
+            {this.state.error.stack} </p> : null}
         </div>
-        );
+      );
     }
 
     return (
       <ChannelGroup { ...this.props } />
-      );
+    );
   }
 }
 
@@ -60,7 +60,8 @@ const mapStateToProps = (state, props) => {
     imageSources: getImageSources(state),
     playState: allChannelsStopped(state) ? "stopped" : "playing",
     selectedImageChannelId: getSelectedImageChannelId(state),
-    uploadLog: getUploadLog(state)
+    uploadLog: getUploadLog(state),
+    isUploadingConfig: isUploadingConfig(state),
   };
 };
 

@@ -41,9 +41,11 @@ export const uploadConfigFile = (configFile, audioContext) => (dispatch, getStat
   return readTextFile(configFile)
     .then((data) => {
       const dataObj = JSON.parse(data);
-      dispatch(uploadConfig(dataObj, audioContext));
+      return dispatch(uploadConfig(dataObj, audioContext));
     })
-    .then(dispatch(uploadConfigSuccess()))
+    .then(() => {
+      return dispatch(uploadConfigSuccess());
+    })
     .catch((err) => {
       console.error(err);
       return dispatch(uploadConfigFailure({
