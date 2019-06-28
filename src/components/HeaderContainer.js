@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 
 import { stopChannel, deleteSelectedPartAndMarkers, createImageChannel, uploadAudioFile, playChannelAndImage, setChannelActive, unsetChannelActive, pastePart } from "../actions/channelActions";
 
-import { downloadConfig, uploadConfigFile, uploadConfig, exportImageChannel, updateFirmware } from "../actions/generalActions";
+import { downloadConfig, uploadConfigFile, uploadConfig, updateFirmware } from "../actions/generalActions";
 import { setResolution, copyPart } from "../actions/viewActions";
 import Header from "./Header";
 import { getChannelIds, allChannelsStopped } from "../reducers/channelReducer";
@@ -48,10 +48,10 @@ class HeaderContainer extends Component {
 
     return (
       <Header { ...this.props }
-          zoomIn={ this.zoomIn }
-          zoomOut={ this.zoomOut }
-          />
-      );
+        zoomIn={ this.zoomIn }
+        zoomOut={ this.zoomOut }
+      />
+    );
   }
 }
 
@@ -69,7 +69,6 @@ const mapDispatchToProps = dispatch => ({
   uploadAudioFile: (audioFile) => dispatch(uploadAudioFile(audioFile, audioContext)),
   uploadConfigAction: (config) => dispatch(uploadConfig(config, audioContext)),
   createImageChannel: () => dispatch(createImageChannel()),
-  exportImageChannel: (channelId) => dispatch(exportImageChannel(channelId)),
   playChannelAndImage: (channelId) => dispatch(playChannelAndImage(channelId)),
   stopChannel: () => dispatch(stopChannel()),
   setResolution: (resolution) => dispatch(setResolution(resolution)),
