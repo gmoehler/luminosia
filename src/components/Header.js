@@ -75,123 +75,124 @@ export class Header extends Component {
 
   render() {
 
-    const { classes, 
-      createImageChannel, downloadConfig, enablePlay, playChannelAndImage, enableStop, 
-      stopChannel, zoomIn, zoomOut, numSelectedElems, deleteSelectedPartAndMarkers, 
+    const { classes,
+      createImageChannel, downloadConfig, enablePlay, playChannelAndImage, enableStop,
+      stopChannel, zoomIn, zoomOut, numSelectedElems, deleteSelectedPartAndMarkers,
       copyPart, pastePart, updateFirmware, hasPartToCopy } = this.props;
 
     return (
       <div className={ classes.wrapper }>
-        <div className= { classes.headergroup }>
+        <div className={ classes.headergroup }>
           <input type="file"
-              accept="audio/*"
-              hidden
-              ref={ (fileUpload) => this.fileUpload = fileUpload }
-              onChange={ this.uploadAudioFile }
-              width={ 0 } />
+            accept="audio/*"
+            hidden
+            ref={ (fileUpload) => this.fileUpload = fileUpload }
+            onChange={ this.uploadAudioFile }
+            width={ 0 } />
           <Tooltip title="Load audio">
             <IconButton color="inherit"
-                onClick={ () => this.fileUpload.click() }>
+              onClick={ () => this.fileUpload.click() }>
               <UploadAudioChannelIcon />
             </IconButton>
           </Tooltip>
           <Tooltip title="Add image channel">
             <IconButton color="inherit"
-                onClick={ createImageChannel }>
+              onClick={ createImageChannel }>
               <PlaylistAddIcon />
             </IconButton>
           </Tooltip>
           <Tooltip title="Load show">
             <IconButton color="inherit"
-                onClick={ () => this.showUpload.click() }>
+              onClick={ () => this.showUpload.click() }>
               <UploadConfigIcon />
             </IconButton>
           </Tooltip>
           <input type="file"
-              hidden
-              ref={ (showUpload) => this.showUpload = showUpload }
-              onChange={ this.uploadConfigFile }
-              width={ 0 } />
+            hidden
+            value=""
+            ref={ (showUpload) => this.showUpload = showUpload }
+            onChange={ this.uploadConfigFile }
+            width={ 0 } />
           <Tooltip title="Download show">
             <IconButton color="inherit"
-                onClick={ downloadConfig }>
+              onClick={ downloadConfig }>
               <DownloadConfigIcon />
             </IconButton>
           </Tooltip>
         </div>
-        <div  className= { classes.headergroup }>
+        <div className={ classes.headergroup }>
           <Tooltip title="Play">
             <div>
-            <IconButton color="inherit"
+              <IconButton color="inherit"
                 disabled={ !enablePlay }
                 onClick={ () => playChannelAndImage(this.state.channelId) }>
-              <PlayArrowIcon />
-            </IconButton>
+                <PlayArrowIcon />
+              </IconButton>
             </div>
           </Tooltip>
           <Tooltip title="Stop">
-          <div>
-            <IconButton color="inherit"
+            <div>
+              <IconButton color="inherit"
                 disabled={ !enableStop }
                 onClick={ stopChannel }>
-              <StopIcon />
-            </IconButton>
+                <StopIcon />
+              </IconButton>
             </div>
           </Tooltip>
         </div>
-        <div className= { classes.headergroup }>
+        <div className={ classes.headergroup }>
           <Tooltip title="Zoom in">
             <IconButton color="inherit"
-                onClick={ zoomIn }>
+              onClick={ zoomIn }>
               <ZoomInIcon />
             </IconButton>
           </Tooltip>
           <Tooltip title="Zoom out">
             <IconButton color="inherit"
-                onClick={ zoomOut }>
+              onClick={ zoomOut }>
               <ZoomOutIcon />
             </IconButton>
           </Tooltip>
           <Tooltip title="Copy selected part">
-          <div>
-            <IconButton disabled={ numSelectedElems === 0 }
+            <div>
+              <IconButton disabled={ numSelectedElems === 0 }
                 color="inherit"
                 onClick={ copyPart }>
-              <ContentCopy />
-            </IconButton>
+                <ContentCopy />
+              </IconButton>
             </div>
           </Tooltip>
           <Tooltip title="Paste part">
-          <div>
-            <IconButton disabled={ !hasPartToCopy }
+            <div>
+              <IconButton disabled={ !hasPartToCopy }
                 color="inherit"
                 onClick={ pastePart }>
-              <ContentPaste />
-            </IconButton>
+                <ContentPaste />
+              </IconButton>
             </div>
           </Tooltip>
           <Tooltip title="Delete selected">
-          <div>
-            <IconButton disabled={ numSelectedElems === 0 }
+            <div>
+              <IconButton disabled={ numSelectedElems === 0 }
                 color="inherit"
                 onClick={ deleteSelectedPartAndMarkers }>
-              <DeleteIcon />
-            </IconButton>
+                <DeleteIcon />
+              </IconButton>
             </div>
           </Tooltip>
         </div>
-        <div className= { classes.headergroup }>
-        <Tooltip title="Update firmware">
-          <IconButton color="secondary"
+        <div className={ classes.headergroup }>
+          <Tooltip title="Update firmware">
+            <IconButton color="secondary"
               onClick={ updateFirmware }>
-            <Autorenew />
-          </IconButton>
-        </Tooltip>
-        
-      </div>
+              <Autorenew />
+            </IconButton>
+          </Tooltip>
+
+        </div>
 
       </div>
-      );
+    );
   }
 }
 
