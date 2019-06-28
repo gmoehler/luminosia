@@ -67,7 +67,7 @@ export default class ChannelGroup extends Component {
   render() {
 
     if (this.props.isUploadingConfig) {
-      return <LoadProgressView />;
+      return (<LoadProgressView disableShrink />);
     }
 
     // no data: nothing to do

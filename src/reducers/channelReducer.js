@@ -313,7 +313,6 @@ export const getPartRefsInInterval = (state, channelId, from, to) => {
   }
   return [];
 
-
 };
 
 export const getLastChannelId = state => state.channel.lastChannelId;
@@ -351,6 +350,10 @@ export const getChannelsConfig = (state) => {
   };
   const channels = state.channel.byChannelId ? Object.values(state.channel.byChannelId) : [];
   return channels.map(ch => filterObjectByKeys(ch, allowedProps, propsToArray));
+};
+
+export const getPartIds = (state, channelId) => {
+  return Object.keys(state.channel.byChannelId[channelId].byPartId);
 };
 
 export const getActiveChannelIds = (state, type) => Object.values(state.channel.byChannelId)

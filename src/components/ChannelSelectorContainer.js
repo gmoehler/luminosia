@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 
 import ChannelSelector from "./ChannelSelector";
 import { getAllChannelsOverview } from "../reducers/channelReducer";
-import { updateChannel, setChannelActive, unsetChannelActive, deleteChannel, duplicateChannel } from "../actions/channelActions";
+import { updateChannel, setChannelActive, unsetChannelActive, deleteChannelAndMarkers, duplicateChannel } from "../actions/channelActions";
 import { exportImageChannel } from "../actions/generalActions";
 import { getSelectedImageChannelId } from "../reducers/viewReducer";
 
@@ -12,8 +12,8 @@ class ChannelSelectorContainer extends Component {
 
   render() {
 
-    return ( 
-	  <ChannelSelector { ...this.props } />);
+    return (
+      <ChannelSelector { ...this.props } />);
   }
 }
 
@@ -29,7 +29,7 @@ const mapDispatchToProps = dispatch => ({
   setChannelActive: (channelId) => dispatch(setChannelActive(channelId)),
   unsetChannelActive: (channelId) => dispatch(unsetChannelActive(channelId)),
   exportImageChannel: (channelId) => dispatch(exportImageChannel(channelId)),
-  deleteChannel: (channelId) => dispatch(deleteChannel(channelId)),
+  deleteChannel: (channelId) => dispatch(deleteChannelAndMarkers(channelId)),
   duplicateChannel: (channelId) => dispatch(duplicateChannel(channelId)),
 });
 

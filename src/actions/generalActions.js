@@ -9,11 +9,11 @@ import { getConfig } from "../reducers/rootReducer";
 
 import { addChannel, loadAChannel, updateChannelMarkersForLastAddedChannel } from "./channelActions";
 import { addImage, loadImage } from "./imageListActions";
+import { addToUploadLog } from "./viewActions";
 import { getChannelData, getMaxDuration } from "../reducers/channelReducer";
+import { imageExists } from "../reducers/imageListReducer";
 import { secondsToSamples } from "../utils/conversions";
 import { encodeImage } from "../utils/imageUtils";
-import { addToUploadLog } from "./viewActions";
-
 
 const logScale = new LogScale(0, 100);
 
@@ -54,38 +54,45 @@ export const uploadConfigFile = (configFile, audioContext) => (dispatch, getStat
     });
 };
 
-export const uploadConfig = 
-(configData, audioContext) => (dispatch, getState) => {
+export const uploadConfig =
+  (configData, audioContext) => (dispatch, getState) => {
 
-  console.log(configData);
-  // dispatch(clearView());
-  // dispatch(clearImageList());
-  // dispatch(clearChannels());
+    console.log(configData);
+    // dispatch(clearView());
+    // dispatch(clearImageList());
+    // dispatch(clearChannels());
 
-  // load all non-existing images and save them to store
-  const imageListPromises = configData.images
-	.filter(imageData => !imageExists(imageData.imageId))
-	.map(imageData => loadImage(imageData)
-    .then((img) => {
-      return dispatch(addImage(img));
-    }));
-
-  return Promise.all(imageListPromises)
-    .then(() => {
-
-      // load all channels
-      const channelPromises = configData.channels.map(channelData => loadAChannel(channelData, audioContext, getState())
-        .then((channelInfo) => {
-          if (channelInfo) { // audio channels are not loaded yet
-            dispatch(addChannel(channelInfo));
-            return dispatch(updateChannelMarkersForLastAddedChannel()); // channelInfo does not know the channel id here...
-          }
-          return Promise.resolve(); 
+    // load all non-existing images and save them to store
+    const imageListPromises = configData.images
+      .filter(imageData => !imageExists(getState(), imageData.imageId))
+      .map(imageData => loadImage(imageData)
+        .then((img) => {
+          console.log(`loading image ${img.imageId}`);
+          return dispatch(addImage(img));
         }));
 
-      return Promise.all(channelPromises);
-    });
-};
+    return Promise.all(imageListPromises)
+      .then(() => {
+        console.log("images loaded.");
+
+        // load all channels
+        const channelPromises = configData.channels
+          .map((channelData) => {
+            return loadAChannel(channelData, audioContext, getState())
+              .then((channelInfo) => {
+                if (channelInfo) { // audio channels are not loaded yet
+                  dispatch(addChannel(channelInfo));
+                  console.log(`${channelData.type} channel added.`);
+                  dispatch(updateChannelMarkersForLastAddedChannel()); // channelInfo does not know the channel id here...
+                  console.log(`${channelData.type} channel: markers added.`);
+                }
+                return Promise.resolve();
+              });
+          });
+
+        return Promise.all(channelPromises);
+      });
+  };
 
 export const downloadConfig = (() => (dispatch, getState) => {
   const config = getConfig(getState());

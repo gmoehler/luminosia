@@ -2,7 +2,7 @@ import { PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_PART, ADD_PA
 
 import { setMarker, deleteMarker, toggleElementSelection, remElemFromSel, addPartToMultiSelection, clearElementSelectionWithMarkers, syncMarkersForPart } from "./viewActions";
 
-import { getNextPartId, getLastChannel, getActiveChannelIds, getMaxDuration, getChannelData, getPart, getElementType } from "../reducers/channelReducer";
+import { getNextPartId, getLastChannel, getActiveChannelIds, getMaxDuration, getChannelData, getPart, getElementType, getPartIds } from "../reducers/channelReducer";
 import { getSelectedImageChannelId, getPartsToCopy, getSelectedElements, getSelectedParts, isElementSelected } from "../reducers/viewReducer";
 import { getImageDuration } from "../reducers/imageListReducer";
 import { removeImage } from "./imageListActions";
@@ -33,7 +33,7 @@ export const createImageChannel = () => {
   };
 };
 
-export const deleteChannel = channelInfo => ({
+const deleteChannel = channelInfo => ({
   type: DELETE_CHANNEL,
   payload: channelInfo
 });
@@ -269,6 +269,25 @@ export const deleteSelectedPartAndMarkers = () => {
         dispatch(removeImage(elemInfo));
       }
     });
+  };
+};
+
+export const deleteChannelAndMarkers = (channelId) => {
+  return (dispatch, getState) => {
+
+    // first delete markers of channel
+    getPartIds(getState(), channelId)
+      .forEach((partId) => {
+        dispatch(deleteMarker({
+          markerId: `${partId}-l`
+        }));
+        dispatch(deleteMarker({
+          markerId: `${partId}-r`
+        }));
+      });
+
+    // then delete channel
+    dispatch(deleteChannel(channelId));
   };
 };
 
