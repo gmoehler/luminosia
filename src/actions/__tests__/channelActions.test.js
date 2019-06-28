@@ -47,13 +47,6 @@ describe("actions", () => {
 
   });
 
-  it("should delete a channel", () => {
-    const expectedAction = {
-      type: types.DELETE_CHANNEL,
-      payload: 2
-    };
-    expect(actions.deleteChannel(2)).toEqual(expectedAction);
-  });
 
   it("should clear all channels", () => {
     const expectedAction = {
@@ -76,6 +69,34 @@ describe("actions", () => {
       payload: 2
     };
     expect(actions.unsetChannelActive(2)).toEqual(expectedAction);
+  });
+
+  it("should delete a channel", () => {
+
+    const store = mockStore(imageChannelState);
+
+    const expectedActions = [
+      {
+        "type": "DELETE_MARKER",
+        "payload": {
+          "markerId": "2:1-l",
+        },
+      },
+      {
+        "type": "DELETE_MARKER",
+        "payload": {
+          "markerId": "2:1-r",
+        },
+      },
+      {
+        type: types.DELETE_CHANNEL,
+        payload: 2
+      }
+    ];
+
+    store.dispatch(actions.deleteChannelAndMarkers(2));
+    const acts = store.getActions();
+    expect(acts).toEqual(expectedActions);
   });
 
 
@@ -187,13 +208,13 @@ describe("actions", () => {
         type: types.ADD_PART,
         payload: {
           ...part,
-        //        channelId: 2
+          //        channelId: 2
         }
       },
       {
         type: types.SET_MARKER,
         payload: {
-          markerId: "2:2-l", 
+          markerId: "2:2-l",
           partId: "2:2",
           channelId: 2,
           pos: 3.3,
@@ -204,7 +225,7 @@ describe("actions", () => {
       {
         type: types.SET_MARKER,
         payload: {
-          markerId: "2:2-r", 
+          markerId: "2:2-r",
           partId: "2:2",
           channelId: 2,
           pos: 3.3 + 11.21,

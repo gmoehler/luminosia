@@ -36,7 +36,7 @@ export function withEventHandler(WrappedComponent) {
       const { selectRange, deselectRange, move, setMarker, insertNewPart, toggleElementSelection, deleteSelectedPartAndMarkers, toggleElementMultiSelection, ...passthruProps } = this.props;
 
       return (<WrappedComponent { ...passthruProps }
-handleMouseEvent={ (eventName, evInfo) => this.mousehandler.handleMouseEvent(eventName, evInfo, this.props.resolution) } />);
+        handleMouseEvent={ (eventName, evInfo) => this.mousehandler.handleMouseEvent(eventName, evInfo, this.props.resolution) } />);
     }
   }
 

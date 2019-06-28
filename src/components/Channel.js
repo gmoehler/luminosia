@@ -113,7 +113,7 @@ class Channel extends Component {
     }
   }
 
-  handleMouseEvent = (e, eventName) => {
+  handleMouseEvent(e, eventName) {
     if (this.props.handleMouseEvent) {
       e.preventDefault();
       const pos = getMouseEventPosition(e, "ChannelWrapper");
@@ -122,7 +122,7 @@ class Channel extends Component {
       const eventInfo = {
         ...pos, // x pos, channelId, partId
         timestamp: e.timeStamp,
-      // no drag source path
+        // no drag source path
       };
       this.props.handleMouseEvent(adaptedEventName, eventInfo);
 
@@ -144,13 +144,14 @@ class Channel extends Component {
     const waveforms = [];
     while (totalWidth > 0) {
       const currentWidth = Math.min(totalWidth, MAX_CANVAS_WIDTH);
-      const waveform = (<Waveform key={ `${length}-${waveformCount}` }
-cssWidth={ currentWidth }
-width={ currentWidth * scale }
-height={ waveHeight * scale }
-waveHeight={ waveHeight }
-ref={ this.createCanvasRef(waveformCount) }
-                        />);
+      const waveform = (
+        <Waveform key={`${length}-${waveformCount}`}
+          cssWidth={currentWidth}
+          width={currentWidth * scale}
+          height={waveHeight * scale}
+          waveHeight={waveHeight}
+          ref={this.createCanvasRef(waveformCount)}
+        />);
 
       waveforms.push(waveform);
       totalWidth -= currentWidth;
@@ -159,26 +160,26 @@ ref={ this.createCanvasRef(waveformCount) }
 
     const progressElem = progress ?
       (<Progress className="Progress"
-progress={ progress }
-theme={ theme }
-waveHeight={ waveHeight }
-offset={ offset } />)
+        progress={progress}
+        theme={theme}
+        waveHeight={waveHeight}
+        offset={offset} />)
       : null;
 
     const selectionElem = selection && selection.from && selection.to ?
       (<Selection className="Selection"
-selection={ selection }
-theme={ theme }
-waveHeight={ waveHeight }
-offset={ offset } />)
+        selection={selection}
+        theme={theme}
+        waveHeight={waveHeight}
+        offset={offset} />)
       : null;
 
     const cursorElem = cursorPos ?
       (<Cursor className="Cursor"
-cursorPos={ cursorPos }
-theme={ theme }
-waveHeight={ waveHeight }
-offset={ offset } />)
+        cursorPos={cursorPos}
+        theme={theme}
+        waveHeight={waveHeight}
+        offset={offset} />)
       : null;
 
     const markerElems = markers && Array.isArray(markers) ?
@@ -190,38 +191,37 @@ offset={ offset } />)
           color = theme.selectedMarkerColor;
         }
         return (<Marker className="Marker"
-key={ marker.markerId }
-markerPos={ marker.pos }
-markerColor={ color }
-theme={ theme }
-waveHeight={ waveHeight }
-	offset={ offset } />);
+          key={marker.markerId}
+          markerPos={marker.pos}
+          markerColor={color}
+          theme={theme}
+          waveHeight={waveHeight}
+          offset={offset} />);
       }
       ) : null;
 
     const borderColor = selected ? theme.borderColorSelected : theme.borderColor;
 
-    return (
-      <ChannelWrapper className="ChannelWrapper"
-onMouseDown={ (e) => this.handleMouseEvent(e, "mouseDown") }
-onMouseUp={ (e) => this.handleMouseEvent(e, "mouseUp") }
-onMouseMove={ (e) => this.handleMouseEvent(e, "mouseMove") }
-onMouseLeave={ (e) => this.handleMouseEvent(e, "mouseLeave") }
-	cssWidth={ length }
-theme={ theme }
-waveHeight={ waveHeight }
-borderColor={ borderColor }>
-        <WaveformCanvases className="WaveformCanvases"
-theme={ theme }
-offset={ offset }>
-          { waveforms }
-        </WaveformCanvases>
-        { progressElem }
-        { selectionElem }
-        { cursorElem }
-        { markerElems }
-      </ChannelWrapper>
-      );
+    return (<ChannelWrapper className="ChannelWrapper"
+      onMouseDown={(e) => this.handleMouseEvent(e, "mouseDown")}
+      onMouseUp={(e) => this.handleMouseEvent(e, "mouseUp")}
+      onMouseMove={(e) => this.handleMouseEvent(e, "mouseMove")}
+      onMouseLeave={(e) => this.handleMouseEvent(e, "mouseLeave")}
+      cssWidth={length}
+      theme={theme}
+      waveHeight={waveHeight}
+      borderColor={borderColor}>
+      <WaveformCanvases className="WaveformCanvases"
+        theme={theme}
+        offset={offset}>
+        {waveforms}
+      </WaveformCanvases>
+      {progressElem}
+      {selectionElem}
+      {cursorElem}
+      {markerElems}
+    </ChannelWrapper>
+    );
   }
 }
 

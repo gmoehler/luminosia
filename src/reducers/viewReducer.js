@@ -1,5 +1,12 @@
 import { cloneDeep } from "lodash";
-import { CLEAR_VIEW, SELECT_RANGE, DESELECT_RANGE, SET_RESOLUTION, SET_MARKER, UPDATE_MARKER, DELETE_MARKER, SELECT_IMAGE_CHANNEL, COPY_PART, ADD_ELEMENT_TO_SEL, REMOVE_ELEMENT_FROM_SEL, CLEAR_SEL, ADD_TO_UPLOAD_LOG, CLEAR_UPLOAD_LOG, SET_MESSAGE, CLEAR_MESSAGE } from "../actions/types";
+import {
+  CLEAR_VIEW,
+  UPLOAD_CONFIG_STARTED, UPLOAD_CONFIG_SUCCESS, UPLOAD_CONFIG_FAILURE,
+  SELECT_RANGE, DESELECT_RANGE, SET_RESOLUTION,
+  SET_MARKER, UPDATE_MARKER, DELETE_MARKER, SELECT_IMAGE_CHANNEL,
+  COPY_PART, ADD_ELEMENT_TO_SEL, REMOVE_ELEMENT_FROM_SEL, CLEAR_SEL,
+  ADD_TO_UPLOAD_LOG, CLEAR_UPLOAD_LOG, SET_MESSAGE, CLEAR_MESSAGE
+} from "../actions/types";
 import { getElementType } from "./channelReducer";
 
 // export for tests
@@ -15,6 +22,7 @@ export const initialState = {
   selectedImageChannelId: null,
   partsToCopy: null,
   uploadLog: null,
+  uploadConfigStatus: null,
   message: null,
 };
 
@@ -23,6 +31,24 @@ export default (state = initialState, action) => {
 
     case CLEAR_VIEW:
       return initialState;
+
+    case UPLOAD_CONFIG_STARTED:
+      return {
+        ...state,
+        uploadConfigStatus: "started"
+      };
+
+    case UPLOAD_CONFIG_SUCCESS:
+      return {
+        ...state,
+        uploadConfigStatus: "success"
+      };
+
+    case UPLOAD_CONFIG_FAILURE:
+      return {
+        ...state,
+        uploadConfigStatus: "failure"
+      };
 
     case SELECT_RANGE:
       return {
@@ -81,7 +107,7 @@ export default (state = initialState, action) => {
       const prevMarker = state.byMarkerId[action.payload.markerId];
       let pos = prevMarker.pos;
       if (action.payload.incr) {
-        pos = Math.max(prevMarker.pos + action.payload.incr, prevMarker.minPos) ;
+        pos = Math.max(prevMarker.pos + action.payload.incr, prevMarker.minPos);
       } else if (typeof action.payload.pos == "number") {
         pos = action.payload.pos;
       }
@@ -232,3 +258,7 @@ export const getSelectionType = (state) => _getSelectionType(state.view);
 export const getUploadLog = (state) => state.view.uploadLog;
 
 export const getMessage = (state) => state.view.message;
+
+export const isUploadingConfig = (state) => {
+  return state.view.uploadConfigStatus === "started";
+};

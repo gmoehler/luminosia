@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 
+import { CircularProgress } from "@material-ui/core";
 import Channel from "./Channel";
 import ImageChannel from "./ImageChannel";
 import TimeScale from "./TimeScale";
@@ -15,6 +16,10 @@ const ChannelGroupWrapper = styled.div`
   transition: width .1s;
 	overflow: auto;
 	white-space: nowrap;
+`;
+
+const LoadProgressView = styled(CircularProgress)`
+  margin: 20px;
 `;
 
 // add play functionality to audio channels
@@ -61,6 +66,10 @@ export default class ChannelGroup extends Component {
 
   render() {
 
+    if (this.props.isUploadingConfig) {
+      return (<LoadProgressView disableShrink />);
+    }
+
     // no data: nothing to do
     if (!this.props.allChannelsData.length) {
       return null;
@@ -100,30 +109,30 @@ export default class ChannelGroup extends Component {
         if (channelData.type === "audio") {
           return (
             <AudioChannelWithPlay { ...channelProps }
-                setChannelPlayState={ playState => this.props.setChannelPlayState(channelId, playState) } />);
+              setChannelPlayState={ playState => this.props.setChannelPlayState(channelId, playState) } />);
         }
 
         return (
           <ImageChannelWithPlay { ...channelProps }
-              selected={ selectedImageChannelId === channelId }
-              setChannelPlayState={ playState => this.props.setChannelPlayState(channelId, playState) }
-              move={ (partId, incr) => this.props.move(channelId, partId, incr)  } 
-              resize={ (partId, markerId, incr) => this.props.resize(channelId, partId, markerId, incr)  } 
-        />);
+            selected={ selectedImageChannelId === channelId }
+            setChannelPlayState={ playState => this.props.setChannelPlayState(channelId, playState) }
+            move={ (partId, incr) => this.props.move(channelId, partId, incr) }
+            resize={ (partId, markerId, incr) => this.props.resize(channelId, partId, markerId, incr) }
+          />);
 
 
       });
 
     return (
       <ChannelGroupWrapper drawerWidth={ this.props.drawerWidth || 0 }
-          ref={ (ref) => this.groupRef = ref }>
+        ref={ (ref) => this.groupRef = ref }>
         <TimeScaleInSecs
-            maxDuration={ this.props.maxDuration } 
-            resolution={ this.props.resolution }
+          maxDuration={ this.props.maxDuration }
+          resolution={ this.props.resolution }
         />
-        { channelComponents }
+        {channelComponents}
       </ChannelGroupWrapper>
-      );
+    );
   }
 }
 
@@ -137,4 +146,5 @@ ChannelGroup.propTypes = {
   selectedImageChannelId: PropTypes.number,
   playState: PropTypes.string,
   maxDuration: PropTypes.number,
+  isUploadingConfig: PropTypes.bool,
 };
