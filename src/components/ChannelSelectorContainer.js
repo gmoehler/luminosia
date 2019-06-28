@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import ChannelSelector from "./ChannelSelector";
 import { getAllChannelsOverview } from "../reducers/channelReducer";
 import { updateChannel, setChannelActive, unsetChannelActive, deleteChannelAndMarkers, duplicateChannel } from "../actions/channelActions";
-import { exportImageChannel } from "../actions/generalActions";
+import { uploadImageChannel, downloadImageChannel } from "../actions/generalActions";
 import { getSelectedImageChannelId } from "../reducers/viewReducer";
 
 class ChannelSelectorContainer extends Component {
@@ -28,7 +28,8 @@ const mapDispatchToProps = dispatch => ({
   updateChannel: (channelInfo) => dispatch(updateChannel(channelInfo)),
   setChannelActive: (channelId) => dispatch(setChannelActive(channelId)),
   unsetChannelActive: (channelId) => dispatch(unsetChannelActive(channelId)),
-  exportImageChannel: (channelId) => dispatch(exportImageChannel(channelId)),
+  uploadImageChannel: (channelId) => dispatch(uploadImageChannel(channelId)),
+  downloadImageChannel: (channelId) => dispatch(downloadImageChannel(channelId)),
   deleteChannel: (channelId) => dispatch(deleteChannelAndMarkers(channelId)),
   duplicateChannel: (channelId) => dispatch(duplicateChannel(channelId)),
 });
@@ -38,7 +39,7 @@ ChannelSelectorContainer.propTypes = {
   selectedImageChannelId: PropTypes.number,
   setChannelActive: PropTypes.func.isRequired,
   unsetChannelActive: PropTypes.func.isRequired,
-  exportImageChannel: PropTypes.func.isRequired,
+  uploadImageChannel: PropTypes.func.isRequired,
   deleteChannel: PropTypes.func.isRequired,
   duplicateChannel: PropTypes.func.isRequired,
 };

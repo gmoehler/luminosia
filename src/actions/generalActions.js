@@ -54,45 +54,44 @@ export const uploadConfigFile = (configFile, audioContext) => (dispatch, getStat
     });
 };
 
-export const uploadConfig =
-  (configData, audioContext) => (dispatch, getState) => {
+export const uploadConfig = (configData, audioContext) => (dispatch, getState) => {
 
-    console.log(configData);
-    // dispatch(clearView());
-    // dispatch(clearImageList());
-    // dispatch(clearChannels());
+  console.log(configData);
+  // dispatch(clearView());
+  // dispatch(clearImageList());
+  // dispatch(clearChannels());
 
-    // load all non-existing images and save them to store
-    const imageListPromises = configData.images
-      .filter(imageData => !imageExists(getState(), imageData.imageId))
-      .map(imageData => loadImage(imageData)
-        .then((img) => {
-          console.log(`loading image ${img.imageId}`);
-          return dispatch(addImage(img));
-        }));
+  // load all non-existing images and save them to store
+  const imageListPromises = configData.images
+    .filter(imageData => !imageExists(getState(), imageData.imageId))
+    .map(imageData => loadImage(imageData)
+      .then((img) => {
+        console.log(`loading image ${img.imageId}`);
+        return dispatch(addImage(img));
+      }));
 
-    return Promise.all(imageListPromises)
-      .then(() => {
-        console.log("images loaded.");
+  return Promise.all(imageListPromises)
+    .then(() => {
+      console.log("images loaded.");
 
-        // load all channels
-        const channelPromises = configData.channels
-          .map((channelData) => {
-            return loadAChannel(channelData, audioContext, getState())
-              .then((channelInfo) => {
-                if (channelInfo) { // audio channels are not loaded yet
-                  dispatch(addChannel(channelInfo));
-                  console.log(`${channelData.type} channel added.`);
-                  dispatch(updateChannelMarkersForLastAddedChannel()); // channelInfo does not know the channel id here...
-                  console.log(`${channelData.type} channel: markers added.`);
-                }
-                return Promise.resolve();
-              });
-          });
+      // load all channels
+      const channelPromises = configData.channels
+        .map((channelData) => {
+          return loadAChannel(channelData, audioContext, getState())
+            .then((channelInfo) => {
+              if (channelInfo) { // audio channels are not loaded yet
+                dispatch(addChannel(channelInfo));
+                console.log(`${channelData.type} channel added.`);
+                dispatch(updateChannelMarkersForLastAddedChannel()); // channelInfo does not know the channel id here...
+                console.log(`${channelData.type} channel: markers added.`);
+              }
+              return Promise.resolve();
+            });
+        });
 
-        return Promise.all(channelPromises);
-      });
-  };
+      return Promise.all(channelPromises);
+    });
+};
 
 export const downloadConfig = (() => (dispatch, getState) => {
   const config = getConfig(getState());
@@ -141,8 +140,25 @@ export const drawExportImage = (channelId, idx, applyLog) => (dispatch, getState
   }
 };
 
+export const downloadImageChannel = channelId => (dispatch, getState) => {
+  dispatch(clearExportImage(1));
+  dispatch(drawExportImage(channelId, 0, true));
+  // binary download
+  const data = getChannelExportData();
+
+  // export/save binary encoded image for poi
+  downloadBinaryFile(`result-${channelId}.poi`, encodeImage(data));
+
+// image file download
+/* const canvas = document.getElementById("imageExportCanvas");
+const resultImage = canvas.toDataURL("image/png");
+if (resultImage) {
+  downloadImagefile(`result-${channelId}.png`, resultImage);
+} */
+};
+
 // export one channel
-export const exportImageChannel = channelId => (dispatch, getState) => {
+export const uploadImageChannel = channelId => (dispatch, getState) => {
   dispatch(clearExportImage(1));
   dispatch(drawExportImage(channelId, 0, true));
   // binary download
@@ -155,16 +171,7 @@ export const exportImageChannel = channelId => (dispatch, getState) => {
         console.log(text);
         dispatch(addToUploadLog(text));
       });
-  } else {
-    downloadBinaryFile(`result-${channelId}.poi`, encodeImage(data));
   }
-
-  // image file download
-  /* const canvas = document.getElementById("imageExportCanvas");
-  const resultImage = canvas.toDataURL("image/png");
-  if (resultImage) {
-    downloadImagefile(`result-${channelId}.png`, resultImage);
-  } */
 };
 
 // during animation: get image data from export canvas within an interval
