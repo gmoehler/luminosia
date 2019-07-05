@@ -1,5 +1,5 @@
-import reducer from "../channelPartReducer";
-import { initialState } from "../channelPartReducer";
+import reducer from "../partReducer";
+import { initialState } from "../partReducer";
 
 import * as types from "../../actions/types";
 import { partPayload0, partPayload1, partState0, partState1 } from "../../__fixtures__/part.fixtures";

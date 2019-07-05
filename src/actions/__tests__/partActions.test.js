@@ -1,7 +1,7 @@
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
-import * as actions from "../channelPartActions";
+import * as actions from "../partActions";
 import * as types from "../types";
 import { partPayload0, partPayload1 } from "../../__fixtures__/part.fixtures";
 
