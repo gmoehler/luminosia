@@ -36,12 +36,14 @@ export default (state = initialState, action) => {
         lastPartId: nextPartId,
       };
 
-    case UPDATE_PART:
-      const partId = action.payload.partId;
-      if (!partId || partId < 0 || !state.allPartIds.includes(partId)) {
+    case UPDATE_PART:  
+      if (!action.payload || !action.payload.partId || action.payload.partId < 0
+ 		|| !state.allPartIds.includes(action.payload.partId)) {
       	console.log("cannot update", action.payload);
       	return state;
       }
+      const partId = action.payload.partId;
+      console.log(" update with", action.payload);
       return {
         ...state,
         byPartId: {
