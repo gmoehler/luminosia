@@ -44,7 +44,7 @@ export default (state = initialState, action) => {
           ...state.byPartId,
           [partId]: {
             ...state.byPartId[partId],
-            action.payload
+            ...action.payload
           },
         },
       };
