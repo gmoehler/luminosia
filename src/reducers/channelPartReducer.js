@@ -39,8 +39,8 @@ export default (state = initialState, action) => {
     case UPDATE_PART:
       const partId = action.payload.partId;
       if (!partId || partId < 0 || !state.allPartIds.includes(partId)) {
-      	console.log("canmot update", action.payload);
-      	return state
+      	console.log("cannot update", action.payload);
+      	return state;
       }
       return {
         ...state,

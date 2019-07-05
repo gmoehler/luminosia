@@ -28,8 +28,26 @@ App
 
   ChannelSelectorContainer
     ChannelSelector
+    
+  AnimationPaneContainer
+    withPlay
+      AnimationPane
+      
 
 ```
 
 Todos:
+- weaker marker colors
 - Redux: Make parts a first level state
+- snap to other objects
+- generate multiple copies of a part
+- group/ungroup of parts
+- drag and dop images out of list
+- markers in timeline
+
+performance:
+- evaluate playing
+- optimize marker add
+
+next gen:
+- parameter input

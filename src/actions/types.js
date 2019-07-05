@@ -21,6 +21,7 @@ export const PLAY_CHANNELS = "PLAY_CHANNELS";
 export const STOP_CHANNELS = "STOP_CHANNELS";
 export const MOVE_PART = "MOVE_PART";
 export const RESIZE_PART = "RESIZE_PART";
+export const CLEAR_PARTS = "CLEAR_PARTS";
 export const ADD_PART = "ADD_PART";
 export const DELETE_PART = "DELETE_PART";
 export const PASTE_PART = "PASTE_PART";
