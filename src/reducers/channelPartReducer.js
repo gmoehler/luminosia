@@ -17,9 +17,6 @@ export const initialState = {
 export default (state = initialState, action) => {
   switch (action.type) {
 
-    case CLEAR_PARTS:
-      return initialState;
-
     case ADD_PART:
       const nextPartId = state.lastPartId + 1;
       return {
@@ -77,6 +74,9 @@ export default (state = initialState, action) => {
         allPartIds: [
           ...state.allPartIds.filter(id => id !== partId1)],
       };
+
+    case CLEAR_PARTS:
+      return initialState;
 
     default:
       return state;

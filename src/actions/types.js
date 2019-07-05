@@ -20,6 +20,7 @@ export const UPLOAD_AUDIO_FAILURE = "UPLOAD_AUDIO_FAILURE";
 export const PLAY_CHANNELS = "PLAY_CHANNELS";
 export const STOP_CHANNELS = "STOP_CHANNELS";
 export const MOVE_PART = "MOVE_PART";
+export const ADD_PART = "ADD_PART";
 export const RESIZE_PART = "RESIZE_PART";
 export const PASTE_PART = "PASTE_PART";
 
@@ -28,9 +29,9 @@ export const ADD_IMAGE = "ADD_IMAGE";
 export const CLEAR_IMAGELIST = "CLEAR_IMAGELIST";
 export const REMOVE_IMAGE = "REMOVE_IMAGE";
 
-// part actions
+// basic part actions
 export const CLEAR_PARTS = "CLEAR_PARTS";
-export const ADD_PART = "ADD_PART";
+export const CREATE_PART = "CREATE_PART";
 export const UPDATE_PART = "UPDATE_PART";
 export const DELETE_PART = "DELETE_PART";
 
@@ -51,4 +52,4 @@ export const SELECT_IMAGE_CHANNEL = "SELECT_IMAGE_CHANNEL";
 export const ADD_TO_UPLOAD_LOG = "ADD_TO_UPLOAD_LOG";
 export const CLEAR_UPLOAD_LOG = "CLEAR_UPLOAD_LOG";
 export const SET_MESSAGE = "SET_MESSAGE";
-export const CLEAR_MESSAGE= "CLEAR_MESSAGE";
+export const CLEAR_MESSAGE = "CLEAR_MESSAGE";
