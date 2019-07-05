@@ -10,25 +10,29 @@ describe("channel reducer", () => {
   });
 
   it("should handle ADD_PART", () => {
-    expect(
-      reducer(reducer(undefined, {}), {
-        type: types.ADD_PART,
-        payload: partPayload0
-      })
-    ).toEqual(partState0);
-  });
-
-  it("should handle UPDATE_PART0", () => {
-    expect(
-      reducer(
-        reducer(reducer(undefined, {}), {
+  	const reducer0 = reducer(reducer(undefined, {}), {
           type: types.ADD_PART,
           payload: partPayload0
-        }), {
+        });
+  
+    expect( reducer0).toEqual(partState0);
+  });
+
+  it("should handle UPDATE_PART", () => {
+  	
+  const reducer0 = reducer(reducer(undefined, {}), {
+          type: types.ADD_PART,
+          payload: partPayload0
+        });
+  
+    expect( reducer0).toEqual(partState0);
+    
+    const reducer1 = reducer(reducer0, {
           type: types.UPDATE_PART,
           payload: partPayload1
-        }))
-      .toEqual(partState1);
+        });
+        
+    expect( reducer1 ).toEqual(partState1);
   });
 
 

@@ -56,7 +56,7 @@ export default (state = initialState, action) => {
         ...state,
         byPartId: nextByPartId,
         allPartIds: [
-          ...state.allPartIds.filter(part => part.partId !== action.partId)],
+          ...state.allPartIds.filter(part => part.partId !== action.payload)],
       };
 
     default:
