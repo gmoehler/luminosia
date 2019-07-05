@@ -8,7 +8,6 @@ export const partPayload0 = {
 };
 
 export const partPayload1 = {
-  partId: 0,
   length: 11,
   imageId: "image1.png",
   src: "data:image/png;base64",

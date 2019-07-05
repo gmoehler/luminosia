@@ -10,29 +10,79 @@ describe("channel reducer", () => {
   });
 
   it("should handle ADD_PART", () => {
-  	const reducer0 = reducer(reducer(undefined, {}), {
-          type: types.ADD_PART,
-          payload: partPayload0
-        });
-  
-    expect( reducer0).toEqual(partState0);
+    const reducer0 = reducer(reducer(undefined, {}), {
+      type: types.ADD_PART,
+      payload: partPayload0
+    });
+
+    expect(reducer0).toEqual(partState0);
+  });
+
+  it("should handle ADD_PART", () => {
+    const reducer0 = reducer(reducer(undefined, {}), {
+      type: types.ADD_PART,
+      payload: partPayload0
+    });
+
+    expect(reducer0).toEqual(partState0);
+  });
+
+  it("should handle CLEAR_PART", () => {
+    const reducer0 = reducer(reducer(undefined, {}), {
+      type: types.ADD_PART,
+      payload: partPayload0
+    });
+
+    expect(reducer0).toEqual(partState0);
+
+    const reducer1 = reducer(reducer0, {
+      type: types.CLEAR_PARTS,
+    });
+
+    expect(reducer1).toEqual({
+      ...initialState,
+    });
+
   });
 
   it("should handle UPDATE_PART", () => {
-  	
-  const reducer0 = reducer(reducer(undefined, {}), {
-          type: types.ADD_PART,
-          payload: partPayload0
-        });
-  
-    expect( reducer0).toEqual(partState0);
-    
+
+    const reducer0 = reducer(reducer(undefined, {}), {
+      type: types.ADD_PART,
+      payload: partPayload0
+    });
+
+    expect(reducer0).toEqual(partState0);
+
     const reducer1 = reducer(reducer0, {
-          type: types.UPDATE_PART,
-          payload: partPayload1
-        });
-        
-    expect( reducer1 ).toEqual(partState1);
+      type: types.UPDATE_PART,
+      payload: {
+        ...partPayload1,
+        partId: 0,
+      }
+    });
+
+    expect(reducer1).toEqual(partState1);
+  });
+
+  it("should handle DELETE_PART", () => {
+
+    const reducer0 = reducer(reducer(undefined, {}), {
+      type: types.ADD_PART,
+      payload: partPayload0
+    });
+
+    expect(reducer0).toEqual(partState0);
+
+    const reducer1 = reducer(reducer0, {
+      type: types.DELETE_PART,
+      payload: 0,
+    });
+
+    expect(reducer1).toEqual({
+      ...initialState,
+      lastPartId: 0,
+    });
   });
 
 
