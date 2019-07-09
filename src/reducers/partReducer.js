@@ -1,6 +1,6 @@
 import {
   CLEAR_PARTS,
-  ADD_PART,
+  ADD_NEW_PART,
   UPDATE_PART,
   DELETE_PART,
 } from "../actions/types";
@@ -8,8 +8,7 @@ import {
 
 export const initialState = {
   byPartId: {},
-  allPartIds: [],
-  lastPartId: -1,
+  allPartIds: []
 };
 
 // currently no assumptions are made for the fields in part
@@ -17,62 +16,77 @@ export const initialState = {
 export default (state = initialState, action) => {
   switch (action.type) {
 
-    case ADD_PART:
-      const nextPartId = state.lastPartId + 1;
+    case ADD_NEW_PART:
+      // checks
+      const partId0 = action.payload && action.payload.partId;
+      if (!partId0) {
+        return state;
+      }
+      const exists0 = state.allPartIds.includes(partId0);
+      if (exists0) {
+        return state;
+      }
+
       return {
         ...state,
+
         // add to byPartId
         byPartId: {
           ...state.byPartId,
-          [nextPartId]: {
-            ...action.payload,
-            partId: nextPartId
-          }
+          [partId0]: action.payload
         },
+
         // add id to allPartIds
         allPartIds: [
           ...state.allPartIds,
-          nextPartId,
+          partId0,
         ],
-        // increment last part id
-        lastPartId: nextPartId,
       };
 
     case UPDATE_PART:
-      const partId0 = action.payload && action.payload.partId;
-      if (partId0 === null || partId0 === undefined       // 0 is valid
-        || partId0 < 0 || !state.allPartIds.includes(partId0)) {
-        console.log("cannot update part with ", action.payload);
+      const partId1 = action.payload && action.payload.partId;
+      if (!partId1) {
         return state;
       }
-      // only update byPartId
+      const exists1 = state.allPartIds.includes(partId1);
+      if (!exists1) {
+        return state;
+      }
       return {
         ...state,
+
+        // add to byPartId
         byPartId: {
           ...state.byPartId,
-          [partId0]: {
-            ...state.byPartId[partId0],
-            ...action.payload
-          },
+          [partId1]: {
+            ...state.byPartId[partId1],
+            ...action.payload,
+          }
         },
+
+        // unchanged allPartIds
       };
 
+
     case DELETE_PART:
-      const partId1 = action.payload;
-      if (partId1 === null || partId1 === undefined       // 0 is valid
-        || partId1 < 0 || !state.allPartIds.includes(partId1)) {
-        console.log("cannot delete part with ", action.payload);
+      const partId2 = action.payload;
+      if (!partId2) {
         return state;
       }
+      const exists2 = state.allPartIds.includes(partId2);
+      if (!exists2) {
+        return state;
+      }
+
       // remove from byPartId
       const nextByPartId = { ...state.byPartId };
-      delete nextByPartId[partId1];
+      delete nextByPartId[partId2];
       return {
         ...state,
         byPartId: nextByPartId,
         // remove id from allPartIds
         allPartIds: [
-          ...state.allPartIds.filter(id => id !== partId1)],
+          ...state.allPartIds.filter(id => id !== partId2)],
       };
 
     case CLEAR_PARTS:

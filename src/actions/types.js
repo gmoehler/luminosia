@@ -31,7 +31,7 @@ export const REMOVE_IMAGE = "REMOVE_IMAGE";
 
 // basic part actions
 export const CLEAR_PARTS = "CLEAR_PARTS";
-export const CREATE_PART = "CREATE_PART";
+export const ADD_NEW_PART = "ADD_NEW_PART";
 export const UPDATE_PART = "UPDATE_PART";
 export const DELETE_PART = "DELETE_PART";
 

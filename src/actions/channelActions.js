@@ -9,6 +9,7 @@ import { removeImage } from "./imageListActions";
 import { defaultSampleRate } from "../components/ImageListContainer";
 import { readAudioFile } from "../utils/fileUtils";
 import { drawExportImage, clearExportImage } from "./generalActions";
+import { createPart } from "./partActions";
 
 // add channel with channelInfo containing complete channel information
 export const addChannel = (channelInfo) => ({
@@ -188,6 +189,10 @@ export const insertNewPart = (partInfo) => {
     dispatch(deleteMarker({
       markerId: "insert"
     }));
+
+    // new part creation
+    // const nextPartId = getNextPartId(getState());
+    // dispatch(createPart(partInfo));
 
     // clone, but remove src if existing
     // remove src is probably no longer required

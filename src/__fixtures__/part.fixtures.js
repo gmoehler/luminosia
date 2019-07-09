@@ -1,5 +1,6 @@
 
 export const partPayload0 = {
+  partId: "1",
   length: 10,
   imageId: "image0.png",
   src: "data:image/png;base64",
@@ -7,7 +8,17 @@ export const partPayload0 = {
   duration: 1,
 };
 
+export const partPayload0WithoutId = {
+  length: 10,
+  imageId: "image0.png",
+  src: "data:image/png;base64",
+  offset: 0,
+  duration: 1,
+};
+
+
 export const partPayload1 = {
+  partId: "1",
   length: 11,
   imageId: "image1.png",
   src: "data:image/png;base64",
@@ -17,24 +28,20 @@ export const partPayload1 = {
 
 export const partState0 = {
   byPartId: {
-    "0": {
+    "1": {
       ...partPayload0,
-      partId: 0,
     }
   },
-  allPartIds: [0],
-  lastPartId: 0
+  allPartIds: ["1"],
 };
 
 export const partState1 = {
   byPartId: {
-    "0": {
+    "1": {
       ...partPayload1,
-      partId: 0,
     }
   },
-  allPartIds: [0],
-  lastPartId: 0
+  allPartIds: ["1"],
 };
 
 
