@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 
 import ImageList from "./ImageList";
 import { getImageList } from "../reducers/imageListReducer";
-import { getResolution, getSelectedImageIds } from "../reducers/viewReducer";
+import { getSelectedImageIds } from "../reducers/viewReducer";
 import { saveImageToStorage, addImage, loadImagesFromStorage } from "../actions/imageListActions";
 import { toggleElementSelection, toggleElementMultiSelection, setMessage } from "../actions/viewActions";
 
@@ -13,19 +13,18 @@ export const defaultSampleRate = 100;
 class ImageListContainer extends Component {
 
   render() {
-    return ( <ImageList 
-        { ...this.props }
-        sampleRate={ defaultSampleRate }
-        selectImage={ this.props.toggleElementSelection }
-        selectMultiImage={ this.props.toggleElementMultiSelection }
-    /> );
+    return (<ImageList
+      { ...this.props }
+      sampleRate={ defaultSampleRate }
+      selectImage={ this.props.toggleElementSelection }
+      selectMultiImage={ this.props.toggleElementMultiSelection }
+    />);
   }
 }
 
 const mapStateToProps = (state, props) => {
   return {
     images: getImageList(state),
-    resolution: getResolution(state),
     selectedImageIds: getSelectedImageIds(state),
   };
 };
@@ -41,7 +40,6 @@ const mapDispatchToProps = dispatch => ({
 
 ImageListContainer.propTypes = {
   images: PropTypes.array, // all images
-  resolution: PropTypes.number,
   selectedImageIds: PropTypes.arrayOf(PropTypes.string),
   addImage: PropTypes.func.isRequired,
   setMessage: PropTypes.func.isRequired,

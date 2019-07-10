@@ -44,11 +44,11 @@ export default class SelectionMouseHandler {
   handleInsertImage = (evInfo) => {
     // console.log(evInfo.x, " drop");
     // prevent drop of images that dont come from the ImageList
-    if (evInfo.channelId && evInfo.imageId && evInfo.duration) {
+    if (evInfo.channelId && evInfo.imageId) {
       const channelId = parseInt(evInfo.channelId);
-      this.handlerFunctions.insertNewPart(channelId, evInfo.imageId, evInfo.src, evInfo.x, evInfo.duration);
+      this.handlerFunctions.insertNewPart(channelId, evInfo.imageId, evInfo.x);
     } else {
-    	this.handlerFunctions.setMessage("You cannot drop an image directly, drop it into the image view first.", "error", "Error");
+      this.handlerFunctions.setMessage("You cannot drop an image directly, drop it into the image view first.", "error", "Error");
     }
     this.prevPosX = null;
     this.prevTimestamp = 0;

@@ -1,7 +1,7 @@
 import { merge, cloneDeep } from "lodash";
 
 import {
-  ADD_CHANNEL, CLEAR_CHANNELS, PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_PART, RESIZE_PART, ADD_PART, DELETE_PART, DELETE_CHANNEL, SET_CHANNEL_ACTIVE, UNSET_CHANNEL_ACTIVE, UPDATE_CHANNEL,
+  ADD_CHANNEL, CLEAR_CHANNELS, PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_PART, RESIZE_PART, ADD_A_PART, ADD_PART, DELETE_PART, DELETE_CHANNEL, SET_CHANNEL_ACTIVE, UNSET_CHANNEL_ACTIVE, UPDATE_CHANNEL,
 } from "../actions/types";
 
 import { filterObjectByKeys } from "../utils/miscUtils";
@@ -43,6 +43,7 @@ export default (state = initialState, action) => {
             channelId,
             lastPartSeqNum: partSeqNum,
             byPartId: newByPartId,
+            allPartIds: [],
           },
         },
       };
@@ -89,6 +90,24 @@ export default (state = initialState, action) => {
             active: false,
           },
         },
+      };
+
+    case ADD_A_PART:
+      const channelCopy0 = { ...state.byChannelId[action.payload.channelId] };
+      const newAllPartIds0 = [
+        ...channelCopy0.allPartIds,
+        action.payload.partId,
+      ];
+
+      return {
+        ...state,
+        byChannelId: {
+          ...state.byChannelId,
+          [action.payload.channelId]: {
+            ...channelCopy0,
+            allPartIds: newAllPartIds0,
+          }
+        }
       };
 
     case ADD_PART:
@@ -361,6 +380,7 @@ export const getActiveChannelIds = (state, type) => Object.values(state.channel.
   .map(channel => channel.channelId);
 
 export function getElementType(elementInfo) {
+  // check this first because parts also have imageId
   if (elementInfo.partId) {
     return "part";
   }

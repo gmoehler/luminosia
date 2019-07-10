@@ -81,12 +81,10 @@ const mapDispatchToProps = dispatch => ({
     minPos,
     type
   })),
-  insertNewPart: (channelId, imageId, src, offset, duration) => dispatch(insertNewPart({
+  insertNewPart: (channelId, imageId, offset) => dispatch(insertNewPart({
     channelId,
     imageId,
-    src,
     offset,
-    duration,
   })),
   move: (channelId, partId, incr) => dispatch(moveSelectedPartsWithMarkers({
     channelId,

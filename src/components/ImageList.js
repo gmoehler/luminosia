@@ -2,7 +2,7 @@ import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 
-import { secondsToPixels, samplesToSeconds } from "../utils/conversions";
+import { samplesToSeconds } from "../utils/conversions";
 
 const ImageListWrapper = styled.div`
 	display: flex;
@@ -54,23 +54,23 @@ export default class ImageList extends PureComponent {
     var img = new Image();
     const that = this;
 
-    reader.onload = function(e) {
+    reader.onload = function (e) {
       img.src = reader.result;
     };
-    img.onload = function() {
-    	
+    img.onload = function () {
+
       if (img.height !== 30) {
-      	that.props.setMessage("Can only add images with a height of 30 pixels.", "error", "Wrong image size" );
+        that.props.setMessage("Can only add images with a height of 30 pixels.", "error", "Wrong image size");
       } else {
-      const newImage = {
-        width: img.width,
-        height: img.height,
-        src: reader.result,
-        imageId: fileName.name,
-        sampleRate: that.props.sampleRate,
-        duration: samplesToSeconds(img.width, that.props.sampleRate)
-      };
-      that.props.addImage(newImage);
+        const newImage = {
+          width: img.width,
+          height: img.height,
+          src: reader.result,
+          imageId: fileName.name,
+          sampleRate: that.props.sampleRate,
+          duration: samplesToSeconds(img.width, that.props.sampleRate)
+        };
+        that.props.addImage(newImage);
       }
     };
     reader.readAsDataURL(fileName);
@@ -127,22 +127,18 @@ export default class ImageList extends PureComponent {
 
   render() {
 
-    const { images, resolution } = this.props;
+    const { images } = this.props;
 
     const imagesComponent = images.map((img) => (
       <ImageInList id={ img.imageId }
-          key={ img.imageId }
-          src={ img.src }
-          data-imageid={ img.imageId }
-          borderColor={ this.props.selectedImageIds.includes(img.imageId) ? "red" : "transparent" }
-          draggable
-          onDragStart={ (e) => {
-                        e.dataTransfer.setData("src", img.src);
-                        e.dataTransfer.setData("imageid", img.imageId);
-                        // transfer duration in pixels since this is going to be consumed 
-                        // in a Channel component which calculates in pixels
-                        e.dataTransfer.setData("duration", secondsToPixels(img.duration, resolution));
-                      } } />
+        key={ img.imageId }
+        src={ img.src }
+        data-imageid={ img.imageId }
+        borderColor={ this.props.selectedImageIds.includes(img.imageId) ? "red" : "transparent" }
+        draggable
+        onDragStart={ (e) => {
+          e.dataTransfer.setData("imageid", img.imageId);
+        } } />
     ));
 
     const dropHereLabel = images.length > 0 ? null :
@@ -150,24 +146,23 @@ export default class ImageList extends PureComponent {
 
     return (
       <ImageListWrapper borderColor={ images.length > 0 ? "tranparent" : "darkgrey" }
-          onMouseUp={ (e) => this.handleMouseEvent(e, "mouseUp") }
-          onDragEnter={ (e) => this.handleMouseEvent(e, "dragEnter") }
-          onDragEnd={ (e) => this.handleMouseEvent(e, "dragEnd") }
-          onDragExit={ (e) => this.handleMouseEvent(e, "dragExit") }
-          onDragLeave={ (e) => this.handleMouseEvent(e, "dragLeave") }
-          onDragOver={ (e) => this.handleMouseEvent(e, "dragOver") }
-          onDrop={ (e) => this.handleMouseEvent(e, "drop") }
-          backgroundColor={ this.state.dragging ? "darkgrey" : "white" }>
-        { dropHereLabel }
-        { imagesComponent }
+        onMouseUp={ (e) => this.handleMouseEvent(e, "mouseUp") }
+        onDragEnter={ (e) => this.handleMouseEvent(e, "dragEnter") }
+        onDragEnd={ (e) => this.handleMouseEvent(e, "dragEnd") }
+        onDragExit={ (e) => this.handleMouseEvent(e, "dragExit") }
+        onDragLeave={ (e) => this.handleMouseEvent(e, "dragLeave") }
+        onDragOver={ (e) => this.handleMouseEvent(e, "dragOver") }
+        onDrop={ (e) => this.handleMouseEvent(e, "drop") }
+        backgroundColor={ this.state.dragging ? "darkgrey" : "white" }>
+        {dropHereLabel}
+        {imagesComponent}
       </ImageListWrapper>
-      );
+    );
   }
 }
 
 ImageList.propTypes = {
   images: PropTypes.array, // all images
-  resolution: PropTypes.number,
   loadImagesFromStorage: PropTypes.func.isRequired,
   selectImage: PropTypes.func.isRequired,
   selectMultiImage: PropTypes.func.isRequired,

@@ -23,6 +23,7 @@ export const MOVE_PART = "MOVE_PART";
 export const ADD_PART = "ADD_PART";
 export const RESIZE_PART = "RESIZE_PART";
 export const PASTE_PART = "PASTE_PART";
+export const DELETE_PART = "DELETE_PART";
 
 // image list actions
 export const ADD_IMAGE = "ADD_IMAGE";
@@ -31,9 +32,9 @@ export const REMOVE_IMAGE = "REMOVE_IMAGE";
 
 // basic part actions
 export const CLEAR_PARTS = "CLEAR_PARTS";
-export const ADD_NEW_PART = "ADD_NEW_PART";
-export const UPDATE_PART = "UPDATE_PART";
-export const DELETE_PART = "DELETE_PART";
+export const ADD_A_PART = "ADD_A_PART";
+export const UPDATE_A_PART = "UPDATE_A_PART";
+export const DELETE_A_PART = "DELETE_A_PART";
 
 // view actions
 export const CLEAR_VIEW = "CLEAR_VIEW";

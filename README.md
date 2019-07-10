@@ -51,3 +51,11 @@ performance:
 
 next gen:
 - parameter input
+
+---
+
+lessons learned:
+- generate ids in actions: can be returned, impure logic
+- check conditions in actions (e.g. for adding)
+    . reducers always work
+    . compound actions know wether action was successful (?)

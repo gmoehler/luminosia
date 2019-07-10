@@ -182,6 +182,8 @@ export const updateChannelMarkersForLastAddedChannel = () => {
   };
 };
 
+// expected type:
+// partInfo: {imageId, channelId, offset}
 export const insertNewPart = (partInfo) => {
   return (dispatch, getState) => {
 
@@ -190,21 +192,22 @@ export const insertNewPart = (partInfo) => {
       markerId: "insert"
     }));
 
-    // new part creation
-    // const nextPartId = getNextPartId(getState());
-    // dispatch(createPart(partInfo));
+    const duration = getImageDuration(
+      getState(), partInfo.imageId);
 
-    // clone, but remove src if existing
-    // remove src is probably no longer required
-    // since we always get the image from the ImageList
-    const partWithoutSrc = {
-      ...partInfo
-    };
-    delete partWithoutSrc.src;
+    // creates part and adds it to the channel
+    // TODO: use pid
+    /* const pId = */ dispatch(createPart({
+        ...partInfo,
+        duration
+      }));
 
     // remember partid that new part will have to re-use for markers
     const nextPartId = getNextPartId(getState(), partInfo.channelId);
-    dispatch(addPart(partWithoutSrc));
+    dispatch(addPart({
+      ...partInfo,
+      duration,
+    }));
 
     // generate markers for part
     dispatch(setMarker({
@@ -219,8 +222,8 @@ export const insertNewPart = (partInfo) => {
       markerId: `${nextPartId}-r`,
       channelId: partInfo.channelId,
       partId: nextPartId,
-      pos: partInfo.offset + partInfo.duration,
-      minPos: partInfo.duration,
+      pos: partInfo.offset + duration,
+      minPos: duration,
       type: "normal"
     }));
 

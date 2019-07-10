@@ -1,8 +1,5 @@
 import {
-  CLEAR_PARTS,
-  ADD_NEW_PART,
-  UPDATE_PART,
-  DELETE_PART,
+  CLEAR_PARTS, ADD_A_PART, UPDATE_A_PART, DELETE_A_PART,
 } from "../actions/types";
 
 
@@ -16,34 +13,25 @@ export const initialState = {
 export default (state = initialState, action) => {
   switch (action.type) {
 
-    case ADD_NEW_PART:
-      // checks
-      const partId0 = action.payload && action.payload.partId;
-      if (!partId0) {
-        return state;
-      }
-      const exists0 = state.allPartIds.includes(partId0);
-      if (exists0) {
-        return state;
-      }
-
+    case ADD_A_PART:
+      // it is ensured that partId exists and is new -> not checking it
       return {
         ...state,
 
         // add to byPartId
         byPartId: {
           ...state.byPartId,
-          [partId0]: action.payload
+          [action.payload.partId]: action.payload
         },
 
         // add id to allPartIds
         allPartIds: [
           ...state.allPartIds,
-          partId0,
+          action.payload.partId,
         ],
       };
 
-    case UPDATE_PART:
+    case UPDATE_A_PART:
       const partId1 = action.payload && action.payload.partId;
       if (!partId1) {
         return state;
@@ -68,7 +56,7 @@ export default (state = initialState, action) => {
       };
 
 
-    case DELETE_PART:
+    case DELETE_A_PART:
       const partId2 = action.payload;
       if (!partId2) {
         return state;
@@ -79,7 +67,9 @@ export default (state = initialState, action) => {
       }
 
       // remove from byPartId
-      const nextByPartId = { ...state.byPartId };
+      const nextByPartId = {
+        ...state.byPartId
+      };
       delete nextByPartId[partId2];
       return {
         ...state,
@@ -97,3 +87,8 @@ export default (state = initialState, action) => {
 
   }
 };
+
+
+export function doesPartExist(state, partId) {
+  return state.entities.parts.allPartIds.contains(partId);
+}
