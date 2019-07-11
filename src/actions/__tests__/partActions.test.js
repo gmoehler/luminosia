@@ -3,7 +3,10 @@ import thunk from "redux-thunk";
 
 import * as actions from "../partActions";
 import * as types from "../types";
-import { partPayload0, partPayload0WithoutId, partPayload0WithoutChannelId, partPayload1 } from "../../__fixtures__/part.fixtures";
+import {
+  partPayload0, partPayload0WithoutId, partPayload0WithoutChannelId,
+  partPayload1, fullPartState0
+} from "../../__fixtures__/part.fixtures";
 
 
 export const mockStore = configureMockStore([thunk]);
@@ -55,11 +58,20 @@ describe("part actions", () => {
 
 
   it("should delete a channel part", () => {
-    const expectedAction = {
+    const expectedActions = [{
       type: types.DELETE_A_PART,
-      payload: 0
-    };
-    expect(actions.deletePart(0)).toEqual(expectedAction);
+      payload: {
+        partId: "part-1",
+        channelId: "channel-1",
+      }
+    }];
+
+    const store = mockStore(fullPartState0);
+
+    store.dispatch(actions.deleteAPart("part-1"));
+    const acts = store.getActions();
+    expect(acts).toEqual(expectedActions);
+
   });
 
   it("should clear all channel parts", () => {

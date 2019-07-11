@@ -9,7 +9,7 @@ import { removeImage } from "./imageListActions";
 import { defaultSampleRate } from "../components/ImageListContainer";
 import { readAudioFile } from "../utils/fileUtils";
 import { drawExportImage, clearExportImage } from "./generalActions";
-import { createPart } from "./partActions";
+import { createPart, deleteAPart } from "./partActions";
 
 // add channel with channelInfo containing complete channel information
 export const addChannel = (channelInfo) => ({
@@ -264,6 +264,8 @@ export const deleteSelectedPartAndMarkers = () => {
       const type = getElementType(elemInfo);
 
       if (type === "part") {
+        // TODO: enable this
+        // dispatch(deleteAPart(elemInfo.partId));
         dispatch(deletePart(elemInfo));
         dispatch(deleteMarker({
           markerId: `${elemInfo.partId}-l`

@@ -57,26 +57,18 @@ export default (state = initialState, action) => {
 
 
     case DELETE_A_PART:
-      const partId2 = action.payload;
-      if (!partId2) {
-        return state;
-      }
-      const exists2 = state.allPartIds.includes(partId2);
-      if (!exists2) {
-        return state;
-      }
-
+      // it is ensured that partId is not null and part is existing
       // remove from byPartId
       const nextByPartId = {
         ...state.byPartId
       };
-      delete nextByPartId[partId2];
+      delete nextByPartId[action.payload.partId];
       return {
         ...state,
         byPartId: nextByPartId,
         // remove id from allPartIds
         allPartIds: [
-          ...state.allPartIds.filter(id => id !== partId2)],
+          ...state.allPartIds.filter(id => id !== action.payload.partId)],
       };
 
     case CLEAR_PARTS:
@@ -90,5 +82,13 @@ export default (state = initialState, action) => {
 
 
 export function doesPartExist(state, partId) {
-  return state.entities.parts.allPartIds.contains(partId);
+  return state.entities.parts.allPartIds.includes(partId);
+}
+
+export function getChannelId(state, partId) {
+  if (!doesPartExist(state, partId)) {
+    return null;
+  }
+  const part = state.entities.parts.byPartId[partId];
+  return part.channelId;
 }

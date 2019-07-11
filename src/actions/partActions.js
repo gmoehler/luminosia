@@ -1,6 +1,7 @@
 import {
   CLEAR_PARTS, ADD_A_PART, UPDATE_A_PART, DELETE_A_PART,
 } from "./types";
+import { getChannelId } from "../reducers/partReducer";
 
 // first id will be 1 to avoid falsy ids
 let lastId = 0;
@@ -24,7 +25,7 @@ export const createPart = (partInfo) => {
 
       const partId = generateId();
       // add part with new part id
-      dispatch(addPart({
+      dispatch(_addPart({
         ...partInfo,
         partId,
       }));
@@ -35,7 +36,7 @@ export const createPart = (partInfo) => {
   };
 };
 
-const addPart = (partInfo) => ({
+const _addPart = (partInfo) => ({
   type: ADD_A_PART,
   payload: partInfo,
 });
@@ -45,7 +46,26 @@ export const updatePart = (partInfo) => ({
   payload: partInfo,
 });
 
-export const deletePart = (partId) => ({
+export const deleteAPart = (partId) => {
+  return (dispatch, getState) => {
+    // ensure we have what we need
+    // so reducers do not need to check assumptions
+    // TODO: remove channelId number checking once channel ids are strings
+    const channelId = getChannelId(getState(), partId);
+
+    if (partId && channelId != null) {
+      dispatch(_deletePart({
+        partId,
+        channelId
+      }));
+    }
+    console.error("cannot remove non-existing part:", partId);
+    return null;
+  };
+};
+
+
+const _deletePart = (partId, channelId) => ({
   type: DELETE_A_PART,
   payload: partId,
 });

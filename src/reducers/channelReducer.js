@@ -1,7 +1,7 @@
 import { merge, cloneDeep } from "lodash";
 
 import {
-  ADD_CHANNEL, CLEAR_CHANNELS, PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_PART, RESIZE_PART, ADD_A_PART, ADD_PART, DELETE_PART, DELETE_CHANNEL, SET_CHANNEL_ACTIVE, UNSET_CHANNEL_ACTIVE, UPDATE_CHANNEL,
+  ADD_CHANNEL, CLEAR_CHANNELS, PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_PART, RESIZE_PART, ADD_A_PART, ADD_PART, DELETE_PART, DELETE_A_PART, DELETE_CHANNEL, SET_CHANNEL_ACTIVE, UNSET_CHANNEL_ACTIVE, UPDATE_CHANNEL,
 } from "../actions/types";
 
 import { filterObjectByKeys } from "../utils/miscUtils";
@@ -93,7 +93,10 @@ export default (state = initialState, action) => {
       };
 
     case ADD_A_PART:
-      const channelCopy0 = { ...state.byChannelId[action.payload.channelId] };
+      // add part to allPartIds array
+      const channelCopy0 = {
+        ...state.byChannelId[action.payload.channelId]
+      };
       const newAllPartIds0 = [
         ...channelCopy0.allPartIds,
         action.payload.partId,
@@ -138,6 +141,26 @@ export default (state = initialState, action) => {
             },
           },
         },
+      };
+
+    case DELETE_A_PART:
+      // remove part from allPartIds array
+      const channelCopy1 = {
+        ...state.byChannelId[action.payload.channelId]
+      };
+      const newAllPartIds1 = [
+        ...channelCopy1.allPartIds.filter(id => id !== action.payload.partId)
+      ];
+
+      return {
+        ...state,
+        byChannelId: {
+          ...state.byChannelId,
+          [action.payload.channelId]: {
+            ...channelCopy1,
+            allPartIds: newAllPartIds1,
+          }
+        }
       };
 
     case DELETE_PART:
