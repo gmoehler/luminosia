@@ -1,5 +1,5 @@
 import {
-  CLEAR_PARTS, ADD_A_PART, UPDATE_A_PART, DELETE_A_PART,
+  CLEAR_PARTS, ADD_A_PART, DELETE_A_PART, MOVE_A_PART, RESIZE_A_PART
 } from "../actions/types";
 
 
@@ -31,30 +31,71 @@ export default (state = initialState, action) => {
         ],
       };
 
-    case UPDATE_A_PART:
-      const partId1 = action.payload && action.payload.partId;
-      if (!partId1) {
-        return state;
-      }
-      const exists1 = state.allPartIds.includes(partId1);
-      if (!exists1) {
-        return state;
-      }
+    case MOVE_A_PART:
+      const part0 = state.byPartId[action.payload.partId];
+      const currentOffset0 = part0.offset || 0;
+      const offsetIncr0 = action.payload.incr || 0;
+      const updatedOffset0 = currentOffset0 + offsetIncr0;
+      const newPart0 = {
+        ...part0,
+        offset: Math.max(0, updatedOffset0),
+      };
       return {
         ...state,
-
-        // add to byPartId
         byPartId: {
           ...state.byPartId,
-          [partId1]: {
-            ...state.byPartId[partId1],
-            ...action.payload,
-          }
+          [action.payload.partId]: newPart0,
         },
-
         // unchanged allPartIds
       };
 
+    case RESIZE_A_PART:
+      const part1 = state.byPartId[action.payload.partId];
+      const currentOffset1 = part1.offset || 0;
+
+      let updatedOffset1 = currentOffset1;
+      let updatedDuration1 = part1.duration;
+
+      // left part boundary moved
+      // between 0 and right boundary
+      if (action.payload.bound === "left") {
+        const maxOffset = part1.offset + part1.duration;
+
+        // moving right: cannot exceed right end of part
+        if (action.payload.incr > 0) {
+          updatedDuration1 = Math.max(0, updatedDuration1 - action.payload.incr);
+          if (updatedDuration1 === 0) { // never allow duration 0
+            updatedDuration1 = part1.duration;
+          }
+          updatedOffset1 = maxOffset - updatedDuration1;
+        } else { // move left: cannot be left of 0
+          updatedOffset1 = Math.max(0, updatedOffset1 + action.payload.incr);
+          updatedDuration1 = maxOffset - updatedOffset1;
+        }
+
+        // right boundary moved 
+        // right to the start of part 
+      } else {
+        updatedDuration1 = Math.max(0, updatedDuration1 + action.payload.incr);
+        if (updatedDuration1 === 0) { // never allow duration 0
+          updatedDuration1 = part1.duration;
+        }
+      }
+
+      const newPart1 = {
+        ...part1,
+        duration: updatedDuration1,
+        offset: updatedOffset1,
+      };
+
+      return {
+        ...state,
+        byPartId: {
+          ...state.byPartId,
+          [action.payload.partId]: newPart1,
+        },
+        // unchanged allPartIds
+      };
 
     case DELETE_A_PART:
       // it is ensured that partId is not null and part is existing
@@ -79,7 +120,6 @@ export default (state = initialState, action) => {
 
   }
 };
-
 
 export function doesPartExist(state, partId) {
   return state.entities.parts.allPartIds.includes(partId);

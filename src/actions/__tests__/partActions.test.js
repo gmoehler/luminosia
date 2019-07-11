@@ -46,17 +46,6 @@ describe("part actions", () => {
     expect(acts).toEqual(expectedActions);
   });
 
-
-
-  it("should update a channel part", () => {
-    const expectedAction = {
-      type: types.UPDATE_A_PART,
-      payload: partPayload1
-    };
-    expect(actions.updatePart(partPayload1)).toEqual(expectedAction);
-  });
-
-
   it("should delete a channel part", () => {
     const expectedActions = [{
       type: types.DELETE_A_PART,

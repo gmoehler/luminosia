@@ -1,7 +1,6 @@
 import { merge, cloneDeep } from "lodash";
 
-import {
-  ADD_CHANNEL, CLEAR_CHANNELS, PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_PART, RESIZE_PART, ADD_A_PART, ADD_PART, DELETE_PART, DELETE_A_PART, DELETE_CHANNEL, SET_CHANNEL_ACTIVE, UNSET_CHANNEL_ACTIVE, UPDATE_CHANNEL,
+import { ADD_CHANNEL, CLEAR_CHANNELS, PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_PART, RESIZE_PART, ADD_A_PART, ADD_PART, DELETE_PART, DELETE_A_PART, DELETE_CHANNEL, SET_CHANNEL_ACTIVE, UNSET_CHANNEL_ACTIVE, UPDATE_CHANNEL,
 } from "../actions/types";
 
 import { filterObjectByKeys } from "../utils/miscUtils";
@@ -248,7 +247,7 @@ export default (state = initialState, action) => {
       let updatedOffset1 = currentOffset1;
       let updatedDuration1 = part1.duration;
 
-      // left marker moved
+      // left marker moved (bounds: 0 & end of part)
       if (action.payload.markerId && action.payload.markerId.includes("l")) {
         const maxOffset = part1.offset + part1.duration;
         if (action.payload.incr > 0) { // moving right: cannot exceed right end of part
@@ -257,11 +256,11 @@ export default (state = initialState, action) => {
             updatedDuration1 = part1.duration;
           }
           updatedOffset1 = maxOffset - updatedDuration1;
-        } else { // move left: cannot be left to 0
+        } else { // move left: cannot be left of 0
           updatedOffset1 = Math.max(0, updatedOffset1 + action.payload.incr);
           updatedDuration1 = maxOffset - updatedOffset1;
         }
-      } else { // right marker moved
+      } else { // right marker moved (bound: start of part)
         updatedDuration1 = Math.max(0, updatedDuration1 + action.payload.incr);
         if (updatedDuration1 === 0) { // never allow duration 0
           updatedDuration1 = part1.duration;

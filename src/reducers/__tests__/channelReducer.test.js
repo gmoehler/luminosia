@@ -25,6 +25,7 @@ describe("channel reducer", () => {
           channelId: 0,
           lastPartSeqNum: -1,
           byPartId: {},
+          allPartIds: [],
         }
       },
       lastChannelId: 0,
@@ -45,6 +46,7 @@ describe("channel reducer", () => {
           channelId: 0,
           lastPartSeqNum: -1, // update is done by action not reducer
           byPartId: {},
+          allPartIds: [],
         }
       },
       lastChannelId: 0,

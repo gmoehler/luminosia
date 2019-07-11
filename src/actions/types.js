@@ -33,8 +33,9 @@ export const REMOVE_IMAGE = "REMOVE_IMAGE";
 // basic part actions
 export const CLEAR_PARTS = "CLEAR_PARTS";
 export const ADD_A_PART = "ADD_A_PART";
-export const UPDATE_A_PART = "UPDATE_A_PART";
 export const DELETE_A_PART = "DELETE_A_PART";
+export const MOVE_A_PART = "MOVE_A_PART";
+export const RESIZE_A_PART = "RESIZE_A_PART";
 
 // view actions
 export const CLEAR_VIEW = "CLEAR_VIEW";

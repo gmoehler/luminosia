@@ -9,7 +9,7 @@ import { removeImage } from "./imageListActions";
 import { defaultSampleRate } from "../components/ImageListContainer";
 import { readAudioFile } from "../utils/fileUtils";
 import { drawExportImage, clearExportImage } from "./generalActions";
-import { createPart, deleteAPart } from "./partActions";
+import { createPart, /*deleteAPart*/ } from "./partActions";
 
 // add channel with channelInfo containing complete channel information
 export const addChannel = (channelInfo) => ({
@@ -242,6 +242,7 @@ export const pastePart = () => {
   return (dispatch, getState) => {
     getPartsToCopy(getState()).forEach((part) => {
       const originialPart = getPart(getState(), part.channelId, part.partId);
+      console.log("orig:", originialPart);
       const selectedImageChannelId = getSelectedImageChannelId(getState());
 
       const partToPaste = {
@@ -288,6 +289,10 @@ export const deleteChannelAndMarkers = (channelId) => {
     // first delete markers of channel
     getPartIds(getState(), channelId)
       .forEach((partId) => {
+
+        // TODO enable code
+        // dispatch(deleteAPart(partId));
+
         dispatch(deleteMarker({
           markerId: `${partId}-l`
         }));

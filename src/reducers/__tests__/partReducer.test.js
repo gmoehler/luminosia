@@ -21,89 +21,215 @@ describe("part reducer", () => {
     expect(reducer0).toEqual(partState0);
   });
 
-  it("should handle a complete part update", () => {
+  it("should move part", () => {
 
     const reducer0 = reducer(reducer(undefined, {}), {
       type: types.ADD_A_PART,
       payload: partPayload0
     });
-
     expect(reducer0).toEqual(partState0);
 
     const reducer1 = reducer(reducer0, {
-      type: types.UPDATE_A_PART,
-      payload: {
-        ...partPayload1,
-      }
-    });
-
-    expect(reducer1).toEqual(partState1);
-  });
-
-  it("should handle a partial part update", () => {
-
-    const reducer0 = reducer(reducer(undefined, {}), {
-      type: types.ADD_A_PART,
-      payload: partPayload0
-    });
-
-    expect(reducer0).toEqual(partState0);
-
-    const reducer1 = reducer(reducer0, {
-      type: types.UPDATE_A_PART,
+      type: types.MOVE_A_PART,
       payload: {
         partId: "part-1",
-        imageId: "image1.png",
+        incr: 0.5,
       }
     });
-
     expect(reducer1).toEqual({
       byPartId: {
         "part-1": {
-          ...partPayload0,
+          partId: "part-1",
           imageId: "image1.png",
+          channelId: "channel-1",
+          offset: 0.5,
+          duration: 1,
         }
       },
       allPartIds: ["part-1"],
     });
   });
 
-  it("should not update a part if invalid partID is used", () => {
+  it("should not move part left to 0", () => {
 
     const reducer0 = reducer(reducer(undefined, {}), {
       type: types.ADD_A_PART,
       payload: partPayload0
     });
-
     expect(reducer0).toEqual(partState0);
 
     const reducer1 = reducer(reducer0, {
-      type: types.UPDATE_A_PART,
+      type: types.MOVE_A_PART,
       payload: {
-        ...partPayload0WithoutId, // no partId
+        partId: "part-1",
+        incr: -0.5,
       }
     });
-    expect(reducer1).toEqual(partState0);
-
-    const reducer2 = reducer(reducer0, {
-      type: types.UPDATE_A_PART,
-      payload: {
-        ...partPayload1,
-        partId: "part-99", // not existing partId
-      }
+    expect(reducer1).toEqual({
+      byPartId: {
+        "part-1": {
+          partId: "part-1",
+          imageId: "image1.png",
+          channelId: "channel-1",
+          offset: 0,
+          duration: 1,
+        }
+      },
+      allPartIds: ["part-1"],
     });
-    expect(reducer2).toEqual(partState0);
-
-    const reducer3 = reducer(reducer0, {
-      type: types.UPDATE_A_PART,
-      payload: {
-        ...partPayload1,
-        partId: "part-0", // not existing partId
-      }
-    });
-    expect(reducer3).toEqual(partState0);
-
   });
+
+  it("should resize the left boundary of a part", () => {
+
+    const reducer0 = reducer(reducer(undefined, {}), {
+      type: types.ADD_A_PART,
+      payload: partPayload0
+    });
+    expect(reducer0).toEqual(partState0);
+
+    const reducer1 = reducer(reducer0, {
+      type: types.RESIZE_A_PART,
+      payload: {
+        partId: "part-1",
+        bound: "left",
+        incr: 0.5,
+      }
+    });
+    expect(reducer1).toEqual({
+      byPartId: {
+        "part-1": {
+          partId: "part-1",
+          imageId: "image1.png",
+          channelId: "channel-1",
+          offset: 0.5,
+          duration: 0.5,
+        }
+      },
+      allPartIds: ["part-1"],
+    });
+  });
+
+  it("should not resize the left boundary more than right bound", () => {
+
+    const reducer0 = reducer(reducer(undefined, {}), {
+      type: types.ADD_A_PART,
+      payload: partPayload0
+    });
+    expect(reducer0).toEqual(partState0);
+
+    const reducer1 = reducer(reducer0, {
+      type: types.RESIZE_A_PART,
+      payload: {
+        partId: "part-1",
+        bound: "left",
+        incr: 1.5,
+      }
+    });
+    expect(reducer1).toEqual({
+      byPartId: {
+        "part-1": {
+          partId: "part-1",
+          imageId: "image1.png",
+          channelId: "channel-1",
+          offset: 0,
+          duration: 1,
+        }
+      },
+      allPartIds: ["part-1"],
+    });
+  });
+
+  it("should not resize the left boundary lower than 0", () => {
+
+    const reducer0 = reducer(reducer(undefined, {}), {
+      type: types.ADD_A_PART,
+      payload: partPayload0
+    });
+    expect(reducer0).toEqual(partState0);
+
+    const reducer1 = reducer(reducer0, {
+      type: types.RESIZE_A_PART,
+      payload: {
+        partId: "part-1",
+        bound: "left",
+        incr: -0.5,
+      }
+    });
+    expect(reducer1).toEqual({
+      byPartId: {
+        "part-1": {
+          partId: "part-1",
+          imageId: "image1.png",
+          channelId: "channel-1",
+          offset: 0,
+          duration: 1,
+        }
+      },
+      allPartIds: ["part-1"],
+    });
+  });
+
+
+  it("should resize the right boundary of a part", () => {
+
+    const reducer0 = reducer(reducer(undefined, {}), {
+      type: types.ADD_A_PART,
+      payload: partPayload0
+    });
+    expect(reducer0).toEqual(partState0);
+
+    const reducer1 = reducer(reducer0, {
+      type: types.RESIZE_A_PART,
+      payload: {
+        partId: "part-1",
+        bound: "right",
+        incr: 0.5,
+      }
+    });
+    expect(reducer1).toEqual({
+      byPartId: {
+        "part-1": {
+          partId: "part-1",
+          imageId: "image1.png",
+          channelId: "channel-1",
+          offset: 0,
+          duration: 1.5,
+        }
+      },
+      allPartIds: ["part-1"],
+    });
+  });
+
+  it("should resize the right boundary to the left of the left bound", () => {
+
+    const reducer0 = reducer(reducer(undefined, {}), {
+      type: types.ADD_A_PART,
+      payload: partPayload0
+    });
+    expect(reducer0).toEqual(partState0);
+
+    const reducer1 = reducer(reducer0, {
+      type: types.RESIZE_A_PART,
+      payload: {
+        partId: "part-1",
+        bound: "right",
+        incr: -1.5,
+      }
+    });
+    expect(reducer1).toEqual({
+      byPartId: {
+        "part-1": {
+          partId: "part-1",
+          imageId: "image1.png",
+          channelId: "channel-1",
+          offset: 0,
+          duration: 1,
+        }
+      },
+      allPartIds: ["part-1"],
+    });
+  });
+
 
   it("should handle DELETE_A_PART", () => {
 
@@ -145,6 +271,10 @@ describe("part reducer", () => {
     });
 
   });
+
+});
+
+describe("state access functions", () => {
 
   it("should show that a part exists", () => {
 

@@ -28,6 +28,13 @@ it("should paste a part from channel 2 to channel 1", () => {
 
   const state = {
     ...imageChannelState,
+    images: {
+      byImageId: {
+        "image-1": {
+          duration: 11.21,
+        }
+      }
+    },
     view: {
       ...initialViewState,
       partsToCopy: [
@@ -43,6 +50,13 @@ it("should paste a part from channel 2 to channel 1", () => {
     type: types.DELETE_MARKER,
     payload: {
       markerId: "insert"
+    }
+  }, {
+    type: types.ADD_A_PART,
+    payload: {
+      ...part,
+      partId: "part-1",
+      channelId: 1
     }
   }, {
     type: types.ADD_PART,

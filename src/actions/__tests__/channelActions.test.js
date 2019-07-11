@@ -188,6 +188,13 @@ describe("actions", () => {
     const state = {
       ...imageChannelState,
       view: initialViewState,
+      images: {
+        byImageId: {
+          "image-1": {
+            duration: 11.21
+          }
+        }
+      }
     };
 
     const store = mockStore(state);
@@ -203,6 +210,17 @@ describe("actions", () => {
         payload: {
           markerId: "insert",
         }
+      },
+      {
+        type: types.ADD_A_PART,
+        payload: {
+          partId: "part-1",
+          imageId: "image-1",
+          channelId: 2,
+          offset: 3.3,
+          duration: 11.21,
+          sampleRate: 100,
+        },
       },
       {
         type: types.ADD_PART,

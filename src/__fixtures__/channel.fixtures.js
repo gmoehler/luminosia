@@ -4,7 +4,7 @@ export const audioChannelPayload = {
   offset: 2.0,
   buffer: {
     length: 10,
-  // real channels have more fields here
+    // real channels have more fields here
   }
 };
 
@@ -59,6 +59,7 @@ export const imageChannelState = {
         byPartId: {
           "2:1": {
             partId: "2:1",
+            imageId: "image-1",
             channelId: 2,
             offset: 3.3,
             duration: 11.21,
@@ -72,6 +73,7 @@ export const imageChannelState = {
 
 export const part = {
   partId: "2:1",
+  imageId: "image-1",
   channelId: 2,
   offset: 3.3,
   duration: 11.21,
@@ -80,6 +82,7 @@ export const part = {
 
 export const part2 = {
   partId: "2:5",
+  imageId: "image-2",
   channelId: 3,
   offset: 5.5,
   duration: 55.55,

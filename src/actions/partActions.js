@@ -1,5 +1,5 @@
 import {
-  CLEAR_PARTS, ADD_A_PART, UPDATE_A_PART, DELETE_A_PART,
+  CLEAR_PARTS, ADD_A_PART, DELETE_A_PART,
 } from "./types";
 import { getChannelId } from "../reducers/partReducer";
 
@@ -38,11 +38,6 @@ export const createPart = (partInfo) => {
 
 const _addPart = (partInfo) => ({
   type: ADD_A_PART,
-  payload: partInfo,
-});
-
-export const updatePart = (partInfo) => ({
-  type: UPDATE_A_PART,
   payload: partInfo,
 });
 
