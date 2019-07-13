@@ -3,7 +3,7 @@ import thunk from "redux-thunk";
 
 import * as actions from "../channelActions";
 import * as types from "../types";
-import { audioChannelPayload, imageChannelPayload, initialImageChannelPayload, imageChannelState, part } from "../../__fixtures__/channel.fixtures";
+import { audioChannelPayload, imageChannelPayload, initialImageChannelPayload, imageChannelState, part, normalizedPart } from "../../__fixtures__/channel.fixtures";
 
 import { initialState as initialViewState } from "../../reducers/viewReducer";
 
@@ -213,20 +213,13 @@ describe("actions", () => {
       },
       {
         type: types.ADD_A_PART,
-        payload: {
-          partId: "part-1",
-          imageId: "image-1",
-          channelId: 2,
-          offset: 3.3,
-          duration: 11.21,
-          sampleRate: 100,
-        },
+        payload: normalizedPart
       },
       {
         type: types.ADD_PART,
         payload: {
           ...part,
-          //        channelId: 2
+          //  channelId: 2
         }
       },
       {

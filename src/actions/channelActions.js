@@ -242,7 +242,6 @@ export const pastePart = () => {
   return (dispatch, getState) => {
     getPartsToCopy(getState()).forEach((part) => {
       const originialPart = getPart(getState(), part.channelId, part.partId);
-      console.log("orig:", originialPart);
       const selectedImageChannelId = getSelectedImageChannelId(getState());
 
       const partToPaste = {

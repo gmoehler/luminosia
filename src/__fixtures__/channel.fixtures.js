@@ -80,6 +80,40 @@ export const part = {
   sampleRate: 100,
 };
 
+export const normalizedPart = {
+  entities: {
+    parts: {
+      "part-1": {
+        partId: "part-1",
+        imageId: "image-1",
+        channelId: 2,
+        offset: 3.3,
+        duration: 11.21,
+        sampleRate: 100,
+      }
+    }
+  },
+  result:
+    "part-1"
+};
+
+export const normalizedPartCh1 = {
+  entities: {
+    parts: {
+      "part-1": {
+        partId: "part-1",
+        imageId: "image-1",
+        channelId: 1,
+        offset: 3.3,
+        duration: 11.21,
+        sampleRate: 100,
+      }
+    }
+  },
+  result:
+    "part-1"
+};
+
 export const part2 = {
   partId: "2:5",
   imageId: "image-2",

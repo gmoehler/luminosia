@@ -5,7 +5,8 @@ import * as actions from "../partActions";
 import * as types from "../types";
 import {
   partPayload0, partPayload0WithoutId, partPayload0WithoutChannelId,
-  partPayload1, fullPartState0
+  fullPartState0,
+  normalizedPartPayload0
 } from "../../__fixtures__/part.fixtures";
 
 
@@ -16,7 +17,7 @@ describe("part actions", () => {
   it("should create a channel part", () => {
     const expectedActions = [{
       type: types.ADD_A_PART,
-      payload: partPayload0
+      payload: normalizedPartPayload0
     }];
 
     const store = mockStore({

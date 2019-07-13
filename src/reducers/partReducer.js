@@ -1,38 +1,28 @@
+import { combineReducers } from "redux";
+
 import {
   CLEAR_PARTS, ADD_A_PART, DELETE_A_PART, MOVE_A_PART, RESIZE_A_PART
 } from "../actions/types";
-
 
 export const initialState = {
   byPartId: {},
   allPartIds: []
 };
 
-// currently no assumptions are made for the fields in part
+// split into 2 reducers: byPartId and allPartIds
 
-export default (state = initialState, action) => {
+const byPartId = (state = {}, action) => {
   switch (action.type) {
 
-    case ADD_A_PART:
-      // it is ensured that partId exists and is new -> not checking it
+    case ADD_A_PART: {
       return {
         ...state,
-
-        // add to byPartId
-        byPartId: {
-          ...state.byPartId,
-          [action.payload.partId]: action.payload
-        },
-
-        // add id to allPartIds
-        allPartIds: [
-          ...state.allPartIds,
-          action.payload.partId,
-        ],
+        ...action.payload.entities.parts, // normalized parts
       };
+    }
 
     case MOVE_A_PART:
-      const part0 = state.byPartId[action.payload.partId];
+      const part0 = state[action.payload.partId];
       const currentOffset0 = part0.offset || 0;
       const offsetIncr0 = action.payload.incr || 0;
       const updatedOffset0 = currentOffset0 + offsetIncr0;
@@ -42,15 +32,11 @@ export default (state = initialState, action) => {
       };
       return {
         ...state,
-        byPartId: {
-          ...state.byPartId,
-          [action.payload.partId]: newPart0,
-        },
-        // unchanged allPartIds
+        [action.payload.partId]: newPart0,
       };
 
     case RESIZE_A_PART:
-      const part1 = state.byPartId[action.payload.partId];
+      const part1 = state[action.payload.partId];
       const currentOffset1 = part1.offset || 0;
 
       let updatedOffset1 = currentOffset1;
@@ -90,36 +76,56 @@ export default (state = initialState, action) => {
 
       return {
         ...state,
-        byPartId: {
-          ...state.byPartId,
-          [action.payload.partId]: newPart1,
-        },
-        // unchanged allPartIds
+        [action.payload.partId]: newPart1,
       };
 
-    case DELETE_A_PART:
-      // it is ensured that partId is not null and part is existing
-      // remove from byPartId
-      const nextByPartId = {
-        ...state.byPartId
-      };
-      delete nextByPartId[action.payload.partId];
-      return {
-        ...state,
-        byPartId: nextByPartId,
-        // remove id from allPartIds
-        allPartIds: [
-          ...state.allPartIds.filter(id => id !== action.payload.partId)],
-      };
+
+    case DELETE_A_PART: {
+      const newState = { ...state };
+      delete newState[action.payload.partId]; // ids
+      return newState;
+    }
 
     case CLEAR_PARTS:
-      return initialState;
+      return {};
 
     default:
       return state;
-
   }
 };
+
+const allPartIds = (state = [], action) => {
+  switch (action.type) {
+
+    case ADD_A_PART:
+      return [...state, action.payload.result];
+
+    case DELETE_A_PART: {
+      const newState = [...state];
+      newState.splice(state.indexOf(action.payload.partId), 1); // ids
+      return newState;
+    }
+
+    case MOVE_A_PART:
+      // no changes
+      return state;
+
+    case RESIZE_A_PART:
+      // no changes
+      return state;
+
+    case CLEAR_PARTS:
+      return [];
+
+    default:
+      return state;
+  }
+};
+
+export default combineReducers({
+  byPartId,
+  allPartIds,
+});
 
 export function doesPartExist(state, partId) {
   return state.entities.parts.allPartIds.includes(partId);

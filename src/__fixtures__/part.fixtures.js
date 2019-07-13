@@ -7,6 +7,22 @@ export const partPayload0 = {
   duration: 1,
 };
 
+export const normalizedPartPayload0 = {
+  entities: {
+    parts: {
+      "part-1": {
+        partId: "part-1",
+        imageId: "image1.png",
+        channelId: "channel-1",
+        offset: 0,
+        duration: 1,
+      }
+    }
+  },
+  result:
+    "part-1"
+};
+
 export const partPayload0WithoutId = {
   ...partPayload0
 };

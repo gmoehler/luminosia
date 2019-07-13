@@ -5,7 +5,7 @@ import * as actions from "../viewActions";
 import * as channelActions from "../channelActions";
 
 import * as types from "../types";
-import { imageChannelState, part } from "../../__fixtures__/channel.fixtures";
+import { imageChannelState, part, normalizedPartCh1 } from "../../__fixtures__/channel.fixtures";
 import { initialState as initialViewState } from "../../reducers/viewReducer";
 
 export const mockStore = configureMockStore([thunk]);
@@ -54,9 +54,7 @@ it("should paste a part from channel 2 to channel 1", () => {
   }, {
     type: types.ADD_A_PART,
     payload: {
-      ...part,
-      partId: "part-1",
-      channelId: 1
+      ...normalizedPartCh1,
     }
   }, {
     type: types.ADD_PART,

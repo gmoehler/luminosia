@@ -3,8 +3,7 @@ import { initialState } from "../partReducer";
 
 import * as types from "../../actions/types";
 import {
-  partPayload0, partPayload1, partState0, fullPartState0,
-  partState1, partPayload0WithoutId
+  partState0, fullPartState0, normalizedPartPayload0
 } from "../../__fixtures__/part.fixtures";
 
 describe("part reducer", () => {
@@ -15,7 +14,7 @@ describe("part reducer", () => {
   it("should create a new part", () => {
     const reducer0 = reducer(reducer(undefined, {}), {
       type: types.ADD_A_PART,
-      payload: partPayload0
+      payload: normalizedPartPayload0
     });
 
     expect(reducer0).toEqual(partState0);
@@ -25,7 +24,7 @@ describe("part reducer", () => {
 
     const reducer0 = reducer(reducer(undefined, {}), {
       type: types.ADD_A_PART,
-      payload: partPayload0
+      payload: normalizedPartPayload0
     });
     expect(reducer0).toEqual(partState0);
 
@@ -54,7 +53,7 @@ describe("part reducer", () => {
 
     const reducer0 = reducer(reducer(undefined, {}), {
       type: types.ADD_A_PART,
-      payload: partPayload0
+      payload: normalizedPartPayload0
     });
     expect(reducer0).toEqual(partState0);
 
@@ -83,7 +82,7 @@ describe("part reducer", () => {
 
     const reducer0 = reducer(reducer(undefined, {}), {
       type: types.ADD_A_PART,
-      payload: partPayload0
+      payload: normalizedPartPayload0
     });
     expect(reducer0).toEqual(partState0);
 
@@ -113,7 +112,7 @@ describe("part reducer", () => {
 
     const reducer0 = reducer(reducer(undefined, {}), {
       type: types.ADD_A_PART,
-      payload: partPayload0
+      payload: normalizedPartPayload0
     });
     expect(reducer0).toEqual(partState0);
 
@@ -143,7 +142,7 @@ describe("part reducer", () => {
 
     const reducer0 = reducer(reducer(undefined, {}), {
       type: types.ADD_A_PART,
-      payload: partPayload0
+      payload: normalizedPartPayload0
     });
     expect(reducer0).toEqual(partState0);
 
@@ -174,7 +173,7 @@ describe("part reducer", () => {
 
     const reducer0 = reducer(reducer(undefined, {}), {
       type: types.ADD_A_PART,
-      payload: partPayload0
+      payload: normalizedPartPayload0
     });
     expect(reducer0).toEqual(partState0);
 
@@ -204,7 +203,7 @@ describe("part reducer", () => {
 
     const reducer0 = reducer(reducer(undefined, {}), {
       type: types.ADD_A_PART,
-      payload: partPayload0
+      payload: normalizedPartPayload0
     });
     expect(reducer0).toEqual(partState0);
 
@@ -235,7 +234,7 @@ describe("part reducer", () => {
 
     const reducer0 = reducer(reducer(undefined, {}), {
       type: types.ADD_A_PART,
-      payload: partPayload0
+      payload: normalizedPartPayload0
     });
 
     expect(reducer0).toEqual(partState0);
@@ -257,7 +256,7 @@ describe("part reducer", () => {
   it("should handle CLEAR_PART", () => {
     const reducer0 = reducer(reducer(undefined, {}), {
       type: types.ADD_A_PART,
-      payload: partPayload0
+      payload: normalizedPartPayload0
     });
 
     expect(reducer0).toEqual(partState0);
