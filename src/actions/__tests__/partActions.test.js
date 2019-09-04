@@ -17,7 +17,10 @@ describe("part actions", () => {
   it("should create a channel part", () => {
     const expectedActions = [{
       type: types.ADD_A_PART,
-      payload: normalizedPartPayload0
+      payload: {
+        ...normalizedPartPayload0,
+        channelId: "channel-1",
+      }
     }];
 
     const store = mockStore({

@@ -1,8 +1,17 @@
+// reducer working on the part entities
+
 import { combineReducers } from "redux";
+import { schema } from "normalizr";
 
 import {
   CLEAR_PARTS, ADD_A_PART, DELETE_A_PART, MOVE_A_PART, RESIZE_A_PART
 } from "../actions/types";
+
+export const partSchema = new schema.Entity("byPartId", {}, {
+  idAttribute: "partId"
+});
+
+
 
 export const initialState = {
   byPartId: {},
@@ -17,7 +26,7 @@ const byPartId = (state = {}, action) => {
     case ADD_A_PART: {
       return {
         ...state,
-        ...action.payload.entities.parts, // normalized parts
+        ...action.payload.entities.byPartId, // normalized parts
       };
     }
 
@@ -138,3 +147,4 @@ export function getChannelId(state, partId) {
   const part = state.entities.parts.byPartId[partId];
   return part.channelId;
 }
+

@@ -9,7 +9,7 @@ export const partPayload0 = {
 
 export const normalizedPartPayload0 = {
   entities: {
-    parts: {
+    byPartId: {
       "part-1": {
         partId: "part-1",
         imageId: "image1.png",

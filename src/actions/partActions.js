@@ -1,23 +1,19 @@
 
-import { normalize, schema } from "normalizr";
+import { normalize } from "normalizr";
 
 import {
   CLEAR_PARTS, ADD_A_PART, DELETE_A_PART,
 } from "./types";
 
-import { getChannelId } from "../reducers/partReducer";
+import { getChannelId, partSchema } from "../reducers/partReducer";
 
-const partSchema = new schema.Entity("parts", {}, {
-  idAttribute: "partId"
-});
-// const partsSchema = [partSchema];
 
 // first id will be 1 to avoid falsy ids
 let lastId = 0;
 
 function generateId() {
   // simple generator :-)
-  // other options cuid or uuid
+  // other options: cuid or uuid
   lastId++;
   return "part-" + lastId.toString();
 }
@@ -38,7 +34,7 @@ export const createPart = (partInfo) => {
         ...partInfo,
         partId,
       }));
-      const bla = normalize(partInfo, partSchema);
+      // const bla = normalize(partInfo, partSchema);
       return partId;
     }
     console.error("cannot add incomplete part:", partInfo);
@@ -48,7 +44,12 @@ export const createPart = (partInfo) => {
 
 const _addPart = (partInfo) => ({
   type: ADD_A_PART,
-  payload: normalize(partInfo, partSchema),
+  // normalize for easy usage in partReducer
+  // also add channelId for channelReducer
+  payload: {
+    ...normalize(partInfo, partSchema),
+    channelId: partInfo.channelId
+  }
 });
 
 export const deleteAPart = (partId) => {
@@ -69,11 +70,10 @@ export const deleteAPart = (partId) => {
   };
 };
 
-
-const _deletePart = (partId) => ({
+const _deletePart = (partIdAndChannelId) => ({
   type: DELETE_A_PART,
-  // no normalization should be required since we can achieve this with id alone
-  payload: partId,
+  // no normalization should be required since we can achieve this with partId and channelId alone
+  payload: partIdAndChannelId,
 });
 
 export const clearParts = () => ({

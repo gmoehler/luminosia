@@ -1,9 +1,15 @@
 import { merge, cloneDeep } from "lodash";
 
-import { ADD_CHANNEL, CLEAR_CHANNELS, PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_PART, RESIZE_PART, ADD_A_PART, ADD_PART, DELETE_PART, DELETE_A_PART, DELETE_CHANNEL, SET_CHANNEL_ACTIVE, UNSET_CHANNEL_ACTIVE, UPDATE_CHANNEL,
+import {
+  ADD_CHANNEL, CLEAR_CHANNELS, PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_PART, RESIZE_PART, ADD_A_PART, DELETE_A_PART, DELETE_CHANNEL, SET_CHANNEL_ACTIVE, UNSET_CHANNEL_ACTIVE, UPDATE_CHANNEL,
 } from "../actions/types";
 
 import { filterObjectByKeys } from "../utils/miscUtils";
+import { denormalize } from "normalizr";
+import { partSchema } from "./partReducer";
+
+const channelSchema = { parts: [partSchema] };
+const channelsSchema = [{ parts: [partSchema] }];
 
 // TODO: improve this reducer using a sub-reducer on the selected channel
 
@@ -20,17 +26,9 @@ export default (state = initialState, action) => {
 
     case ADD_CHANNEL:
       const channelId = state.lastChannelId + 1;
-
-      // update partId & channelId in all parts
-      const newByPartId = {};
-      let partSeqNum = -1;
-      Object.keys(action.payload.byPartId || {}).forEach((oldPartId) => {
-        const part = cloneDeep(action.payload.byPartId[oldPartId]);
-        const partId = generatePartId(channelId, ++partSeqNum);
-        part.channelId = channelId;
-        part.partId = partId;
-        newByPartId[partId] = part;
-      });
+      // TODO: check array in action already
+      const newParts = Array.isArray(action.payload.parts) ?
+        [...action.payload.parts] : [];
 
       return {
         ...state,
@@ -40,9 +38,7 @@ export default (state = initialState, action) => {
           [channelId]: {
             ...action.payload,
             channelId,
-            lastPartSeqNum: partSeqNum,
-            byPartId: newByPartId,
-            allPartIds: [],
+            parts: newParts,
           },
         },
       };
@@ -92,14 +88,19 @@ export default (state = initialState, action) => {
       };
 
     case ADD_A_PART:
-      // add part to allPartIds array
+      // add part to parts array
       const channelCopy0 = {
         ...state.byChannelId[action.payload.channelId]
       };
-      const newAllPartIds0 = [
-        ...channelCopy0.allPartIds,
-        action.payload.partId,
+      const newParts0 = [
+        ...channelCopy0.parts,
+        action.payload.result,
       ];
+      // and adjust duration
+      const part0 = action.payload.entities.byPartId[action.payload.result];
+      const duration0 = Math.max(
+        state.byChannelId[action.payload.channelId].duration,
+        part0.offset + part0.duration);
 
       return {
         ...state,
@@ -107,48 +108,19 @@ export default (state = initialState, action) => {
           ...state.byChannelId,
           [action.payload.channelId]: {
             ...channelCopy0,
-            allPartIds: newAllPartIds0,
+            parts: newParts0,
+            duration: duration0,
           }
         }
       };
 
-    case ADD_PART:
-      if (!action.payload.imageId) {
-        return state;
-      }
-      const partSeqNum1 = state.byChannelId[action.payload.channelId].lastPartSeqNum + 1;
-      const partId = generatePartId(action.payload.channelId, partSeqNum1);
-      const maxDuration = Math.max(state.byChannelId[action.payload.channelId].duration,
-        action.payload.offset + action.payload.duration);
-      return {
-        ...state,
-        byChannelId: {
-          ...state.byChannelId,
-          [action.payload.channelId]: {
-            ...state.byChannelId[action.payload.channelId],
-            lastPartSeqNum: partSeqNum1,
-            duration: maxDuration,
-            byPartId: {
-              ...state.byChannelId[action.payload.channelId].byPartId,
-              [partId]: {
-                partId,
-                src: action.payload.src,
-                imageId: action.payload.imageId,
-                offset: action.payload.offset,
-                duration: action.payload.duration,
-              },
-            },
-          },
-        },
-      };
-
     case DELETE_A_PART:
-      // remove part from allPartIds array
+      // remove part from parts array
       const channelCopy1 = {
         ...state.byChannelId[action.payload.channelId]
       };
-      const newAllPartIds1 = [
-        ...channelCopy1.allPartIds.filter(id => id !== action.payload.partId)
+      const newParts1 = [
+        ...channelCopy1.parts.filter(id => id !== action.payload.partId)
       ];
 
       return {
@@ -157,24 +129,9 @@ export default (state = initialState, action) => {
           ...state.byChannelId,
           [action.payload.channelId]: {
             ...channelCopy1,
-            allPartIds: newAllPartIds1,
+            parts: newParts1,
           }
         }
-      };
-
-    case DELETE_PART:
-      const parts = cloneDeep(state.byChannelId[action.payload.channelId]).byPartId;
-      delete parts[action.payload.partId];
-
-      return {
-        ...state,
-        byChannelId: {
-          ...state.byChannelId,
-          [action.payload.channelId]: {
-            ...state.byChannelId[action.payload.channelId],
-            byPartId: parts,
-          },
-        },
       };
 
     case PLAY_CHANNELS:
@@ -320,13 +277,16 @@ export function allChannelsStopped(state) {
   return (_allChannelsStopped(state.channel));
 }
 
-// channel data sorted by type and id
-export const getAllChannelsData = state => Object.values(state.channel.byChannelId)
-  .sort((ch1, ch2) => {
-    const str1 = ch1.type + ch1.channelId;
-    const str2 = ch2.type + ch2.channelId;
-    return str1.localeCompare(str2);
-  });
+// channel data sorted by type and id and denormalized
+export const getAllChannelsData = state => {
+  const channels = Object.values(state.channel.byChannelId)
+    .sort((ch1, ch2) => {
+      const str1 = ch1.type + ch1.channelId;
+      const str2 = ch2.type + ch2.channelId;
+      return str1.localeCompare(str2);
+    });
+  return denormalizeChannels(state, channels);
+};
 
 export const getAllChannelsOverview = state => getAllChannelsData(state)
   .map(channel => ({
@@ -363,15 +323,6 @@ export const getLastChannel = (state) => {
   return state.channel.byChannelId[lastChannelId];
 };
 
-export const getNextPartId = (state, channelId) => {
-  const nextPartSeqNum = state.channel.byChannelId[channelId].lastPartSeqNum + 1;
-  return `${channelId}:${nextPartSeqNum}`;
-};
-
-function generatePartId(channelId, partSeqId) {
-  return `${channelId}:${partSeqId}`;
-}
-
 function getDuration(state, channelId) {
   const channelData = state.channel.byChannelId[channelId];
   const offset = channelData.offset ? channelData.offset : 0;
@@ -394,7 +345,7 @@ export const getChannelsConfig = (state) => {
 };
 
 export const getPartIds = (state, channelId) => {
-  return Object.keys(state.channel.byChannelId[channelId].byPartId);
+  return state.channel.byChannelId[channelId].parts;
 };
 
 export const getActiveChannelIds = (state, type) => Object.values(state.channel.byChannelId)
@@ -411,3 +362,9 @@ export function getElementType(elementInfo) {
   }
   return null;
 }
+
+export const denormalizeChannel = (state, channel) =>
+  denormalize(channel, channelSchema, state.entities.parts);
+
+export const denormalizeChannels = (state, channels) =>
+  denormalize(channels, channelsSchema, state.entities.parts);

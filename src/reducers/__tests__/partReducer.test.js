@@ -273,7 +273,7 @@ describe("part reducer", () => {
 
 });
 
-describe("state access functions", () => {
+describe("selector functions", () => {
 
   it("should show that a part exists", () => {
 

@@ -2,14 +2,14 @@ import { PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_PART, ADD_PA
 
 import { setMarker, deleteMarker, toggleElementSelection, remElemFromSel, addPartToMultiSelection, clearElementSelectionWithMarkers, syncMarkersForPart } from "./viewActions";
 
-import { getNextPartId, getLastChannel, getActiveChannelIds, getMaxDuration, getChannelData, getPart, getElementType, getPartIds } from "../reducers/channelReducer";
+import { getLastChannel, getActiveChannelIds, getMaxDuration, getChannelData, getPart, getElementType, getPartIds } from "../reducers/channelReducer";
 import { getSelectedImageChannelId, getPartsToCopy, getSelectedElements, getSelectedParts, isElementSelected } from "../reducers/viewReducer";
 import { getImageDuration } from "../reducers/imageListReducer";
 import { removeImage } from "./imageListActions";
 import { defaultSampleRate } from "../components/ImageListContainer";
 import { readAudioFile } from "../utils/fileUtils";
 import { drawExportImage, clearExportImage } from "./generalActions";
-import { createPart, /*deleteAPart*/ } from "./partActions";
+import { createPart, deleteAPart } from "./partActions";
 
 // add channel with channelInfo containing complete channel information
 export const addChannel = (channelInfo) => ({
@@ -99,7 +99,6 @@ function loadImageChannel(channelConfig, state) {
   normalizedParts &&
     delete normalizedParts.curid;
   delete channelConfig.parts;
-  channelConfig.lastPartSeqNum = Object.keys(normalizedParts).length - 1;
   channelConfig.playState = "stopped";
   channelConfig.gain = channelConfig.gain || 1.0;
 
@@ -197,31 +196,24 @@ export const insertNewPart = (partInfo) => {
 
     // creates part and adds it to the channel
     // TODO: use pid
-    /* const pId = */ dispatch(createPart({
-        ...partInfo,
-        duration
-      }));
-
-    // remember partid that new part will have to re-use for markers
-    const nextPartId = getNextPartId(getState(), partInfo.channelId);
-    dispatch(addPart({
+    const pId = dispatch(createPart({
       ...partInfo,
-      duration,
+      duration
     }));
 
     // generate markers for part
     dispatch(setMarker({
-      markerId: `${nextPartId}-l`,
+      markerId: `${pId}-l`,
       channelId: partInfo.channelId,
-      partId: nextPartId,
+      partId: pId,
       pos: partInfo.offset,
       minPos: 0,
       type: "normal"
     }));
     dispatch(setMarker({
-      markerId: `${nextPartId}-r`,
+      markerId: `${pId}-r`,
       channelId: partInfo.channelId,
-      partId: nextPartId,
+      partId: pId,
       pos: partInfo.offset + duration,
       minPos: duration,
       type: "normal"
@@ -231,7 +223,7 @@ export const insertNewPart = (partInfo) => {
     // select the new part
     const lastPart = {
       channelId: partInfo.channelId,
-      partId: nextPartId,
+      partId: pId,
       selected: true,
     };
     dispatch(toggleElementSelection(lastPart));
@@ -264,9 +256,7 @@ export const deleteSelectedPartAndMarkers = () => {
       const type = getElementType(elemInfo);
 
       if (type === "part") {
-        // TODO: enable this
-        // dispatch(deleteAPart(elemInfo.partId));
-        dispatch(deletePart(elemInfo));
+        dispatch(deleteAPart(elemInfo.partId));
         dispatch(deleteMarker({
           markerId: `${elemInfo.partId}-l`
         }));
