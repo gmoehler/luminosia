@@ -79,13 +79,13 @@ describe("actions", () => {
       {
         "type": "DELETE_MARKER",
         "payload": {
-          "markerId": "2:1-l",
+          "markerId": "part-1-l",
         },
       },
       {
         "type": "DELETE_MARKER",
         "payload": {
-          "markerId": "2:1-r",
+          "markerId": "part-1-r",
         },
       },
       {

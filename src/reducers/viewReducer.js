@@ -76,6 +76,7 @@ export default (state = initialState, action) => {
         selectedImageChannelId: action.payload.channelId
       };
 
+    // TODO: use part & channel id for marker and denormalize
     case SET_MARKER:
       return {
         ...state,
