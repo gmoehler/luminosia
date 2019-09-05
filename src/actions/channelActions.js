@@ -12,6 +12,7 @@ import { drawExportImage, clearExportImage } from "./generalActions";
 import { createPart, deleteAPart } from "./partActions";
 
 // add channel with channelInfo containing complete channel information
+// TODO: generate & add channel-id here and check fields
 export const addChannel = (channelInfo) => ({
   type: ADD_CHANNEL,
   payload: channelInfo

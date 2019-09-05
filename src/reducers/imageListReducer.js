@@ -55,6 +55,7 @@ export const getImageList = (state) => {
 };
 
 // an map with imageIds pointing to image sources
+// TODO: think about denorm with image sources or lookup func
 export const getImageSources = (state) => {
   const ret = Object.values(state.entities.images.byImageId).reduce((srcMap, img) => {
     srcMap[img.imageId] = img.src;
