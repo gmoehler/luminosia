@@ -3,7 +3,6 @@ import { CLEAR_IMAGELIST, ADD_IMAGE, REMOVE_IMAGE, } from "../actions/types";
 import { filterObjectByKeys } from "../utils/miscUtils";
 import { combineReducers } from "redux";
 
-
 const byImageId = (state = {}, action) => {
   switch (action.type) {
 

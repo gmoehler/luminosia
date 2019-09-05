@@ -1,21 +1,16 @@
 
 import { normalize } from "normalizr";
-
-import {
-  CLEAR_PARTS, ADD_A_PART, DELETE_A_PART,
-} from "./types";
-
+import { CLEAR_PARTS, ADD_A_PART, DELETE_A_PART } from "./types";
 import { getChannelId, partSchema } from "../reducers/partReducer";
 
-
 // first id will be 1 to avoid falsy ids
-let lastId = 0;
+let lastPartId = 0;
 
 function generateId() {
   // simple generator :-)
   // other options: cuid or uuid
-  lastId++;
-  return "part-" + lastId.toString();
+  lastPartId++;
+  return "part-" + lastPartId.toString();
 }
 
 // create part id and add the part to the parts entities and channel

@@ -216,13 +216,6 @@ describe("actions", () => {
         payload: normalizedPart
       },
       {
-        type: types.ADD_PART,
-        payload: {
-          ...part,
-          //  channelId: 2
-        }
-      },
-      {
         type: types.SET_MARKER,
         payload: {
           markerId: "2:2-l",

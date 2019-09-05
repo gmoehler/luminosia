@@ -57,12 +57,6 @@ it("should paste a part from channel 2 to channel 1", () => {
       ...normalizedPartCh1,
     }
   }, {
-    type: types.ADD_PART,
-    payload: {
-      ...part,
-      channelId: 1
-    }
-  }, {
     type: types.SET_MARKER,
     payload: {
       "channelId": 1,

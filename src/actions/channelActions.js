@@ -1,4 +1,4 @@
-import { PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_PART, ADD_PART, DELETE_PART, ADD_CHANNEL, CLEAR_CHANNELS, UPLOAD_AUDIO_STARTED, UPLOAD_AUDIO_SUCCESS, UPLOAD_AUDIO_FAILURE, DELETE_CHANNEL, SET_CHANNEL_ACTIVE, UNSET_CHANNEL_ACTIVE, UPDATE_CHANNEL, RESIZE_PART } from "./types";
+import { PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_PART, ADD_CHANNEL, CLEAR_CHANNELS, UPLOAD_AUDIO_STARTED, UPLOAD_AUDIO_SUCCESS, UPLOAD_AUDIO_FAILURE, DELETE_CHANNEL, SET_CHANNEL_ACTIVE, UNSET_CHANNEL_ACTIVE, UPDATE_CHANNEL, RESIZE_PART } from "./types";
 
 import { setMarker, deleteMarker, toggleElementSelection, remElemFromSel, addPartToMultiSelection, clearElementSelectionWithMarkers, syncMarkersForPart } from "./viewActions";
 
@@ -246,11 +246,6 @@ export const pastePart = () => {
   };
 };
 
-export const addPart = (partInfo) => ({
-  type: ADD_PART,
-  payload: partInfo
-});
-
 export const deleteSelectedPartAndMarkers = () => {
   return (dispatch, getState) => {
     getSelectedElements(getState()).forEach((elemInfo) => {
@@ -296,12 +291,6 @@ export const deleteChannelAndMarkers = (channelId) => {
   };
 };
 
-export const deletePart = partInfo => ({
-  type: DELETE_PART,
-  payload: partInfo
-});
-
-
 // play related actions
 
 export const playChannel = () => ({
@@ -331,6 +320,7 @@ export const movePart = (moveInfo) => ({
   payload: moveInfo
 });
 
+// TODO: replace by RESIZE_A_PART
 export const resizePart = (resizeInfo) => ({
   type: RESIZE_PART,
   payload: resizeInfo
