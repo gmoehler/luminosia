@@ -7,10 +7,11 @@ import partReducer from "./partReducer";
 
 const entityReducer = combineReducers({
     parts: partReducer,
+    images: imageListReducer,
 });
 
 export default combineReducers({
-    images: imageListReducer,
+
     channel: channelReducer,
     view: viewReducer,
     entities: entityReducer,

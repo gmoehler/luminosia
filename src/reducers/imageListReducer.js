@@ -1,60 +1,74 @@
 import { cloneDeep } from "lodash";
 import { CLEAR_IMAGELIST, ADD_IMAGE, REMOVE_IMAGE, } from "../actions/types";
 import { filterObjectByKeys } from "../utils/miscUtils";
+import { combineReducers } from "redux";
 
-const initialState = {
-  byImageId: {},
-};
 
-export default (state = initialState, action) => {
+const byImageId = (state = {}, action) => {
   switch (action.type) {
 
     case CLEAR_IMAGELIST:
-      return initialState;
+      return {};
 
     case ADD_IMAGE:
-      const imageId = action.payload.imageId ? action.payload.imageId : action.payload.src;
       return {
         ...state,
-        byImageId: {
-          ...state.byImageId,
-          [imageId]: action.payload
-        }
+        [action.payload.imageId]: action.payload
       };
 
     case REMOVE_IMAGE:
-      const images = cloneDeep(state).byImageId;
-      delete images[action.payload.imageId];
-
-      return {
-        ...state,
-        byImageId: images
-      };
+      const newImages = cloneDeep(state).byImageId;
+      delete newImages[action.payload.imageId];
+      return newImages;
 
     default:
       return state;
   }
 };
 
+const allImageIds = (state = [], action) => {
+  switch (action.type) {
+
+    case CLEAR_IMAGELIST:
+      return [];
+
+    case ADD_IMAGE:
+      return [...state, action.payload.imageId];
+
+    case REMOVE_IMAGE:
+      const newAllImageIds = [...state];
+      newAllImageIds.splice(state.indexOf(action.payload.imageId), 1); // ids
+      return newAllImageIds;
+
+    default:
+      return state;
+  }
+};
+
+export default combineReducers({
+  byImageId,
+  allImageIds,
+});
+
 export const getImageList = (state) => {
-  return Object.values(state.images.byImageId);
+  return Object.values(state.entities.images.byImageId);
 };
 
 // an map with imageIds pointing to image sources
 export const getImageSources = (state) => {
-  const ret = Object.values(state.images.byImageId).reduce((srcMap, img) => {
-      srcMap[img.imageId] = img.src;
-      return srcMap;
+  const ret = Object.values(state.entities.images.byImageId).reduce((srcMap, img) => {
+    srcMap[img.imageId] = img.src;
+    return srcMap;
   }, {});
-    return ret;
+  return ret;
 };
 
 export const getImageSampleRate = (state) => {
-  return state.images.sampleRate;
+  return state.entities.images.sampleRate;
 };
 
 export const getImageDuration = (state, imageId) => {
-  const img = state.images.byImageId[imageId];
+  const img = state.entities.images.byImageId[imageId];
   return img ? img.duration : 0;
 };
 
@@ -63,12 +77,11 @@ export const getImageListConfig = (state) => {
   const allowedProps = ["src", "sampleRate",
     "imageId", "width", "height", "duration"];
 
-  const images = state.images.byImageId ?
-    Object.values(state.images.byImageId) : [];
+  const images = state.entities.images.byImageId ?
+    Object.values(state.entities.images.byImageId) : [];
 
   return images.map((img) => filterObjectByKeys(img, allowedProps));
-
 };
 
-export const imageExists = 
-	(state, id) => Object.keys(state.images.byImageId).includes(id);
+export const imageExists =
+  (state, id) => Object.keys(state.entities.images.byImageId).includes(id);

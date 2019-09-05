@@ -1,11 +1,20 @@
 import { ADD_IMAGE, CLEAR_IMAGELIST, REMOVE_IMAGE } from "./types";
 import { getImageList } from "../reducers/imageListReducer";
 
-
-export const addImage = (imageInfo) => ({
+const _addImage = (imageInfo) => ({
   type: ADD_IMAGE,
   payload: imageInfo
 });
+
+export function addImage(imageInfo) {
+  return (dispatch, getState) => {
+    // add imageId from src if not existing
+    dispatch(_addImage({
+      ...imageInfo,
+      imageId: imageInfo.imageId || imageInfo.src
+    }));
+  };
+};
 
 export const clearImageList = () => ({
   type: CLEAR_IMAGELIST
@@ -22,7 +31,7 @@ export function loadImage(imageInfo) {
     // we assume everything is in the record
     return Promise.resolve(imageInfo);
   }
-// no longer read file from server
+  // no longer read file from server
 }
 
 export function saveImageToStorage(image) {

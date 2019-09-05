@@ -12,7 +12,6 @@ export const partSchema = new schema.Entity("byPartId", {}, {
 });
 
 
-
 export const initialState = {
   byPartId: {},
   allPartIds: []
