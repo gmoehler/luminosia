@@ -1,6 +1,6 @@
 
 import { normalize } from "normalizr";
-import { CLEAR_PARTS, ADD_A_PART, DELETE_A_PART } from "./types";
+import { CLEAR_PARTS, ADD_A_PART, DELETE_A_PART, RESIZE_A_PART, MOVE_A_PART } from "./types";
 import { getChannelId, partSchema } from "../reducers/partReducer";
 
 // first id will be 1 to avoid falsy ids
@@ -59,9 +59,9 @@ export const deleteAPart = (partId) => {
         partId,
         channelId
       }));
+    } else {
+      console.error("cannot remove non-existing part:", partId);
     }
-    console.error("cannot remove non-existing part:", partId);
-    return null;
   };
 };
 
@@ -73,4 +73,44 @@ const _deletePart = (partIdAndChannelId) => ({
 
 export const clearParts = () => ({
   type: CLEAR_PARTS
+});
+
+export const moveAPart = (moveInfo) => {
+  return (dispatch, getState) => {
+    // ensure we have what we need
+    // so reducers do not need to check assumptions
+
+    if (moveInfo.partId) {
+      moveInfo.incr = moveInfo.incr || 0;
+      dispatch(_movePart(moveInfo));
+    } else {
+      console.error("part does not have enough information to be moved:", moveInfo);
+    }
+  };
+};
+
+export const _movePart = (moveInfo) => ({
+  type: MOVE_A_PART,
+  payload: moveInfo
+});
+
+export const resizeAPart = (resizeInfo) => {
+  return (dispatch, getState) => {
+    // ensure we have what we need
+    // so reducers do not need to check assumptions
+
+    if (resizeInfo.partId &&
+      ["left", "right"].includes(resizeInfo.bound)) {
+      resizeInfo.incr = resizeInfo.incr || 0;
+      dispatch(_resizePart(resizeInfo));
+    } else {
+      console.error("part does not have enough information to be resized:",
+        resizeInfo);
+    }
+  };
+};
+
+export const _resizePart = (resizeInfo) => ({
+  type: RESIZE_A_PART,
+  payload: resizeInfo
 });

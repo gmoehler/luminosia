@@ -1,5 +1,5 @@
 import { ADD_IMAGE, CLEAR_IMAGELIST, REMOVE_IMAGE } from "./types";
-import { getImageList } from "../reducers/imageListReducer";
+import { getImageList, imageExists } from "../reducers/imageListReducer";
 
 const _addImage = (imageInfo) => ({
   type: ADD_IMAGE,
@@ -8,11 +8,18 @@ const _addImage = (imageInfo) => ({
 
 export function addImage(imageInfo) {
   return (dispatch, getState) => {
-    // add imageId from src if not existing
-    dispatch(_addImage({
-      ...imageInfo,
-      imageId: imageInfo.imageId || imageInfo.src
-    }));
+    // required fields
+    if ((imageInfo.filename || imageInfo.imageId) &&
+      imageInfo.src && imageInfo.width && imageInfo.height) {
+      // add imageId based on filename
+      const imageId = imageInfo.imageId || imageInfo.filename;
+      dispatch(_addImage({
+        ...imageInfo,
+        imageId
+      }));
+      return imageId;
+    }
+    return null;
   };
 };
 
@@ -20,10 +27,18 @@ export const clearImageList = () => ({
   type: CLEAR_IMAGELIST
 });
 
-export const removeImage = (imageInfo) => ({
+const _removeImage = (imageId) => ({
   type: REMOVE_IMAGE,
-  payload: imageInfo
+  payload: imageId
 });
+
+export function removeImage(imageId) {
+  return (dispatch, getState) => {
+    if (imageExists(getState(), imageId)) {
+      dispatch(_removeImage(imageId));
+    }
+  };
+};
 
 export function loadImage(imageInfo) {
   // base64 encoded images

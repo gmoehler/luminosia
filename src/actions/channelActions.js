@@ -1,15 +1,28 @@
-import { PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, MOVE_PART, ADD_CHANNEL, CLEAR_CHANNELS, UPLOAD_AUDIO_STARTED, UPLOAD_AUDIO_SUCCESS, UPLOAD_AUDIO_FAILURE, DELETE_CHANNEL, SET_CHANNEL_ACTIVE, UNSET_CHANNEL_ACTIVE, UPDATE_CHANNEL, RESIZE_PART } from "./types";
+import {
+  PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, ADD_CHANNEL, CLEAR_CHANNELS,
+  UPLOAD_AUDIO_STARTED, UPLOAD_AUDIO_SUCCESS, UPLOAD_AUDIO_FAILURE, DELETE_CHANNEL,
+  SET_CHANNEL_ACTIVE, UNSET_CHANNEL_ACTIVE, UPDATE_CHANNEL,
+} from "./types";
 
-import { setMarker, deleteMarker, toggleElementSelection, remElemFromSel, addPartToMultiSelection, clearElementSelectionWithMarkers, syncMarkersForPart } from "./viewActions";
+import {
+  setMarker, deleteMarker, toggleElementSelection, remElemFromSel,
+  addPartToMultiSelection, clearElementSelectionWithMarkers, syncMarkersForPart
+} from "./viewActions";
 
-import { getLastChannel, getActiveChannelIds, getMaxDuration, getChannelData, getPart, getElementType, getPartIds } from "../reducers/channelReducer";
-import { getSelectedImageChannelId, getPartsToCopy, getSelectedElements, getSelectedParts, isElementSelected } from "../reducers/viewReducer";
+import {
+  getLastChannel, getActiveChannelIds, getMaxDuration, getChannelData,
+  getPart, getElementType, getPartIds
+} from "../reducers/channelReducer";
+import {
+  getSelectedImageChannelId, getPartsToCopy, getSelectedElements,
+  getSelectedParts, isElementSelected
+} from "../reducers/viewReducer";
 import { getImageDuration } from "../reducers/imageListReducer";
 import { removeImage } from "./imageListActions";
 import { defaultSampleRate } from "../components/ImageListContainer";
 import { readAudioFile } from "../utils/fileUtils";
 import { drawExportImage, clearExportImage } from "./generalActions";
-import { createPart, deleteAPart } from "./partActions";
+import { createPart, deleteAPart, moveAPart, resizeAPart } from "./partActions";
 
 // add channel with channelInfo containing complete channel information
 // TODO: generate & add channel-id here and check fields
@@ -262,7 +275,7 @@ export const deleteSelectedPartAndMarkers = () => {
         dispatch(remElemFromSel(elemInfo));
       }
       if (type === "image") {
-        dispatch(removeImage(elemInfo));
+        dispatch(removeImage(elemInfo.imageId));
       }
     });
   };
@@ -315,17 +328,6 @@ export const setChannelPlayState = (stateInfo) => ({
   payload: stateInfo
 });
 
-export const movePart = (moveInfo) => ({
-  type: MOVE_PART,
-  payload: moveInfo
-});
-
-// TODO: replace by RESIZE_A_PART
-export const resizePart = (resizeInfo) => ({
-  type: RESIZE_PART,
-  payload: resizeInfo
-});
-
 export const resizePartWithMarkers = (resizeInfo) => {
   return (dispatch, getState) => {
 
@@ -333,7 +335,7 @@ export const resizePartWithMarkers = (resizeInfo) => {
     dispatch(clearElementSelectionWithMarkers());
     dispatch(addPartToMultiSelection(resizeInfo));
 
-    dispatch(resizePart(resizeInfo));
+    dispatch(resizeAPart(resizeInfo));
     dispatch(syncMarkersForPart(resizeInfo.channelId, resizeInfo.partId));
   };
 };
@@ -347,7 +349,7 @@ export const moveSelectedPartsWithMarkers = (moveInfo) => {
       dispatch(addPartToMultiSelection(moveInfo));
     }
     getSelectedParts(getState()).forEach((part) => {
-      dispatch(movePart({
+      dispatch(moveAPart({
         ...part,
         incr: moveInfo.incr,
       }));

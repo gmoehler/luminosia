@@ -6,11 +6,11 @@ import { schema } from "normalizr";
 import {
   CLEAR_PARTS, ADD_A_PART, DELETE_A_PART, MOVE_A_PART, RESIZE_A_PART
 } from "../actions/types";
+import { getPart } from "./channelReducer";
 
 export const partSchema = new schema.Entity("byPartId", {}, {
   idAttribute: "partId"
 });
-
 
 export const initialState = {
   byPartId: {},
@@ -32,7 +32,7 @@ const byPartId = (state = {}, action) => {
     case MOVE_A_PART:
       const part0 = state[action.payload.partId];
       const currentOffset0 = part0.offset || 0;
-      const offsetIncr0 = action.payload.incr || 0;
+      const offsetIncr0 = action.payload.incr;
       const updatedOffset0 = currentOffset0 + offsetIncr0;
       const newPart0 = {
         ...part0,
@@ -139,11 +139,14 @@ export function doesPartExist(state, partId) {
   return state.entities.parts.allPartIds.includes(partId);
 }
 
+function _getPart(state, partId) {
+  return state.entities.parts.byPartId[partId];
+}
+
 export function getChannelId(state, partId) {
   if (!doesPartExist(state, partId)) {
     return null;
   }
-  const part = state.entities.parts.byPartId[partId];
-  return part.channelId;
+  return _getPart(state, partId).channelId;
 }
 

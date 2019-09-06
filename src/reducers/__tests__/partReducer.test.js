@@ -243,7 +243,7 @@ describe("part reducer", () => {
       type: types.DELETE_A_PART,
       payload: {
         partId: "part-1",
-        channelID: "channel-1",
+        channelId: "channel-1",
       }
     });
 

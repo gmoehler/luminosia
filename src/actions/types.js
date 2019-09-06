@@ -19,9 +19,6 @@ export const UPLOAD_AUDIO_FAILURE = "UPLOAD_AUDIO_FAILURE";
 
 export const PLAY_CHANNELS = "PLAY_CHANNELS";
 export const STOP_CHANNELS = "STOP_CHANNELS";
-export const MOVE_PART = "MOVE_PART";
-export const RESIZE_PART = "RESIZE_PART";
-export const PASTE_PART = "PASTE_PART";
 
 // image list actions
 export const ADD_IMAGE = "ADD_IMAGE";

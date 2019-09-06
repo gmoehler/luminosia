@@ -66,7 +66,7 @@ export default class ImageList extends PureComponent {
           width: img.width,
           height: img.height,
           src: reader.result,
-          imageId: fileName.name,
+          filename: fileName.name,
           sampleRate: that.props.sampleRate,
           duration: samplesToSeconds(img.width, that.props.sampleRate)
         };

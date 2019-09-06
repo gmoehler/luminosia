@@ -25,7 +25,10 @@ describe("part actions", () => {
 
     const store = mockStore({
       entities: {
-        parts: {},
+        parts: {
+          byPartId: {},
+          allPartIds: [],
+        },
       }
     });
 
@@ -40,7 +43,10 @@ describe("part actions", () => {
 
     const store = mockStore({
       entities: {
-        parts: {},
+        parts: {
+          byPartId: {},
+          allPartIds: [],
+        },
       }
     });
 
@@ -74,5 +80,6 @@ describe("part actions", () => {
     expect(actions.clearParts()).toEqual(expectedAction);
   });
 
+  // TODO add tests for movePart and resizePart
 
 });
