@@ -1,7 +1,6 @@
 import reducer, { initialState, getImageList, getImageSources } from "../imageListReducer";
 import * as types from "../../actions/types";
-import {
-  imagePayload0, imageListState0, fullState0,
+import { imagePayload0, imageListState0, fullState0,
 } from "../../__fixtures__/imageList.fixtures";
 
 describe("image list reducer", () => {
@@ -59,14 +58,14 @@ describe("image list reducer", () => {
 describe("selector functions", () => {
 
   it("should get the image list", () => {
-
     expect(getImageList(fullState0)).toEqual([imagePayload0]);
   });
 
   it("should get the image sources", () => {
-
     expect(getImageSources(fullState0)).toEqual(
-      { "grummelschnubbel.png": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJMAAAAeCAYAAAAoyywTAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAACLSURBVHhe7daxDQIxEADBg+7o4akOeqA8nsAh+g/YgGBGsnyJHa0sX2bm/VkceNyeazp2f21r+u7snrPz/+66dviZmMiIiYyYyPiAk/EykRETGTGRERMZMZERExkxkRETGTGRERMZMZERExkxkRETGTGRERMZMZERExkxkRETGTGRERMZMZERE5GZHUbWCDnvLRwMAAAAAElFTkSuQmCC" }
+      {
+        "grummelschnubbel.png": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJMAAAAeCAYAAAAoyywTAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAACLSURBVHhe7daxDQIxEADBg+7o4akOeqA8nsAh+g/YgGBGsnyJHa0sX2bm/VkceNyeazp2f21r+u7snrPz/+66dviZmMiIiYyYyPiAk/EykRETGTGRERMZMZERExkxkRETGTGRERMZMZERExkxkRETGTGRERMZMZERExkxkRETGTGRERMZMZERE5GZHUbWCDnvLRwMAAAAAElFTkSuQmCC"
+      }
     );
   });
 

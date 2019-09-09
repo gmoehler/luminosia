@@ -25,12 +25,18 @@ export const ADD_IMAGE = "ADD_IMAGE";
 export const CLEAR_IMAGELIST = "CLEAR_IMAGELIST";
 export const REMOVE_IMAGE = "REMOVE_IMAGE";
 
-// basic part actions
+// part actions
 export const CLEAR_PARTS = "CLEAR_PARTS";
 export const ADD_A_PART = "ADD_A_PART";
 export const DELETE_A_PART = "DELETE_A_PART";
 export const MOVE_A_PART = "MOVE_A_PART";
 export const RESIZE_A_PART = "RESIZE_A_PART";
+
+// marker actions
+export const CLEAR_MARKERS = "CLEAR_MARKERS";
+export const SET_A_MARKER = "SET_A_MARKER";
+export const DELETE_A_MARKER = "DELETE_A_MARKER";
+export const UPDATE_A_MARKER = "UPDATE_A_MARKER";
 
 // view actions
 export const CLEAR_VIEW = "CLEAR_VIEW";
@@ -41,6 +47,7 @@ export const SET_CHANNEL_PLAY_STATE = "SET_CHANNEL_PLAY_STATE";
 export const SET_MARKER = "SET_MARKER";
 export const DELETE_MARKER = "DELETE_MARKER";
 export const UPDATE_MARKER = "UPDATE_MARKER";
+
 export const ADD_ELEMENT_TO_SEL = "ADD_ELEMENT_TO_SEL";
 export const REMOVE_ELEMENT_FROM_SEL = "REMOVE_ELEMENT_FROM_SEL";
 export const CLEAR_SEL = "CLEAR_SEL";
