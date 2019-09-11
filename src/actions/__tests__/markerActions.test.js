@@ -3,9 +3,7 @@ import thunk from "redux-thunk";
 
 import * as actions from "../markerActions";
 import * as types from "../types";
-import {
-  markerPayload0, markerPayload1, fullMarkerState0
-} from "../../__fixtures__/marker.fixtures";
+import { markerPayload0, markerPayload1, fullMarkerState0 } from "../../__fixtures__/marker.fixtures";
 
 
 export const mockStore = configureMockStore([thunk]);
@@ -14,7 +12,7 @@ describe("marker actions", () => {
 
   it("should set a marker", () => {
     const expectedActions = [{
-      type: types.SET_A_MARKER,
+      type: types.SET_OR_REPLACE_A_MARKER,
       payload: markerPayload0
     }];
 
@@ -27,7 +25,7 @@ describe("marker actions", () => {
       }
     });
 
-    const markerId = store.dispatch(actions.setAMarker(markerPayload1));
+    const markerId = store.dispatch(actions.setOrReplaceAMarker(markerPayload1));
     expect(markerId).toEqual(markerPayload0.markerId);
     const acts = store.getActions();
     expect(acts).toEqual(expectedActions);
@@ -35,7 +33,7 @@ describe("marker actions", () => {
 
   it("should add an marker with existing markerId to the list", () => {
     const expectedActions = [{
-      type: types.SET_A_MARKER,
+      type: types.SET_OR_REPLACE_A_MARKER,
       payload: markerPayload0
     }];
 
@@ -48,7 +46,7 @@ describe("marker actions", () => {
       }
     });
 
-    const markerId = store.dispatch(actions.setAMarker(markerPayload0));
+    const markerId = store.dispatch(actions.setOrReplaceAMarker(markerPayload0));
     expect(markerId).toEqual(markerPayload0.markerId);
     const acts = store.getActions();
     expect(acts).toEqual(expectedActions);
@@ -76,13 +74,19 @@ describe("marker actions", () => {
   it("should update a marker with incr", () => {
     const expectedActions = [{
       type: types.UPDATE_A_MARKER,
-      payload: { markerId: "part-2--left", incr: 12 },
+      payload: {
+        markerId: "part-2--left",
+        incr: 12
+      },
     }];
 
     const store = mockStore(fullMarkerState0);
 
     store.dispatch(actions.updateAMarker(
-      { markerId: "part-2--left", incr: 12 }));
+      {
+        markerId: "part-2--left",
+        incr: 12
+      }));
     const acts = store.getActions();
     expect(acts).toEqual(expectedActions);
   });
@@ -90,13 +94,19 @@ describe("marker actions", () => {
   it("should update a marker with pos", () => {
     const expectedActions = [{
       type: types.UPDATE_A_MARKER,
-      payload: { markerId: "part-2--left", pos: 12 },
+      payload: {
+        markerId: "part-2--left",
+        pos: 12
+      },
     }];
 
     const store = mockStore(fullMarkerState0);
 
     store.dispatch(actions.updateAMarker(
-      { markerId: "part-2--left", pos: 12 }));
+      {
+        markerId: "part-2--left",
+        pos: 12
+      }));
     const acts = store.getActions();
     expect(acts).toEqual(expectedActions);
   });
@@ -104,13 +114,19 @@ describe("marker actions", () => {
   it("should update a marker with type", () => {
     const expectedActions = [{
       type: types.UPDATE_A_MARKER,
-      payload: { markerId: "part-2--left", type: "part-22--right" },
+      payload: {
+        markerId: "part-2--left",
+        type: "part-22--right"
+      },
     }];
 
     const store = mockStore(fullMarkerState0);
 
     store.dispatch(actions.updateAMarker(
-      { markerId: "part-2--left", type: "part-22--right" }));
+      {
+        markerId: "part-2--left",
+        type: "part-22--right"
+      }));
     const acts = store.getActions();
     expect(acts).toEqual(expectedActions);
   });
@@ -122,7 +138,10 @@ describe("marker actions", () => {
     const store = mockStore(fullMarkerState0);
 
     store.dispatch(actions.updateAMarker(
-      { markerId: "unkown-marker", incr: 12 }));
+      {
+        markerId: "unkown-marker",
+        incr: 12
+      }));
     const acts = store.getActions();
     expect(acts).toEqual([]);
   });
@@ -133,7 +152,9 @@ describe("marker actions", () => {
     const store = mockStore(fullMarkerState0);
 
     store.dispatch(actions.updateAMarker(
-      { markerId: "part-2--left" }));
+      {
+        markerId: "part-2--left"
+      }));
     const acts = store.getActions();
     expect(acts).toEqual([]);
   });

@@ -5,8 +5,10 @@ import ChannelGroup from "./ChannelGroup";
 import { setChannelPlayState, insertNewPart, deleteSelectedPartAndMarkers, moveSelectedPartsWithMarkers, resizePartWithMarkers } from "../actions/channelActions";
 import { selectRange, deselectRange, setMarker, toggleElementSelection, toggleElementMultiSelection, setMessage, selectInInterval } from "../actions/viewActions";
 import { getMaxDuration, getAllChannelsData, allChannelsStopped } from "../reducers/channelReducer";
-import { getSelectionRange, getResolution, getMarkers, getSelectedImageChannelId, getUploadLog, isUploadingConfig } from "../reducers/viewReducer";
+import { getSelectionRange, getResolution, getSelectedImageChannelId, getUploadLog, isUploadingConfig } from "../reducers/viewReducer";
 import { getImageSources } from "../reducers/imageListReducer";
+import { setOrReplaceAMarker, } from "../actions/markerActions";
+import { getAllMarkers } from "../reducers/markerReducer";
 
 class ChannelGroupContainer extends Component {
 
@@ -56,7 +58,7 @@ const mapStateToProps = (state, props) => {
     selection: getSelectionRange(state),
     resolution: getResolution(state),
     maxDuration: getMaxDuration(state),
-    markers: getMarkers(state),
+    markers: getAllMarkers(state),
     imageSources: getImageSources(state),
     playState: allChannelsStopped(state) ? "stopped" : "playing",
     selectedImageChannelId: getSelectedImageChannelId(state),
@@ -79,6 +81,10 @@ const mapDispatchToProps = dispatch => ({
     partId,
     pos,
     minPos,
+    type
+  })),
+  setOrReplaceAMarker: (pos, type) => dispatch(setOrReplaceAMarker({
+    pos,
     type
   })),
   insertNewPart: (channelId, imageId, offset) => dispatch(insertNewPart({

@@ -102,7 +102,7 @@ export default class ChannelGroup extends Component {
           sampleRate,
           resolution,
           buffer: channelData && channelData.buffer,
-          parts: channelData.byPartId ? Object.values(channelData.byPartId) : [],
+          parts: channelData.parts,
           reportProgress: this.reportProgress,
         };
 

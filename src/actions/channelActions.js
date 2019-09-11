@@ -5,12 +5,12 @@ import {
 } from "./types";
 
 import {
-  setMarker, deleteMarker, toggleElementSelection, remElemFromSel,
+  deleteMarker, toggleElementSelection, remElemFromSel,
   addPartToMultiSelection, clearElementSelectionWithMarkers, syncMarkersForPart
 } from "./viewActions";
 
 import {
-  getLastChannel, getActiveChannelIds, getMaxDuration, getChannelData,
+  getActiveChannelIds, getMaxDuration, getChannelData,
   getPart, getElementType, getPartIds
 } from "../reducers/channelReducer";
 import {
@@ -23,6 +23,7 @@ import { defaultSampleRate } from "../components/ImageListContainer";
 import { readAudioFile } from "../utils/fileUtils";
 import { drawExportImage, clearExportImage } from "./generalActions";
 import { createPart, deleteAPart, moveAPart, resizeAPart } from "./partActions";
+import { deleteAMarker } from "./markerActions";
 
 // add channel with channelInfo containing complete channel information
 // TODO: generate & add channel-id here and check fields
@@ -161,37 +162,6 @@ export const duplicateChannel = (channelId) => {
     // also sanatizes the parts
     dispatch(addChannel(ch));
     // TODO: add new channel just after copied one
-    dispatch(updateChannelMarkersForLastAddedChannel()); // although we do know the channel id here...
-  };
-};
-
-export const updateChannelMarkersForLastAddedChannel = () => {
-  return (dispatch, getState) => {
-
-    const lastChannel = getLastChannel(getState());
-    if (lastChannel) {
-      const channelId = lastChannel.channelId;
-
-      Object.keys(lastChannel.byPartId).forEach((partId) => {
-        const part = lastChannel.byPartId[partId];
-        dispatch(setMarker({
-          markerId: `${partId}-l`,
-          channelId: channelId,
-          partId: partId,
-          pos: part.offset,
-          minPos: 0,
-          type: "normal"
-        }));
-        dispatch(setMarker({
-          markerId: `${partId}-r`,
-          channelId: channelId,
-          partId: partId,
-          pos: part.offset + part.duration,
-          minPos: part.duration,
-          type: "normal"
-        }));
-      });
-    }
   };
 };
 
@@ -205,6 +175,8 @@ export const insertNewPart = (partInfo) => {
       markerId: "insert"
     }));
 
+    dispatch(deleteAMarker("insert"));
+
     const duration = getImageDuration(
       getState(), partInfo.imageId);
 
@@ -214,25 +186,6 @@ export const insertNewPart = (partInfo) => {
       ...partInfo,
       duration
     }));
-
-    // generate markers for part
-    dispatch(setMarker({
-      markerId: `${pId}-l`,
-      channelId: partInfo.channelId,
-      partId: pId,
-      pos: partInfo.offset,
-      minPos: 0,
-      type: "normal"
-    }));
-    dispatch(setMarker({
-      markerId: `${pId}-r`,
-      channelId: partInfo.channelId,
-      partId: pId,
-      pos: partInfo.offset + duration,
-      minPos: duration,
-      type: "normal"
-    }));
-
 
     // select the new part
     const lastPart = {

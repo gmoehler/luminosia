@@ -4,9 +4,9 @@ import { combineReducers } from "redux";
 import { schema } from "normalizr";
 
 import {
-  CLEAR_PARTS, ADD_A_PART, DELETE_A_PART, MOVE_A_PART, RESIZE_A_PART
+  CLEAR_PARTS, ADD_A_PART, DELETE_A_PART, MOVE_A_PART, RESIZE_A_PART,
+  SELECT_A_PART, DESELECT_A_PART,
 } from "../actions/types";
-import { getPart } from "./channelReducer";
 
 export const partSchema = new schema.Entity("byPartId", {}, {
   idAttribute: "partId"
@@ -14,7 +14,8 @@ export const partSchema = new schema.Entity("byPartId", {}, {
 
 export const initialState = {
   byPartId: {},
-  allPartIds: []
+  allPartIds: [],
+  selectedPartIds: [],
 };
 
 // split into 2 reducers: byPartId and allPartIds
@@ -94,6 +95,10 @@ const byPartId = (state = {}, action) => {
       return newState;
     }
 
+    case SELECT_A_PART: {
+      return state;
+    }
+
     case CLEAR_PARTS:
       return {};
 
@@ -110,17 +115,19 @@ const allPartIds = (state = [], action) => {
 
     case DELETE_A_PART: {
       const newState = [...state];
+      // we already checked in action that it actually exists
       newState.splice(state.indexOf(action.payload.partId), 1); // ids
       return newState;
     }
 
     case MOVE_A_PART:
-      // no changes
-      return state;
+      return state; // no changes
 
     case RESIZE_A_PART:
-      // no changes
-      return state;
+      return state; // no changes
+
+    case SELECT_A_PART:
+      return state; // no changes
 
     case CLEAR_PARTS:
       return [];
@@ -130,13 +137,61 @@ const allPartIds = (state = [], action) => {
   }
 };
 
+const selectedPartIds = (state = [], action) => {
+  switch (action.type) {
+
+    case ADD_A_PART:
+      return state; // no changes
+
+    case DELETE_A_PART: {
+      if (state.includes(action.payload.partId)) {
+        const newState0 = [...state];
+        newState0.splice(newState0.indexOf(action.payload.partId), 1); // ids
+        return newState0;
+      }
+      return state;
+    }
+
+    case MOVE_A_PART:
+      return state; // no changes
+
+    case RESIZE_A_PART:
+      return state; // no changes
+
+    case SELECT_A_PART: {
+      return [...state, action.payload];
+    }
+
+    case DESELECT_A_PART: {
+      if (state.includes(action.payload)) {
+        const newState1 = [...state];
+        newState1.splice(newState1.indexOf(action.payload), 1); // ids
+        return newState1;
+      }
+      return state;
+    }
+
+    case CLEAR_PARTS:
+      return [];
+
+    default:
+      return state;
+  }
+};
+
+
 export default combineReducers({
   byPartId,
   allPartIds,
+  selectedPartIds,
 });
 
 export function doesPartExist(state, partId) {
   return state.entities.parts.allPartIds.includes(partId);
+}
+
+export function isPartSelected(state, partId) {
+  return state.entities.parts.selectedPartIds.includes(partId);
 }
 
 function _getPart(state, partId) {

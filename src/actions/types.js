@@ -31,10 +31,12 @@ export const ADD_A_PART = "ADD_A_PART";
 export const DELETE_A_PART = "DELETE_A_PART";
 export const MOVE_A_PART = "MOVE_A_PART";
 export const RESIZE_A_PART = "RESIZE_A_PART";
+export const SELECT_A_PART = "SELECT_A_PART";
+export const DESELECT_A_PART = "DESELECT_A_PART";
 
 // marker actions
 export const CLEAR_MARKERS = "CLEAR_MARKERS";
-export const SET_A_MARKER = "SET_A_MARKER";
+export const SET_OR_REPLACE_A_MARKER = "SET_OR_REPLACE_A_MARKER";
 export const DELETE_A_MARKER = "DELETE_A_MARKER";
 export const UPDATE_A_MARKER = "UPDATE_A_MARKER";
 

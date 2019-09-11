@@ -3,6 +3,8 @@ import { SELECT_RANGE, DESELECT_RANGE, SET_RESOLUTION, UPDATE_MARKER, SET_MARKER
 import { isElementSelected, getSelectedElements, getNumSelectedElements, getSelectionType, getSelectedParts, getSelectedImageChannelId } from "../reducers/viewReducer";
 
 import { getElementType, getPart, getPartRefsInInterval } from "../reducers/channelReducer";
+import { isPartSelected } from "../reducers/partReducer";
+import { deselectAPart, selectAPart } from "./partActions";
 
 export const clearView = () => ({
   type: CLEAR_VIEW
@@ -83,7 +85,7 @@ export const updateMarkersForPart = (partId, updateInfo) => {
 
 export const syncMarkersForPart = (channelId, partId) => {
   return (dispatch, getState) => {
-    const part = getPart(getState(), channelId, partId);
+    /* const part = getPart(getState(), channelId, partId);
     const markerIdPrefix = `${partId}`;
     dispatch(updateMarker({
       markerId: markerIdPrefix + "-l",
@@ -92,18 +94,7 @@ export const syncMarkersForPart = (channelId, partId) => {
     dispatch(updateMarker({
       markerId: markerIdPrefix + "-r",
       pos: part.offset + part.duration,
-    }));
-  };
-};
-
-export const updateSelectedMarkers = (moveInfo) => {
-  return (dispatch, getState) => {
-    getSelectedParts(getState()).forEach((part) => {
-      dispatch(updateMarkersForPart(part.partId, {
-        incr: moveInfo.incr,
-        selected: true,
-      }));
-    });
+    })); */
   };
 };
 
@@ -114,6 +105,15 @@ export const toggleElementSelection = ((elementInfo) => {
 
     // always select the channel
     dispatch(selectImageChannel(elementInfo));
+
+    const partId = elementInfo.partId;
+    if (partId) {
+      if (isPartSelected(getState(), partId)) {
+        dispatch(deselectAPart(partId));
+      } else {
+        dispatch(selectAPart(partId));
+      }
+    }
 
     const elemSelected = isElementSelected(getState(), elementInfo);
     const numElemSelected = getNumSelectedElements(getState());

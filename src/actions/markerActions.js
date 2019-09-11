@@ -1,26 +1,27 @@
-import { CLEAR_MARKERS, SET_A_MARKER, DELETE_A_MARKER, UPDATE_A_MARKER, } from "./types";
-import { markerExists } from "../reducers/markerReducer";
+import { CLEAR_MARKERS, SET_OR_REPLACE_A_MARKER, DELETE_A_MARKER, UPDATE_A_MARKER, } from "./types";
+import { aMarkerExists } from "../reducers/markerReducer";
 
 export const clearMarkers = () => ({
   type: CLEAR_MARKERS,
 });
 
-const _setMarker = (markerInfo) => ({
-  type: SET_A_MARKER,
+const _setOrReplaceMarker = (markerInfo) => ({
+  type: SET_OR_REPLACE_A_MARKER,
   payload: markerInfo
 });
 
-export function setAMarker(markerInfo) {
+export function setOrReplaceAMarker(markerInfo) {
   return (dispatch, getState) => {
     // required fields
     if (markerInfo.type && markerInfo.pos) {
       let markerId = markerInfo.markerId;
       if (!markerId) {
         // add markerId based on type and partId
+        // or use type (mainly for "insert" marker)
         markerId = markerInfo.partId ?
           `${markerInfo.partId}--${markerInfo.type}` : markerInfo.type;
       }
-      dispatch(_setMarker({
+      dispatch(_setOrReplaceMarker({
         ...markerInfo,
         markerId
       }));
@@ -30,6 +31,10 @@ export function setAMarker(markerInfo) {
   };
 };
 
+export function setSelectionMarkers(partId) {
+
+}
+
 const _deleteMarker = (markerId) => ({
   type: DELETE_A_MARKER,
   payload: markerId
@@ -37,7 +42,7 @@ const _deleteMarker = (markerId) => ({
 
 export function deleteAMarker(imageId) {
   return (dispatch, getState) => {
-    if (markerExists(getState(), imageId)) {
+    if (aMarkerExists(getState(), imageId)) {
       dispatch(_deleteMarker(imageId));
     }
   };
@@ -53,7 +58,7 @@ export const updateAMarker = (markerInfo) => {
     // ensure we have what we need
     // so reducers do not need to check assumptions
     if (markerInfo.markerId) {
-      if (markerExists(getState(), markerInfo.markerId) && (
+      if (aMarkerExists(getState(), markerInfo.markerId) && (
         markerInfo.incr ||
         typeof markerInfo.pos == "number" ||
         markerInfo.type)) {

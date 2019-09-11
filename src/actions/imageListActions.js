@@ -13,11 +13,14 @@ export function addImage(imageInfo) {
       imageInfo.src && imageInfo.width && imageInfo.height) {
       // add imageId based on filename
       const imageId = imageInfo.imageId || imageInfo.filename;
-      dispatch(_addImage({
-        ...imageInfo,
-        imageId
-      }));
-      return imageId;
+      // only insert once
+      if (!imageExists(getState(), imageId)) {
+        dispatch(_addImage({
+          ...imageInfo,
+          imageId
+        }));
+        return imageId;
+      }
     }
     return null;
   };

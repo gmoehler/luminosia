@@ -47,6 +47,8 @@ const ImageCanvas = styled.canvas`
   padding: 0;
   width: ${props => props.cssWidth}px;
   height: ${props => props.height}px;
+  border-left: ${props => props.channelSelected ? 2 : 1}px solid ${props => props.theme.markerColor};
+  border-right:  ${props => props.channelSelected ? 2 : 1}px solid ${props => props.theme.markerColor};
 `;
 
 const CanvasRefImage = styled.img`
@@ -209,6 +211,8 @@ class ImageChannel extends Component {
               height={ imageHeight + 2 }
               ref={ this.createCanvasRef(partId, canvasCount) }
               data-partid={ partId }
+              theme={ theme }
+              channelSelected={ selected }
             />
           );
 

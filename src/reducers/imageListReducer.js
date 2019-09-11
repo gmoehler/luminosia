@@ -37,6 +37,7 @@ const allImageIds = (state = [], action) => {
       return [];
 
     case ADD_IMAGE:
+      // we already ensured in the action that it did not yet exist
       return [...state, action.payload.imageId];
 
     case REMOVE_IMAGE:

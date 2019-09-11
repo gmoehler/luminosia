@@ -7,7 +7,7 @@ import { downloadTextfile, readTextFile, /* downloadImagefile, */ downloadBinary
 
 import { getConfig } from "../reducers/rootReducer";
 
-import { addChannel, loadAChannel, updateChannelMarkersForLastAddedChannel } from "./channelActions";
+import { addChannel, loadAChannel } from "./channelActions";
 import { addImage, loadImage } from "./imageListActions";
 import { addToUploadLog } from "./viewActions";
 import { getChannelData, getMaxDuration } from "../reducers/channelReducer";
@@ -83,8 +83,6 @@ export const uploadConfig =
                 if (channelInfo) { // audio channels are not loaded yet
                   dispatch(addChannel(channelInfo));
                   console.log(`${channelData.type} channel added.`);
-                  dispatch(updateChannelMarkersForLastAddedChannel()); // channelInfo does not know the channel id here...
-                  console.log(`${channelData.type} channel: markers added.`);
                 }
                 return Promise.resolve();
               });

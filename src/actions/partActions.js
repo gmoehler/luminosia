@@ -1,7 +1,7 @@
 
 import { normalize } from "normalizr";
-import { CLEAR_PARTS, ADD_A_PART, DELETE_A_PART, RESIZE_A_PART, MOVE_A_PART } from "./types";
-import { getChannelId, partSchema } from "../reducers/partReducer";
+import { CLEAR_PARTS, ADD_A_PART, DELETE_A_PART, RESIZE_A_PART, MOVE_A_PART, SELECT_A_PART, DESELECT_A_PART } from "./types";
+import { getChannelId, partSchema, doesPartExist } from "../reducers/partReducer";
 
 // first id will be 1 to avoid falsy ids
 let lastPartId = 0;
@@ -67,7 +67,7 @@ export const deleteAPart = (partId) => {
 
 const _deletePart = (partIdAndChannelId) => ({
   type: DELETE_A_PART,
-  // no normalization should be required since we can achieve this with partId and channelId alone
+  // no normalization should not be required since we can achieve this with partId and channelId alone
   payload: partIdAndChannelId,
 });
 
@@ -92,6 +92,38 @@ export const moveAPart = (moveInfo) => {
 export const _movePart = (moveInfo) => ({
   type: MOVE_A_PART,
   payload: moveInfo
+});
+
+export const selectAPart = (partId) => {
+  return (dispatch, getState) => {
+    // ensure that part exists
+    if (doesPartExist(getState(), partId)) {
+      dispatch(_selectPart(partId));
+    } else {
+      console.error("part to select does not exist:", partId);
+    }
+  };
+};
+
+export const _selectPart = (partId) => ({
+  type: SELECT_A_PART,
+  payload: partId
+});
+
+export const deselectAPart = (partId) => {
+  return (dispatch, getState) => {
+    // ensure that part exists
+    if (doesPartExist(getState(), partId)) {
+      dispatch(_deselectPart(partId));
+    } else {
+      console.error("part to deselect does not exist:", partId);
+    }
+  };
+};
+
+export const _deselectPart = (partId) => ({
+  type: DESELECT_A_PART,
+  payload: partId
 });
 
 export const resizeAPart = (resizeInfo) => {

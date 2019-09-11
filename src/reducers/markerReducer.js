@@ -1,5 +1,5 @@
 import { cloneDeep } from "lodash";
-import { CLEAR_MARKERS, SET_A_MARKER, DELETE_A_MARKER, UPDATE_A_MARKER, } from "../actions/types";
+import { CLEAR_MARKERS, SET_OR_REPLACE_A_MARKER, DELETE_A_MARKER, UPDATE_A_MARKER, } from "../actions/types";
 import { combineReducers } from "redux";
 
 export const initialState = {
@@ -13,7 +13,7 @@ const byMarkerId = (state = {}, action) => {
     case CLEAR_MARKERS:
       return {};
 
-    case SET_A_MARKER:
+    case SET_OR_REPLACE_A_MARKER:
       return {
         ...state,
         [action.payload.markerId]: action.payload
@@ -56,8 +56,9 @@ const allMarkerIds = (state = [], action) => {
     case CLEAR_MARKERS:
       return [];
 
-    case SET_A_MARKER:
-      return [...state, action.payload.markerId];
+    case SET_OR_REPLACE_A_MARKER:
+      return state.includes(action.payload.markerId) ?
+        state : [...state, action.payload.markerId];
 
     case DELETE_A_MARKER:
       const newAllMarkerIds = [...state];
@@ -78,9 +79,9 @@ export default combineReducers({
 });
 
 
-export const getMarkers = (state) => {
+export const getAllMarkers = (state) => {
   return Object.values(state.entities.markers.byMarkerId);
 };
 
-export const markerExists = (state, id) =>
+export const aMarkerExists = (state, id) =>
   state.entities.markers.allMarkerIds.includes(id);

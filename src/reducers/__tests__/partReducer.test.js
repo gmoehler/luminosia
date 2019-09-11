@@ -46,6 +46,7 @@ describe("part reducer", () => {
         }
       },
       allPartIds: ["part-1"],
+      selectedPartIds: [],
     });
   });
 
@@ -75,6 +76,7 @@ describe("part reducer", () => {
         }
       },
       allPartIds: ["part-1"],
+      selectedPartIds: [],
     });
   });
 
@@ -105,6 +107,7 @@ describe("part reducer", () => {
         }
       },
       allPartIds: ["part-1"],
+      selectedPartIds: [],
     });
   });
 
@@ -135,6 +138,7 @@ describe("part reducer", () => {
         }
       },
       allPartIds: ["part-1"],
+      selectedPartIds: [],
     });
   });
 
@@ -165,6 +169,7 @@ describe("part reducer", () => {
         }
       },
       allPartIds: ["part-1"],
+      selectedPartIds: [],
     });
   });
 
@@ -196,6 +201,7 @@ describe("part reducer", () => {
         }
       },
       allPartIds: ["part-1"],
+      selectedPartIds: [],
     });
   });
 
@@ -226,11 +232,12 @@ describe("part reducer", () => {
         }
       },
       allPartIds: ["part-1"],
+      selectedPartIds: [],
     });
   });
 
 
-  it("should handle DELETE_A_PART", () => {
+  it("should delete a part", () => {
 
     const reducer0 = reducer(reducer(undefined, {}), {
       type: types.ADD_A_PART,
@@ -249,6 +256,99 @@ describe("part reducer", () => {
 
     expect(reducer1).toEqual({
       ...initialState,
+    });
+  });
+
+  it("should select a part", () => {
+
+    const reducer0 = reducer(reducer(undefined, {}), {
+      type: types.ADD_A_PART,
+      payload: normalizedPartPayload0
+    });
+
+    expect(reducer0).toEqual(partState0);
+
+    const reducer1 = reducer(reducer0, {
+      type: types.SELECT_A_PART,
+      payload: "part-1",
+    });
+
+    expect(reducer1).toEqual({
+      byPartId: {
+        "part-1": {
+          partId: "part-1",
+          imageId: "image1.png",
+          channelId: "channel-1",
+          offset: 0,
+          duration: 1,
+        }
+      },
+      allPartIds: ["part-1"],
+      selectedPartIds: ["part-1"],
+    });
+  });
+
+  it("should delete a selected part", () => {
+
+    const reducer0 = reducer(reducer(undefined, {}), {
+      type: types.ADD_A_PART,
+      payload: normalizedPartPayload0
+    });
+
+    expect(reducer0).toEqual(partState0);
+
+    const reducer1 = reducer(reducer0, {
+      type: types.SELECT_A_PART,
+      payload: "part-1",
+    });
+
+    const reducer2 = reducer(reducer1, {
+      type: types.DELETE_A_PART,
+      payload: {
+        partId: "part-1",
+        channelId: "channel-1",
+      }
+    });
+
+    expect(reducer2).toEqual({
+      ...initialState,
+    });
+  });
+
+  it("should deselect a selected part", () => {
+
+    const reducer0 = reducer(reducer(undefined, {}), {
+      type: types.ADD_A_PART,
+      payload: normalizedPartPayload0
+    });
+
+    expect(reducer0).toEqual(partState0);
+
+    const reducer1 = reducer(reducer0, {
+      type: types.SELECT_A_PART,
+      payload: "part-1",
+    });
+
+    const reducer2 = reducer(reducer1, {
+      type: types.DESELECT_A_PART,
+      payload: {
+        partId: "part-1",
+        channelId: "channel-1",
+      }
+    });
+
+    expect(reducer2).toEqual({
+      byPartId: {
+        "part-1": {
+          partId: "part-1",
+          imageId: "image1.png",
+          channelId: "channel-1",
+          offset: 0,
+          duration: 1,
+        }
+      },
+      allPartIds: ["part-1"],
+      selectedPartIds: [],
     });
   });
 

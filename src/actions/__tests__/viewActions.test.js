@@ -299,54 +299,6 @@ it("should sync markers for a part", () => {
 
 });
 
-
-
-it("should update selected markers for part", () => {
-
-  const state = {
-    ...imageChannelState,
-    view: {
-      ...initialViewState,
-      partsToCopy: [
-        part
-      ],
-      selectedElementsById: {
-        [part.partId]: part
-      },
-      selectedImageChannelId: 1,
-    }
-  };
-
-  const store = mockStore(state);
-
-  const expectedActions = [{
-    type: types.UPDATE_MARKER,
-    payload: {
-      markerId: "2:1-l",
-      incr: 23,
-      pos: undefined,
-      type: "selected"
-    }
-  }, {
-    type: types.UPDATE_MARKER,
-    payload: {
-      markerId: "2:1-r",
-      incr: 23,
-      pos: undefined,
-      type: "selected"
-    }
-  }
-  ];
-
-  store.dispatch(actions.updateSelectedMarkers({
-    ...part,
-    incr: 23
-  }));
-  const acts = store.getActions();
-  expect(acts).toEqual(expectedActions);
-
-});
-
 it("should sync markers for a part", () => {
 
   const state = {
