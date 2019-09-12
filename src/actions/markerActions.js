@@ -1,4 +1,7 @@
-import { CLEAR_MARKERS, SET_OR_REPLACE_A_MARKER, DELETE_A_MARKER, UPDATE_A_MARKER, } from "./types";
+import {
+  CLEAR_MARKERS, SET_OR_REPLACE_A_MARKER, DELETE_A_MARKER,
+  UPDATE_A_MARKER,
+} from "./types";
 import { aMarkerExists } from "../reducers/markerReducer";
 
 export const clearMarkers = () => ({
@@ -61,8 +64,11 @@ export const updateAMarker = (markerInfo) => {
   };
 };
 
-// actions in relation with parts
+////////////////////////////////////
+// actions in relation with parts //
+////////////////////////////////////
 
+// helpers to generate marker info from part
 function _getMarkerId(partId, type) {
   return `${partId}--${type}`;
 }
@@ -96,6 +102,8 @@ function _getSelectedRightMarker(partInfo) {
     type: "selected"
   };
 }
+
+// actions
 
 export const addPartSelectionMarkers = (partInfo) => {
   return (dispatch, getState) => {
