@@ -98,6 +98,8 @@ export const syncMarkersForPart = (channelId, partId) => {
   };
 };
 
+
+
 // method to select/deselect an element with always one being selected
 // (e.g. on simple click)
 export const toggleElementSelection = ((elementInfo) => {
@@ -105,15 +107,6 @@ export const toggleElementSelection = ((elementInfo) => {
 
     // always select the channel
     dispatch(selectImageChannel(elementInfo));
-
-    const partId = elementInfo.partId;
-    if (partId) {
-      if (isPartSelected(getState(), partId)) {
-        dispatch(deselectAPart(partId));
-      } else {
-        dispatch(selectAPart(partId));
-      }
-    }
 
     const elemSelected = isElementSelected(getState(), elementInfo);
     const numElemSelected = getNumSelectedElements(getState());

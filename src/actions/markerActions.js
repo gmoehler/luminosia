@@ -13,19 +13,10 @@ const _setOrReplaceMarker = (markerInfo) => ({
 export function setOrReplaceAMarker(markerInfo) {
   return (dispatch, getState) => {
     // required fields
-    if (markerInfo.type && markerInfo.pos) {
-      let markerId = markerInfo.markerId;
-      if (!markerId) {
-        // add markerId based on type and partId
-        // or use type (mainly for "insert" marker)
-        markerId = markerInfo.partId ?
-          `${markerInfo.partId}--${markerInfo.type}` : markerInfo.type;
-      }
+    if (markerInfo.markerId && markerInfo.pos && markerInfo.type) {
       dispatch(_setOrReplaceMarker({
-        ...markerInfo,
-        markerId
+        ...markerInfo
       }));
-      return markerId;
     }
     return null;
   };
@@ -40,10 +31,10 @@ const _deleteMarker = (markerId) => ({
   payload: markerId
 });
 
-export function deleteAMarker(imageId) {
+export function deleteAMarker(markerId) {
   return (dispatch, getState) => {
-    if (aMarkerExists(getState(), imageId)) {
-      dispatch(_deleteMarker(imageId));
+    if (aMarkerExists(getState(), markerId)) {
+      dispatch(_deleteMarker(markerId));
     }
   };
 };
@@ -67,6 +58,60 @@ export const updateAMarker = (markerInfo) => {
     } else {
       console.error("marker does not have enough information to be updated:", markerInfo);
     }
+  };
+};
+
+// actions in relation with parts
+
+function _getMarkerId(partId, type) {
+  return `${partId}--${type}`;
+}
+
+function _getPartLeftMarkerId(partId) {
+  return _getMarkerId({
+    partId: partId,
+    type: "left",
+  });
+}
+
+function _getSelectedLeftMarker(partInfo) {
+  return {
+    markerId: _getPartLeftMarkerId(partInfo.partId),
+    pos: partInfo.offset,
+    type: "selected"
+  };
+}
+
+function _getPartRightMarkerId(partId) {
+  return _getMarkerId({
+    partId: partId,
+    type: "right",
+  });
+}
+
+function _getSelectedRightMarker(partInfo) {
+  return {
+    markerId: _getPartRightMarkerId(partInfo.partId),
+    pos: partInfo.offset + partInfo.duration,
+    type: "selected"
+  };
+}
+
+export const addPartSelectionMarkers = (partInfo) => {
+  return (dispatch, getState) => {
+    const leftMarker = _getSelectedLeftMarker(partInfo);
+    dispatch(setOrReplaceAMarker(leftMarker));
+    const rightMarker = _getSelectedRightMarker(partInfo);
+    dispatch(setOrReplaceAMarker(rightMarker));
+  };
+};
+
+export const deletePartSelectionMarkers = (partId) => {
+  return (dispatch, getState) => {
+    const leftMarkerId = _getPartLeftMarkerId(partId);
+    dispatch(deleteAMarker(leftMarkerId));
+    const rightMarkerId = _getPartRightMarkerId(partId);
+    dispatch(deleteAMarker(rightMarkerId));
   };
 };
 

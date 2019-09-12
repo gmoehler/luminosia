@@ -1,7 +1,8 @@
 
 import { normalize } from "normalizr";
-import { CLEAR_PARTS, ADD_A_PART, DELETE_A_PART, RESIZE_A_PART, MOVE_A_PART, SELECT_A_PART, DESELECT_A_PART } from "./types";
-import { getChannelId, partSchema, doesPartExist } from "../reducers/partReducer";
+import { CLEAR_PARTS, ADD_A_PART, DELETE_A_PART, RESIZE_A_PART, MOVE_A_PART, SELECT_A_PART, DESELECT_A_PART, CLEAR_SELECTION } from "./types";
+import { getChannelId, partSchema, doesPartExist, getPart, isPartSelected } from "../reducers/partReducer";
+import { deletePartSelectionMarkers, addPartSelectionMarkers } from "./markerActions";
 
 // first id will be 1 to avoid falsy ids
 let lastPartId = 0;
@@ -94,6 +95,27 @@ export const _movePart = (moveInfo) => ({
   payload: moveInfo
 });
 
+export const resizeAPart = (resizeInfo) => {
+  return (dispatch, getState) => {
+    // ensure we have what we need
+    // so reducers do not need to check assumptions
+
+    if (resizeInfo.partId &&
+      ["left", "right"].includes(resizeInfo.bound)) {
+      resizeInfo.incr = resizeInfo.incr || 0;
+      dispatch(_resizePart(resizeInfo));
+    } else {
+      console.error("part does not have enough information to be resized:",
+        resizeInfo);
+    }
+  };
+};
+
+export const _resizePart = (resizeInfo) => ({
+  type: RESIZE_A_PART,
+  payload: resizeInfo
+});
+
 export const selectAPart = (partId) => {
   return (dispatch, getState) => {
     // ensure that part exists
@@ -126,23 +148,46 @@ export const _deselectPart = (partId) => ({
   payload: partId
 });
 
-export const resizeAPart = (resizeInfo) => {
-  return (dispatch, getState) => {
-    // ensure we have what we need
-    // so reducers do not need to check assumptions
+export const clearSelection = () => ({
+  type: CLEAR_SELECTION
+});
 
-    if (resizeInfo.partId &&
-      ["left", "right"].includes(resizeInfo.bound)) {
-      resizeInfo.incr = resizeInfo.incr || 0;
-      dispatch(_resizePart(resizeInfo));
-    } else {
-      console.error("part does not have enough information to be resized:",
-        resizeInfo);
+
+// only one part can be selected (for single click)
+export const toggleAPartSelection = ((partId) => {
+  return (dispatch, getState) => {
+
+    // check required params for action to work
+    if (partId && doesPartExist(partId)) {
+
+      const partAlreadySelected = isPartSelected(getState(), partId);
+      dispatch(clearSelection());
+      dispatch(deletePartSelectionMarkers(partId));
+
+      if (!partAlreadySelected) {
+        const part = getPart(getState(), partId);
+        dispatch(clearSelection());
+        dispatch(selectAPart(partId));
+        dispatch(addPartSelectionMarkers(part));
+      }
     }
   };
-};
+});
 
-export const _resizePart = (resizeInfo) => ({
-  type: RESIZE_A_PART,
-  payload: resizeInfo
+// many parts can be selected (for ctrl-click)
+export const toggleMultiPartSelection = ((partId) => {
+  return (dispatch, getState) => {
+
+    // check condition
+    if (partId && doesPartExist(partId)) {
+      if (isPartSelected(getState(), partId)) {
+        dispatch(deselectAPart(partId));
+        dispatch(deletePartSelectionMarkers(partId));
+      } else {
+        const part = getPart(getState(), partId);
+        dispatch(selectAPart(partId));
+        dispatch(addPartSelectionMarkers(part));
+      }
+    }
+  };
 });

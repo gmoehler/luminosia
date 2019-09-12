@@ -83,7 +83,8 @@ const mapDispatchToProps = dispatch => ({
     minPos,
     type
   })),
-  setOrReplaceAMarker: (pos, type) => dispatch(setOrReplaceAMarker({
+  setOrReplaceAMarker: (markerId, pos, type) => dispatch(setOrReplaceAMarker({
+    markerId,
     pos,
     type
   })),

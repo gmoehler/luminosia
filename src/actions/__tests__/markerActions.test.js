@@ -3,7 +3,7 @@ import thunk from "redux-thunk";
 
 import * as actions from "../markerActions";
 import * as types from "../types";
-import { markerPayload0, markerPayload1, fullMarkerState0 } from "../../__fixtures__/marker.fixtures";
+import { markerPayload0, fullMarkerState0 } from "../../__fixtures__/marker.fixtures";
 
 
 export const mockStore = configureMockStore([thunk]);
@@ -25,29 +25,7 @@ describe("marker actions", () => {
       }
     });
 
-    const markerId = store.dispatch(actions.setOrReplaceAMarker(markerPayload1));
-    expect(markerId).toEqual(markerPayload0.markerId);
-    const acts = store.getActions();
-    expect(acts).toEqual(expectedActions);
-  });
-
-  it("should add an marker with existing markerId to the list", () => {
-    const expectedActions = [{
-      type: types.SET_OR_REPLACE_A_MARKER,
-      payload: markerPayload0
-    }];
-
-    const store = mockStore({
-      entities: {
-        markers: {
-          byMarkerId: {},
-          allMarkerIds: []
-        },
-      }
-    });
-
-    const markerId = store.dispatch(actions.setOrReplaceAMarker(markerPayload0));
-    expect(markerId).toEqual(markerPayload0.markerId);
+    store.dispatch(actions.setOrReplaceAMarker(markerPayload0));
     const acts = store.getActions();
     expect(acts).toEqual(expectedActions);
   });

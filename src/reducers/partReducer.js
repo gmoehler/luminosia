@@ -5,7 +5,7 @@ import { schema } from "normalizr";
 
 import {
   CLEAR_PARTS, ADD_A_PART, DELETE_A_PART, MOVE_A_PART, RESIZE_A_PART,
-  SELECT_A_PART, DESELECT_A_PART,
+  SELECT_A_PART, DESELECT_A_PART, CLEAR_SELECTION,
 } from "../actions/types";
 
 export const partSchema = new schema.Entity("byPartId", {}, {
@@ -94,9 +94,6 @@ const byPartId = (state = {}, action) => {
       delete newState[action.payload.partId]; // ids
       return newState;
 
-    case SELECT_A_PART:
-      return state;
-
     case CLEAR_PARTS:
       return {};
 
@@ -113,15 +110,6 @@ const allPartIds = (state = [], action) => {
 
     case DELETE_A_PART:
       return state.filter(p => p !== action.payload.partId);
-
-    case MOVE_A_PART:
-      return state; // no changes
-
-    case RESIZE_A_PART:
-      return state; // no changes
-
-    case SELECT_A_PART:
-      return state; // no changes
 
     case CLEAR_PARTS:
       return [];
@@ -140,21 +128,14 @@ const selectedPartIds = (state = [], action) => {
     case DELETE_A_PART:
       return state.filter(p => p !== action.payload.partId);
 
-
-    case MOVE_A_PART:
-      return state; // no changes
-
-    case RESIZE_A_PART:
-      return state; // no changes
-
-    case SELECT_A_PART: {
+    case SELECT_A_PART:
       return [...state, action.payload];
-    }
 
     case DESELECT_A_PART:
       return state.filter(p => p !== action.payload);
 
     case CLEAR_PARTS:
+    case CLEAR_SELECTION:
       return [];
 
     default:
@@ -177,7 +158,7 @@ export function isPartSelected(state, partId) {
   return state.entities.parts.selectedPartIds.includes(partId);
 }
 
-function _getPart(state, partId) {
+export function getPart(state, partId) {
   return state.entities.parts.byPartId[partId];
 }
 
@@ -185,6 +166,6 @@ export function getChannelId(state, partId) {
   if (!doesPartExist(state, partId)) {
     return null;
   }
-  return _getPart(state, partId).channelId;
+  return getPart(state, partId).channelId;
 }
 
