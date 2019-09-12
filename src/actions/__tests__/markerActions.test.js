@@ -25,7 +25,7 @@ describe("marker actions", () => {
       }
     });
 
-    store.dispatch(actions.setOrReplaceAMarker(markerPayload0));
+    store.dispatch(actions._setOrReplaceAMarker(markerPayload0));
     const acts = store.getActions();
     expect(acts).toEqual(expectedActions);
   });

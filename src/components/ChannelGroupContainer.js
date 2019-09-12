@@ -7,7 +7,7 @@ import { selectRange, deselectRange, setMarker, toggleElementSelection, toggleEl
 import { getMaxDuration, getAllChannelsData, allChannelsStopped } from "../reducers/channelReducer";
 import { getSelectionRange, getResolution, getSelectedImageChannelId, getUploadLog, isUploadingConfig } from "../reducers/viewReducer";
 import { getImageSources } from "../reducers/imageListReducer";
-import { setOrReplaceAMarker, } from "../actions/markerActions";
+import { setOrReplaceInsertMarker } from "../actions/markerActions";
 import { getAllMarkers } from "../reducers/markerReducer";
 
 class ChannelGroupContainer extends Component {
@@ -83,10 +83,8 @@ const mapDispatchToProps = dispatch => ({
     minPos,
     type
   })),
-  setOrReplaceAMarker: (markerId, pos, type) => dispatch(setOrReplaceAMarker({
-    markerId,
+  setOrReplaceInsertMarker: (pos) => dispatch(setOrReplaceInsertMarker({
     pos,
-    type
   })),
   insertNewPart: (channelId, imageId, offset) => dispatch(insertNewPart({
     channelId,

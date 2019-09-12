@@ -13,7 +13,8 @@ const _setOrReplaceMarker = (markerInfo) => ({
   payload: markerInfo
 });
 
-export function setOrReplaceAMarker(markerInfo) {
+// only exported for test
+export function _setOrReplaceAMarker(markerInfo) {
   return (dispatch, getState) => {
     // required fields
     if (markerInfo.markerId && markerInfo.pos && markerInfo.type) {
@@ -25,9 +26,15 @@ export function setOrReplaceAMarker(markerInfo) {
   };
 };
 
-export function setSelectionMarkers(partId) {
-
-}
+export function setOrReplaceInsertMarker(pos) {
+  return (dispatch, getState) => {
+    dispatch(_setOrReplaceAMarker({
+      markerId: "insertMarker",
+      pos,
+      type: "insert"
+    }));
+  };
+};
 
 const _deleteMarker = (markerId) => ({
   type: DELETE_A_MARKER,
@@ -108,9 +115,9 @@ function _getSelectedRightMarker(partInfo) {
 export const addPartSelectionMarkers = (partInfo) => {
   return (dispatch, getState) => {
     const leftMarker = _getSelectedLeftMarker(partInfo);
-    dispatch(setOrReplaceAMarker(leftMarker));
+    dispatch(_setOrReplaceAMarker(leftMarker));
     const rightMarker = _getSelectedRightMarker(partInfo);
-    dispatch(setOrReplaceAMarker(rightMarker));
+    dispatch(_setOrReplaceAMarker(rightMarker));
   };
 };
 
