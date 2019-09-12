@@ -61,9 +61,7 @@ const allMarkerIds = (state = [], action) => {
         state : [...state, action.payload.markerId];
 
     case DELETE_A_MARKER:
-      const newAllMarkerIds = [...state];
-      newAllMarkerIds.splice(state.indexOf(action.payload), 1); // ids
-      return newAllMarkerIds;
+      return state.filter(p => p !== action.payload);
 
     case UPDATE_A_MARKER:
       return state;

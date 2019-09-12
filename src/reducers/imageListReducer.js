@@ -41,9 +41,7 @@ const allImageIds = (state = [], action) => {
       return [...state, action.payload.imageId];
 
     case REMOVE_IMAGE:
-      const newAllImageIds = [...state];
-      newAllImageIds.splice(state.indexOf(action.payload), 1); // ids
-      return newAllImageIds;
+      return state.filter(p => p !== action.payload);
 
     default:
       return state;
