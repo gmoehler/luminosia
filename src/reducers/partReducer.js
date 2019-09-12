@@ -89,15 +89,13 @@ const byPartId = (state = {}, action) => {
       };
 
 
-    case DELETE_A_PART: {
+    case DELETE_A_PART:
       const newState = { ...state };
       delete newState[action.payload.partId]; // ids
       return newState;
-    }
 
-    case SELECT_A_PART: {
+    case SELECT_A_PART:
       return state;
-    }
 
     case CLEAR_PARTS:
       return {};
@@ -113,12 +111,8 @@ const allPartIds = (state = [], action) => {
     case ADD_A_PART:
       return [...state, action.payload.result];
 
-    case DELETE_A_PART: {
-      const newState = [...state];
-      // we already checked in action that it actually exists
-      newState.splice(state.indexOf(action.payload.partId), 1); // ids
-      return newState;
-    }
+    case DELETE_A_PART:
+      return state.filter(p => p !== action.payload.partId);
 
     case MOVE_A_PART:
       return state; // no changes
@@ -143,14 +137,9 @@ const selectedPartIds = (state = [], action) => {
     case ADD_A_PART:
       return state; // no changes
 
-    case DELETE_A_PART: {
-      if (state.includes(action.payload.partId)) {
-        const newState0 = [...state];
-        newState0.splice(newState0.indexOf(action.payload.partId), 1); // ids
-        return newState0;
-      }
-      return state;
-    }
+    case DELETE_A_PART:
+      return state.filter(p => p !== action.payload.partId);
+
 
     case MOVE_A_PART:
       return state; // no changes
@@ -162,14 +151,8 @@ const selectedPartIds = (state = [], action) => {
       return [...state, action.payload];
     }
 
-    case DESELECT_A_PART: {
-      if (state.includes(action.payload)) {
-        const newState1 = [...state];
-        newState1.splice(newState1.indexOf(action.payload), 1); // ids
-        return newState1;
-      }
-      return state;
-    }
+    case DESELECT_A_PART:
+      return state.filter(p => p !== action.payload);
 
     case CLEAR_PARTS:
       return [];

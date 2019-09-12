@@ -331,10 +331,7 @@ describe("part reducer", () => {
 
     const reducer2 = reducer(reducer1, {
       type: types.DESELECT_A_PART,
-      payload: {
-        partId: "part-1",
-        channelId: "channel-1",
-      }
+      payload: "part-1"
     });
 
     expect(reducer2).toEqual({
