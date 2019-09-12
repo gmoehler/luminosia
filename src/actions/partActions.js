@@ -90,7 +90,7 @@ export const moveAPart = (moveInfo) => {
   };
 };
 
-export const _movePart = (moveInfo) => ({
+const _movePart = (moveInfo) => ({
   type: MOVE_A_PART,
   payload: moveInfo
 });
@@ -99,7 +99,6 @@ export const resizeAPart = (resizeInfo) => {
   return (dispatch, getState) => {
     // ensure we have what we need
     // so reducers do not need to check assumptions
-
     if (resizeInfo.partId &&
       ["left", "right"].includes(resizeInfo.bound)) {
       resizeInfo.incr = resizeInfo.incr || 0;
@@ -111,7 +110,7 @@ export const resizeAPart = (resizeInfo) => {
   };
 };
 
-export const _resizePart = (resizeInfo) => ({
+const _resizePart = (resizeInfo) => ({
   type: RESIZE_A_PART,
   payload: resizeInfo
 });
@@ -127,7 +126,7 @@ export const selectAPart = (partId) => {
   };
 };
 
-export const _selectPart = (partId) => ({
+const _selectPart = (partId) => ({
   type: SELECT_A_PART,
   payload: partId
 });
@@ -143,7 +142,7 @@ export const deselectAPart = (partId) => {
   };
 };
 
-export const _deselectPart = (partId) => ({
+const _deselectPart = (partId) => ({
   type: DESELECT_A_PART,
   payload: partId
 });
@@ -157,10 +156,12 @@ export const clearSelection = () => ({
 export const toggleAPartSelection = ((partId) => {
   return (dispatch, getState) => {
 
-    // check required params for action to work
+    // ensure we have what we need
+    // so reducers do not need to check assumptions
     if (partId && doesPartExist(partId)) {
 
       const partAlreadySelected = isPartSelected(getState(), partId);
+      // simpler to deselect everything instead of deselection prev selection
       dispatch(clearSelection());
       dispatch(deletePartSelectionMarkers(partId));
 
