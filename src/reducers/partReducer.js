@@ -5,7 +5,7 @@ import { schema } from "normalizr";
 
 import {
   CLEAR_PARTS, ADD_A_PART, DELETE_A_PART, MOVE_A_PART, RESIZE_A_PART,
-  SELECT_A_PART, DESELECT_A_PART, CLEAR_SELECTION,
+  SELECT_A_PART, DESELECT_A_PART, CLEAR_PART_SELECTION,
 } from "../actions/types";
 
 export const partSchema = new schema.Entity("byPartId", {}, {
@@ -135,7 +135,7 @@ const selectedPartIds = (state = [], action) => {
       return state.filter(p => p !== action.payload);
 
     case CLEAR_PARTS:
-    case CLEAR_SELECTION:
+    case CLEAR_PART_SELECTION:
       return [];
 
     default:
@@ -158,8 +158,16 @@ export function isPartSelected(state, partId) {
   return state.entities.parts.selectedPartIds.includes(partId);
 }
 
+export function isPartSingleSelected(state, partId) {
+  return state.entities.parts.selectedPartIds === [partId];
+}
+
 export function getPart(state, partId) {
   return state.entities.parts.byPartId[partId];
+}
+
+export function getAllSelectedParts(state) {
+  return state.entities.parts.selectedPartIds;
 }
 
 export function getChannelId(state, partId) {

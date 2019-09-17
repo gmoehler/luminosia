@@ -81,10 +81,7 @@ function _getMarkerId(partId, type) {
 }
 
 function _getPartLeftMarkerId(partId) {
-  return _getMarkerId({
-    partId: partId,
-    type: "left",
-  });
+  return _getMarkerId(partId, "left");
 }
 
 function _getSelectedLeftMarker(partInfo) {
@@ -96,10 +93,7 @@ function _getSelectedLeftMarker(partInfo) {
 }
 
 function _getPartRightMarkerId(partId) {
-  return _getMarkerId({
-    partId: partId,
-    type: "right",
-  });
+  return _getMarkerId(partId, "right");
 }
 
 function _getSelectedRightMarker(partInfo) {

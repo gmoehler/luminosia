@@ -1,8 +1,8 @@
 
 import { normalize } from "normalizr";
-import { CLEAR_PARTS, ADD_A_PART, DELETE_A_PART, RESIZE_A_PART, MOVE_A_PART, SELECT_A_PART, DESELECT_A_PART, CLEAR_SELECTION } from "./types";
-import { getChannelId, partSchema, doesPartExist, getPart, isPartSelected } from "../reducers/partReducer";
-import { deletePartSelectionMarkers, addPartSelectionMarkers } from "./markerActions";
+import { CLEAR_PARTS, ADD_A_PART, DELETE_A_PART, RESIZE_A_PART, MOVE_A_PART, SELECT_A_PART, DESELECT_A_PART, CLEAR_PART_SELECTION } from "./types";
+import { getChannelId, partSchema, doesPartExist, getPart, isPartSelected, isPartSingleSelected } from "../reducers/partReducer";
+import { deletePartSelectionMarkers, addPartSelectionMarkers, clearMarkers } from "./markerActions";
 
 // first id will be 1 to avoid falsy ids
 let lastPartId = 0;
@@ -148,7 +148,7 @@ const _deselectPart = (partId) => ({
 });
 
 export const clearSelection = () => ({
-  type: CLEAR_SELECTION
+  type: CLEAR_PART_SELECTION
 });
 
 
@@ -158,16 +158,15 @@ export const toggleAPartSelection = ((partId) => {
 
     // ensure we have what we need
     // so reducers do not need to check assumptions
-    if (partId && doesPartExist(partId)) {
+    if (partId && doesPartExist(getState(), partId)) {
 
-      const partAlreadySelected = isPartSelected(getState(), partId);
+      const partSingleSelected = isPartSingleSelected(getState(), partId);
       // simpler to deselect everything instead of deselection prev selection
       dispatch(clearSelection());
-      dispatch(deletePartSelectionMarkers(partId));
+      dispatch(clearMarkers());
 
-      if (!partAlreadySelected) {
+      if (!partSingleSelected) {
         const part = getPart(getState(), partId);
-        dispatch(clearSelection());
         dispatch(selectAPart(partId));
         dispatch(addPartSelectionMarkers(part));
       }
@@ -180,7 +179,7 @@ export const toggleMultiPartSelection = ((partId) => {
   return (dispatch, getState) => {
 
     // check condition
-    if (partId && doesPartExist(partId)) {
+    if (partId && doesPartExist(getState(), partId)) {
       if (isPartSelected(getState(), partId)) {
         dispatch(deselectAPart(partId));
         dispatch(deletePartSelectionMarkers(partId));

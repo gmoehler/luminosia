@@ -3,12 +3,13 @@ import { connect } from "react-redux";
 
 import ChannelGroup from "./ChannelGroup";
 import { setChannelPlayState, insertNewPart, deleteSelectedPartAndMarkers, moveSelectedPartsWithMarkers, resizePartWithMarkers } from "../actions/channelActions";
-import { selectRange, deselectRange, setMarker, toggleElementSelection, toggleElementMultiSelection, setMessage, selectInInterval } from "../actions/viewActions";
+import { selectRange, deselectRange, setMarker, setMessage, selectInInterval } from "../actions/viewActions";
 import { getMaxDuration, getAllChannelsData, allChannelsStopped } from "../reducers/channelReducer";
 import { getSelectionRange, getResolution, getSelectedImageChannelId, getUploadLog, isUploadingConfig } from "../reducers/viewReducer";
 import { getImageSources } from "../reducers/imageListReducer";
 import { setOrReplaceInsertMarker } from "../actions/markerActions";
 import { getAllMarkers } from "../reducers/markerReducer";
+import { toggleAPartSelection, toggleMultiPartSelection, moveAPart } from "../actions/partActions";
 
 class ChannelGroupContainer extends Component {
 
@@ -91,8 +92,7 @@ const mapDispatchToProps = dispatch => ({
     imageId,
     offset,
   })),
-  move: (channelId, partId, incr) => dispatch(moveSelectedPartsWithMarkers({
-    channelId,
+  move: (partId, incr) => dispatch(moveAPart({
     partId,
     incr
   })),
@@ -102,9 +102,9 @@ const mapDispatchToProps = dispatch => ({
     markerId,
     incr
   })),
-  toggleElementSelection: (partInfo) => dispatch(toggleElementSelection(partInfo)),
-  toggleElementMultiSelection: (partInfo) => dispatch(toggleElementMultiSelection(partInfo)),
+  toggleAPartSelection: (partId) => dispatch(toggleAPartSelection(partId)),
   deleteSelectedPartAndMarkers: () => dispatch(deleteSelectedPartAndMarkers()),
+  toggleMultiPartSelection: (partId) => dispatch(toggleMultiPartSelection(partId)),
   setChannelPlayState: (channelId, playState) => dispatch(setChannelPlayState({
     channelId,
     playState

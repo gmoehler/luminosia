@@ -116,7 +116,7 @@ export default class ChannelGroup extends Component {
           <ImageChannelWithPlay { ...channelProps }
             selected={ selectedImageChannelId === channelId }
             setChannelPlayState={ playState => this.props.setChannelPlayState(channelId, playState) }
-            move={ (partId, incr) => this.props.move(channelId, partId, incr) }
+            move={ (partId, incr) => this.props.move(partId, incr) }
             resize={ (partId, markerId, incr) => this.props.resize(channelId, partId, markerId, incr) }
           />);
 

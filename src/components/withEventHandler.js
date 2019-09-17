@@ -25,8 +25,8 @@ export function withEventHandler(WrappedComponent) {
         setMarker: this.props.setMarker,
         setOrReplaceInsertMarker: this.props.setOrReplaceInsertMarker,
         insertNewPart: this.props.insertNewPart,
-        toggleElementSelection: this.props.toggleElementSelection,
-        toggleElementMultiSelection: this.props.toggleElementMultiSelection,
+        toggleAPartSelection: this.props.toggleAPartSelection,
+        toggleMultiPartSelection: this.props.toggleMultiPartSelection,
         deleteSelectedPartAndMarkers: this.props.deleteSelectedPartAndMarkers,
         setMessage: this.props.setMessage,
       });
@@ -34,10 +34,16 @@ export function withEventHandler(WrappedComponent) {
 
     render() {
 
-      const { selectRange, deselectRange, move, setMarker, insertNewPart, toggleElementSelection, deleteSelectedPartAndMarkers, toggleElementMultiSelection, ...passthruProps } = this.props;
+      const { selectRange, deselectRange, move, setMarker,
+        insertNewPart, toggleAPartSelection,
+        toggleMultiPartSelection,
+        deleteSelectedPartAndMarkers,
+        ...passthruProps } = this.props;
 
       return (<WrappedComponent { ...passthruProps }
-        handleMouseEvent={ (eventName, evInfo) => this.mousehandler.handleMouseEvent(eventName, evInfo, this.props.resolution) } />);
+        handleMouseEvent={ (eventName, evInfo) =>
+          this.mousehandler.handleMouseEvent(
+            eventName, evInfo, this.props.resolution) } />);
     }
   }
 
@@ -50,8 +56,8 @@ export function withEventHandler(WrappedComponent) {
     setMarker: PropTypes.func.isRequired,
     setOrReplaceInsertMarker: PropTypes.func.isRequired,
     insertNewPart: PropTypes.func.isRequired,
-    toggleElementSelection: PropTypes.func.isRequired,
-    toggleElementMultiSelection: PropTypes.func.isRequired,
+    toggleAPartSelection: PropTypes.func.isRequired,
+    toggleMultiPartSelection: PropTypes.func.isRequired,
     deleteSelectedPartAndMarkers: PropTypes.func.isRequired,
     resolution: PropTypes.number.isRequired,
     setMessage: PropTypes.func.isRequired,

@@ -98,8 +98,6 @@ export const syncMarkersForPart = (channelId, partId) => {
   };
 };
 
-
-
 // method to select/deselect an element with always one being selected
 // (e.g. on simple click)
 export const toggleElementSelection = ((elementInfo) => {

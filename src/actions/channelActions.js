@@ -5,7 +5,7 @@ import {
 } from "./types";
 
 import {
-  deleteMarker, toggleElementSelection, remElemFromSel,
+  deleteMarker, remElemFromSel,
   addPartToMultiSelection, clearElementSelectionWithMarkers, syncMarkersForPart
 } from "./viewActions";
 
@@ -22,8 +22,9 @@ import { removeImage } from "./imageListActions";
 import { defaultSampleRate } from "../components/ImageListContainer";
 import { readAudioFile } from "../utils/fileUtils";
 import { drawExportImage, clearExportImage } from "./generalActions";
-import { createPart, deleteAPart, moveAPart, resizeAPart } from "./partActions";
-import { deleteAMarker } from "./markerActions";
+import { createPart, deleteAPart, moveAPart, resizeAPart, toggleAPartSelection, clearSelection } from "./partActions";
+import { deleteAMarker, clearMarkers } from "./markerActions";
+import { isPartSelected, getAllSelectedParts } from "../reducers/partReducer";
 
 // add channel with channelInfo containing complete channel information
 // TODO: generate & add channel-id here and check fields
@@ -107,8 +108,8 @@ function loadImageChannel(channelConfig, state) {
       res.curid++;
       return res;
     }, {
-        curid: 0
-      }) : {};
+      curid: 0
+    }) : {};
 
   // incremented id no longer required
   normalizedParts &&
@@ -181,19 +182,13 @@ export const insertNewPart = (partInfo) => {
       getState(), partInfo.imageId);
 
     // creates part and adds it to the channel
-    // TODO: use pid
     const pId = dispatch(createPart({
       ...partInfo,
       duration
     }));
 
     // select the new part
-    const lastPart = {
-      channelId: partInfo.channelId,
-      partId: pId,
-      selected: true,
-    };
-    dispatch(toggleElementSelection(lastPart));
+    dispatch(toggleAPartSelection(pId));
   };
 };
 
@@ -295,18 +290,16 @@ export const resizePartWithMarkers = (resizeInfo) => {
 
 export const moveSelectedPartsWithMarkers = (moveInfo) => {
   return (dispatch, getState) => {
-    if (!isElementSelected(getState(), moveInfo)) {
-      // if part was not selected then exclusively 
-      // select it for move
-      dispatch(clearElementSelectionWithMarkers());
-      dispatch(addPartToMultiSelection(moveInfo));
+    if (!isPartSelected(getState(), moveInfo.partId)) {
+      // if part was not selected then exclusively select it for move
+      dispatch(toggleAPartSelection(moveInfo.partId));
     }
-    getSelectedParts(getState()).forEach((part) => {
+    getAllSelectedParts(getState()).forEach((part) => {
       dispatch(moveAPart({
         ...part,
         incr: moveInfo.incr,
       }));
-      dispatch(syncMarkersForPart(part.channelId, part.partId));
+      // TODO dispatch(syncMarkersForPart(part.channelId, part.partId));
     });
   };
 };

@@ -33,7 +33,7 @@ export const MOVE_A_PART = "MOVE_A_PART";
 export const RESIZE_A_PART = "RESIZE_A_PART";
 export const SELECT_A_PART = "SELECT_A_PART";
 export const DESELECT_A_PART = "DESELECT_A_PART";
-export const CLEAR_SELECTION = "CLEAR_SELECTION";
+export const CLEAR_PART_SELECTION = "CLEAR_PART_SELECTION";
 
 // marker actions
 export const CLEAR_MARKERS = "CLEAR_MARKERS";

@@ -100,11 +100,8 @@ export default class MoveMouseHandler {
   }
 
   handleToggleSelection = (evInfo) => {
-    this.handlerFunctions.toggleElementSelection({
-      channelId: parseInt(evInfo.channelId),
-      partId: evInfo.partId,
-    // selected: true // select
-    });
+    this.handlerFunctions.toggleAPartSelection(evInfo.partId);
+
   }
 
   handleMoveTo = (evInfo, finalizeAction) => {
@@ -177,12 +174,8 @@ export default class MoveMouseHandler {
     }
   }
 
-
   handleMultiSelect = (evInfo) => {
-    this.handlerFunctions.toggleElementMultiSelection({
-      channelId: parseInt(evInfo.channelId),
-      partId: evInfo.partId,
-    });
+    this.handlerFunctions.toggleMultiPartSelection(evInfo.partId);
   }
 
   deselectRange = () => {
