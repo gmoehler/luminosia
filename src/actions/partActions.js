@@ -2,7 +2,7 @@
 import { normalize } from "normalizr";
 import { CLEAR_PARTS, ADD_A_PART, DELETE_A_PART, RESIZE_A_PART, MOVE_A_PART, SELECT_A_PART, DESELECT_A_PART, CLEAR_PART_SELECTION } from "./types";
 import { getChannelId, partSchema, doesPartExist, getPart, isPartSelected, isPartSingleSelected, getAllSelectedPartIds } from "../reducers/partReducer";
-import { deletePartSelectionMarkers, addPartSelectionMarkers, clearMarkers, updatePartMarkers } from "./markerActions";
+import { deletePartSelectionMarkers, addPartSelectionMarkers, clearMarkers, updateAMarker, updatePartMarkers } from "./markerActions";
 
 // first id will be 1 to avoid falsy ids
 let lastPartId = 0;
@@ -114,12 +114,16 @@ const _movePart = (moveInfo) => ({
 
 export const resizeAPart = (resizeInfo) => {
   return (dispatch, getState) => {
+  	
     // ensure we have what we need
     // so reducers do not need to check assumptions
     if (resizeInfo.partId && resizeInfo.markerId) {
-      resizeInfo.incr = resizeInfo.incr || 0;
-      resizeInfo.bound = resizeInfo.markerId.includes("right") ? "right" : "left";
-      dispatch(_resizePart(resizeInfo));
+      // if incr is 0 no need to resize
+      if (resizeInfo.incr) {
+        resizeInfo.bound = resizeInfo.markerId.includes("right") ? "right" : "left";
+        dispatch(_resizePart(resizeInfo));
+        dispatch(updateAMarker(resizeInfo));
+      }
     } else {
       console.error("part does not have enough information to be resized:",
         resizeInfo);
