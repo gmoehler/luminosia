@@ -166,7 +166,7 @@ export function getPart(state, partId) {
   return state.entities.parts.byPartId[partId];
 }
 
-export function getAllSelectedParts(state) {
+export function getAllSelectedPartIds(state) {
   return state.entities.parts.selectedPartIds;
 }
 

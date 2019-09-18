@@ -35,14 +35,10 @@ const byMarkerId = (state = {}, action) => {
       } else if (typeof action.payload.pos == "number") {
         pos = action.payload.pos;
       }
-      const type = action.payload.type ? action.payload.type : prevMarker.type;
+      const type = action.payload.type || prevMarker.type;
       return {
         ...state,
-        [action.payload.markerId]: {
-          ...prevMarker,
-          pos,
-          type
-        }
+        [action.payload.markerId]: { ...prevMarker, pos, type }
       };
 
     default:

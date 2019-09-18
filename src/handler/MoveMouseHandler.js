@@ -101,7 +101,6 @@ export default class MoveMouseHandler {
 
   handleToggleSelection = (evInfo) => {
     this.handlerFunctions.toggleAPartSelection(evInfo.partId);
-
   }
 
   handleMoveTo = (evInfo, finalizeAction) => {

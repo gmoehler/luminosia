@@ -18,6 +18,7 @@ export function _setOrReplaceAMarker(markerInfo) {
   return (dispatch, getState) => {
     // required fields
     if (markerInfo.markerId && markerInfo.pos && markerInfo.type) {
+      markerInfo.minPos = markerInfo.minPos || 0;
       dispatch(_setOrReplaceMarker({
         ...markerInfo
       }));
@@ -58,6 +59,8 @@ export const updateAMarker = (markerInfo) => {
   return (dispatch, getState) => {
     // ensure we have what we need
     // so reducers do not need to check assumptions
+    // update marker position either by incr or pos
+    // or update type
     if (markerInfo.markerId) {
       if (aMarkerExists(getState(), markerInfo.markerId) && (
         markerInfo.incr ||
@@ -88,7 +91,9 @@ function _getSelectedLeftMarker(partInfo) {
   return {
     markerId: _getPartLeftMarkerId(partInfo.partId),
     pos: partInfo.offset,
-    type: "selected"
+    type: "selected",
+    channelId: partInfo.channelId,
+    partId: partInfo.partId
   };
 }
 
@@ -100,7 +105,9 @@ function _getSelectedRightMarker(partInfo) {
   return {
     markerId: _getPartRightMarkerId(partInfo.partId),
     pos: partInfo.offset + partInfo.duration,
-    type: "selected"
+    type: "selected",
+    channelId: partInfo.channelId,
+    partId: partInfo.partId
   };
 }
 
@@ -124,4 +131,11 @@ export const deletePartSelectionMarkers = (partId) => {
   };
 };
 
-
+export const updatePartMarkers = (partUpdateInfo) => {
+  return (dispatch, getState) => {
+    const leftMarkerId = _getPartLeftMarkerId(partUpdateInfo.partId);
+    dispatch(updateAMarker({ ...partUpdateInfo, markerId: leftMarkerId }));
+    const rightMarkerId = _getPartRightMarkerId(partUpdateInfo.partId);
+    dispatch(updateAMarker({ ...partUpdateInfo, markerId: rightMarkerId }));
+  };
+};

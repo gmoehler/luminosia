@@ -2,14 +2,14 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 
 import ChannelGroup from "./ChannelGroup";
-import { setChannelPlayState, insertNewPart, deleteSelectedPartAndMarkers, moveSelectedPartsWithMarkers, resizePartWithMarkers } from "../actions/channelActions";
+import { setChannelPlayState, insertNewPart, deleteSelectedPartAndMarkers } from "../actions/channelActions";
 import { selectRange, deselectRange, setMarker, setMessage, selectInInterval } from "../actions/viewActions";
 import { getMaxDuration, getAllChannelsData, allChannelsStopped } from "../reducers/channelReducer";
 import { getSelectionRange, getResolution, getSelectedImageChannelId, getUploadLog, isUploadingConfig } from "../reducers/viewReducer";
 import { getImageSources } from "../reducers/imageListReducer";
 import { setOrReplaceInsertMarker } from "../actions/markerActions";
 import { getAllMarkers } from "../reducers/markerReducer";
-import { toggleAPartSelection, toggleMultiPartSelection, moveAPart } from "../actions/partActions";
+import { toggleAPartSelection, toggleMultiPartSelection, moveSelectedParts, resizeAPart } from "../actions/partActions";
 
 class ChannelGroupContainer extends Component {
 
@@ -47,7 +47,7 @@ class ChannelGroupContainer extends Component {
     }
 
     return (
-      <ChannelGroup { ...this.props } />
+      <ChannelGroup {...this.props} />
     );
   }
 }
@@ -92,11 +92,11 @@ const mapDispatchToProps = dispatch => ({
     imageId,
     offset,
   })),
-  move: (partId, incr) => dispatch(moveAPart({
+  move: (partId, incr) => dispatch(moveSelectedParts({
     partId,
     incr
   })),
-  resize: (channelId, partId, markerId, incr) => dispatch(resizePartWithMarkers({
+  resize: (channelId, partId, markerId, incr) => dispatch(resizeAPart({
     channelId,
     partId,
     markerId,

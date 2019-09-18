@@ -1,8 +1,8 @@
 
 import { normalize } from "normalizr";
 import { CLEAR_PARTS, ADD_A_PART, DELETE_A_PART, RESIZE_A_PART, MOVE_A_PART, SELECT_A_PART, DESELECT_A_PART, CLEAR_PART_SELECTION } from "./types";
-import { getChannelId, partSchema, doesPartExist, getPart, isPartSelected, isPartSingleSelected } from "../reducers/partReducer";
-import { deletePartSelectionMarkers, addPartSelectionMarkers, clearMarkers } from "./markerActions";
+import { getChannelId, partSchema, doesPartExist, getPart, isPartSelected, isPartSingleSelected, getAllSelectedPartIds } from "../reducers/partReducer";
+import { deletePartSelectionMarkers, addPartSelectionMarkers, clearMarkers, updatePartMarkers } from "./markerActions";
 
 // first id will be 1 to avoid falsy ids
 let lastPartId = 0;
@@ -30,7 +30,6 @@ export const createPart = (partInfo) => {
         ...partInfo,
         partId,
       }));
-      // const bla = normalize(partInfo, partSchema);
       return partId;
     }
     console.error("cannot add incomplete part:", partInfo);
@@ -78,15 +77,33 @@ export const clearParts = () => ({
 
 export const moveAPart = (moveInfo) => {
   return (dispatch, getState) => {
+
     // ensure we have what we need
     // so reducers do not need to check assumptions
-
     if (moveInfo.partId) {
-      moveInfo.incr = moveInfo.incr || 0;
-      dispatch(_movePart(moveInfo));
+      // if incr is 0 no need to move
+      if (moveInfo.incr) {
+        dispatch(_movePart(moveInfo));
+        dispatch(updatePartMarkers(moveInfo));
+      }
     } else {
       console.error("part does not have enough information to be moved:", moveInfo);
     }
+  };
+};
+
+export const moveSelectedParts = (moveInfo) => {
+  return (dispatch, getState) => {
+    if (!isPartSelected(getState(), moveInfo.partId)) {
+      // if part was not selected then exclusively select it for move
+      dispatch(toggleAPartSelection(moveInfo.partId));
+    }
+    getAllSelectedPartIds(getState()).forEach((partId) => {
+      dispatch(moveAPart({
+        partId,
+        incr: moveInfo.incr,
+      }));
+    });
   };
 };
 
@@ -99,9 +116,9 @@ export const resizeAPart = (resizeInfo) => {
   return (dispatch, getState) => {
     // ensure we have what we need
     // so reducers do not need to check assumptions
-    if (resizeInfo.partId &&
-      ["left", "right"].includes(resizeInfo.bound)) {
+    if (resizeInfo.partId && resizeInfo.markerId) {
       resizeInfo.incr = resizeInfo.incr || 0;
+      resizeInfo.bound = resizeInfo.markerId.includes("right") ? "right" : "left";
       dispatch(_resizePart(resizeInfo));
     } else {
       console.error("part does not have enough information to be resized:",
