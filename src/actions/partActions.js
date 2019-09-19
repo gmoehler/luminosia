@@ -2,7 +2,7 @@
 import { normalize } from "normalizr";
 import { CLEAR_PARTS, ADD_A_PART, DELETE_A_PART, RESIZE_A_PART, MOVE_A_PART, SELECT_A_PART, DESELECT_A_PART, CLEAR_PART_SELECTION } from "./types";
 import { getChannelId, partSchema, doesPartExist, getPart, isPartSelected, isPartSingleSelected, getAllSelectedPartIds } from "../reducers/partReducer";
-import { deletePartSelectionMarkers, addPartSelectionMarkers, clearMarkers, updateAMarker, updatePartMarkers } from "./markerActions";
+import { deletePartSelectionMarkers, addPartSelectionMarkers, clearMarkers, updateAMarker, syncPartMarkers } from "./markerActions";
 
 // first id will be 1 to avoid falsy ids
 let lastPartId = 0;
@@ -84,7 +84,8 @@ export const moveAPart = (moveInfo) => {
       // if incr is 0 no need to move
       if (moveInfo.incr) {
         dispatch(_movePart(moveInfo));
-        dispatch(updatePartMarkers(moveInfo));
+         // update markers based on actual move
+        dispatch(syncPartDeps(moveInfo.partId));
       }
     } else {
       console.error("part does not have enough information to be moved:", moveInfo);
@@ -122,7 +123,8 @@ export const resizeAPart = (resizeInfo) => {
       if (resizeInfo.incr) {
         resizeInfo.bound = resizeInfo.markerId.includes("right") ? "right" : "left";
         dispatch(_resizePart(resizeInfo));
-        dispatch(updateAMarker(resizeInfo));
+        // update markers based on actual resize
+        dispatch(syncPartDeps(resizeInfo.partId));
       }
     } else {
       console.error("part does not have enough information to be resized:",
@@ -212,3 +214,15 @@ export const toggleMultiPartSelection = ((partId) => {
     }
   };
 });
+
+export const syncPartDeps = (partId) => {
+  return (dispatch, getState) => {
+    const part = getPart(getState(), partId);
+    if (part) {
+      // currently only part markers need to be synced
+      dispatch(syncPartMarkers(part));
+    } else {
+      console.error("part to sync deps for does not exist:", partId);
+    }
+  };
+};
