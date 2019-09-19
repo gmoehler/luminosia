@@ -1,17 +1,26 @@
 
 import { normalize } from "normalizr";
-import { CLEAR_PARTS, ADD_A_PART, DELETE_A_PART, RESIZE_A_PART, MOVE_A_PART, SELECT_A_PART, DESELECT_A_PART, CLEAR_PART_SELECTION } from "./types";
-import { getChannelId, partSchema, doesPartExist, getPart, isPartSelected, isPartSingleSelected, getAllSelectedPartIds } from "../reducers/partReducer";
-import { deletePartSelectionMarkers, addPartSelectionMarkers, clearMarkers, updateAMarker, syncPartMarkers } from "./markerActions";
+import {
+  CLEAR_PARTS, ADD_A_PART, DELETE_A_PART, RESIZE_A_PART, MOVE_A_PART,
+  SELECT_A_PART, DESELECT_A_PART, CLEAR_PART_SELECTION
+} from "./types";
+import {
+  getChannelId, partSchema, doesPartExist, getPart, isPartSelected,
+  isPartSingleSelected, getAllSelectedPartIds
+} from "../reducers/partReducer";
+import {
+  deletePartSelectionMarkers, addPartSelectionMarkers, clearMarkers,
+  syncPartMarkers
+} from "./markerActions";
 
 // first id will be 1 to avoid falsy ids
-let lastPartId = 0;
+let lastPartIdCount = 0;
 
 function generateId() {
   // simple generator :-)
   // other options: cuid or uuid
-  lastPartId++;
-  return "part-" + lastPartId.toString();
+  lastPartIdCount++;
+  return "part-" + lastPartIdCount.toString();
 }
 
 // create part id and add the part to the parts entities and channel
@@ -84,7 +93,7 @@ export const moveAPart = (moveInfo) => {
       // if incr is 0 no need to move
       if (moveInfo.incr) {
         dispatch(_movePart(moveInfo));
-         // update markers based on actual move
+        // update markers based on actual move
         dispatch(syncPartDeps(moveInfo.partId));
       }
     } else {
@@ -115,10 +124,12 @@ const _movePart = (moveInfo) => ({
 
 export const resizeAPart = (resizeInfo) => {
   return (dispatch, getState) => {
-  	
+
     // ensure we have what we need
     // so reducers do not need to check assumptions
     if (resizeInfo.partId && resizeInfo.markerId) {
+      // exclusively select this part
+      dispatch(toggleAPartSelection(resizeInfo.partId));
       // if incr is 0 no need to resize
       if (resizeInfo.incr) {
         resizeInfo.bound = resizeInfo.markerId.includes("right") ? "right" : "left";

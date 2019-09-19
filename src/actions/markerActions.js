@@ -133,10 +133,10 @@ export const deletePartSelectionMarkers = (partId) => {
 
 export const syncPartMarkers = (part) => {
   return (dispatch, getState) => {
-     // will only update, when markers exist
-    const leftMarkerId = _getPartLeftMarkerId(partUpdateInfo.partId);
-    dispatch(updateAMarker({pos: part.offfset, markerId: leftMarkerId }));
-    const rightMarkerId = _getPartRightMarkerId(partUpdateInfo.partId);
-    dispatch(updateAMarker({pos: part.offfset + part.duration, markerId: rightMarkerId }));
+    // will only update, when markers exist
+    const leftMarkerId = _getPartLeftMarkerId(part.partId);
+    dispatch(updateAMarker({ pos: part.offset, markerId: leftMarkerId }));
+    const rightMarkerId = _getPartRightMarkerId(part.partId);
+    dispatch(updateAMarker({ pos: part.offset + part.duration, markerId: rightMarkerId }));
   };
 };

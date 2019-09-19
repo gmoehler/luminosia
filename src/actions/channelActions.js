@@ -1,4 +1,5 @@
-import { PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, ADD_CHANNEL, CLEAR_CHANNELS, UPLOAD_AUDIO_STARTED, UPLOAD_AUDIO_SUCCESS, UPLOAD_AUDIO_FAILURE, DELETE_CHANNEL, SET_CHANNEL_ACTIVE, UNSET_CHANNEL_ACTIVE, UPDATE_CHANNEL,
+import {
+  PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, ADD_CHANNEL, CLEAR_CHANNELS, UPLOAD_AUDIO_STARTED, UPLOAD_AUDIO_SUCCESS, UPLOAD_AUDIO_FAILURE, DELETE_CHANNEL, SET_CHANNEL_ACTIVE, UNSET_CHANNEL_ACTIVE, UPDATE_CHANNEL,
 } from "./types";
 
 import { deleteMarker, remElemFromSel, addPartToMultiSelection, clearElementSelectionWithMarkers, syncMarkersForPart } from "./viewActions";
@@ -10,9 +11,9 @@ import { removeImage } from "./imageListActions";
 import { defaultSampleRate } from "../components/ImageListContainer";
 import { readAudioFile } from "../utils/fileUtils";
 import { drawExportImage, clearExportImage } from "./generalActions";
-import { createPart, deleteAPart, moveAPart, resizeAPart, toggleAPartSelection, clearSelection } from "./partActions";
-import { deleteAMarker, clearMarkers } from "./markerActions";
-import { isPartSelected, getAllSelectedPartIds } from "../reducers/partReducer";
+import { createPart, deleteAPart, toggleAPartSelection } from "./partActions";
+import { deleteAMarker } from "./markerActions";
+
 
 // add channel with channelInfo containing complete channel information
 // TODO: generate & add channel-id here and check fields
@@ -101,7 +102,7 @@ function loadImageChannel(channelConfig, state) {
 
   // incremented id no longer required
   normalizedParts &&
-  delete normalizedParts.curid;
+    delete normalizedParts.curid;
   delete channelConfig.parts;
   channelConfig.playState = "stopped";
   channelConfig.gain = channelConfig.gain || 1.0;
@@ -150,7 +151,7 @@ export const duplicateChannel = (channelId) => {
     const ch = getChannelData(getState(), channelId);
     // also sanatizes the parts
     dispatch(addChannel(ch));
-  // TODO: add new channel just after copied one
+    // TODO: add new channel just after copied one
   };
 };
 
@@ -160,10 +161,6 @@ export const insertNewPart = (partInfo) => {
   return (dispatch, getState) => {
 
     // remove insertion marker
-    dispatch(deleteMarker({
-      markerId: "insert"
-    }));
-
     dispatch(deleteAMarker("insert"));
 
     const duration = getImageDuration(
@@ -263,31 +260,3 @@ export const setChannelPlayState = (stateInfo) => ({
   type: SET_CHANNEL_PLAY_STATE,
   payload: stateInfo
 });
-
-export const resizePartWithMarkers = (resizeInfo) => {
-  return (dispatch, getState) => {
-
-    // exclusively select part for resizing
-    dispatch(clearElementSelectionWithMarkers());
-    dispatch(addPartToMultiSelection(resizeInfo));
-
-    dispatch(resizeAPart(resizeInfo));
-    dispatch(syncMarkersForPart(resizeInfo.channelId, resizeInfo.partId));
-  };
-};
-
-export const moveSelectedPartsWithMarkers = (moveInfo) => {
-  return (dispatch, getState) => {
-    if (!isPartSelected(getState(), moveInfo.partId)) {
-      // if part was not selected then exclusively select it for move
-      dispatch(toggleAPartSelection(moveInfo.partId));
-    }
-    getAllSelectedPartIds(getState()).forEach((part) => {
-      dispatch(moveAPart({
-        ...part,
-        incr: moveInfo.incr,
-      }));
-    // TODO dispatch(syncMarkersForPart(part.channelId, part.partId));
-    });
-  };
-};

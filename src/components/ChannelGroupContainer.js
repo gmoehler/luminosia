@@ -47,7 +47,7 @@ class ChannelGroupContainer extends Component {
     }
 
     return (
-      <ChannelGroup {...this.props} />
+      <ChannelGroup { ...this.props } />
     );
   }
 }
