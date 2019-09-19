@@ -135,7 +135,7 @@ class ImageChannel extends Component {
       e.preventDefault();
       const pos = eventName !== "keyDown" ?
         getMouseEventPosition(e, "ChannelWrapper", this.props.channelId) : {};
-      const src = e.dataTransfer && e.dataTransfer.getData("src");
+      // transfer data is not available until drop (not on dragEnter / dragOver)
       const imageId = e.dataTransfer && e.dataTransfer.getData("imageid");
       const duration = e.dataTransfer && Number(e.dataTransfer.getData("duration"));
       const key = e.key;
@@ -152,7 +152,6 @@ class ImageChannel extends Component {
       const evInfo = {
         ...pos, // x pos, channelId, partId, markerId
         timestamp: e.timeStamp,
-        src, // drag source path
         imageId,
         duration,
         key,

@@ -138,6 +138,7 @@ export default class ImageList extends PureComponent {
         draggable
         onDragStart={ (e) => {
           e.dataTransfer.setData("imageid", img.imageId);
+          e.dataTransfer.setData("duration", img.duration);
         } } />
     ));
 
