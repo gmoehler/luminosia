@@ -185,6 +185,9 @@ export const clearSelection = () => ({
   type: CLEAR_PART_SELECTION
 });
 
+/**********************************/
+/*  Different selection functions */
+/**********************************/
 
 // only one part can be selected (for single click)
 export const toggleAPartSelection = ((partId) => {
@@ -218,6 +221,23 @@ export const toggleMultiPartSelection = ((partId) => {
         dispatch(deselectAPart(partId));
         dispatch(deletePartSelectionMarkers(partId));
       } else {
+        const part = getPart(getState(), partId);
+        dispatch(selectAPart(partId));
+        dispatch(addPartSelectionMarkers(part));
+      }
+    }
+  };
+});
+
+// adds selection if not yet selected (for mouse-down-click)
+export const toggleInitialPartSelection = ((partId) => {
+  return (dispatch, getState) => {
+
+    // check condition
+    if (partId && doesPartExist(getState(), partId)) {
+      if (!isPartSelected(getState(), partId)) {
+        dispatch(clearSelection());
+        dispatch(clearMarkers());
         const part = getPart(getState(), partId);
         dispatch(selectAPart(partId));
         dispatch(addPartSelectionMarkers(part));

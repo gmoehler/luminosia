@@ -27,6 +27,7 @@ export function withEventHandler(WrappedComponent) {
         insertNewPart: this.props.insertNewPart,
         toggleAPartSelection: this.props.toggleAPartSelection,
         toggleMultiPartSelection: this.props.toggleMultiPartSelection,
+        toggleInitialPartSelection: this.props.toggleInitialPartSelection,
         deleteSelectedPartAndMarkers: this.props.deleteSelectedPartAndMarkers,
         setMessage: this.props.setMessage,
       });
@@ -36,7 +37,7 @@ export function withEventHandler(WrappedComponent) {
 
       const { selectRange, deselectRange, move, setMarker,
         insertNewPart, toggleAPartSelection,
-        toggleMultiPartSelection,
+        toggleMultiPartSelection, toggleInitialPartSelection,
         deleteSelectedPartAndMarkers,
         ...passthruProps } = this.props;
 
@@ -58,6 +59,7 @@ export function withEventHandler(WrappedComponent) {
     insertNewPart: PropTypes.func.isRequired,
     toggleAPartSelection: PropTypes.func.isRequired,
     toggleMultiPartSelection: PropTypes.func.isRequired,
+    toggleInitialPartSelection: PropTypes.func.isRequired,
     deleteSelectedPartAndMarkers: PropTypes.func.isRequired,
     resolution: PropTypes.number.isRequired,
     setMessage: PropTypes.func.isRequired,

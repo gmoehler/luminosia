@@ -5,10 +5,10 @@ import { part, part2 } from "../../__fixtures__/channel.fixtures";
 import { marker1, marker2 } from "../../__fixtures__/view.fixtures";
 
 describe("view reducer", () => {
-  it("should return the initial state", () => 
+  it("should return the initial state", () =>
     expect(reducer(undefined, {})).toEqual(initialState));
 
-    
+
   it("should handle ADD_ELEMENT_TO_SEL for parts", () => {
 
 
@@ -32,7 +32,7 @@ describe("view reducer", () => {
       payload: part
     });
 
-    const reducer2 = reducer(reducer1,  {
+    const reducer2 = reducer(reducer1, {
       type: types.ADD_ELEMENT_TO_SEL,
       payload: part2
     });
@@ -63,12 +63,12 @@ describe("view reducer", () => {
       payload: part
     });
 
-    const reducer2 = reducer(reducer1,  {
+    const reducer2 = reducer(reducer1, {
       type: types.ADD_ELEMENT_TO_SEL,
       payload: part2
     });
 
-    const reducer3 = reducer(reducer1,  {
+    const reducer3 = reducer(reducer1, {
       type: types.REMOVE_ELEMENT_FROM_SEL,
       payload: part2
     });
@@ -77,7 +77,7 @@ describe("view reducer", () => {
     expect(reducer3).toEqual(expectedState3);
   });
 
-it("should handle CLEAR_SEL for parts", () => {
+  it("should handle CLEAR_SEL for parts", () => {
 
     const expectedState2 = {
       ...initialState,
@@ -89,7 +89,7 @@ it("should handle CLEAR_SEL for parts", () => {
 
     const expectedState3 = {
       ...initialState,
-      selectedElementsById: { }
+      selectedElementsById: {}
     };
 
     const reducer1 = reducer(reducer(undefined, {}), {
@@ -97,19 +97,19 @@ it("should handle CLEAR_SEL for parts", () => {
       payload: part
     });
 
-    const reducer2 = reducer(reducer1,  {
+    const reducer2 = reducer(reducer1, {
       type: types.ADD_ELEMENT_TO_SEL,
       payload: part2
     });
 
-    const reducer3 = reducer(reducer2,  {
+    const reducer3 = reducer(reducer2, {
       type: types.CLEAR_SEL
     });
 
     expect(reducer2).toEqual(expectedState2);
     expect(reducer3).toEqual(expectedState3);
   });
-  
+
   it("should handle SET_MARKER", () => {
 
     const expectedState1 = {
@@ -141,30 +141,6 @@ it("should handle CLEAR_SEL for parts", () => {
     expect(reducer2).toEqual(expectedState2);
   });
 
-  it("should handle SET_MARKER with undefined minPos", () => {
-
-    const marker1b = {
-      ...marker1,
-      minPos: null,
-    };
-
-    const expectedState1 = {
-      ...initialState,
-      byMarkerId: {
-        [marker1.markerId]: {
-          ...marker1,
-          minPos: 0
-        }
-      }
-    };
-
-    const reducer1 = reducer(reducer(undefined, {}), {
-      type: types.SET_MARKER,
-      payload: marker1b
-    });
-
-    expect(reducer1).toEqual(expectedState1);
-  });
 
   it("should handle DELETE_MARKER", () => {
 
@@ -274,7 +250,6 @@ it("should handle CLEAR_SEL for parts", () => {
     };
 
     delete marker3.pos;
-    delete marker3.minPos;
     delete marker3.type;
 
     const expectedState1 = {

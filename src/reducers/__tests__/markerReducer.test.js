@@ -36,7 +36,6 @@ describe("marker reducer", () => {
           markerId: "part-2--left",
           partId: "part-2",
           pos: 22.84,
-          minPos: 20.0,
           type: "left",
           selected: true
         }
@@ -46,34 +45,6 @@ describe("marker reducer", () => {
   });
 
 
-  it("should update a marker by an increment restricted by minPos", () => {
-    const reducer0 = reducer(reducer(undefined, {}), {
-      type: types.SET_OR_REPLACE_A_MARKER,
-      payload: markerPayload0
-    });
-    expect(reducer0).toEqual(markerState0);
-
-    const reducer1 = reducer(reducer0, {
-      type: types.UPDATE_A_MARKER,
-      payload: {
-        markerId: "part-2--left",
-        incr: -5.0,
-      }
-    });
-    expect(reducer1).toEqual({
-      byMarkerId: {
-        "part-2--left": {
-          markerId: "part-2--left",
-          partId: "part-2",
-          pos: 20.0,
-          minPos: 20.0,
-          type: "left",
-          selected: true,
-        }
-      },
-      allMarkerIds: ["part-2--left"],
-    });
-  });
 
   it("should update a marker by a new position", () => {
     const reducer0 = reducer(reducer(undefined, {}), {
@@ -95,7 +66,6 @@ describe("marker reducer", () => {
           markerId: "part-2--left",
           partId: "part-2",
           pos: 33.34,
-          minPos: 20.0,
           type: "left",
           selected: true,
         }
@@ -124,7 +94,6 @@ describe("marker reducer", () => {
           markerId: "part-2--left",
           partId: "part-2",
           pos: 22.34,
-          minPos: 20.0,
           type: "right",
           selected: true
         }

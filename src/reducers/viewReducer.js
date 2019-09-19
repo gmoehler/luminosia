@@ -82,10 +82,7 @@ export default (state = initialState, action) => {
         ...state,
         byMarkerId: {
           ...state.byMarkerId,
-          [action.payload.markerId]: {
-            ...action.payload,
-            minPos: action.payload.minPos || 0,
-          }
+          [action.payload.markerId]: action.payload,
         }
       };
 
@@ -108,7 +105,7 @@ export default (state = initialState, action) => {
       const prevMarker = state.byMarkerId[action.payload.markerId];
       let pos = prevMarker.pos;
       if (action.payload.incr) {
-        pos = Math.max(prevMarker.pos + action.payload.incr, prevMarker.minPos);
+        pos = Math.max(0, prevMarker.pos + action.payload.incr);
       } else if (typeof action.payload.pos == "number") {
         pos = action.payload.pos;
       }

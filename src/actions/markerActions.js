@@ -18,7 +18,6 @@ export function _setOrReplaceAMarker(markerInfo) {
   return (dispatch, getState) => {
     // required fields
     if (markerInfo.markerId && markerInfo.pos && markerInfo.type) {
-      markerInfo.minPos = markerInfo.minPos || 0;
       dispatch(_setOrReplaceMarker({
         ...markerInfo
       }));

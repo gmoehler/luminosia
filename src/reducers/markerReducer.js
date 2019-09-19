@@ -31,7 +31,7 @@ const byMarkerId = (state = {}, action) => {
       const prevMarker = state[action.payload.markerId];
       let pos = prevMarker.pos;
       if (action.payload.incr) {
-        pos = Math.max(prevMarker.pos + action.payload.incr, prevMarker.minPos);
+        pos = Math.max(0, prevMarker.pos + action.payload.incr);
       } else if (typeof action.payload.pos == "number") {
         pos = action.payload.pos;
       }

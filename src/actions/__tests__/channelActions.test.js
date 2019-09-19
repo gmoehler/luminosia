@@ -188,7 +188,6 @@ describe("actions", () => {
           partId: "2:2",
           channelId: 2,
           pos: 3.3,
-          minPos: 0,
           type: "normal"
         }
       },
@@ -199,7 +198,6 @@ describe("actions", () => {
           partId: "2:2",
           channelId: 2,
           pos: 3.3 + 11.21,
-          minPos: 11.21,
           type: "normal"
         }
       },

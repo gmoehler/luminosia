@@ -9,7 +9,7 @@ import { getSelectionRange, getResolution, getSelectedImageChannelId, getUploadL
 import { getImageSources } from "../reducers/imageListReducer";
 import { setOrReplaceInsertMarker } from "../actions/markerActions";
 import { getAllMarkers } from "../reducers/markerReducer";
-import { toggleAPartSelection, toggleMultiPartSelection, moveSelectedParts, resizeAPart } from "../actions/partActions";
+import { toggleAPartSelection, toggleMultiPartSelection, toggleInitialPartSelection, moveSelectedParts, resizeAPart } from "../actions/partActions";
 
 class ChannelGroupContainer extends Component {
 
@@ -84,9 +84,7 @@ const mapDispatchToProps = dispatch => ({
     minPos,
     type
   })),
-  setOrReplaceInsertMarker: (pos) => dispatch(setOrReplaceInsertMarker({
-    pos,
-  })),
+  setOrReplaceInsertMarker: (pos) => dispatch(setOrReplaceInsertMarker(pos)),
   insertNewPart: (channelId, imageId, offset) => dispatch(insertNewPart({
     channelId,
     imageId,
@@ -103,8 +101,9 @@ const mapDispatchToProps = dispatch => ({
     incr
   })),
   toggleAPartSelection: (partId) => dispatch(toggleAPartSelection(partId)),
-  deleteSelectedPartAndMarkers: () => dispatch(deleteSelectedPartAndMarkers()),
   toggleMultiPartSelection: (partId) => dispatch(toggleMultiPartSelection(partId)),
+  toggleInitialPartSelection: (partId) => dispatch(toggleInitialPartSelection(partId)),
+  deleteSelectedPartAndMarkers: () => dispatch(deleteSelectedPartAndMarkers()),
   setChannelPlayState: (channelId, playState) => dispatch(setChannelPlayState({
     channelId,
     playState

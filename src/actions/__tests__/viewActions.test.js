@@ -61,7 +61,6 @@ it("should paste a part from channel 2 to channel 1", () => {
     payload: {
       "channelId": 1,
       "markerId": "1:2-l",
-      "minPos": 0,
       "partId": "1:2",
       "pos": 3.3,
       "type": "normal",
@@ -71,7 +70,6 @@ it("should paste a part from channel 2 to channel 1", () => {
     payload: {
       "channelId": 1,
       "markerId": "1:2-r",
-      "minPos": 11.21,
       "partId": "1:2",
       "pos": 11.21 + 3.3,
       "type": "normal",

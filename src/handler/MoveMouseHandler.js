@@ -97,6 +97,7 @@ export default class MoveMouseHandler {
     this.channelId = evInfo.channelId;
     this.partId = evInfo.partId;
     this.markerId = evInfo.markerId; // for resize
+    this.handlerFunctions.toggleInitialPartSelection(evInfo.partId);
   }
 
   handleToggleSelection = (evInfo) => {
