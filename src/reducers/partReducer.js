@@ -122,9 +122,6 @@ const allPartIds = (state = [], action) => {
 const selectedPartIds = (state = [], action) => {
   switch (action.type) {
 
-    case ADD_A_PART:
-      return state; // no changes
-
     case DELETE_A_PART:
       return state.filter(p => p !== action.payload.partId);
 

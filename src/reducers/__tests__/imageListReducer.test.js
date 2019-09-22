@@ -1,6 +1,7 @@
 import reducer, { initialState, getImageList, getImageSources } from "../imageListReducer";
 import * as types from "../../actions/types";
-import { imagePayload0, imageListState0, fullState0,
+import {
+  imagePayload0, imageListState0, fullState0, imageListState0WithSelection,
 } from "../../__fixtures__/imageList.fixtures";
 
 describe("image list reducer", () => {
@@ -53,7 +54,48 @@ describe("image list reducer", () => {
     });
   });
 
+  it("should select an image", () => {
+
+    const reducer1 = reducer(reducer(imageListState0, {}), {
+      type: types.SELECT_IMAGE,
+      payload: imagePayload0.imageId,
+    });
+
+    expect(reducer1).toEqual(imageListState0WithSelection);
+  });
+
+  it("should remove a selected image", () => {
+
+    const reducer1 = reducer(reducer(imageListState0WithSelection, {}), {
+      type: types.REMOVE_IMAGE,
+      payload: imagePayload0.imageId,
+    });
+
+    expect(reducer1).toEqual({
+      ...initialState,
+    });
+  });
+
+  it("should deselect a selected image", () => {
+
+    const reducer1 = reducer(reducer(imageListState0WithSelection, {}), {
+      type: types.DESELECT_IMAGE,
+      payload: imagePayload0.imageId,
+    });
+
+    expect(reducer1).toEqual(imageListState0);
+  });
+
+  it("should deselect all images", () => {
+
+    const reducer1 = reducer(reducer(imageListState0WithSelection, {}), {
+      type: types.CLEAR_IMAGE_SELECTION
+    });
+
+    expect(reducer1).toEqual(imageListState0);
+  });
 });
+
 
 describe("selector functions", () => {
 

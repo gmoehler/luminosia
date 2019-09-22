@@ -21,9 +21,12 @@ export const PLAY_CHANNELS = "PLAY_CHANNELS";
 export const STOP_CHANNELS = "STOP_CHANNELS";
 
 // image list actions
-export const ADD_IMAGE = "ADD_IMAGE";
 export const CLEAR_IMAGELIST = "CLEAR_IMAGELIST";
+export const ADD_IMAGE = "ADD_IMAGE";
 export const REMOVE_IMAGE = "REMOVE_IMAGE";
+export const SELECT_IMAGE = "SELECT_IMAGE";
+export const DESELECT_IMAGE = "DESELECT_IMAGE";
+export const CLEAR_IMAGE_SELECTION = "CLEAR_IMAGE_SELECTION";
 
 // part actions
 export const CLEAR_PARTS = "CLEAR_PARTS";

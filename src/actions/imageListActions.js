@@ -1,4 +1,4 @@
-import { ADD_IMAGE, CLEAR_IMAGELIST, REMOVE_IMAGE } from "./types";
+import { ADD_IMAGE, CLEAR_IMAGELIST, REMOVE_IMAGE, SELECT_IMAGE, DESELECT_IMAGE, CLEAR_IMAGE_SELECTION } from "./types";
 import { getImageList, imageExists } from "../reducers/imageListReducer";
 
 const _addImage = (imageInfo) => ({
@@ -42,6 +42,46 @@ export function removeImage(imageId) {
     }
   };
 };
+
+export const selectImage = (imageId) => {
+  return (dispatch, getState) => {
+    // ensure that image exists
+    if (imageExists(getState(), imageId)) {
+      dispatch(_selectImage(imageId));
+    } else {
+      console.error("image to select does not exist:", imageId);
+    }
+  };
+};
+
+const _selectImage = (imageId) => ({
+  type: SELECT_IMAGE,
+  payload: imageId
+});
+
+export const deselectImage = (imageId) => {
+  return (dispatch, getState) => {
+    // ensure that image exists
+    if (imageExists(getState(), imageId)) {
+      dispatch(_deselectPart(imageId));
+    } else {
+      console.error("part to deselect does not exist:", imageId);
+    }
+  };
+};
+
+const _deselectPart = (partId) => ({
+  type: DESELECT_IMAGE,
+  payload: partId
+});
+
+export const clearSelection = () => ({
+  type: CLEAR_IMAGE_SELECTION
+});
+
+/**************************************/
+/******* LOAD / 'STORE ACTIONS ********/
+/**************************************/
 
 export function loadImage(imageInfo) {
   // base64 encoded images

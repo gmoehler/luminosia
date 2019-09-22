@@ -20,6 +20,23 @@ describe("part reducer", () => {
     expect(reducer0).toEqual(partState0);
   });
 
+  it("should handle CLEAR_PART", () => {
+    const reducer0 = reducer(reducer(undefined, {}), {
+      type: types.ADD_A_PART,
+      payload: normalizedPartPayload0
+    });
+
+    expect(reducer0).toEqual(partState0);
+
+    const reducer1 = reducer(reducer0, {
+      type: types.CLEAR_PARTS,
+    });
+
+    expect(reducer1).toEqual({
+      ...initialState,
+    });
+  });
+
   it("should move part", () => {
 
     const reducer0 = reducer(reducer(undefined, {}), {
@@ -350,23 +367,7 @@ describe("part reducer", () => {
   });
 
 
-  it("should handle CLEAR_PART", () => {
-    const reducer0 = reducer(reducer(undefined, {}), {
-      type: types.ADD_A_PART,
-      payload: normalizedPartPayload0
-    });
 
-    expect(reducer0).toEqual(partState0);
-
-    const reducer1 = reducer(reducer0, {
-      type: types.CLEAR_PARTS,
-    });
-
-    expect(reducer1).toEqual({
-      ...initialState,
-    });
-
-  });
 
 });
 
