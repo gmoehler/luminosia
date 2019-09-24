@@ -1,7 +1,6 @@
 
 import { CLEAR_VIEW, UPLOAD_CONFIG_STARTED, UPLOAD_CONFIG_SUCCESS, UPLOAD_CONFIG_FAILURE, SELECT_RANGE, DESELECT_RANGE, SET_RESOLUTION, SELECT_IMAGE_CHANNEL, COPY_PART, ADD_TO_UPLOAD_LOG, CLEAR_UPLOAD_LOG, SET_MESSAGE, CLEAR_MESSAGE } from "../actions/types";
 
-
 // export for tests
 export const initialState = {
   selection: {
@@ -9,7 +8,6 @@ export const initialState = {
     to: null,
     type: null,
   },
-  byMarkerId: {},
   resolution: 80,
   selectedImageChannelId: null,
   partsToCopy: null,
