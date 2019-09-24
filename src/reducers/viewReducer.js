@@ -8,6 +8,8 @@ import {
   ADD_TO_UPLOAD_LOG, CLEAR_UPLOAD_LOG, SET_MESSAGE, CLEAR_MESSAGE
 } from "../actions/types";
 import { getElementType } from "./channelReducer";
+import { imageExists } from "./imageListReducer";
+import { doesPartExist } from "./partReducer";
 
 // export for tests
 export const initialState = {
@@ -259,4 +261,13 @@ export const getMessage = (state) => state.view.message;
 
 export const isUploadingConfig = (state) => {
   return state.view.uploadConfigStatus === "started";
+};
+
+export const getEntityType = (state, id) => {
+  if (imageExists(state, id)) {
+    return "image";
+  } else if (doesPartExist(state, id)) {
+    return "part";
+  }
+  return "unknown";
 };

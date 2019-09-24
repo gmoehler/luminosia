@@ -1,5 +1,5 @@
 import { ADD_IMAGE, CLEAR_IMAGELIST, REMOVE_IMAGE, SELECT_IMAGE, DESELECT_IMAGE, CLEAR_IMAGE_SELECTION } from "./types";
-import { getImageList, imageExists } from "../reducers/imageListReducer";
+import { getImageList, imageExists, isImageSelected, isImageSingleSelected } from "../reducers/imageListReducer";
 
 const _addImage = (imageInfo) => ({
   type: ADD_IMAGE,
@@ -77,6 +77,59 @@ const _deselectPart = (partId) => ({
 
 export const clearSelection = () => ({
   type: CLEAR_IMAGE_SELECTION
+});
+
+
+/**********************************/
+/*  Different selection functions */
+/**********************************/
+
+// only one part can be selected (for single click)
+export const toggleImageSelection = ((imageId) => {
+  return (dispatch, getState) => {
+
+    // ensure we have what we need
+    // so reducers do not need to check assumptions
+    if (imageId && imageExists(getState(), imageId)) {
+
+      const partSingleSelected = isImageSingleSelected(getState(), imageId);
+      // simpler to deselect everything instead of deselection prev selection
+      dispatch(clearSelection());
+
+      if (!partSingleSelected) {
+        dispatch(selectImage(imageId));
+      }
+    }
+  };
+});
+
+// many parts can be selected (for ctrl-click)
+export const toggleMultiImageSelection = ((imageId) => {
+  return (dispatch, getState) => {
+
+    // check condition
+    if (imageId && imageExists(getState(), imageId)) {
+      if (isImageSelected(getState(), imageId)) {
+        dispatch(deselectImage(imageId));
+      } else {
+        dispatch(selectImage(imageId));
+      }
+    }
+  };
+});
+
+// adds selection if not yet selected (for mouse-down-click)
+export const toggleInitialImageSelection = ((imageId) => {
+  return (dispatch, getState) => {
+
+    // check condition
+    if (imageId && imageExists(getState(), imageId)) {
+      if (!isImageSelected(getState(), imageId)) {
+        dispatch(clearSelection());
+        dispatch(selectImage(imageId));
+      }
+    }
+  };
 });
 
 /**************************************/

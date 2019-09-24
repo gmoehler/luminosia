@@ -116,3 +116,11 @@ export const getImageListConfig = (state) => {
 
 export const imageExists = (state, id) =>
   state.entities.images.allImageIds.includes(id);
+
+export function isImageSelected(state, imageId) {
+  return state.entities.images.selectedImageIds.includes(imageId);
+}
+
+export function isImageSingleSelected(state, imageId) {
+  return state.entities.images.selectedImageIds === [imageId];
+}
