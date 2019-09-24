@@ -21,6 +21,16 @@ function generateId() {
   return "part-" + lastPartIdCount.toString();
 }
 
+const _addPart = (partInfo) => ({
+  type: ADD_A_PART,
+  // normalize for easy usage in partReducer
+  // also add channelId for channelReducer
+  payload: {
+    ...normalize(partInfo, partSchema),
+    channelId: partInfo.channelId
+  }
+});
+
 // create part id and add the part to the parts entities and channel
 // returns the new part id
 export const createPart = (partInfo) => {
@@ -45,14 +55,12 @@ export const createPart = (partInfo) => {
   };
 };
 
-const _addPart = (partInfo) => ({
-  type: ADD_A_PART,
-  // normalize for easy usage in partReducer
-  // also add channelId for channelReducer
-  payload: {
-    ...normalize(partInfo, partSchema),
-    channelId: partInfo.channelId
-  }
+
+
+const _deletePart = (partIdAndChannelId) => ({
+  type: DELETE_A_PART,
+  // no normalization should not be required since we can achieve this with partId and channelId alone
+  payload: partIdAndChannelId,
 });
 
 export const deleteAPart = (partId) => {
@@ -73,14 +81,15 @@ export const deleteAPart = (partId) => {
   };
 };
 
-const _deletePart = (partIdAndChannelId) => ({
-  type: DELETE_A_PART,
-  // no normalization should not be required since we can achieve this with partId and channelId alone
-  payload: partIdAndChannelId,
-});
+
 
 export const clearParts = () => ({
   type: CLEAR_PARTS
+});
+
+const _movePart = (moveInfo) => ({
+  type: MOVE_A_PART,
+  payload: moveInfo
 });
 
 export const moveAPart = (moveInfo) => {
@@ -116,9 +125,11 @@ export const moveSelectedParts = (moveInfo) => {
   };
 };
 
-const _movePart = (moveInfo) => ({
-  type: MOVE_A_PART,
-  payload: moveInfo
+
+
+const _resizePart = (resizeInfo) => ({
+  type: RESIZE_A_PART,
+  payload: resizeInfo
 });
 
 export const resizeAPart = (resizeInfo) => {
@@ -143,10 +154,7 @@ export const resizeAPart = (resizeInfo) => {
   };
 };
 
-const _resizePart = (resizeInfo) => ({
-  type: RESIZE_A_PART,
-  payload: resizeInfo
-});
+
 
 export const syncPartDeps = (partId) => {
   return (dispatch, getState) => {
