@@ -140,7 +140,6 @@ const selectedPartIds = (state = [], action) => {
   }
 };
 
-
 export default combineReducers({
   byPartId,
   allPartIds,

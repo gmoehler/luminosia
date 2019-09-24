@@ -1,16 +1,10 @@
 import { combineReducers } from "redux";
 
-import imageListReducer, { getImageListConfig } from "./imageListReducer";
 import channelReducer, { getChannelsConfig } from "./channelReducer";
 import viewReducer from "./viewReducer";
-import partReducer from "./partReducer";
-import markerReducer from "./markerReducer";
+import entityReducer from "./entityReducer";
+import { getImageListConfig } from "./imageListReducer";
 
-const entityReducer = combineReducers({
-    parts: partReducer,
-    images: imageListReducer,
-    markers: markerReducer,
-});
 
 export default combineReducers({
     channel: channelReducer,

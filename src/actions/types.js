@@ -20,6 +20,11 @@ export const UPLOAD_AUDIO_FAILURE = "UPLOAD_AUDIO_FAILURE";
 export const PLAY_CHANNELS = "PLAY_CHANNELS";
 export const STOP_CHANNELS = "STOP_CHANNELS";
 
+// general entity actions
+export const SELECT_ENTITY = "SELECT_ENTITY";
+export const DESELECT_ENTITY = "DESELECT_ENTITY";
+export const CLEAR_ENTITY_SELECTION = "CLEAR_ENTITY_SELECTION";
+
 // image list actions
 export const CLEAR_IMAGELIST = "CLEAR_IMAGELIST";
 export const ADD_IMAGE = "ADD_IMAGE";

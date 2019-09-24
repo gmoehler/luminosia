@@ -43,6 +43,11 @@ export function removeImage(imageId) {
   };
 };
 
+const _selectImage = (imageId) => ({
+  type: SELECT_IMAGE,
+  payload: imageId
+});
+
 export const selectImage = (imageId) => {
   return (dispatch, getState) => {
     // ensure that image exists
@@ -54,8 +59,8 @@ export const selectImage = (imageId) => {
   };
 };
 
-const _selectImage = (imageId) => ({
-  type: SELECT_IMAGE,
+const _deselectPart = (imageId) => ({
+  type: DESELECT_IMAGE,
   payload: imageId
 });
 
@@ -69,11 +74,6 @@ export const deselectImage = (imageId) => {
     }
   };
 };
-
-const _deselectPart = (partId) => ({
-  type: DESELECT_IMAGE,
-  payload: partId
-});
 
 export const clearSelection = () => ({
   type: CLEAR_IMAGE_SELECTION
