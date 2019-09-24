@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import ChannelSelector from "./ChannelSelector";
 import { getAllChannelsOverview } from "../reducers/channelReducer";
 import { updateChannel, setChannelActive, unsetChannelActive, deleteChannel, duplicateChannel } from "../actions/channelActions";
-import { exportImageChannel } from "../actions/generalActions";
+import { uploadImageChannel, downloadImageChannel } from "../actions/generalActions";
 
 import { getSelectedImageChannelId } from "../reducers/viewReducer";
 
@@ -29,7 +29,8 @@ const mapDispatchToProps = dispatch => ({
   updateChannel: (channelInfo) => dispatch(updateChannel(channelInfo)),
   setChannelActive: (channelId) => dispatch(setChannelActive(channelId)),
   unsetChannelActive: (channelId) => dispatch(unsetChannelActive(channelId)),
-  exportImageChannel: (channelId) => dispatch(exportImageChannel(channelId)),
+  uploadImageChannel: (channelId) => dispatch(uploadImageChannel(channelId)),
+  downloadImageChannel: (channelId) => dispatch(downloadImageChannel(channelId)),
   deleteChannel: (channelId) => dispatch(deleteChannel(channelId)),
   duplicateChannel: (channelId) => dispatch(duplicateChannel(channelId)),
 });

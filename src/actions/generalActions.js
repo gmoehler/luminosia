@@ -148,12 +148,12 @@ export const downloadImageChannel = channelId => (dispatch, getState) => {
   // export/save binary encoded image for poi
   downloadBinaryFile(`result-${channelId}.poi`, encodeImage(data));
 
-// image file download
-/* const canvas = document.getElementById("imageExportCanvas");
-const resultImage = canvas.toDataURL("image/png");
-if (resultImage) {
-  downloadImagefile(`result-${channelId}.png`, resultImage);
-} */
+  // image file download
+  /* const canvas = document.getElementById("imageExportCanvas");
+  const resultImage = canvas.toDataURL("image/png");
+  if (resultImage) {
+    downloadImagefile(`result-${channelId}.png`, resultImage);
+  } */
 };
 
 // export one channel
