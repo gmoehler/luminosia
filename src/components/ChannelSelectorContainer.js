@@ -6,6 +6,7 @@ import ChannelSelector from "./ChannelSelector";
 import { getAllChannelsOverview } from "../reducers/channelReducer";
 import { updateChannel, setChannelActive, unsetChannelActive, deleteChannel, duplicateChannel } from "../actions/channelActions";
 import { exportImageChannel } from "../actions/generalActions";
+
 import { getSelectedImageChannelId } from "../reducers/viewReducer";
 
 class ChannelSelectorContainer extends Component {
@@ -38,7 +39,7 @@ ChannelSelectorContainer.propTypes = {
   selectedImageChannelId: PropTypes.number,
   setChannelActive: PropTypes.func.isRequired,
   unsetChannelActive: PropTypes.func.isRequired,
-  exportImageChannel: PropTypes.func.isRequired,
+  uploadImageChannel: PropTypes.func.isRequired,
   deleteChannel: PropTypes.func.isRequired,
   duplicateChannel: PropTypes.func.isRequired,
 };

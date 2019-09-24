@@ -139,8 +139,25 @@ export const drawExportImage = (channelId, idx, applyLog) => (dispatch, getState
   }
 };
 
+export const downloadImageChannel = channelId => (dispatch, getState) => {
+  dispatch(clearExportImage(1));
+  dispatch(drawExportImage(channelId, 0, true));
+  // binary download
+  const data = getChannelExportData();
+
+  // export/save binary encoded image for poi
+  downloadBinaryFile(`result-${channelId}.poi`, encodeImage(data));
+
+// image file download
+/* const canvas = document.getElementById("imageExportCanvas");
+const resultImage = canvas.toDataURL("image/png");
+if (resultImage) {
+  downloadImagefile(`result-${channelId}.png`, resultImage);
+} */
+};
+
 // export one channel
-export const exportImageChannel = channelId => (dispatch, getState) => {
+export const uploadImageChannel = channelId => (dispatch, getState) => {
   dispatch(clearExportImage(1));
   dispatch(drawExportImage(channelId, 0, true));
   // binary download
@@ -153,16 +170,7 @@ export const exportImageChannel = channelId => (dispatch, getState) => {
         console.log(text);
         dispatch(addToUploadLog(text));
       });
-  } else {
-    downloadBinaryFile(`result-${channelId}.poi`, encodeImage(data));
   }
-
-  // image file download
-  /* const canvas = document.getElementById("imageExportCanvas");
-  const resultImage = canvas.toDataURL("image/png");
-  if (resultImage) {
-    downloadImagefile(`result-${channelId}.png`, resultImage);
-  } */
 };
 
 // during animation: get image data from export canvas within an interval

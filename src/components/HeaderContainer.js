@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 
 import { stopChannel, createImageChannel, uploadAudioFile, playChannelAndImage, setChannelActive, unsetChannelActive, pastePart } from "../actions/channelActions";
 
-import { downloadConfig, uploadConfigFile, uploadConfig, exportImageChannel, updateFirmware } from "../actions/generalActions";
+import { downloadConfig, uploadConfigFile, uploadConfig, updateFirmware } from "../actions/generalActions";
 import { setResolution, copyPart } from "../actions/viewActions";
 import { deleteSelectedEntities, } from "../actions/entityActions";
 import Header from "./Header";
@@ -68,7 +68,6 @@ const mapDispatchToProps = dispatch => ({
   uploadAudioFile: (audioFile) => dispatch(uploadAudioFile(audioFile, audioContext)),
   uploadConfigAction: (config) => dispatch(uploadConfig(config, audioContext)),
   createImageChannel: () => dispatch(createImageChannel()),
-  exportImageChannel: (channelId) => dispatch(exportImageChannel(channelId)),
   playChannelAndImage: (channelId) => dispatch(playChannelAndImage(channelId)),
   stopChannel: () => dispatch(stopChannel()),
   setResolution: (resolution) => dispatch(setResolution(resolution)),
