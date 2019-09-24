@@ -25,10 +25,10 @@ export function withEventHandler(WrappedComponent) {
         setMarker: this.props.setMarker,
         setOrReplaceInsertMarker: this.props.setOrReplaceInsertMarker,
         insertNewPart: this.props.insertNewPart,
-        toggleAPartSelection: this.props.toggleAPartSelection,
-        toggleMultiPartSelection: this.props.toggleMultiPartSelection,
-        toggleInitialPartSelection: this.props.toggleInitialPartSelection,
-        deleteSelectedPartAndMarkers: this.props.deleteSelectedPartAndMarkers,
+        toggleEntitySelection: this.props.toggleEntitySelection,
+        toggleMultiEntitySelection: this.props.toggleMultiEntitySelection,
+        toggleInitialEntitySelection: this.props.toggleInitialEntitySelection,
+        deleteSelectedEntities: this.props.deleteSelectedEntities,
         setMessage: this.props.setMessage,
       });
     }
@@ -36,9 +36,9 @@ export function withEventHandler(WrappedComponent) {
     render() {
 
       const { selectRange, deselectRange, move, setMarker,
-        insertNewPart, toggleAPartSelection,
-        toggleMultiPartSelection, toggleInitialPartSelection,
-        deleteSelectedPartAndMarkers,
+        insertNewPart, toggleEntitySelection,
+        toggleMultiEntitySelection, toggleInitialEntitySelection,
+        deleteSelectedEntities,
         ...passthruProps } = this.props;
 
       return (<WrappedComponent { ...passthruProps }
@@ -57,10 +57,10 @@ export function withEventHandler(WrappedComponent) {
     setMarker: PropTypes.func.isRequired,
     setOrReplaceInsertMarker: PropTypes.func.isRequired,
     insertNewPart: PropTypes.func.isRequired,
-    toggleAPartSelection: PropTypes.func.isRequired,
-    toggleMultiPartSelection: PropTypes.func.isRequired,
-    toggleInitialPartSelection: PropTypes.func.isRequired,
-    deleteSelectedPartAndMarkers: PropTypes.func.isRequired,
+    toggleEntitySelection: PropTypes.func.isRequired,
+    toggleMultiEntitySelection: PropTypes.func.isRequired,
+    toggleInitialEntitySelection: PropTypes.func.isRequired,
+    deleteSelectedEntities: PropTypes.func.isRequired,
     resolution: PropTypes.number.isRequired,
     setMessage: PropTypes.func.isRequired,
   };

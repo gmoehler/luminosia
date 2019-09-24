@@ -7,7 +7,7 @@ import {
 } from "../actions/types";
 
 import partReducer, { doesPartExist } from "./partReducer";
-import markerReducer from "./markerReducer";
+import markerReducer, { aMarkerExists } from "./markerReducer";
 import imageListReducer, { imageExists } from "./imageListReducer";
 
 export const initialState = {
@@ -59,19 +59,19 @@ export function isEntitySingleSelected(state, entityId) {
   return state.entities.selectedEntityIds === [entityId];
 }
 
-export function getEntityType(entityId) {
-  if (doesPartExist(entityId)) {
+export function getEntityType(state, entityId) {
+  if (doesPartExist(state, entityId)) {
     return "part";
-  } else if (imageExists(entityId)) {
+  } else if (imageExists(state, entityId)) {
     return "image";
-  } else if (aMarkerExists(entityId)) {
+  } else if (aMarkerExists(state, entityId)) {
     return "marker";
   }
   return "unknown";
 }
 
-export function isEntitySelectable(entityId) {
-  return ["part", "image"].includes(getSelectedEntityType(entityId));
+export function isEntitySelectable(state, entityId) {
+  return ["part", "image"].includes(getEntityType(state, entityId));
 }
 
 // only one type of entities can be selected 
@@ -80,5 +80,18 @@ export function getSelectedEntityType(state) {
   if (state.entities.selectedEntityIds.length === 0) {
     return "none";
   }
-  return getEntityType(state.entities.selectedEntityIds[0]);
+  return getEntityType(state, state.entities.selectedEntityIds[0]);
+}
+
+export function getSelectedEntities(state) {
+  return state.entities.selectedEntityIds;
+}
+
+export function getSelectedEntitiesOfType(state, type) {
+  return getSelectedEntityType(state) === type ?
+    getSelectedEntities(state) : [];
+}
+
+export function anyEntitySelected(state) {
+  return getSelectedEntities(state).length > 0;
 }

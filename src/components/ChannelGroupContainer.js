@@ -2,14 +2,15 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 
 import ChannelGroup from "./ChannelGroup";
-import { setChannelPlayState, insertNewPart, deleteSelectedPartAndMarkers } from "../actions/channelActions";
+import { setChannelPlayState, insertNewPart, } from "../actions/channelActions";
 import { selectRange, deselectRange, setMarker, setMessage, selectInInterval } from "../actions/viewActions";
 import { getMaxDuration, getAllChannelsData, allChannelsStopped } from "../reducers/channelReducer";
 import { getSelectionRange, getResolution, getSelectedImageChannelId, getUploadLog, isUploadingConfig } from "../reducers/viewReducer";
 import { getImageSources } from "../reducers/imageListReducer";
 import { setOrReplaceInsertMarker } from "../actions/markerActions";
 import { getAllMarkers } from "../reducers/markerReducer";
-import { toggleAPartSelection, toggleMultiPartSelection, toggleInitialPartSelection, moveSelectedParts, resizeAPart } from "../actions/partActions";
+import { moveSelectedParts, resizeAPart } from "../actions/partActions";
+import { toggleEntitySelection, toggleMultiEntitySelection, toggleInitialEntitySelection, deleteSelectedEntities } from "../actions/entityActions";
 
 class ChannelGroupContainer extends Component {
 
@@ -100,10 +101,10 @@ const mapDispatchToProps = dispatch => ({
     markerId,
     incr
   })),
-  toggleAPartSelection: (partId) => dispatch(toggleAPartSelection(partId)),
-  toggleMultiPartSelection: (partId) => dispatch(toggleMultiPartSelection(partId)),
-  toggleInitialPartSelection: (partId) => dispatch(toggleInitialPartSelection(partId)),
-  deleteSelectedPartAndMarkers: () => dispatch(deleteSelectedPartAndMarkers()),
+  toggleEntitySelection: (partId) => dispatch(toggleEntitySelection(partId)),
+  toggleMultiEntitySelection: (partId) => dispatch(toggleMultiEntitySelection(partId)),
+  toggleInitialEntitySelection: (partId) => dispatch(toggleInitialEntitySelection(partId)),
+  deleteSelectedEntities: () => dispatch(deleteSelectedEntities()),
   setChannelPlayState: (channelId, playState) => dispatch(setChannelPlayState({
     channelId,
     playState

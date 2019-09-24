@@ -77,7 +77,7 @@ export class Header extends Component {
 
     const { classes,
       createImageChannel, downloadConfig, enablePlay, playChannelAndImage, enableStop,
-      stopChannel, zoomIn, zoomOut, numSelectedElems, deleteSelectedPartAndMarkers,
+      stopChannel, zoomIn, zoomOut, entitySelected, deleteSelectedEntities,
       copyPart, pastePart, updateFirmware, hasPartToCopy } = this.props;
 
     return (
@@ -155,7 +155,7 @@ export class Header extends Component {
           </Tooltip>
           <Tooltip title="Copy selected part">
             <div>
-              <IconButton disabled={ numSelectedElems === 0 }
+              <IconButton disabled={ !entitySelected }
                 color="inherit"
                 onClick={ copyPart }>
                 <ContentCopy />
@@ -173,9 +173,9 @@ export class Header extends Component {
           </Tooltip>
           <Tooltip title="Delete selected">
             <div>
-              <IconButton disabled={ numSelectedElems === 0 }
+              <IconButton disabled={ !entitySelected }
                 color="inherit"
-                onClick={ deleteSelectedPartAndMarkers }>
+                onClick={ deleteSelectedEntities }>
                 <DeleteIcon />
               </IconButton>
             </div>
@@ -209,8 +209,8 @@ Header.propTypes = {
   stopChannelAction: PropTypes.func,
   zoomIn: PropTypes.func.isRequired,
   zoomOut: PropTypes.func.isRequired,
-  numSelectedElems: PropTypes.number,
-  deleteSelectedPartAndMarkers: PropTypes.func.isRequired,
+  entitySelected: PropTypes.bool,
+  deleteSelectedEntities: PropTypes.func.isRequired,
   uploadConfigFile: PropTypes.func.isRequired,
   unsetChannelActive: PropTypes.func.isRequired,
   setChannelActive: PropTypes.func.isRequired,

@@ -83,13 +83,9 @@ export default class ImageList extends PureComponent {
       let el = e.target;
       const imageId = el.getAttribute("data-imageid");
       if (e.ctrlKey) {
-        this.props.selectMultiImage({
-          imageId
-        });
+        this.props.toggleMultiEntitySelection(imageId);
       } else {
-        this.props.selectImage({
-          imageId
-        });
+        this.props.toggleEntitySelection(imageId);
       }
     } else if (eventName === "dragEnter") {
       this.dragCounter++;
@@ -134,7 +130,7 @@ export default class ImageList extends PureComponent {
         key={ img.imageId }
         src={ img.src }
         data-imageid={ img.imageId }
-        borderColor={ this.props.selectedImageIds.includes(img.imageId) ? "red" : "transparent" }
+        borderColor={ this.props.isEntitySelected(img.imageId) ? "red" : "transparent" }
         draggable
         onDragStart={ (e) => {
           e.dataTransfer.setData("imageid", img.imageId);
@@ -165,9 +161,9 @@ export default class ImageList extends PureComponent {
 ImageList.propTypes = {
   images: PropTypes.array, // all images
   loadImagesFromStorage: PropTypes.func.isRequired,
-  selectImage: PropTypes.func.isRequired,
-  selectMultiImage: PropTypes.func.isRequired,
-  selectedImageIds: PropTypes.arrayOf(PropTypes.string),
+  toggleEntitySelection: PropTypes.func.isRequired,
+  toggleMultiEntitySelection: PropTypes.func.isRequired,
+  isEntitySelected: PropTypes.func.isRequired,
   sampleRate: PropTypes.number.isRequired,
   addImage: PropTypes.func.isRequired,
   setMessage: PropTypes.func.isRequired,

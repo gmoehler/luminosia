@@ -6,12 +6,15 @@ import {
 } from "./types";
 import {
   getChannelId, partSchema, doesPartExist, getPart, isPartSelected,
-  isPartSingleSelected, getAllSelectedPartIds
+  isPartSingleSelected,
 } from "../reducers/partReducer";
 import {
   deletePartSelectionMarkers, addPartSelectionMarkers, clearMarkers,
   syncPartMarkers
 } from "./markerActions";
+
+import { toggleEntitySelection } from "./entityActions";
+import { isEntitySelected, getSelectedEntitiesOfType } from "../reducers/entityReducer";
 
 // first id will be 1 to avoid falsy ids
 let lastPartIdCount = 0;
@@ -39,6 +42,7 @@ export const createPart = (partInfo) => {
         ...partInfo,
         partId,
       }));
+      dispatch(toggleEntitySelection(partId));
       return partId;
     }
     console.error("cannot add incomplete part:", partInfo);
@@ -104,11 +108,11 @@ export const moveAPart = (moveInfo) => {
 
 export const moveSelectedParts = (moveInfo) => {
   return (dispatch, getState) => {
-    if (!isPartSelected(getState(), moveInfo.partId)) {
+    if (!isEntitySelected(getState(), moveInfo.partId)) {
       // if part was not selected then exclusively select it for move
-      dispatch(toggleAPartSelection(moveInfo.partId));
+      dispatch(toggleEntitySelection(moveInfo.partId));
     }
-    getAllSelectedPartIds(getState()).forEach((partId) => {
+    getSelectedEntitiesOfType(getState(), "part").forEach((partId) => {
       dispatch(moveAPart({
         partId,
         incr: moveInfo.incr,
@@ -129,7 +133,7 @@ export const resizeAPart = (resizeInfo) => {
     // so reducers do not need to check assumptions
     if (resizeInfo.partId && resizeInfo.markerId) {
       // exclusively select this part
-      dispatch(toggleAPartSelection(resizeInfo.partId));
+      dispatch(toggleEntitySelection(resizeInfo.partId));
       // if incr is 0 no need to resize
       if (resizeInfo.incr) {
         resizeInfo.bound = resizeInfo.markerId.includes("right") ? "right" : "left";

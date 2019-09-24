@@ -88,7 +88,7 @@ export default class MoveMouseHandler {
 
   handleKeyDown = (evInfo) => {
     if (evInfo.key === "Delete" || evInfo.key === "Backspace") {
-      this.handlerFunctions.deleteSelectedPartAndMarkers();
+      this.handlerFunctions.deleteSelectedEntities();
     }
   }
 
@@ -97,11 +97,11 @@ export default class MoveMouseHandler {
     this.channelId = evInfo.channelId;
     this.partId = evInfo.partId;
     this.markerId = evInfo.markerId; // for resize
-    this.handlerFunctions.toggleInitialPartSelection(evInfo.partId);
+    this.handlerFunctions.toggleInitialEntitySelection(evInfo.partId);
   }
 
   handleToggleSelection = (evInfo) => {
-    this.handlerFunctions.toggleAPartSelection(evInfo.partId);
+    this.handlerFunctions.toggleEntitySelection(evInfo.partId);
   }
 
   handleMoveTo = (evInfo, finalizeAction) => {
@@ -175,7 +175,7 @@ export default class MoveMouseHandler {
   }
 
   handleMultiSelect = (evInfo) => {
-    this.handlerFunctions.toggleMultiPartSelection(evInfo.partId);
+    this.handlerFunctions.toggleMultiEntitySelection(evInfo.partId);
   }
 
   deselectRange = () => {

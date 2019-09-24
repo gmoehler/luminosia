@@ -2,13 +2,15 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import { stopChannel, deleteSelectedPartAndMarkers, createImageChannel, uploadAudioFile, playChannelAndImage, setChannelActive, unsetChannelActive, pastePart } from "../actions/channelActions";
+import { stopChannel, createImageChannel, uploadAudioFile, playChannelAndImage, setChannelActive, unsetChannelActive, pastePart } from "../actions/channelActions";
 
 import { downloadConfig, uploadConfigFile, uploadConfig, exportImageChannel, updateFirmware } from "../actions/generalActions";
 import { setResolution, copyPart } from "../actions/viewActions";
+import { deleteSelectedEntities, } from "../actions/entityActions";
 import Header from "./Header";
 import { getChannelIds, allChannelsStopped } from "../reducers/channelReducer";
-import { getPartsToCopy, getNumSelectedElements } from "../reducers/viewReducer";
+import { getPartsToCopy, } from "../reducers/viewReducer";
+import { anyEntitySelected } from "../reducers/entityReducer";
 
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
 const audioContext = window.AudioContext && new window.AudioContext();
@@ -47,17 +49,14 @@ class HeaderContainer extends Component {
   render() {
 
     return (
-      <Header { ...this.props }
-          zoomIn={ this.zoomIn }
-          zoomOut={ this.zoomOut }
-          />
-      );
+      <Header { ...this.props } zoomIn={ this.zoomIn } zoomOut={ this.zoomOut } />
+    );
   }
 }
 
 const mapStateToProps = state => ({
   channelIds: getChannelIds(state),
-  numSelectedElems: getNumSelectedElements(state),
+  entitySelected: anyEntitySelected(state),
   hasPartToCopy: Boolean(getPartsToCopy(state)),
   enablePlay: Boolean(getChannelIds(state).length > 0 && allChannelsStopped(state)),
   enableStop: Boolean(getChannelIds(state).length && !allChannelsStopped(state)),
@@ -73,7 +72,7 @@ const mapDispatchToProps = dispatch => ({
   playChannelAndImage: (channelId) => dispatch(playChannelAndImage(channelId)),
   stopChannel: () => dispatch(stopChannel()),
   setResolution: (resolution) => dispatch(setResolution(resolution)),
-  deleteSelectedPartAndMarkers: () => dispatch(deleteSelectedPartAndMarkers()),
+  deleteSelectedEntities: () => dispatch(deleteSelectedEntities()),
   setChannelActive: (channelId) => dispatch(setChannelActive(channelId)),
   unsetChannelActive: (channelId) => dispatch(unsetChannelActive(channelId)),
   copyPart: () => dispatch(copyPart()),
@@ -83,7 +82,7 @@ const mapDispatchToProps = dispatch => ({
 
 HeaderContainer.propTypes = {
   setResolution: PropTypes.func.isRequired,
-  deleteSelectedPartAndMarkers: PropTypes.func.isRequired,
+  deleteSelectedEntities: PropTypes.func.isRequired,
 };
 
 
