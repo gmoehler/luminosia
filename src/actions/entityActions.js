@@ -10,8 +10,8 @@ const _selectEntity = (entityId) => ({
 
 export const selectEntity = (entityId) => {
   return (dispatch, getState) => {
-    // ensure that entity exists
-    if (entityExists(getState(), entityId)) {
+    // ensure that entity exists and is selectable
+    if (entityExists(getState(), entityId) && isEntitySelectable(entityId)) {
       dispatch(_selectEntity(entityId));
     } else {
       console.error("entity to select does not exist:", entityId);
@@ -19,25 +19,22 @@ export const selectEntity = (entityId) => {
   };
 };
 
-const _deselectEntity = (entityId) => ({
+// no checks are required: reducer works for unknown entities
+const deselectEntity = (entityId) => ({
   type: DESELECT_ENTITY,
   payload: entityId
 });
 
-export const deselectEntity = (entityId) => {
-  return (dispatch, getState) => {
-    // ensure that entity exists
-    if (entityExists(getState(), entityId)) {
-      dispatch(_deselectEntity(entityId));
-    } else {
-      console.error("entity to deselect does not exist:", entityId);
-    }
-  };
-};
-
-export const clearEntitySelection = () => ({
+export const _clearEntitySelection = () => ({
   type: CLEAR_ENTITY_SELECTION
 });
+
+export const clearEntitySelection = () => {
+  return (dispatch, getState) => {
+      dispatch(_clearEntitySelection());
+      dispatch(clearMarkers());  // just do it in any case
+  };
+};
 
 /**********************************/
 /*  Different selection functions */
@@ -54,7 +51,6 @@ export const toggleEntitySelection = ((entityId) => {
       const entitySingleSelected = isEntitySingleSelected(getState(), entityId);
       // simpler to deselect everything instead of deselection prev selection
       dispatch(clearEntitySelection());
-      dispatch(clearMarkers());
 
       if (!entitySingleSelected) {
         dispatch(selectEntity(entityId));
@@ -74,7 +70,14 @@ export const toggleMultiEntitySelection = ((entityId) => {
 
     // check condition
     if (entityId && entityExists(getState(), entityId)) {
-      if (isEntitySelected(getState(), entityId)) {
+    	
+      // if other entity type was selected: clean selection first
+      if (getEntityType(entityId) !== getSelectedEntityType(getState())) {
+        	dispatch(clearEntitySelection());
+            dispatch(selectEntity(entityId));
+      }
+      
+      else if (isEntitySelected(getState(), entityId)) {
         dispatch(deselectEntity(entityId));
       } else {
         dispatch(selectEntity(entityId));
@@ -89,7 +92,7 @@ export const toggleInitialEntitySelection = ((entityId) => {
 
     // check condition
     if (entityId && entityExists(getState(), entityId)) {
-      if (!isEntitySelected(getState(), entityId)) {
+      if (!isEntitySelected(getState(), entityId) {
         dispatch(clearEntitySelection());
         dispatch(selectEntity(entityId));
       }

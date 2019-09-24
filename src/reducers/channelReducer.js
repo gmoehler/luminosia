@@ -96,7 +96,7 @@ export default (state = initialState, action) => {
       };
       const newParts0 = [
         ...channelCopy0.parts,
-        action.payload.result,
+        action.payload.result, // add new partId
       ];
       // and adjust duration
       const part0 = action.payload.entities.byPartId[action.payload.result];

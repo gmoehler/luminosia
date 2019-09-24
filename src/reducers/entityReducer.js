@@ -59,15 +59,26 @@ export function isEntitySingleSelected(state, entityId) {
   return state.entities.selectedEntityIds === [entityId];
 }
 
+export function getEntityType(entityId) {
+  if (doesPartExist(entityId)) {
+    return "part";
+  } else if (imageExists(entityId)) {
+    return "image";
+  } else if (aMarkerExists(entityId)) {
+    return "marker";
+  }
+  return "unknown";
+}
+
+export function isEntitySelectable(entityId) {
+  return ["part", "image"].includes(getSelectedEntityType(entityId));
+}
+
 // only one type of entities can be selected 
 // currently only part or image
 export function getSelectedEntityType(state) {
   if (state.entities.selectedEntityIds.length === 0) {
     return "none";
-  } else if (doesPartExist(state.entities.selectedEntityIds[0])) {
-    return "part";
-  } else if (imageExists(state.entities.selectedEntityIds[0])) {
-    return "image";
   }
-  return "unknown";
+  return getEntityType(state.entities.selectedEntityIds[0]);
 }
