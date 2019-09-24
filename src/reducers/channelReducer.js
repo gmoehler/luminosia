@@ -223,10 +223,8 @@ export const getChannelData = (state, channelId) => state.channel.byChannelId[ch
 
 export const getChannelIds = state => Object.keys(state.channel.byChannelId);
 
-export const getPart = (state, channelId, partId) => state.channel.byChannelId[channelId].byPartId[partId];
-
 export const getPartRefsInInterval = (state, channelId, from, to) => {
-  const ch = state.channel.byChannelId[channelId];
+  /* const ch = state.channel.byChannelId[channelId];
   if (ch && Object.keys(ch.byPartId) && Object.keys(ch.byPartId).length > 0) {
     return Object.values(ch.byPartId).filter(
       part => part.offset + part.duration > from && part.offset < to,
@@ -234,7 +232,7 @@ export const getPartRefsInInterval = (state, channelId, from, to) => {
       channelId,
       partId: part.partId,
     }));
-  }
+  }*/
   return [];
 
 };

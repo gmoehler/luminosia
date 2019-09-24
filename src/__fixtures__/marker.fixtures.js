@@ -4,7 +4,6 @@ export const markerPayload0 = {
   partId: "part-2",
   pos: 22.34,
   type: "left",
-  selected: true
 };
 
 export const markerState0 = {

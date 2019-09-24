@@ -69,7 +69,7 @@ export function deleteSelectedEntities() {
     // assuming all entities are of the same type
     const entityType = getSelectedEntityType(getState());
 
-    getSelectedEntities(getState()).map((entityId) => {
+    getSelectedEntities(getState()).forEach((entityId) => {
       if (entityType === "part") {
         dispatch(deleteAPart(entityId));
         dispatch(deletePartSelectionMarkers(entityId));

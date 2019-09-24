@@ -12,12 +12,6 @@ export const imageListState0 = {
     [imagePayload0.imageId]: imagePayload0,
   },
   allImageIds: [imagePayload0.imageId],
-  selectedImageIds: [],
-};
-
-export const imageListState0WithSelection = {
-  ...imageListState0,
-  selectedImageIds: [imagePayload0.imageId],
 };
 
 export const fullState0 = {

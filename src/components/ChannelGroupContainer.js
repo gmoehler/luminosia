@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 
 import ChannelGroup from "./ChannelGroup";
 import { setChannelPlayState, insertNewPart, } from "../actions/channelActions";
-import { selectRange, deselectRange, setMarker, setMessage, selectInInterval } from "../actions/viewActions";
+import { selectRange, deselectRange, setMessage, selectInInterval } from "../actions/viewActions";
 import { getMaxDuration, getAllChannelsData, allChannelsStopped } from "../reducers/channelReducer";
 import { getSelectionRange, getResolution, getSelectedImageChannelId, getUploadLog, isUploadingConfig } from "../reducers/viewReducer";
 import { getImageSources } from "../reducers/imageListReducer";
@@ -77,14 +77,6 @@ const mapDispatchToProps = dispatch => ({
   })),
   deselectRange: () => dispatch(deselectRange()),
   selectInInterval: (from, to) => dispatch(selectInInterval(from, to)),
-  setMarker: (markerId, channelId, partId, pos, minPos, type) => dispatch(setMarker({
-    markerId,
-    channelId,
-    partId,
-    pos,
-    minPos,
-    type
-  })),
   setOrReplaceInsertMarker: (pos) => dispatch(setOrReplaceInsertMarker(pos)),
   insertNewPart: (channelId, imageId, offset) => dispatch(insertNewPart({
     channelId,

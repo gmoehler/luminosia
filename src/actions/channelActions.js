@@ -2,17 +2,14 @@ import {
   PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, ADD_CHANNEL, CLEAR_CHANNELS, UPLOAD_AUDIO_STARTED, UPLOAD_AUDIO_SUCCESS, UPLOAD_AUDIO_FAILURE, DELETE_CHANNEL, SET_CHANNEL_ACTIVE, UNSET_CHANNEL_ACTIVE, UPDATE_CHANNEL,
 } from "./types";
 
-import { deleteMarker, remElemFromSel, addPartToMultiSelection, clearElementSelectionWithMarkers, syncMarkersForPart } from "./viewActions";
-
-import { getActiveChannelIds, getMaxDuration, getChannelData, getPart, getElementType, getPartIds } from "../reducers/channelReducer";
-import { getSelectedImageChannelId, getPartsToCopy, getSelectedElements, getSelectedParts, isElementSelected } from "../reducers/viewReducer";
+import { getActiveChannelIds, getMaxDuration, getChannelData, getPartIds } from "../reducers/channelReducer";
 import { getImageDuration } from "../reducers/imageListReducer";
-import { removeImage } from "./imageListActions";
 import { defaultSampleRate } from "../components/ImageListContainer";
 import { readAudioFile } from "../utils/fileUtils";
 import { drawExportImage, clearExportImage } from "./generalActions";
-import { createPart, deleteAPart, toggleAPartSelection } from "./partActions";
+import { createPart, deleteAPart } from "./partActions";
 import { deleteAMarker } from "./markerActions";
+import { toggleEntitySelection } from "./entityActions";
 
 
 // add channel with channelInfo containing complete channel information
@@ -39,10 +36,24 @@ export const createImageChannel = () => {
   };
 };
 
-const deleteChannel = channelInfo => ({
+const _deleteChannel = channelInfo => ({
   type: DELETE_CHANNEL,
   payload: channelInfo
 });
+
+export const deleteChannel = (channelId) => {
+  return (dispatch, getState) => {
+
+    // first delete parts & markers of channel
+    getPartIds(getState(), channelId)
+      .forEach((partId) => {
+        dispatch(deleteAPart(partId));
+      });
+
+    // then delete channel
+    dispatch(_deleteChannel(channelId));
+  };
+};
 
 export const clearChannels = () => ({
   type: CLEAR_CHANNELS
@@ -173,13 +184,13 @@ export const insertNewPart = (partInfo) => {
     }));
 
     // select the new part
-    dispatch(toggleAPartSelection(pId));
+    dispatch(toggleEntitySelection(pId));
   };
 };
 
 export const pastePart = () => {
   return (dispatch, getState) => {
-    getPartsToCopy(getState()).forEach((part) => {
+    /* getPartsToCopy(getState()).forEach((part) => {
       const originialPart = getPart(getState(), part.channelId, part.partId);
       const selectedImageChannelId = getSelectedImageChannelId(getState());
 
@@ -188,54 +199,11 @@ export const pastePart = () => {
         channelId: selectedImageChannelId,
       };
       dispatch(insertNewPart(partToPaste));
-    });
+    });*/
   };
 };
 
-export const deleteSelectedPartAndMarkers = () => {
-  return (dispatch, getState) => {
-    getSelectedElements(getState()).forEach((elemInfo) => {
-      const type = getElementType(elemInfo);
 
-      if (type === "part") {
-        dispatch(deleteAPart(elemInfo.partId));
-        dispatch(deleteMarker({
-          markerId: `${elemInfo.partId}-l`
-        }));
-        dispatch(deleteMarker({
-          markerId: `${elemInfo.partId}-r`
-        }));
-        dispatch(remElemFromSel(elemInfo));
-      }
-      if (type === "image") {
-        dispatch(removeImage(elemInfo.imageId));
-      }
-    });
-  };
-};
-
-export const deleteChannelAndMarkers = (channelId) => {
-  return (dispatch, getState) => {
-
-    // first delete markers of channel
-    getPartIds(getState(), channelId)
-      .forEach((partId) => {
-
-        // TODO enable code
-        // dispatch(deleteAPart(partId));
-
-        dispatch(deleteMarker({
-          markerId: `${partId}-l`
-        }));
-        dispatch(deleteMarker({
-          markerId: `${partId}-r`
-        }));
-      });
-
-    // then delete channel
-    dispatch(deleteChannel(channelId));
-  };
-};
 
 // play related actions
 

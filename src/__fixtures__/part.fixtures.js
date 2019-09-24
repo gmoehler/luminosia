@@ -46,7 +46,6 @@ export const partState0 = {
     "part-1": partPayload0,
   },
   allPartIds: ["part-1"],
-  selectedPartIds: [],
 };
 
 export const fullPartState0 = {
@@ -62,5 +61,4 @@ export const partState1 = {
     }
   },
   allPartIds: ["part-1"],
-  selectedPartIds: [],
 };

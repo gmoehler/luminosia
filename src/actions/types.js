@@ -29,9 +29,6 @@ export const CLEAR_ENTITY_SELECTION = "CLEAR_ENTITY_SELECTION";
 export const CLEAR_IMAGELIST = "CLEAR_IMAGELIST";
 export const ADD_IMAGE = "ADD_IMAGE";
 export const REMOVE_IMAGE = "REMOVE_IMAGE";
-export const SELECT_IMAGE = "SELECT_IMAGE";
-export const DESELECT_IMAGE = "DESELECT_IMAGE";
-export const CLEAR_IMAGE_SELECTION = "CLEAR_IMAGE_SELECTION";
 
 // part actions
 export const CLEAR_PARTS = "CLEAR_PARTS";
@@ -39,9 +36,6 @@ export const ADD_A_PART = "ADD_A_PART";
 export const DELETE_A_PART = "DELETE_A_PART";
 export const MOVE_A_PART = "MOVE_A_PART";
 export const RESIZE_A_PART = "RESIZE_A_PART";
-export const SELECT_A_PART = "SELECT_A_PART";
-export const DESELECT_A_PART = "DESELECT_A_PART";
-export const CLEAR_PART_SELECTION = "CLEAR_PART_SELECTION";
 
 // marker actions
 export const CLEAR_MARKERS = "CLEAR_MARKERS";
@@ -55,13 +49,7 @@ export const SELECT_RANGE = "SELECT_RANGE";
 export const DESELECT_RANGE = "DESELECT_RANGE";
 export const SET_RESOLUTION = "SET_RESOLUTION";
 export const SET_CHANNEL_PLAY_STATE = "SET_CHANNEL_PLAY_STATE";
-export const SET_MARKER = "SET_MARKER";
-export const DELETE_MARKER = "DELETE_MARKER";
-export const UPDATE_MARKER = "UPDATE_MARKER";
 
-export const ADD_ELEMENT_TO_SEL = "ADD_ELEMENT_TO_SEL";
-export const REMOVE_ELEMENT_FROM_SEL = "REMOVE_ELEMENT_FROM_SEL";
-export const CLEAR_SEL = "CLEAR_SEL";
 export const COPY_PART = "COPY_PART";
 export const SELECT_IMAGE_CHANNEL = "SELECT_IMAGE_CHANNEL";
 export const ADD_TO_UPLOAD_LOG = "ADD_TO_UPLOAD_LOG";

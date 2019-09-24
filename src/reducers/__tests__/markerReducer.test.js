@@ -37,7 +37,6 @@ describe("marker reducer", () => {
           partId: "part-2",
           pos: 22.84,
           type: "left",
-          selected: true
         }
       },
       allMarkerIds: ["part-2--left"],
@@ -67,7 +66,6 @@ describe("marker reducer", () => {
           partId: "part-2",
           pos: 33.34,
           type: "left",
-          selected: true,
         }
       },
       allMarkerIds: ["part-2--left"],
@@ -95,7 +93,6 @@ describe("marker reducer", () => {
           partId: "part-2",
           pos: 22.34,
           type: "right",
-          selected: true
         }
       },
       allMarkerIds: ["part-2--left"],

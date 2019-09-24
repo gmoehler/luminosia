@@ -1,3 +1,7 @@
+import { partState0 } from "./part.fixtures";
+import { initialState as imageInitialState } from "../reducers/imageListReducer";
+import { initialState as markerInitialState } from "../reducers/markerReducer";
+
 export const audioChannelPayload = {
   src: "some source.mp3",
   type: "audio",
@@ -48,7 +52,30 @@ export const imageChannelState = {
         parts: ["part-1"],
       }
     } // byChannelId
-  } // channel
+  }, // channel
+  entities: {
+    parts: partState0,
+    images: imageInitialState,
+    markers: {
+      byMarkerId: {
+        "part-1--left": {
+          markerId: "part-1--left",
+          partId: "part-1",
+          pos: 22.34,
+          type: "selected",
+          channelId: 2
+        },
+        "part-1--right": {
+          markerId: "part-1--right",
+          partId: "part-1",
+          pos: 22.99,
+          type: "selected",
+          channelId: 2
+        }
+      },
+      allMarkerIds: ["part-1--left", "part-1--right"],
+    }
+  }
 };
 
 export const part = {

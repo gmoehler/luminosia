@@ -2,16 +2,11 @@
 import { normalize } from "normalizr";
 import {
   CLEAR_PARTS, ADD_A_PART, DELETE_A_PART, RESIZE_A_PART, MOVE_A_PART,
-  SELECT_A_PART, DESELECT_A_PART, CLEAR_PART_SELECTION
 } from "./types";
 import {
-  getChannelId, partSchema, doesPartExist, getPart, isPartSelected,
-  isPartSingleSelected,
+  getChannelId, partSchema, getPart
 } from "../reducers/partReducer";
-import {
-  deletePartSelectionMarkers, addPartSelectionMarkers, clearMarkers,
-  syncPartMarkers
-} from "./markerActions";
+import { syncPartMarkers } from "./markerActions";
 
 import { toggleEntitySelection } from "./entityActions";
 import { isEntitySelected, getSelectedEntitiesOfType } from "../reducers/entityReducer";
@@ -151,103 +146,6 @@ export const resizeAPart = (resizeInfo) => {
 const _resizePart = (resizeInfo) => ({
   type: RESIZE_A_PART,
   payload: resizeInfo
-});
-
-export const selectAPart = (partId) => {
-  return (dispatch, getState) => {
-    // ensure that part exists
-    if (doesPartExist(getState(), partId)) {
-      dispatch(_selectPart(partId));
-    } else {
-      console.error("part to select does not exist:", partId);
-    }
-  };
-};
-
-const _selectPart = (partId) => ({
-  type: SELECT_A_PART,
-  payload: partId
-});
-
-export const deselectAPart = (partId) => {
-  return (dispatch, getState) => {
-    // ensure that part exists
-    if (doesPartExist(getState(), partId)) {
-      dispatch(_deselectPart(partId));
-    } else {
-      console.error("part to deselect does not exist:", partId);
-    }
-  };
-};
-
-const _deselectPart = (partId) => ({
-  type: DESELECT_A_PART,
-  payload: partId
-});
-
-export const clearSelection = () => ({
-  type: CLEAR_PART_SELECTION
-});
-
-/**********************************/
-/*  Different selection functions */
-/**********************************/
-
-// only one part can be selected (for single click)
-export const toggleAPartSelection = ((partId) => {
-  return (dispatch, getState) => {
-
-    // ensure we have what we need
-    // so reducers do not need to check assumptions
-    if (partId && doesPartExist(getState(), partId)) {
-
-      const partSingleSelected = isPartSingleSelected(getState(), partId);
-      // simpler to deselect everything instead of deselection prev selection
-      dispatch(clearSelection());
-      dispatch(clearMarkers());
-
-      if (!partSingleSelected) {
-        const part = getPart(getState(), partId);
-        dispatch(selectAPart(partId));
-        dispatch(addPartSelectionMarkers(part));
-      }
-    }
-  };
-});
-
-// many parts can be selected (for ctrl-click)
-export const toggleMultiPartSelection = ((partId) => {
-  return (dispatch, getState) => {
-
-    // check condition
-    if (partId && doesPartExist(getState(), partId)) {
-      if (isPartSelected(getState(), partId)) {
-        dispatch(deselectAPart(partId));
-        dispatch(deletePartSelectionMarkers(partId));
-      } else {
-        const part = getPart(getState(), partId);
-        dispatch(selectAPart(partId));
-        dispatch(addPartSelectionMarkers(part));
-      }
-    }
-  };
-});
-
-// adds selection if not yet selected (for mouse-down-click)
-export const toggleInitialPartSelection = ((partId) => {
-  return (dispatch, getState) => {
-
-    // check condition
-    if (partId && doesPartExist(getState(), partId)) {
-      if (!isPartSelected(getState(), partId)) {
-        dispatch(clearSelection());
-        dispatch(clearMarkers());
-        const part = getPart(getState(), partId);
-        dispatch(selectAPart(partId));
-        dispatch(addPartSelectionMarkers(part));
-      }
-    }
-  };
 });
 
 export const syncPartDeps = (partId) => {

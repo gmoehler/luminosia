@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 
 import ImageList from "./ImageList";
 import { getImageList } from "../reducers/imageListReducer";
-import { getSelectedImageIds } from "../reducers/viewReducer";
 import { saveImageToStorage, addImage, loadImagesFromStorage } from "../actions/imageListActions";
 import { setMessage } from "../actions/viewActions";
 import { toggleEntitySelection, toggleMultiEntitySelection } from "../actions/entityActions";
@@ -27,7 +26,6 @@ class ImageListContainer extends Component {
 const mapStateToProps = (state, props) => {
   return {
     images: getImageList(state),
-    selectedImageIds: getSelectedImageIds(state),
     isEntitySelected: (entityId) => isEntitySelected(state, entityId),
   };
 };
@@ -43,7 +41,6 @@ const mapDispatchToProps = dispatch => ({
 
 ImageListContainer.propTypes = {
   images: PropTypes.array, // all images
-  selectedImageIds: PropTypes.arrayOf(PropTypes.string),
   addImage: PropTypes.func.isRequired,
   setMessage: PropTypes.func.isRequired,
   toggleEntitySelection: PropTypes.func.isRequired,

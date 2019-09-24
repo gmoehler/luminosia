@@ -22,7 +22,6 @@ export function withEventHandler(WrappedComponent) {
         selectInInterval: this.props.selectInInterval,
         move: this.props.move,
         resize: this.props.resize,
-        setMarker: this.props.setMarker,
         setOrReplaceInsertMarker: this.props.setOrReplaceInsertMarker,
         insertNewPart: this.props.insertNewPart,
         toggleEntitySelection: this.props.toggleEntitySelection,
@@ -35,7 +34,7 @@ export function withEventHandler(WrappedComponent) {
 
     render() {
 
-      const { selectRange, deselectRange, move, setMarker,
+      const { selectRange, deselectRange, move,
         insertNewPart, toggleEntitySelection,
         toggleMultiEntitySelection, toggleInitialEntitySelection,
         deleteSelectedEntities,
@@ -54,7 +53,6 @@ export function withEventHandler(WrappedComponent) {
     selectInInterval: PropTypes.func.isRequired,
     move: PropTypes.func.isRequired,
     resize: PropTypes.func.isRequired,
-    setMarker: PropTypes.func.isRequired,
     setOrReplaceInsertMarker: PropTypes.func.isRequired,
     insertNewPart: PropTypes.func.isRequired,
     toggleEntitySelection: PropTypes.func.isRequired,

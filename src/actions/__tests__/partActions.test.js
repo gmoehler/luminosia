@@ -29,6 +29,10 @@ describe("part actions", () => {
           byPartId: {},
           allPartIds: [],
         },
+        images: {
+          byImageId: {},
+          allImageIds: [],
+        }
       }
     });
 
@@ -47,6 +51,10 @@ describe("part actions", () => {
           byPartId: {},
           allPartIds: [],
         },
+        images: {
+          byImageId: {},
+          allImageIds: [],
+        }
       }
     });
 
