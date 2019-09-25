@@ -151,8 +151,9 @@ export default class MoveMouseHandler {
 
   handleMultiSelectFrom = (evInfo) => {
     this.selectFromX = evInfo.x;
+    this.channelId = evInfo.channelId;
     this.handlerFunctions.selectRange(evInfo.x, evInfo.x, "temp");
-    this.handlerFunctions.selectInInterval(evInfo.x, evInfo.x);
+    this.handlerFunctions.selectInInterval(evInfo.channelId, evInfo.x, evInfo.x);
   }
 
   handleMultiSelectTo = (evInfo, finalizeAction) => {

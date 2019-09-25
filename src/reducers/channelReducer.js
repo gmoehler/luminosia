@@ -219,18 +219,13 @@ export const getChannelData = (state, channelId) => state.channel.byChannelId[ch
 
 export const getChannelIds = state => Object.keys(state.channel.byChannelId);
 
-export const getPartRefsInInterval = (state, channelId, from, to) => {
-  /* const ch = state.channel.byChannelId[channelId];
-  if (ch && Object.keys(ch.byPartId) && Object.keys(ch.byPartId).length > 0) {
-    return Object.values(ch.byPartId).filter(
-      part => part.offset + part.duration > from && part.offset < to,
-    ).map(part => ({
-      channelId,
-      partId: part.partId,
-    }));
-  }*/
-  return [];
-
+export const getPartIdsInInterval = (state, channelId, from, to) => {
+	const partIds = getPartIds(state, channelId);
+	const parts = getParts(partIds);
+	return parts
+      .filter(
+        part => part.offset + part.duration < to && part.offset > from)
+      .map(part => part.partId);
 };
 
 export const getLastChannelId = state => state.channel.lastChannelId;
@@ -268,17 +263,6 @@ export const getPartIds = (state, channelId) => {
 export const getActiveChannelIds = (state, type) => Object.values(state.channel.byChannelId)
   .filter(channel => channel.active && (!type || channel.type === type))
   .map(channel => channel.channelId);
-
-export function getElementType(elementInfo) {
-  // check this first because parts also have imageId
-  if (elementInfo.partId) {
-    return "part";
-  }
-  if (elementInfo.imageId) {
-    return "image";
-  }
-  return null;
-}
 
 export const denormalizeChannel = (state, channel) =>
   denormalize(channel, channelSchema, state.entities.parts);
