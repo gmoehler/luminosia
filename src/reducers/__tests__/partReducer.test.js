@@ -1,9 +1,9 @@
-import reducer, { doesPartExist, getChannelId } from "../partReducer";
+import reducer, { doesPartExist, getChannelId, getPart, getParts } from "../partReducer";
 import { initialState } from "../partReducer";
 
 import * as types from "../../actions/types";
 import {
-  partState0, fullPartState0, normalizedPartPayload0
+  partState0, fullPartState0, normalizedPartPayload0, partPayload0
 } from "../../__fixtures__/part.fixtures";
 
 describe("part reducer", () => {
@@ -293,5 +293,12 @@ describe("selector functions", () => {
     expect(getChannelId(fullPartState0, "part-99")).toBeNull();
   });
 
+  it("should return the part", () => {
+    expect(getPart(fullPartState0, "part-1")).toEqual(partPayload0);
+  });
+
+  it("should return the part", () => {
+    expect(getParts(fullPartState0, ["part-1"])).toEqual([partPayload0]);
+  });
 
 });

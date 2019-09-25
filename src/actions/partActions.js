@@ -4,12 +4,12 @@ import {
   CLEAR_PARTS, ADD_A_PART, DELETE_A_PART, RESIZE_A_PART, MOVE_A_PART,
 } from "./types";
 import {
-  getChannelId, partSchema, getPart
+  getChannelId, partSchema, getPart, getParts
 } from "../reducers/partReducer";
 import { syncPartMarkers } from "./markerActions";
 
 import { toggleEntitySelection } from "./entityActions";
-import { isEntitySelected, getSelectedEntitiesOfType } from "../reducers/entityReducer";
+import { isEntitySelected, getSelectedEntityIdsOfType } from "../reducers/entityReducer";
 
 // first id will be 1 to avoid falsy ids
 let lastPartIdCount = 0;
@@ -116,10 +116,22 @@ export const moveSelectedParts = (moveInfo) => {
       // if part was not selected then exclusively select it for move
       dispatch(toggleEntitySelection(moveInfo.partId));
     }
-    getSelectedEntitiesOfType(getState(), "part").forEach((partId) => {
+
+    const partIdsToMove = getSelectedEntityIdsOfType(getState(), "part");
+    let incr = moveInfo.incr;
+    if (moveInfo.incr < 0) {
+      // need to check that no part crosses 0
+      const partsToMove = getParts(getState(), partIdsToMove);
+      const minOffset = partsToMove.reduce((minPos, part) =>
+        minPos === null ? Math.min(minPos, part.offset) : part.offset,
+        null);
+      incr = Math.max(-minOffset, moveInfo.incr);
+    }
+
+    partIdsToMove.forEach((partId) => {
       dispatch(moveAPart({
         partId,
-        incr: moveInfo.incr,
+        incr,
       }));
     });
   };

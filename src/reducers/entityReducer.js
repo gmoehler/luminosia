@@ -83,15 +83,15 @@ export function getSelectedEntityType(state) {
   return getEntityType(state, state.entities.selectedEntityIds[0]);
 }
 
-export function getSelectedEntities(state) {
+export function getSelectedEntityIds(state) {
   return state.entities.selectedEntityIds;
 }
 
-export function getSelectedEntitiesOfType(state, type) {
+export function getSelectedEntityIdsOfType(state, type) {
   return getSelectedEntityType(state) === type ?
-    getSelectedEntities(state) : [];
+    getSelectedEntityIds(state) : [];
 }
 
 export function anyEntitySelected(state) {
-  return getSelectedEntities(state).length > 0;
+  return getSelectedEntityIds(state).length > 0;
 }

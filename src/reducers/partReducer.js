@@ -1,7 +1,7 @@
 // reducer working on the part entities
 
 import { combineReducers } from "redux";
-import { schema } from "normalizr";
+import { schema, denormalize } from "normalizr";
 
 import {
   CLEAR_PARTS, ADD_A_PART, DELETE_A_PART, MOVE_A_PART, RESIZE_A_PART,
@@ -35,6 +35,7 @@ const byPartId = (state = {}, action) => {
       const updatedOffset0 = currentOffset0 + offsetIncr0;
       const newPart0 = {
         ...part0,
+        // TODO: check against 0 should no longer be required
         offset: Math.max(0, updatedOffset0),
       };
       return {
@@ -128,6 +129,10 @@ export function doesPartExist(state, partId) {
 
 export function getPart(state, partId) {
   return state.entities.parts.byPartId[partId];
+}
+
+export function getParts(state, partIds) {
+  return denormalize(partIds, [partSchema], state.entities.parts);
 }
 
 export function getChannelId(state, partId) {

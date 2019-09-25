@@ -178,11 +178,7 @@ export default (state = initialState, action) => {
 
 function mergePlayStateIntoToChannels(state, playState) {
   const channelPlayStatesStopped = Object.keys(state.byChannelId)
-    .map(key => ({
-      [key]: {
-        playState,
-      },
-    }))
+    .map(key => ({ [key]: { playState, }, }))
     .reduce((a, b) => Object.assign({}, a, b));
   const mergedState = merge({}, state.byChannelId, channelPlayStatesStopped);
   return mergedState;

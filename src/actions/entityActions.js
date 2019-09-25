@@ -4,7 +4,7 @@ import {
 } from "./types";
 import {
   entityExists, isEntitySingleSelected, isEntitySelected,
-  getSelectedEntityType, getEntityType, isEntitySelectable, getSelectedEntities
+  getSelectedEntityType, getEntityType, isEntitySelectable, getSelectedEntityIds
 } from "../reducers/entityReducer";
 import { clearMarkers, addPartSelectionMarkers, deletePartSelectionMarkers } from "./markerActions";
 import { doesPartExist, getPart } from "../reducers/partReducer";
@@ -69,7 +69,7 @@ export function deleteSelectedEntities() {
     // assuming all entities are of the same type
     const entityType = getSelectedEntityType(getState());
 
-    getSelectedEntities(getState()).forEach((entityId) => {
+    getSelectedEntityIds(getState()).forEach((entityId) => {
       if (entityType === "part") {
         dispatch(deleteAPart(entityId));
         dispatch(deletePartSelectionMarkers(entityId));
