@@ -1,8 +1,7 @@
-import {
-  PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, ADD_CHANNEL, CLEAR_CHANNELS, UPLOAD_AUDIO_STARTED, UPLOAD_AUDIO_SUCCESS, UPLOAD_AUDIO_FAILURE, DELETE_CHANNEL, SET_CHANNEL_ACTIVE, UNSET_CHANNEL_ACTIVE, UPDATE_CHANNEL,
+import { PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, ADD_CHANNEL, CLEAR_CHANNELS, UPLOAD_AUDIO_STARTED, UPLOAD_AUDIO_SUCCESS, UPLOAD_AUDIO_FAILURE, DELETE_CHANNEL, SET_CHANNEL_ACTIVE, UNSET_CHANNEL_ACTIVE, UPDATE_CHANNEL,
 } from "./types";
 
-import { getActiveChannelIds, getMaxDuration, getChannelData, getPartIds } from "../reducers/channelReducer";
+import { getActiveChannelIds, getMaxDuration, getChannel, getPartIdsInChannel } from "../reducers/channelReducer";
 import { getImageDuration } from "../reducers/imageListReducer";
 import { defaultSampleRate } from "../components/ImageListContainer";
 import { readAudioFile } from "../utils/fileUtils";
@@ -45,7 +44,7 @@ export const deleteChannel = (channelId) => {
   return (dispatch, getState) => {
 
     // first delete parts & markers of channel
-    getPartIds(getState(), channelId)
+    getPartIdsInChannel(getState(), channelId)
       .forEach((partId) => {
         dispatch(deleteAPart(partId));
       });
@@ -113,7 +112,7 @@ function loadImageChannel(channelConfig, state) {
 
   // incremented id no longer required
   normalizedParts &&
-    delete normalizedParts.curid;
+  delete normalizedParts.curid;
   delete channelConfig.parts;
   channelConfig.playState = "stopped";
   channelConfig.gain = channelConfig.gain || 1.0;
@@ -159,10 +158,10 @@ export const uploadAudioFile = (audioFile, audioContext) => {
 
 export const duplicateChannel = (channelId) => {
   return (dispatch, getState) => {
-    const ch = getChannelData(getState(), channelId);
+    const ch = getChannel(getState(), channelId);
     // also sanatizes the parts
     dispatch(addChannel(ch));
-    // TODO: add new channel just after copied one
+  // TODO: add new channel just after copied one
   };
 };
 

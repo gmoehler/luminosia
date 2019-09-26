@@ -3,13 +3,13 @@ import { connect } from "react-redux";
 
 import ChannelGroup from "./ChannelGroup";
 import { setChannelPlayState, insertNewPart, } from "../actions/channelActions";
-import { selectRange, deselectRange, setMessage, selectInInterval } from "../actions/viewActions";
-import { getMaxDuration, getAllChannelsData, allChannelsStopped } from "../reducers/channelReducer";
+import { selectRange, deselectRange, setMessage, } from "../actions/viewActions";
+import { getMaxDuration, getAllChannelsDenorm, allChannelsStopped } from "../reducers/channelReducer";
 import { getSelectionRange, getResolution, getSelectedImageChannelId, getUploadLog, isUploadingConfig } from "../reducers/viewReducer";
 import { getImageSources } from "../reducers/imageListReducer";
 import { setOrReplaceInsertMarker } from "../actions/markerActions";
 import { getAllMarkers } from "../reducers/markerReducer";
-import { moveSelectedParts, resizeAPart } from "../actions/partActions";
+import { moveSelectedParts, resizeAPart, selectInInterval } from "../actions/partActions";
 import { toggleEntitySelection, toggleMultiEntitySelection, toggleInitialEntitySelection, deleteSelectedEntities } from "../actions/entityActions";
 
 class ChannelGroupContainer extends Component {
@@ -56,7 +56,7 @@ class ChannelGroupContainer extends Component {
 const mapStateToProps = (state, props) => {
   // get audio data and play state from redux
   return {
-    allChannelsData: getAllChannelsData(state),
+    allChannelsData: getAllChannelsDenorm(state),
     selection: getSelectionRange(state),
     resolution: getResolution(state),
     maxDuration: getMaxDuration(state),
@@ -76,7 +76,7 @@ const mapDispatchToProps = dispatch => ({
     type
   })),
   deselectRange: () => dispatch(deselectRange()),
-  selectInInterval: (from, to) => dispatch(selectInInterval(from, to)),
+  selectInInterval: (channelId, from, to) => dispatch(selectInInterval(channelId, from, to)),
   setOrReplaceInsertMarker: (pos) => dispatch(setOrReplaceInsertMarker(pos)),
   insertNewPart: (channelId, imageId, offset) => dispatch(insertNewPart({
     channelId,

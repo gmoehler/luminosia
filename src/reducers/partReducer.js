@@ -6,6 +6,7 @@ import { schema, denormalize } from "normalizr";
 import {
   CLEAR_PARTS, ADD_A_PART, DELETE_A_PART, MOVE_A_PART, RESIZE_A_PART,
 } from "../actions/types";
+import { /* getPartIdsInChannel */ } from "./channelReducer";
 
 export const partSchema = new schema.Entity("byPartId", {}, {
   idAttribute: "partId"
@@ -135,6 +136,10 @@ export function getParts(state, partIds) {
   return denormalize(partIds, [partSchema], state.entities.parts);
 }
 
+export function getAllPartIds(state) {
+  return state.entities.parts.allPartIds;
+}
+
 export function getChannelId(state, partId) {
   if (!doesPartExist(state, partId)) {
     return null;
@@ -142,3 +147,14 @@ export function getChannelId(state, partId) {
   return getPart(state, partId).channelId;
 }
 
+export const getPartIdsInInterval = (state, channelId, from, to) => {
+  // from channel only
+  // const partIds = getPartIdsInChannel(state, channelId);
+  // or all parts
+  const partIds = getAllPartIds(state);
+  const parts = getParts(state, partIds);
+  return parts
+    .filter(
+      part => part.offset + part.duration < to && part.offset > from)
+    .map(part => part.partId);
+};

@@ -161,10 +161,10 @@ export default class MoveMouseHandler {
       // console.log('selection to: ', x);
       if (this.selectFromX < evInfo.x) {
         this.handlerFunctions.selectRange(this.selectFromX, evInfo.x, "temp");
-        this.handlerFunctions.selectInInterval(this.selectFromX, evInfo.x);
+        this.handlerFunctions.selectInInterval(evInfo.channelId, this.selectFromX, evInfo.x);
       } else {
         this.handlerFunctions.selectRange(evInfo.x, this.selectFromX, "temp");
-        this.handlerFunctions.selectInInterval(evInfo.x, this.selectFromX);
+        this.handlerFunctions.selectInInterval(evInfo.channelId, evInfo.x, this.selectFromX);
       }
       if (finalizeAction) {
         // range selection is only temporarily

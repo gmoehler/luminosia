@@ -4,11 +4,11 @@ import {
   CLEAR_PARTS, ADD_A_PART, DELETE_A_PART, RESIZE_A_PART, MOVE_A_PART,
 } from "./types";
 import {
-  getChannelId, partSchema, getPart, getParts
+  getChannelId, partSchema, getPart, getParts, getPartIdsInInterval
 } from "../reducers/partReducer";
 import { syncPartMarkers } from "./markerActions";
 
-import { toggleEntitySelection } from "./entityActions";
+import { toggleEntitySelection, selectEntity } from "./entityActions";
 import { isEntitySelected, getSelectedEntityIdsOfType } from "../reducers/entityReducer";
 
 // first id will be 1 to avoid falsy ids
@@ -123,7 +123,7 @@ export const moveSelectedParts = (moveInfo) => {
       // need to check that no part crosses 0
       const partsToMove = getParts(getState(), partIdsToMove);
       const minOffset = partsToMove.reduce((minPos, part) =>
-        minPos === null ? Math.min(minPos, part.offset) : part.offset,
+        minPos === null ? part.offset : Math.min(minPos, part.offset),
         null);
       incr = Math.max(-minOffset, moveInfo.incr);
     }
@@ -136,8 +136,6 @@ export const moveSelectedParts = (moveInfo) => {
     });
   };
 };
-
-
 
 const _resizePart = (resizeInfo) => ({
   type: RESIZE_A_PART,
@@ -166,8 +164,6 @@ export const resizeAPart = (resizeInfo) => {
   };
 };
 
-
-
 export const syncPartDeps = (partId) => {
   return (dispatch, getState) => {
     const part = getPart(getState(), partId);
@@ -179,3 +175,11 @@ export const syncPartDeps = (partId) => {
     }
   };
 };
+
+
+export const selectInInterval = ((selectedChannelId, from, to) => {
+  return (dispatch, getState) => {
+    const partIds = getPartIdsInInterval(getState(), selectedChannelId, from, to);
+    partIds.forEach((pId) => dispatch(selectEntity(pId)));
+  };
+});

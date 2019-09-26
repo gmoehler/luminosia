@@ -10,10 +10,11 @@ import { getConfig } from "../reducers/rootReducer";
 import { addChannel, loadAChannel } from "./channelActions";
 import { addImage, loadImage } from "./imageListActions";
 import { addToUploadLog } from "./viewActions";
-import { getChannelData, getMaxDuration } from "../reducers/channelReducer";
+import { getMaxDuration, getChannel } from "../reducers/channelReducer";
 import { imageExists } from "../reducers/imageListReducer";
 import { secondsToSamples } from "../utils/conversions";
 import { encodeImage } from "../utils/imageUtils";
+import { getPart } from "../reducers/partReducer";
 
 const logScale = new LogScale(0, 100);
 
@@ -113,24 +114,25 @@ export const clearExportImage = numChannels => (dispatch, getState) => {
 
 // draw a channel to the export at position idx
 export const drawExportImage = (channelId, idx, applyLog) => (dispatch, getState) => {
-  const data = getChannelData(getState(), channelId);
-  if (data && data.byPartId) {
+  const channel = getChannel(getState(), channelId);
+
+  if (channel && channel.parts) {
     const canvas = document.getElementById("imageExportCanvas");
     const cc = canvas.getContext("2d");
 
-    Object.keys(data.byPartId).forEach((partId) => {
+    channel.parts.forEach((partId) => {
 
-      const part = data.byPartId[partId];
+      const part = getPart(getState(), partId);
       const img = document.getElementById(part.imageId);
-      const offsetPx = part.offset ? secondsToSamples(part.offset, data.sampleRate) : 0;
-      const widthPx = part.duration ? secondsToSamples(part.duration, data.sampleRate) : 0;
+      const offsetPx = part.offset ? secondsToSamples(part.offset, channel.sampleRate) : 0;
+      const widthPx = part.duration ? secondsToSamples(part.duration, channel.sampleRate) : 0;
       cc.drawImage(img, 0, 0, img.width, 30, offsetPx, idx * 30, widthPx, 30);
     });
 
     // apply gain by adding a transparent black rectangle on top of the parts
-    if (data.gain && data.gain < 0.99) {
+    if (channel.gain && channel.gain < 0.99) {
       // use log gain because otherwise it fades to strongly
-      const gain = applyLog ? logScale.linearToLogarithmic(data.gain) / 100 : data.gain;
+      const gain = applyLog ? logScale.linearToLogarithmic(channel.gain) / 100 : channel.gain;
 
       cc.fillStyle = "black";
       cc.globalAlpha = 1.0 - gain;

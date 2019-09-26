@@ -19,7 +19,8 @@ const _selectEntity = (entityId) => ({
 export function selectEntity(entityId) {
   return (dispatch, getState) => {
     // ensure that entity exists and is selectable
-    if (entityExists(getState(), entityId) && isEntitySelectable(getState(), entityId)) {
+    if (entityExists(getState(), entityId) && isEntitySelectable(getState(), entityId)
+      && !isEntitySelected(getState(), entityId)) {
       dispatch(_selectEntity(entityId));
       // for part: also add markers
       if (doesPartExist(getState(), entityId)) {

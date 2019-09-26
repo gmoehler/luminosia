@@ -34,7 +34,8 @@ export function withEventHandler(WrappedComponent) {
 
     render() {
 
-      const { selectRange, deselectRange, move,
+      const {
+        selectRange, deselectRange, move,
         insertNewPart, toggleEntitySelection,
         toggleMultiEntitySelection, toggleInitialEntitySelection,
         deleteSelectedEntities,

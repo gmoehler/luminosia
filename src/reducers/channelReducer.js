@@ -1,17 +1,19 @@
 import { merge, cloneDeep } from "lodash";
 
 import {
-  ADD_CHANNEL, CLEAR_CHANNELS, PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE,
-  ADD_A_PART, DELETE_A_PART, DELETE_CHANNEL, SET_CHANNEL_ACTIVE,
-  UNSET_CHANNEL_ACTIVE, UPDATE_CHANNEL,
+  ADD_CHANNEL, CLEAR_CHANNELS, PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, ADD_A_PART, DELETE_A_PART, DELETE_CHANNEL, SET_CHANNEL_ACTIVE, UNSET_CHANNEL_ACTIVE, UPDATE_CHANNEL,
 } from "../actions/types";
 
 import { filterObjectByKeys } from "../utils/miscUtils";
 import { denormalize } from "normalizr";
-import { partSchema } from "./partReducer";
+import { partSchema, } from "./partReducer";
 
-const channelSchema = { parts: [partSchema] };
-const channelsSchema = [{ parts: [partSchema] }];
+const channelSchema = {
+  parts: [partSchema]
+};
+const channelsSchema = [{
+  parts: [partSchema]
+}];
 
 // TODO: improve this reducer using a sub-reducer on the selected channel
 
@@ -178,7 +180,11 @@ export default (state = initialState, action) => {
 
 function mergePlayStateIntoToChannels(state, playState) {
   const channelPlayStatesStopped = Object.keys(state.byChannelId)
-    .map(key => ({ [key]: { playState, }, }))
+    .map(key => ({
+      [key]: {
+        playState,
+      },
+    }))
     .reduce((a, b) => Object.assign({}, a, b));
   const mergedState = merge({}, state.byChannelId, channelPlayStatesStopped);
   return mergedState;
@@ -196,8 +202,19 @@ export function allChannelsStopped(state) {
   return (_allChannelsStopped(state.channel));
 }
 
+export const denormalizeChannel = (state, channel) =>
+  denormalize(channel, channelSchema, state.entities.parts);
+
+export const denormalizeChannels = (state, channels) =>
+  denormalize(channels, channelsSchema, state.entities.parts);
+
 // channel data sorted by type and id and denormalized
-export const getAllChannelsData = state => {
+export const getChannelDenorm = (state, channelId) => {
+  const channel = state.channel.byChannelId[channelId];
+  return denormalizeChannel(state, channel);
+};
+
+export const getAllChannelsDenorm = state => {
   const channels = Object.values(state.channel.byChannelId)
     .sort((ch1, ch2) => {
       const str1 = ch1.type + ch1.channelId;
@@ -207,7 +224,7 @@ export const getAllChannelsData = state => {
   return denormalizeChannels(state, channels);
 };
 
-export const getAllChannelsOverview = state => getAllChannelsData(state)
+export const getAllChannelsOverview = state => getAllChannelsDenorm(state)
   .map(channel => ({
     channelId: channel.channelId,
     type: channel.type,
@@ -215,25 +232,9 @@ export const getAllChannelsOverview = state => getAllChannelsData(state)
     gain: channel.gain,
   }));
 
-export const getChannelData = (state, channelId) => state.channel.byChannelId[channelId];
+export const getChannel = (state, channelId) => state.channel.byChannelId[channelId];
 
 export const getChannelIds = state => Object.keys(state.channel.byChannelId);
-
-export const getPartIdsInInterval = (state, channelId, from, to) => {
-	const partIds = getPartIds(state, channelId);
-	const parts = getParts(partIds);
-	return parts
-      .filter(
-        part => part.offset + part.duration < to && part.offset > from)
-      .map(part => part.partId);
-};
-
-export const getLastChannelId = state => state.channel.lastChannelId;
-
-export const getLastChannel = (state) => {
-  const { lastChannelId } = state.channel;
-  return state.channel.byChannelId[lastChannelId];
-};
 
 function getDuration(state, channelId) {
   const channelData = state.channel.byChannelId[channelId];
@@ -256,7 +257,7 @@ export const getChannelsConfig = (state) => {
   return channels.map(ch => filterObjectByKeys(ch, allowedProps, propsToArray));
 };
 
-export const getPartIds = (state, channelId) => {
+export const getPartIdsInChannel = (state, channelId) => {
   return state.channel.byChannelId[channelId].parts;
 };
 
@@ -264,8 +265,4 @@ export const getActiveChannelIds = (state, type) => Object.values(state.channel.
   .filter(channel => channel.active && (!type || channel.type === type))
   .map(channel => channel.channelId);
 
-export const denormalizeChannel = (state, channel) =>
-  denormalize(channel, channelSchema, state.entities.parts);
 
-export const denormalizeChannels = (state, channels) =>
-  denormalize(channels, channelsSchema, state.entities.parts);

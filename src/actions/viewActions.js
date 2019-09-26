@@ -1,8 +1,5 @@
 import { SELECT_RANGE, DESELECT_RANGE, SET_RESOLUTION, CLEAR_VIEW, SELECT_IMAGE_CHANNEL, COPY_PART, ADD_TO_UPLOAD_LOG, CLEAR_UPLOAD_LOG, SET_MESSAGE, CLEAR_MESSAGE } from "./types";
 
-import { getSelectedImageChannelId } from "../reducers/viewReducer";
-import { getPartRefsInInterval } from "../reducers/channelReducer";
-
 export const clearView = () => ({
   type: CLEAR_VIEW
 });
@@ -28,24 +25,6 @@ export const selectImageChannel = (channelInfo) => ({
 
 export const copyPart = () => ({
   type: COPY_PART
-});
-
-export const selectInInterval = ((from, to) => {
-  return (dispatch, getState) => {
-    const selectedChannelId = getSelectedImageChannelId(getState());
-    const parts = getPartRefsInInterval(getState(), selectedChannelId, from, to);
-    parts.forEach((part) => dispatch(addPartToMultiSelection(part)));
-  };
-});
-
-// simple and fast add routine - no checks
-export const addPartToMultiSelection = ((elementInfo) => {
-  return (dispatch, getState) => {
-    /* dispatch(addElemToSel(elementInfo));
-    dispatch(updateMarkersForPart(elementInfo.partId, {
-      selected: true
-    })); */
-  };
 });
 
 export const addToUploadLog = (text) => ({
