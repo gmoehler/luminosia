@@ -1,4 +1,4 @@
-import reducer, { getAllChannelsData, denormalizeChannel, denormalizeChannels } from "../channelReducer";
+import reducer, { getAllChannelsData, denormalizeChannel, denormalizeChannels, getAllChannelsDenorm } from "../channelReducer";
 import * as types from "../../actions/types";
 import { audioChannelPayload, imageChannelPayload } from "../../__fixtures__/channel.fixtures";
 
@@ -186,7 +186,7 @@ describe("channel reducer", () => {
       }
     };
 
-    expect(getAllChannelsData(state)).toEqual([{
+    expect(getAllChannelsDenorm(state)).toEqual([{
       channelId: "channel-1",
       duration: 22,
       parts: [{
