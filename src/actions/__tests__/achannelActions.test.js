@@ -3,7 +3,7 @@ import thunk from "redux-thunk";
 
 import * as actions from "../channelActions";
 import * as types from "../types";
-import { normalizedImageChannelPayload0, channelPayload0WithoutSampleRate, denormChannelPayload0 } from "../../__fixtures__/channel.fixtures";
+import { channelPayload0WithoutSampleRate, denormChannelPayload0, normalizedImageChannel0 } from "../../__fixtures__/channel.fixtures";
 
 
 export const mockStore = configureMockStore([thunk]);
@@ -13,7 +13,7 @@ describe("channel actions", () => {
   xit("should add a channel", () => {
     const expectedActions = [{
       type: types.ADD_A_CHANNEL,
-      payload: normalizedImageChannelPayload0,
+      payload: normalizedImageChannel0,
     }];
 
     const store = mockStore({

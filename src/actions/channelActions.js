@@ -3,7 +3,7 @@ import {
   PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, ADD_CHANNEL, CLEAR_CHANNELS, UPLOAD_AUDIO_STARTED, UPLOAD_AUDIO_SUCCESS, UPLOAD_AUDIO_FAILURE, DELETE_CHANNEL, SET_CHANNEL_ACTIVE, UNSET_CHANNEL_ACTIVE, UPDATE_CHANNEL, ADD_A_CHANNEL,
 } from "./types";
 
-import { getActiveChannelIds, getMaxDuration, getChannel, getPartIdsInChannel, channelSchema } from "../reducers/channelReducer";
+import { getActiveChannelIds, getMaxDuration, getChannel, getPartIdsInChannel, channelSchema, channelSchema2 } from "../reducers/channelReducer";
 import { getImageDuration } from "../reducers/imageListReducer";
 import { defaultSampleRate } from "../components/ImageListContainer";
 import { readAudioFile } from "../utils/fileUtils";
@@ -32,7 +32,7 @@ export const addChannel = (channelInfo) => ({
 
 const _addAChannel = (channelInfo) => ({
   type: ADD_A_CHANNEL,
-  payload: normalize(channelInfo, channelSchema),
+  payload: normalize(channelInfo, channelSchema2),
 });
 
 // add channel with channelInfo containing complete 

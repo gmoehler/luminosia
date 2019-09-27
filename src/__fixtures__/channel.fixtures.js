@@ -53,7 +53,38 @@ export const denormChannelPayload0 = {
     imageId: "image1.png",
     offset: 0,
     duration: 1,
+  },
+  {
+    imageId: "image2.png",
+    offset: 2,
+    duration: 2,
   }]
+};
+
+export const normalizedImageChannel0 = {
+  entities: {
+    byChannelId: {
+      "channel-1": {
+        channelId: "channel-1",
+        type: "image",
+        sampleRate: 100,
+        active: true,
+        duration: 55.5,
+        gain: 1,
+        playState: "stopped",
+        parts: [undefined]
+      }
+    },
+    byPartId: {
+      undefined: {
+        imageId: "image1.png",
+        offset: 0,
+        duration: 1,
+      }
+    }
+  },
+  result:
+    "channel-1"
 };
 
 export const channelPayload0WithoutSampleRate = {
