@@ -1,13 +1,9 @@
 import {
-  SELECT_ENTITY, DESELECT_ENTITY,
-  CLEAR_ENTITY_SELECTION,
+  SELECT_ENTITY, DESELECT_ENTITY, CLEAR_ENTITY_SELECTION,
 } from "./types";
-import {
-  entityExists, isEntitySingleSelected, isEntitySelected,
-  getSelectedEntityType, getEntityType, isEntitySelectable, getSelectedEntityIds
-} from "../reducers/entityReducer";
+import { entityExists, isEntitySingleSelected, isEntitySelected, getSelectedEntityType, getEntityType, isEntitySelectable, getSelectedEntityIds } from "../reducers/entityReducer";
 import { clearMarkers, addPartSelectionMarkers, deletePartSelectionMarkers } from "./markerActions";
-import { doesPartExist, getPart } from "../reducers/partReducer";
+import { partExists, getPart } from "../reducers/partReducer";
 import { removeImage } from "./imageListActions";
 import { deleteAPart } from "./partActions";
 
@@ -23,7 +19,7 @@ export function selectEntity(entityId) {
       && !isEntitySelected(getState(), entityId)) {
       dispatch(_selectEntity(entityId));
       // for part: also add markers
-      if (doesPartExist(getState(), entityId)) {
+      if (partExists(getState(), entityId)) {
         const part = getPart(getState(), entityId);
         dispatch(addPartSelectionMarkers(part));
       }
@@ -31,7 +27,8 @@ export function selectEntity(entityId) {
       console.error("entity to select does not exist:", entityId);
     }
   };
-};
+}
+;
 
 export const _deselectEntity = (entityId) => ({
   type: DESELECT_ENTITY,
@@ -44,7 +41,7 @@ export function deselectEntity(entityId) {
     if (entityExists(getState(), entityId) && isEntitySelectable(getState(), entityId)) {
       dispatch(_deselectEntity(entityId));
       // for part: also delete markers
-      if (doesPartExist(getState(), entityId)) {
+      if (partExists(getState(), entityId)) {
         dispatch(deletePartSelectionMarkers(entityId));
       }
     } else {
@@ -60,7 +57,7 @@ export const _clearEntitySelection = () => ({
 export function clearEntitySelection() {
   return (dispatch, getState) => {
     dispatch(_clearEntitySelection());
-    dispatch(clearMarkers());  // just do it in any case
+    dispatch(clearMarkers()); // just do it in any case
   };
 };
 
@@ -115,9 +112,7 @@ export function toggleMultiEntitySelection(entityId) {
       if (getEntityType(getState(), entityId) !== getSelectedEntityType(getState())) {
         dispatch(clearEntitySelection());
         dispatch(selectEntity(entityId));
-      }
-
-      else if (isEntitySelected(getState(), entityId)) {
+      } else if (isEntitySelected(getState(), entityId)) {
         dispatch(deselectEntity(entityId));
       } else {
         dispatch(selectEntity(entityId));

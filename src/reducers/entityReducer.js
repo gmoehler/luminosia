@@ -6,9 +6,10 @@ import {
   DELETE_A_PART, CLEAR_PARTS, REMOVE_IMAGE, CLEAR_IMAGELIST
 } from "../actions/types";
 
-import partReducer, { doesPartExist } from "./partReducer";
+import partReducer, { partExists } from "./partReducer";
 import markerReducer, { aMarkerExists } from "./markerReducer";
 import imageListReducer, { imageExists } from "./imageListReducer";
+import channelReducer, { channelExists } from "./achannelReducer";
 
 export const initialState = {
   selectedEntityIds: [],
@@ -43,6 +44,7 @@ export default combineReducers({
   parts: partReducer,
   images: imageListReducer,
   markers: markerReducer,
+  channels: channelReducer,
   selectedEntityIds,
 });
 
@@ -60,12 +62,14 @@ export function isEntitySingleSelected(state, entityId) {
 }
 
 export function getEntityType(state, entityId) {
-  if (doesPartExist(state, entityId)) {
+  if (partExists(state, entityId)) {
     return "part";
   } else if (imageExists(state, entityId)) {
     return "image";
   } else if (aMarkerExists(state, entityId)) {
     return "marker";
+  } else if (channelExists(state, entityId)) {
+    return "channel";
   }
   return "unknown";
 }

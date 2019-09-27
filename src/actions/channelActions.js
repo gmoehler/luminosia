@@ -1,7 +1,9 @@
-import { PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, ADD_CHANNEL, CLEAR_CHANNELS, UPLOAD_AUDIO_STARTED, UPLOAD_AUDIO_SUCCESS, UPLOAD_AUDIO_FAILURE, DELETE_CHANNEL, SET_CHANNEL_ACTIVE, UNSET_CHANNEL_ACTIVE, UPDATE_CHANNEL,
+import { normalize } from "normalizr";
+import {
+  PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, ADD_CHANNEL, CLEAR_CHANNELS, UPLOAD_AUDIO_STARTED, UPLOAD_AUDIO_SUCCESS, UPLOAD_AUDIO_FAILURE, DELETE_CHANNEL, SET_CHANNEL_ACTIVE, UNSET_CHANNEL_ACTIVE, UPDATE_CHANNEL, ADD_A_CHANNEL,
 } from "./types";
 
-import { getActiveChannelIds, getMaxDuration, getChannel, getPartIdsInChannel } from "../reducers/channelReducer";
+import { getActiveChannelIds, getMaxDuration, getChannel, getPartIdsInChannel, channelSchema } from "../reducers/channelReducer";
 import { getImageDuration } from "../reducers/imageListReducer";
 import { defaultSampleRate } from "../components/ImageListContainer";
 import { readAudioFile } from "../utils/fileUtils";
@@ -11,12 +13,77 @@ import { deleteAMarker } from "./markerActions";
 import { toggleEntitySelection } from "./entityActions";
 
 
+// first id will be 1 to avoid falsy ids
+let lastChannelIdCount = 0;
+
+function generateId() {
+  // simple generator :-)
+  // other options: cuid or uuid
+  lastChannelIdCount++;
+  return "channel-" + lastChannelIdCount.toString();
+}
+
 // add channel with channelInfo containing complete channel information
-// TODO: generate & add channel-id here and check fields
+
 export const addChannel = (channelInfo) => ({
   type: ADD_CHANNEL,
   payload: channelInfo
 });
+
+const _addAChannel = (channelInfo) => ({
+  type: ADD_A_CHANNEL,
+  payload: normalize(channelInfo, channelSchema),
+});
+
+// add channel with channelInfo containing complete 
+// denormalized channel information
+export const addAChannel = (channelInfo) => {
+  return (dispatch, getState) => {
+
+    // check requirements for channels
+    if (channelInfo.sampleRate &&
+      channelInfo.duration &&
+      Array.isArray(channelInfo.parts) &&
+
+      ((channelInfo.type === "image")
+        ||
+        (channelInfo.type === "audio" &&
+          channelInfo.buffer && channelInfo.src)
+      )) {
+
+      // add tags that are not usually externalized
+      channelInfo.playState = "stopped";
+      channelInfo.gain = channelInfo.gain || 1;
+      channelInfo.active = true;
+
+      // add channel with new channel id
+      channelInfo.channelId = generateId();
+      dispatch(_addAChannel(channelInfo));
+      return channelInfo.channelId;
+    }
+
+    console.error("cannot add incomplete channel:", channelInfo);
+    return null;
+  };
+};
+
+// create an empty image channel
+export const createAnImageChannel = () => {
+  return (dispatch, getState) => {
+    // we extend the duration to the longest channel
+    const duration = Math.max(10, getMaxDuration(getState()));
+    // add required fields
+    dispatch(addAChannel({
+      type: "image",
+      sampleRate: defaultSampleRate,
+      active: true,
+      playState: "stopped",
+      gain: 1.0,
+      duration,
+      parts: [],
+    }));
+  };
+};
 
 // create an empty image channel
 export const createImageChannel = () => {
@@ -112,7 +179,7 @@ function loadImageChannel(channelConfig, state) {
 
   // incremented id no longer required
   normalizedParts &&
-  delete normalizedParts.curid;
+    delete normalizedParts.curid;
   delete channelConfig.parts;
   channelConfig.playState = "stopped";
   channelConfig.gain = channelConfig.gain || 1.0;
@@ -161,7 +228,7 @@ export const duplicateChannel = (channelId) => {
     const ch = getChannel(getState(), channelId);
     // also sanatizes the parts
     dispatch(addChannel(ch));
-  // TODO: add new channel just after copied one
+    // TODO: add new channel just after copied one
   };
 };
 

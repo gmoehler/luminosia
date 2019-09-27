@@ -1,6 +1,66 @@
 import { partState0 } from "./part.fixtures";
 import { initialState as imageInitialState } from "../reducers/imageListReducer";
+import { initialState as partInitialState } from "../reducers/partReducer";
 import { initialState as markerInitialState } from "../reducers/markerReducer";
+
+
+export const normalizedImageChannelPayload0 = {
+  entities: {
+    byChannelId: {
+      "channel-1": {
+        channelId: "channel-1",
+        type: "image",
+        sampleRate: 100,
+        active: true,
+        duration: 55.5,
+        gain: 1,
+        playState: "stopped",
+        parts: ["part-1"]
+      }
+    }
+  },
+  result:
+    "channel-1"
+};
+
+export const imageChannelState0 = {
+  byChannelId: {
+    "channel-1": {
+      channelId: "channel-1",
+      type: "image",
+      sampleRate: 100,
+      active: true,
+      duration: 55.5,
+      gain: 1,
+      playState: "stopped",
+      parts: ["part-1"]
+    },
+  },
+  allChannelIds: ["channel-1"],
+};
+
+export const fullChannelState0 = {
+  entities: {
+    channels: imageChannelState0
+  }
+};
+
+export const denormChannelPayload0 = {
+  type: "image",
+  sampleRate: 100,
+  duration: 55.5,
+  parts: [{
+    imageId: "image1.png",
+    offset: 0,
+    duration: 1,
+  }]
+};
+
+export const channelPayload0WithoutSampleRate = {
+  ...denormChannelPayload0
+};
+delete channelPayload0WithoutSampleRate.sampleRate;
+
 
 export const audioChannelPayload = {
   src: "some source.mp3",

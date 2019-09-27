@@ -90,7 +90,9 @@ const byPartId = (state = {}, action) => {
 
 
     case DELETE_A_PART:
-      const newState = { ...state };
+      const newState = {
+        ...state
+      };
       delete newState[action.payload.partId]; // ids
       return newState;
 
@@ -124,7 +126,7 @@ export default combineReducers({
   allPartIds,
 });
 
-export function doesPartExist(state, partId) {
+export function partExists(state, partId) {
   return state.entities.parts.allPartIds.includes(partId);
 }
 
@@ -141,7 +143,7 @@ export function getAllPartIds(state) {
 }
 
 export function getChannelId(state, partId) {
-  if (!doesPartExist(state, partId)) {
+  if (!partExists(state, partId)) {
     return null;
   }
   return getPart(state, partId).channelId;

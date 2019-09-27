@@ -8,10 +8,10 @@ import { filterObjectByKeys } from "../utils/miscUtils";
 import { denormalize } from "normalizr";
 import { partSchema, } from "./partReducer";
 
-const channelSchema = {
+export const channelSchema = {
   parts: [partSchema]
 };
-const channelsSchema = [{
+export const channelsSchema = [{
   parts: [partSchema]
 }];
 

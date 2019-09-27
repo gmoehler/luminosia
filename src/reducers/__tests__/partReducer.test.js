@@ -1,4 +1,4 @@
-import reducer, { doesPartExist, getChannelId, getPart, getParts } from "../partReducer";
+import reducer, { partExists, getChannelId, getPart, getParts } from "../partReducer";
 import { initialState } from "../partReducer";
 
 import * as types from "../../actions/types";
@@ -275,12 +275,12 @@ describe("selector functions", () => {
 
   it("should show that a part exists", () => {
 
-    expect(doesPartExist(fullPartState0, "part-1")).toBeTruthy();
+    expect(partExists(fullPartState0, "part-1")).toBeTruthy();
   });
 
   it("should show that a part does not exists", () => {
 
-    expect(doesPartExist(fullPartState0, "part-99")).toBeFalsy();
+    expect(partExists(fullPartState0, "part-99")).toBeFalsy();
   });
 
   it("should return the channel id of a part", () => {
