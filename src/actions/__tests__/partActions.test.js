@@ -19,7 +19,6 @@ describe("part actions", () => {
       type: types.ADD_A_PART,
       payload: {
         ...normalizedPartPayload0,
-        channelId: "channel-1",
       }
     }];
 

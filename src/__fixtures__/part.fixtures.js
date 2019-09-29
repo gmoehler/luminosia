@@ -23,6 +23,30 @@ export const normalizedPartPayload0 = {
     "part-1"
 };
 
+export const partPayload2 = {
+  partId: "part-2",
+  imageId: "image2.png",
+  channelId: "channel-1",
+  offset: 2,
+  duration: 2,
+};
+
+export const normalizedPartPayload2 = {
+  entities: {
+    byPartId: {
+      "part-2": {
+        partId: "part-2",
+        imageId: "image2.png",
+        channelId: "channel-1",
+        offset: 2,
+        duration: 2,
+      }
+    }
+  },
+  result:
+    "part-2"
+};
+
 export const partPayload0WithoutId = {
   ...partPayload0
 };

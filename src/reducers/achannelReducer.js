@@ -73,3 +73,18 @@ export function channelExists(state, channelId) {
   return state.entities.channels.allChannelIds.includes(channelId);
 }
 
+export function getNumChannels(state) {
+  return state.entities.channels.allChannelIds.length;
+}
+
+function _getChannelDuration(state, channelId) {
+  if (!channelExists(state, channelId)) {
+    return 0;
+  }
+  const ch = state.entities.channels.byChannelId[channelId];
+  return ch.offset + ch.duration;
+}
+
+export const getMaxChannelDuration = state => (getNumChannels(state) === 0 ? 0
+  : state.entities.channels.allChannelIds
+    .reduce((duration, channeld) => Math.max(duration, _getChannelDuration(state, channeld)), 0));

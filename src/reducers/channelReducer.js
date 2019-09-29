@@ -101,24 +101,25 @@ export default (state = initialState, action) => {
 
     case ADD_A_PART:
       // add part to parts array
+      const part0 = action.payload.entities.byPartId[action.payload.result];
       const channelCopy0 = {
-        ...state.byChannelId[action.payload.channelId]
+        ...state.byChannelId[part0.channelId]
       };
       const newParts0 = [
         ...channelCopy0.parts,
         action.payload.result, // add new partId
       ];
       // and adjust duration
-      const part0 = action.payload.entities.byPartId[action.payload.result];
+
       const duration0 = Math.max(
-        state.byChannelId[action.payload.channelId].duration,
+        state.byChannelId[part0.channelId].duration,
         part0.offset + part0.duration);
 
       return {
         ...state,
         byChannelId: {
           ...state.byChannelId,
-          [action.payload.channelId]: {
+          [part0.channelId]: {
             ...channelCopy0,
             parts: newParts0,
             duration: duration0,

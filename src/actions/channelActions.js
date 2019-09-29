@@ -1,9 +1,9 @@
 import { normalize } from "normalizr";
 import {
-  PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, ADD_CHANNEL, CLEAR_CHANNELS, UPLOAD_AUDIO_STARTED, UPLOAD_AUDIO_SUCCESS, UPLOAD_AUDIO_FAILURE, DELETE_CHANNEL, SET_CHANNEL_ACTIVE, UNSET_CHANNEL_ACTIVE, UPDATE_CHANNEL, ADD_A_CHANNEL,
+  PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, ADD_CHANNEL, CLEAR_CHANNELS, UPLOAD_AUDIO_STARTED, UPLOAD_AUDIO_SUCCESS, UPLOAD_AUDIO_FAILURE, DELETE_CHANNEL, SET_CHANNEL_ACTIVE, UNSET_CHANNEL_ACTIVE, UPDATE_CHANNEL, ADD_A_CHANNEL, DELETE_A_CHANNEL, CLEAR_ALL_CHANNELS,
 } from "./types";
 
-import { getActiveChannelIds, getMaxDuration, getChannel, getPartIdsInChannel, channelSchema, channelSchema2 } from "../reducers/channelReducer";
+import { getActiveChannelIds, getMaxDuration, getChannel, getPartIdsInChannel, channelSchema2 } from "../reducers/channelReducer";
 import { getImageDuration } from "../reducers/imageListReducer";
 import { defaultSampleRate } from "../components/ImageListContainer";
 import { readAudioFile } from "../utils/fileUtils";
@@ -11,6 +11,7 @@ import { drawExportImage, clearExportImage } from "./generalActions";
 import { createPart, deleteAPart } from "./partActions";
 import { deleteAMarker } from "./markerActions";
 import { toggleEntitySelection } from "./entityActions";
+import { getMaxChannelDuration, channelExists } from "../reducers/achannelReducer";
 
 
 // first id will be 1 to avoid falsy ids
@@ -23,12 +24,10 @@ function generateId() {
   return "channel-" + lastChannelIdCount.toString();
 }
 
-// add channel with channelInfo containing complete channel information
-
-export const addChannel = (channelInfo) => ({
-  type: ADD_CHANNEL,
-  payload: channelInfo
-});
+// should only be used with case (e.g. in tests)
+export function _resetId() {
+  lastChannelIdCount = 0;
+}
 
 const _addAChannel = (channelInfo) => ({
   type: ADD_A_CHANNEL,
@@ -55,9 +54,20 @@ export const addAChannel = (channelInfo) => {
       channelInfo.playState = "stopped";
       channelInfo.gain = channelInfo.gain || 1;
       channelInfo.active = true;
+      channelInfo.channelId = generateId();
+
+      // add parts and replace part field with partIds
+      const partIds = [];
+      channelInfo.parts.forEach((part) => {
+        const partId = dispatch(createPart({
+          ...part,
+          channelId: channelInfo.channelId
+        }));
+        partIds.push(partId);
+      });
+      channelInfo.parts = partIds;
 
       // add channel with new channel id
-      channelInfo.channelId = generateId();
       dispatch(_addAChannel(channelInfo));
       return channelInfo.channelId;
     }
@@ -71,19 +81,49 @@ export const addAChannel = (channelInfo) => {
 export const createAnImageChannel = () => {
   return (dispatch, getState) => {
     // we extend the duration to the longest channel
-    const duration = Math.max(10, getMaxDuration(getState()));
+    const duration = Math.max(10, getMaxChannelDuration(getState()));
     // add required fields
-    dispatch(addAChannel({
+    return dispatch(addAChannel({
       type: "image",
       sampleRate: defaultSampleRate,
-      active: true,
-      playState: "stopped",
-      gain: 1.0,
       duration,
       parts: [],
     }));
   };
 };
+
+const _deleteAChannel = (channelId) => ({
+  type: DELETE_A_CHANNEL,
+  // no normalization should not be required since we can achieve this with channelId alone
+  payload: channelId,
+});
+
+export const deleteAChannel = (channelId) => {
+  return (dispatch, getState) => {
+    // ensure we have what we need
+    // so reducers do not need to check assumptions
+
+    if (channelId != null && channelExists(getState(), channelId)) {
+      dispatch(_deleteAChannel(channelId));
+    } else {
+      console.error("cannot remove non-existing channelId:", channelId);
+    }
+  };
+};
+
+export const clearAllChannels = () => ({
+  type: CLEAR_ALL_CHANNELS
+});
+
+
+/////////////// legacy function ////////////////
+
+// add channel with channelInfo containing complete channel information
+
+export const addChannel = (channelInfo) => ({
+  type: ADD_CHANNEL,
+  payload: channelInfo
+});
 
 // create an empty image channel
 export const createImageChannel = () => {

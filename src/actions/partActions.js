@@ -27,7 +27,6 @@ const _addPart = (partInfo) => ({
   // also add channelId for channelReducer
   payload: {
     ...normalize(partInfo, partSchema),
-    channelId: partInfo.channelId
   }
 });
 
