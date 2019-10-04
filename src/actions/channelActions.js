@@ -1,6 +1,6 @@
 import { normalize } from "normalizr";
 import {
-  PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, ADD_CHANNEL, CLEAR_CHANNELS, UPLOAD_AUDIO_STARTED, UPLOAD_AUDIO_SUCCESS, UPLOAD_AUDIO_FAILURE, DELETE_CHANNEL, SET_CHANNEL_ACTIVE, UNSET_CHANNEL_ACTIVE, UPDATE_CHANNEL, ADD_A_CHANNEL, DELETE_A_CHANNEL, CLEAR_ALL_CHANNELS,
+  PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, ADD_CHANNEL, CLEAR_CHANNELS, UPLOAD_AUDIO_STARTED, UPLOAD_AUDIO_SUCCESS, UPLOAD_AUDIO_FAILURE, DELETE_CHANNEL, SET_CHANNEL_ACTIVE, UNSET_CHANNEL_ACTIVE, UPDATE_CHANNEL, ADD_A_CHANNEL, DELETE_A_CHANNEL, CLEAR_ALL_CHANNELS, SET_A_CHANNEL_ACTIVE, SET_A_CHANNEL_INACTIVE, PLAY_THE_CHANNELS, STOP_ALL_CHANNELS, STOP_A_CHANNEL,
 } from "./types";
 
 import { getActiveChannelIds, getMaxDuration, getChannel, getPartIdsInChannel, channelSchema2 } from "../reducers/channelReducer";
@@ -115,6 +115,45 @@ export const clearAllChannels = () => ({
   type: CLEAR_ALL_CHANNELS
 });
 
+export const setAChannelActive = (channelId) => ({
+  type: SET_A_CHANNEL_ACTIVE,
+  payload: channelId
+});
+
+export const unsetAChannelActive = (channelId) => ({
+  type: SET_A_CHANNEL_INACTIVE,
+  payload: channelId
+});
+
+export const playTheChannels = (channelIds) => ({
+  type: PLAY_THE_CHANNELS,
+  payload: channelIds
+});
+
+export const stopAChannel = (channelId) => ({
+  type: STOP_A_CHANNEL,
+  payload: channelId,
+});
+
+export const stopAllChannels = () => ({
+  type: STOP_ALL_CHANNELS
+});
+
+
+export const playActiveChannels = () => {
+  return (dispatch, getState) => {
+    const chs = getActiveChannelIds(getState());
+    dispatch(playTheChannels(chs));
+  };
+};
+
+export const duplicateImageChannel = (channelId) => {
+  return (dispatch, getState) => {
+
+    //const ch = getDenormalizedChannel(getState(), channelId);
+    //dispatch(createAnImageChannel(ch));
+  };
+};
 
 /////////////// legacy function ////////////////
 

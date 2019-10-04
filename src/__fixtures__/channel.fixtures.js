@@ -1,47 +1,45 @@
-import { partState0, partPayload0, partPayload2 } from "./part.fixtures";
+import { partState0, partPayload0, partPayload2, normalizedPartPayload0 } from "./part.fixtures";
 import { initialState as imageInitialState } from "../reducers/imageListReducer";
-import { initialState as partInitialState } from "../reducers/partReducer";
-import { initialState as markerInitialState } from "../reducers/markerReducer";
 
+export const channel1 = {
+  channelId: "channel-1",
+  type: "image",
+  sampleRate: 100,
+  active: true,
+  duration: 55.5,
+  gain: 1,
+  playState: "stopped",
+  parts: ["part-1"]
+};
 
 export const normalizedImageChannelPayload0 = {
   entities: {
     byChannelId: {
-      "channel-1": {
-        channelId: "channel-1",
-        type: "image",
-        sampleRate: 100,
-        active: true,
-        duration: 55.5,
-        gain: 1,
-        playState: "stopped",
-        parts: ["part-1"]
-      }
+      [channel1.channelId]: channel1,
     }
   },
-  result: "channel-1"
+  result: channel1.channelId
 };
 
 export const imageChannelState0 = {
   byChannelId: {
-    "channel-1": {
-      channelId: "channel-1",
-      type: "image",
-      sampleRate: 100,
-      active: true,
-      duration: 55.5,
-      gain: 1,
-      playState: "stopped",
-      parts: ["part-1"]
-    },
+    [channel1.channelId]: channel1,
   },
-  allChannelIds: ["channel-1"],
+  allChannelIds: [channel1.channelId],
+  activeChannels: [],
+  playingChannels: [],
 };
 
 export const fullChannelState0 = {
   entities: {
-    channels: imageChannelState0
+    channels: imageChannelState0,
+    parts: normalizedPartPayload0.entities,
   }
+};
+
+export const denormChannel0 = {
+  ...imageChannelState0.byChannelId["channel-1"],
+  parts: [partPayload0]
 };
 
 export const denormChannelPayload0 = {
@@ -100,7 +98,7 @@ export const audioChannelPayload = {
   offset: 2.0,
   buffer: {
     length: 10,
-  // real channels have more fields here
+    // real channels have more fields here
   }
 };
 
