@@ -14,9 +14,8 @@ import { isEntitySelected, getSelectedEntityIdsOfType } from "../reducers/entity
 // first id will be 1 to avoid falsy ids
 let lastPartIdCount = 0;
 
-
 // should only be used with care (e.g. in tests)
-export function _setId(newId) {
+export function _setInitialPartIdCount(newId) {
   lastPartIdCount = newId;
 }
 

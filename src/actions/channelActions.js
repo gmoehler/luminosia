@@ -28,8 +28,8 @@ function generateId() {
 export function _resetId() {
   lastChannelIdCount = 0;
 }
-export function _setId(newId) {
-  lastChannelIdCount = newId;
+export function _setInitialChannelIdCount(newCount) {
+  lastChannelIdCount = newCount;
 }
 
 const _addAChannel = (channelInfo) => ({

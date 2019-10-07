@@ -2,13 +2,10 @@ import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
 import * as actions from "../channelActions";
-import { _setId as _setInitialPartId } from "../partActions";
+import { _setInitialPartIdCount } from "../partActions";
 import * as types from "../types";
 
-import {
-  imageChannel1, normalizedPart1, normalizedPart2, normalizedImageChannel0,
-  normalizedImageChannel1, entityState0, entityState1, denormImageChannel1Import,
-  normalizedImageChannel2, imageChannel2, normalizedPart4, normalizedPart3,
+import { imageChannel1, normalizedPart1, normalizedPart2, normalizedImageChannel0, normalizedImageChannel1, entityState0, entityState1, denormImageChannel1Import, normalizedImageChannel2, imageChannel2, normalizedPart4, normalizedPart3,
 } from "../../__fixtures__/entity.fixtures";
 
 export const mockStore = configureMockStore([thunk]);
@@ -101,8 +98,8 @@ describe("channel actions", () => {
     }];
 
     const store2 = mockStore(entityState1);
-    actions._setId(1); // pretend we have already created one channel ...
-    _setInitialPartId(2); // ... and 2 parts
+    actions._setInitialChannelIdCount(1); // pretend we have already created one channel ...
+    _setInitialPartIdCount(2); // ... and 2 parts
 
     const channel2Id = store2.dispatch(actions.duplicateImageChannel(imageChannel1.channelId));
     expect(channel2Id).toEqual(imageChannel2.channelId);
