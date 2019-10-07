@@ -3,25 +3,13 @@ import thunk from "redux-thunk";
 
 import * as actions from "../partActions";
 import * as types from "../types";
-import { part1WithoutId, normalizedPart1, part1, partState2, entityState1 } from "../../__fixtures__/entity.fixtures";
-
+import { part1WithoutId, normalizedPart1, part1, entityState1, entityState0 } from "../../__fixtures__/entity.fixtures";
 
 export const mockStore = configureMockStore([thunk]);
 
 describe("part actions", () => {
 
-  const store = mockStore({
-    entities: {
-      parts: {
-        byPartId: {},
-        allPartIds: [],
-      },
-      images: {
-        byImageId: {},
-        allImageIds: [],
-      }
-    }
-  });
+  const store = mockStore(entityState0);
 
   afterEach(() => {
     store.clearActions();

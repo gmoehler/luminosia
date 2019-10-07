@@ -1,3 +1,8 @@
+import { initialState as initialPartState } from "../reducers/partReducer";
+import { initialState as initialImageListState } from "../reducers/imageListReducer";
+import { initialState as initialChannelState } from "../reducers/achannelReducer";
+import { initialState as initialMarkersState } from "../reducers/markerReducer";
+
 // single entities
 
 export const part1WithoutId = {
@@ -134,6 +139,15 @@ export const partState2 = {
     [part2.partId]: part2,
   },
   allPartIds: [part1.partId, part2.partId],
+};
+
+export const entityState0 = {
+  entities: {
+    parts: initialPartState,
+    images: initialImageListState,
+    channels: initialChannelState,
+    markers: initialMarkersState,
+  }
 };
 
 export const entityState1 = {

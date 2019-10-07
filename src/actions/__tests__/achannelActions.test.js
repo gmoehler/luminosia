@@ -4,35 +4,18 @@ import thunk from "redux-thunk";
 import * as actions from "../channelActions";
 import * as types from "../types";
 
-import { imageChannel1, normalizedPart1, normalizedPart2, normalizedImageChannel0, normalizedImageChannel1, entityState1, denormImageChannel1Import } from "../../__fixtures__/entity.fixtures";
-
+import { imageChannel1, normalizedPart1, normalizedPart2, normalizedImageChannel0, normalizedImageChannel1, entityState1, denormImageChannel1Import, entityState0 } from "../../__fixtures__/entity.fixtures";
 
 export const mockStore = configureMockStore([thunk]);
 
 describe("channel actions", () => {
 
-  const store = mockStore({
-    entities: {
-      parts: {
-        byPartId: {},
-        allPartIds: [],
-      },
-      images: {
-        byImageId: {},
-        allImageIds: [],
-      },
-      channels: {
-        byChannelId: {},
-        allChannelIds: [],
-      }
-    }
-  });
+  const store = mockStore(entityState0);
 
   afterEach(() => {
     actions._resetId();
     store.clearActions();
   });
-
 
   it("should add a channel", () => {
     const expectedActions = [{
