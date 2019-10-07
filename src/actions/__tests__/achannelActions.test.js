@@ -3,50 +3,51 @@ import thunk from "redux-thunk";
 
 import * as actions from "../channelActions";
 import * as types from "../types";
-import { channelPayload0WithoutSampleRate, denormChannelPayload0, normalizedImageChannel0, normalizedEmptyImageChannel, fullChannelState0 } from "../../__fixtures__/channel.fixtures";
-import { normalizedPartPayload2, normalizedPartPayload0 } from "../../__fixtures__/part.fixtures";
+
+import { imageChannel1, normalizedPart1, normalizedPart2, normalizedImageChannel0, normalizedImageChannel1, entityState1, denormImageChannel1Import } from "../../__fixtures__/entity.fixtures";
 
 
 export const mockStore = configureMockStore([thunk]);
 
 describe("channel actions", () => {
 
+  const store = mockStore({
+    entities: {
+      parts: {
+        byPartId: {},
+        allPartIds: [],
+      },
+      images: {
+        byImageId: {},
+        allImageIds: [],
+      },
+      channels: {
+        byChannelId: {},
+        allChannelIds: [],
+      }
+    }
+  });
+
   afterEach(() => {
     actions._resetId();
+    store.clearActions();
   });
 
 
   it("should add a channel", () => {
     const expectedActions = [{
       type: types.ADD_A_PART,
-      payload: normalizedPartPayload0,
+      payload: normalizedPart1,
     }, {
       type: types.ADD_A_PART,
-      payload: normalizedPartPayload2,
+      payload: normalizedPart2,
     }, {
       type: types.ADD_A_CHANNEL,
-      payload: normalizedImageChannel0,
+      payload: normalizedImageChannel1,
     }];
 
-    const store = mockStore({
-      entities: {
-        parts: {
-          byPartId: {},
-          allPartIds: [],
-        },
-        images: {
-          byImageId: {},
-          allImageIds: [],
-        },
-        channels: {
-          byChannelId: {},
-          allChannelIds: [],
-        }
-      }
-    });
-
-    const channelId = store.dispatch(actions.addAChannel(denormChannelPayload0));
-    expect(channelId).toEqual("channel-1");
+    const channelId = store.dispatch(actions.addAChannel(denormImageChannel1Import));
+    expect(channelId).toEqual(imageChannel1.channelId);
     const acts = store.getActions();
     expect(acts).toEqual(expectedActions);
   });
@@ -54,24 +55,12 @@ describe("channel actions", () => {
   it("should not create a channel without sampleRate", () => {
     const expectedActions = [];
 
-    const store = mockStore({
-      entities: {
-        parts: {
-          byPartId: {},
-          allPartIds: [],
-        },
-        images: {
-          byImageId: {},
-          allImageIds: [],
-        },
-        channels: {
-          byChannelId: {},
-          allChannelIds: [],
-        }
-      }
-    });
+    const denormImageChannel1WithoutSampleRate = {
+      ...denormImageChannel1Import
+    };
+    delete denormImageChannel1WithoutSampleRate.sampleRate;
 
-    const channelId = store.dispatch(actions.addAChannel(channelPayload0WithoutSampleRate));
+    const channelId = store.dispatch(actions.addAChannel(denormImageChannel1WithoutSampleRate));
     expect(channelId).toBeFalsy();
     const acts = store.getActions();
     expect(acts).toEqual(expectedActions);
@@ -80,28 +69,11 @@ describe("channel actions", () => {
   it("should create an empty image channel", () => {
     const expectedActions = [{
       type: types.ADD_A_CHANNEL,
-      payload: normalizedEmptyImageChannel,
+      payload: normalizedImageChannel0,
     }];
 
-    const store = mockStore({
-      entities: {
-        parts: {
-          byPartId: {},
-          allPartIds: [],
-        },
-        images: {
-          byImageId: {},
-          allImageIds: [],
-        },
-        channels: {
-          byChannelId: {},
-          allChannelIds: [],
-        }
-      }
-    });
-
     const channelId = store.dispatch(actions.createAnImageChannel());
-    expect(channelId).toEqual("channel-1");
+    expect(channelId).toEqual(imageChannel1.channelId);
     const acts = store.getActions();
     expect(acts).toEqual(expectedActions);
   });
@@ -109,12 +81,12 @@ describe("channel actions", () => {
   it("should delete a channel", () => {
     const expectedActions = [{
       type: types.DELETE_A_CHANNEL,
-      payload: "channel-1"
+      payload: imageChannel1.channelId
     }];
 
-    const store = mockStore(fullChannelState0);
+    const store = mockStore(entityState1);
 
-    store.dispatch(actions.deleteAChannel("channel-1"));
+    store.dispatch(actions.deleteAChannel(imageChannel1.channelId));
     const acts = store.getActions();
     expect(acts).toEqual(expectedActions);
 

@@ -3,7 +3,7 @@ import thunk from "redux-thunk";
 
 import * as actions from "../channelActions";
 import * as types from "../types";
-import { audioChannelPayload, imageChannelPayload, initialImageChannelPayload, imageChannelState, part, normalizedPart } from "../../__fixtures__/channel.fixtures";
+import { audioChannelPayload, imageChannelPayload, initialImageChannelPayload, imageChannelState, normalizedPart } from "../../__fixtures__/channel.fixtures";
 
 import { initialState as initialViewState } from "../../reducers/viewReducer";
 

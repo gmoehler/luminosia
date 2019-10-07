@@ -3,40 +3,40 @@ import thunk from "redux-thunk";
 
 import * as actions from "../partActions";
 import * as types from "../types";
-import {
-  partPayload0, partPayload0WithoutId, partPayload0WithoutChannelId,
-  fullPartState0,
-  normalizedPartPayload0
-} from "../../__fixtures__/part.fixtures";
+import { part1WithoutId, normalizedPart1, part1, partState2, entityState1 } from "../../__fixtures__/entity.fixtures";
 
 
 export const mockStore = configureMockStore([thunk]);
 
 describe("part actions", () => {
 
+  const store = mockStore({
+    entities: {
+      parts: {
+        byPartId: {},
+        allPartIds: [],
+      },
+      images: {
+        byImageId: {},
+        allImageIds: [],
+      }
+    }
+  });
+
+  afterEach(() => {
+    store.clearActions();
+  });
+
   it("should create a channel part", () => {
     const expectedActions = [{
       type: types.ADD_A_PART,
       payload: {
-        ...normalizedPartPayload0,
+        ...normalizedPart1,
       }
     }];
 
-    const store = mockStore({
-      entities: {
-        parts: {
-          byPartId: {},
-          allPartIds: [],
-        },
-        images: {
-          byImageId: {},
-          allImageIds: [],
-        }
-      }
-    });
-
-    const partId = store.dispatch(actions.createPart(partPayload0WithoutId));
-    expect(partId).toEqual(partPayload0.partId);
+    const partId = store.dispatch(actions.createPart(part1WithoutId));
+    expect(partId).toEqual(part1.partId);
     const acts = store.getActions();
     expect(acts).toEqual(expectedActions);
   });
@@ -44,20 +44,12 @@ describe("part actions", () => {
   it("should not create a channel part without channelId", () => {
     const expectedActions = [];
 
-    const store = mockStore({
-      entities: {
-        parts: {
-          byPartId: {},
-          allPartIds: [],
-        },
-        images: {
-          byImageId: {},
-          allImageIds: [],
-        }
-      }
-    });
+    const part1WithoutIdNorChannelId = {
+      ...part1WithoutId
+    };
+    delete part1WithoutIdNorChannelId.channelId;
 
-    const partId = store.dispatch(actions.createPart(partPayload0WithoutChannelId));
+    const partId = store.dispatch(actions.createPart(part1WithoutIdNorChannelId));
     expect(partId).toBeFalsy();
     const acts = store.getActions();
     expect(acts).toEqual(expectedActions);
@@ -67,15 +59,15 @@ describe("part actions", () => {
     const expectedActions = [{
       type: types.DELETE_A_PART,
       payload: {
-        partId: "part-1",
+        partId: part1.partId,
         channelId: "channel-1",
       }
     }];
 
-    const store = mockStore(fullPartState0);
+    const store2 = mockStore(entityState1);
 
-    store.dispatch(actions.deleteAPart("part-1"));
-    const acts = store.getActions();
+    store2.dispatch(actions.deleteAPart(part1.partId));
+    const acts = store2.getActions();
     expect(acts).toEqual(expectedActions);
 
   });

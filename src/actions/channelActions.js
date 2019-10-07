@@ -51,9 +51,7 @@ export const addAChannel = (channelInfo) => {
       )) {
 
       // add tags that are not usually externalized
-      channelInfo.playState = "stopped";
       channelInfo.gain = channelInfo.gain || 1;
-      channelInfo.active = true;
       channelInfo.channelId = generateId();
 
       // add parts and replace part field with partIds
