@@ -11,7 +11,7 @@ import { drawExportImage, clearExportImage } from "./generalActions";
 import { createPart, deleteAPart } from "./partActions";
 import { deleteAMarker } from "./markerActions";
 import { toggleEntitySelection } from "./entityActions";
-import { getMaxChannelDuration, channelExists } from "../reducers/achannelReducer";
+import { getMaxChannelDuration, channelExists, getDenormalizedChannel } from "../reducers/achannelReducer";
 
 
 // first id will be 1 to avoid falsy ids
@@ -24,9 +24,12 @@ function generateId() {
   return "channel-" + lastChannelIdCount.toString();
 }
 
-// should only be used with case (e.g. in tests)
+// should only be used with care (e.g. in tests)
 export function _resetId() {
   lastChannelIdCount = 0;
+}
+export function _setId(newId) {
+  lastChannelIdCount = newId;
 }
 
 const _addAChannel = (channelInfo) => ({
@@ -148,8 +151,8 @@ export const playActiveChannels = () => {
 export const duplicateImageChannel = (channelId) => {
   return (dispatch, getState) => {
 
-    //const ch = getDenormalizedChannel(getState(), channelId);
-    //dispatch(createAnImageChannel(ch));
+    const ch = getDenormalizedChannel(getState(), channelId);
+    return dispatch(addAChannel(ch));
   };
 };
 

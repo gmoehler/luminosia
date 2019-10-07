@@ -6,12 +6,18 @@ import {
   DELETE_A_PART, CLEAR_PARTS, REMOVE_IMAGE, CLEAR_IMAGELIST
 } from "../actions/types";
 
-import partReducer, { partExists } from "./partReducer";
-import markerReducer, { aMarkerExists } from "./markerReducer";
-import imageListReducer, { imageExists } from "./imageListReducer";
+import imageListReducer, { imageExists, initialState as initialImageListState } from "./imageListReducer";
+import { initialState as initialChannelState } from "./achannelReducer";
+import partReducer, { partExists, initialState as initialPartState } from "./partReducer";
+import markerReducer, { aMarkerExists, initialState as initialMarkerState } from "./markerReducer";
+
 import channelReducer, { channelExists } from "./achannelReducer";
 
 export const initialState = {
+  images: initialImageListState,
+  channels: initialChannelState,
+  parts: initialPartState,
+  markers: initialMarkerState,
   selectedEntityIds: [],
 };
 

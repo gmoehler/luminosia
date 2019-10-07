@@ -2,9 +2,14 @@ import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
 import * as actions from "../channelActions";
+import { _setId as _setInitialPartId } from "../partActions";
 import * as types from "../types";
 
-import { imageChannel1, normalizedPart1, normalizedPart2, normalizedImageChannel0, normalizedImageChannel1, entityState1, denormImageChannel1Import, entityState0 } from "../../__fixtures__/entity.fixtures";
+import {
+  imageChannel1, normalizedPart1, normalizedPart2, normalizedImageChannel0,
+  normalizedImageChannel1, entityState0, entityState1, denormImageChannel1Import,
+  normalizedImageChannel2, imageChannel2, normalizedPart4, normalizedPart3,
+} from "../../__fixtures__/entity.fixtures";
 
 export const mockStore = configureMockStore([thunk]);
 
@@ -80,6 +85,29 @@ describe("channel actions", () => {
       type: types.CLEAR_ALL_CHANNELS,
     };
     expect(actions.clearAllChannels()).toEqual(expectedAction);
+  });
+
+  it("should duplicate a channel", () => {
+
+    const expectedActions = [{
+      type: types.ADD_A_PART,
+      payload: normalizedPart3,
+    }, {
+      type: types.ADD_A_PART,
+      payload: normalizedPart4,
+    }, {
+      type: types.ADD_A_CHANNEL,
+      payload: normalizedImageChannel2,
+    }];
+
+    const store2 = mockStore(entityState1);
+    actions._setId(1); // pretend we have already created one channel ...
+    _setInitialPartId(2); // ... and 2 parts
+
+    const channel2Id = store2.dispatch(actions.duplicateImageChannel(imageChannel1.channelId));
+    expect(channel2Id).toEqual(imageChannel2.channelId);
+    const acts = store2.getActions();
+    expect(acts).toEqual(expectedActions);
   });
 
 
