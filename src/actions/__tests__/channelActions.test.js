@@ -8,6 +8,7 @@ import { audioChannelPayload, imageChannelPayload, initialImageChannelPayload, i
 import { initialState as initialViewState } from "../../reducers/viewReducer";
 
 import * as fileUtilsMock from "../../utils/fileUtils";
+import { normalizedImageChannel1 } from "../../__fixtures__/entity.fixtures";
 jest.mock("../../utils/fileUtils");
 
 export const mockStore = configureMockStore([thunk]);
@@ -121,6 +122,7 @@ describe("actions", () => {
       {
         type: types.ADD_CHANNEL,
         payload: {
+          channelId: "channel-1",
           type: "audio",
           playState: "stopped",
           src: audioFile.name,
@@ -133,6 +135,33 @@ describe("actions", () => {
           },
           duration: 21.21,
           active: true,
+          parts: [],
+        }
+      },
+      {
+        type: types.ADD_A_CHANNEL,
+        payload: {
+          entities: {
+            byChannelId: {
+              "channel-1": {
+                channelId: "channel-1",
+                type: "audio",
+                playState: "stopped",
+                src: audioFile.name,
+                offset: 0,
+                gain: 1,
+                sampleRate: 44100,
+                buffer: {
+                  duration: 21.21,
+                  sampleRate: 44100,
+                },
+                duration: 21.21,
+                active: true,
+                parts: [],
+              }
+            }
+          },
+          result: "channel-1",
         }
       },
       {

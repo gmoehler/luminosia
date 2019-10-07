@@ -5,7 +5,8 @@ import * as actions from "../channelActions";
 import { _setInitialPartIdCount } from "../partActions";
 import * as types from "../types";
 
-import { imageChannel1, normalizedPart1, normalizedPart2, normalizedImageChannel0, normalizedImageChannel1, entityState0, entityState1, denormImageChannel1Import, normalizedImageChannel2, imageChannel2, normalizedPart4, normalizedPart3,
+import {
+  imageChannel1, normalizedPart1, normalizedPart2, normalizedImageChannel0, normalizedImageChannel1, entityState0, entityState1, denormImageChannel1Import, normalizedImageChannel2, imageChannel2, normalizedPart4, normalizedPart3, part1, part2, part3, part4,
 } from "../../__fixtures__/entity.fixtures";
 
 export const mockStore = configureMockStore([thunk]);
@@ -24,8 +25,14 @@ describe("channel actions", () => {
       type: types.ADD_A_PART,
       payload: normalizedPart1,
     }, {
+      type: types.SET_A_CHANNEL_ACTIVE,
+      payload: part1.partId,
+    }, {
       type: types.ADD_A_PART,
       payload: normalizedPart2,
+    }, {
+      type: types.SET_A_CHANNEL_ACTIVE,
+      payload: part2.partId,
     }, {
       type: types.ADD_A_CHANNEL,
       payload: normalizedImageChannel1,
@@ -90,8 +97,15 @@ describe("channel actions", () => {
       type: types.ADD_A_PART,
       payload: normalizedPart3,
     }, {
+      type: types.SET_A_CHANNEL_ACTIVE,
+      payload: part3.partId,
+    }, {
       type: types.ADD_A_PART,
       payload: normalizedPart4,
+    },
+    {
+      type: types.SET_A_CHANNEL_ACTIVE,
+      payload: part4.partId,
     }, {
       type: types.ADD_A_CHANNEL,
       payload: normalizedImageChannel2,

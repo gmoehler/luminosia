@@ -10,6 +10,7 @@ import { syncPartMarkers } from "./markerActions";
 
 import { toggleEntitySelection, selectEntity } from "./entityActions";
 import { isEntitySelected, getSelectedEntityIdsOfType } from "../reducers/entityReducer";
+import { setAChannelActive } from "./channelActions";
 
 // first id will be 1 to avoid falsy ids
 let lastPartIdCount = 0;
@@ -52,6 +53,7 @@ export const createPart = (partInfo) => {
         partId,
       }));
       dispatch(toggleEntitySelection(partId));
+      dispatch(setAChannelActive(partId));
       return partId;
     }
     console.error("cannot add incomplete part:", partInfo);

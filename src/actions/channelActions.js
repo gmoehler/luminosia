@@ -58,6 +58,7 @@ export const addAChannel = (channelInfo) => {
       channelInfo.channelId = generateId();
 
       // add parts and replace part field with partIds
+      // audio channels have no parts and simply skipped this
       const partIds = [];
       channelInfo.parts.forEach((part) => {
         const partId = dispatch(createPart({
@@ -280,17 +281,19 @@ export const uploadAudioFile = (audioFile, audioContext) => {
       .then((audioBuffer) => {
         const channelInfo = {
           type: "audio",
-          playState: "stopped",
+          playState: "stopped", // TODO: remove
           src: audioFile.name,
           offset: 0,
           sampleRate: audioBuffer.sampleRate,
           gain: 1.0,
           buffer: audioBuffer,
           duration: audioBuffer.duration,
-          active: true,
+          active: true, // TODO: remove
+          parts: [],
         };
         // console.log(channelInfo);
         dispatch(addChannel(channelInfo));
+        dispatch(addAChannel(channelInfo));
         dispatch(uploadAudioSuccess());
         console.log("File read.");
       })
