@@ -105,7 +105,7 @@ export function withPlay(WrappedComponent) {
 
       if (!this.animationStartTime) {
         this.animationStartTime = timestamp;
-      //TODO: sync with playout time
+        //TODO: sync with playout time
       }
 
 
@@ -168,12 +168,12 @@ export function withPlay(WrappedComponent) {
       // time to pixel conversion is done in HOC TimeToPixel
       return (
         <WrappedComponent { ...passthruProps }
-progress={ this.state.progress }
-handleMouseEvent={ this.props.handleMouseEvent }
-factor={ this.props.resolution / this.props.sampleRate }
-peaks={ peaksDataMono }
-	bits={ bits }
-length={ length } /* only for audio */ />);
+          progress={ this.state.progress }
+          handleMouseEvent={ this.props.handleMouseEvent }
+          factor={ this.props.resolution / this.props.sampleRate }
+          peaks={ peaksDataMono }
+          bits={ bits }
+          length={ length } /* only for audio */ />);
     }
   }
   ;
@@ -192,6 +192,7 @@ length={ length } /* only for audio */ />);
       type: PropTypes.string,
     }),
     setChannelPlayState: PropTypes.func.isRequired,
+    handleMouseEvent: PropTypes.func.isRequired,
     parts: PropTypes.array,
     maxDuration: PropTypes.number,
   };

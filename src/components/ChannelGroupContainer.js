@@ -4,13 +4,14 @@ import { connect } from "react-redux";
 import ChannelGroup from "./ChannelGroup";
 import { setChannelPlayState, insertNewPart, } from "../actions/channelActions";
 import { selectRange, deselectRange, setMessage, } from "../actions/viewActions";
-import { getMaxDuration, getAllChannelsDenorm, allChannelsStopped } from "../reducers/channelReducer";
+import { allChannelsStopped } from "../reducers/channelReducer";
 import { getSelectionRange, getResolution, getSelectedImageChannelId, getUploadLog, isUploadingConfig } from "../reducers/viewReducer";
 import { getImageSources } from "../reducers/imageListReducer";
 import { setOrReplaceInsertMarker } from "../actions/markerActions";
 import { getAllMarkers } from "../reducers/markerReducer";
 import { moveSelectedParts, resizeAPart, selectInInterval } from "../actions/partActions";
 import { toggleEntitySelection, toggleMultiEntitySelection, toggleInitialEntitySelection, deleteSelectedEntities } from "../actions/entityActions";
+import { getAllDenormalizedChannels, getMaxChannelDuration } from "../reducers/achannelReducer";
 
 class ChannelGroupContainer extends Component {
 
@@ -56,10 +57,11 @@ class ChannelGroupContainer extends Component {
 const mapStateToProps = (state, props) => {
   // get audio data and play state from redux
   return {
-    allChannelsData: getAllChannelsDenorm(state),
+    // allChannelsData: getAllChannelsDenorm(state),
+    allChannelsData: getAllDenormalizedChannels(state),
     selection: getSelectionRange(state),
     resolution: getResolution(state),
-    maxDuration: getMaxDuration(state),
+    maxDuration: getMaxChannelDuration(state),
     markers: getAllMarkers(state),
     imageSources: getImageSources(state),
     playState: allChannelsStopped(state) ? "stopped" : "playing",

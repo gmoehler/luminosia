@@ -21,9 +21,6 @@ describe("part actions", () => {
       payload: {
         ...normalizedPart1,
       }
-    }, {
-      type: types.SET_A_CHANNEL_ACTIVE,
-      payload: part1.partId,
     }];
 
     const partId = store.dispatch(actions.createPart(part1WithoutId));

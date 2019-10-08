@@ -8,9 +8,11 @@ import {
 } from "../actions/types";
 import { /* getPartIdsInChannel */ } from "./channelReducer";
 
-export const partSchema = new schema.Entity("byPartId", {}, {
-  idAttribute: "partId"
-});
+export const partSchema = new schema.Entity(
+  "byPartId",
+  {},
+  { idAttribute: "partId" }
+);
 
 export const initialState = {
   byPartId: {},

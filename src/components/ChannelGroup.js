@@ -95,7 +95,7 @@ export default class ChannelGroup extends Component {
           channelId,
           key: channelId, // required because of list
           type: channelData.type,
-          playState: channelData.playState,
+          playState: "stopped", // TODO: derive from playingChannels
           offset: channelData.offset,
           selected: channelData.selected,
           gain: channelData.gain,

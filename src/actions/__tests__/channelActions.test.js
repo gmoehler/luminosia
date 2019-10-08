@@ -8,7 +8,6 @@ import { audioChannelPayload, imageChannelPayload, initialImageChannelPayload, i
 import { initialState as initialViewState } from "../../reducers/viewReducer";
 
 import * as fileUtilsMock from "../../utils/fileUtils";
-import { normalizedImageChannel1 } from "../../__fixtures__/entity.fixtures";
 jest.mock("../../utils/fileUtils");
 
 export const mockStore = configureMockStore([thunk]);
@@ -163,6 +162,10 @@ describe("actions", () => {
           },
           result: "channel-1",
         }
+      },
+      {
+        type: types.SET_A_CHANNEL_ACTIVE,
+        payload: "channel-1",
       },
       {
         type: types.UPLOAD_AUDIO_SUCCESS

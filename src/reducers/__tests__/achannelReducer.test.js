@@ -1,4 +1,4 @@
-import reducer, { channelExists } from "../achannelReducer";
+import reducer, { channelExists, getAllDenormalizedChannels } from "../achannelReducer";
 import { initialState, getDenormalizedChannel } from "../achannelReducer";
 
 import * as types from "../../actions/types";
@@ -109,6 +109,11 @@ describe("selector functions", () => {
 
   it("should return a denormalized channel", () => {
     expect(getDenormalizedChannel(entityState1, imageChannel1.channelId)).toEqual(denormImageChannel1);
+  });
+
+  it("should return denormalized channels", () => {
+    expect(getAllDenormalizedChannels(entityState1))
+      .toEqual([denormImageChannel1]);
   });
 
 });

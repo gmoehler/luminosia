@@ -3,7 +3,7 @@ import {
   PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, ADD_CHANNEL, CLEAR_CHANNELS, UPLOAD_AUDIO_STARTED, UPLOAD_AUDIO_SUCCESS, UPLOAD_AUDIO_FAILURE, DELETE_CHANNEL, SET_CHANNEL_ACTIVE, UNSET_CHANNEL_ACTIVE, UPDATE_CHANNEL, ADD_A_CHANNEL, DELETE_A_CHANNEL, CLEAR_ALL_CHANNELS, SET_A_CHANNEL_ACTIVE, SET_A_CHANNEL_INACTIVE, PLAY_THE_CHANNELS, STOP_ALL_CHANNELS, STOP_A_CHANNEL,
 } from "./types";
 
-import { getActiveChannelIds, getMaxDuration, getChannel, getPartIdsInChannel, channelSchema2 } from "../reducers/channelReducer";
+import { getActiveChannelIds, getMaxDuration, getChannel, getPartIdsInChannel, } from "../reducers/channelReducer";
 import { getImageDuration } from "../reducers/imageListReducer";
 import { defaultSampleRate } from "../components/ImageListContainer";
 import { readAudioFile } from "../utils/fileUtils";
@@ -11,7 +11,7 @@ import { drawExportImage, clearExportImage } from "./generalActions";
 import { createPart, deleteAPart } from "./partActions";
 import { deleteAMarker } from "./markerActions";
 import { toggleEntitySelection } from "./entityActions";
-import { getMaxChannelDuration, channelExists, getDenormalizedChannel } from "../reducers/achannelReducer";
+import { getMaxChannelDuration, channelExists, getDenormalizedChannel, achannelSchema } from "../reducers/achannelReducer";
 
 
 // first id will be 1 to avoid falsy ids
@@ -34,7 +34,7 @@ export function _setInitialChannelIdCount(newCount) {
 
 const _addAChannel = (channelInfo) => ({
   type: ADD_A_CHANNEL,
-  payload: normalize(channelInfo, channelSchema2),
+  payload: normalize(channelInfo, achannelSchema),
 });
 
 // add channel with channelInfo containing complete 
@@ -71,6 +71,7 @@ export const addAChannel = (channelInfo) => {
 
       // add channel with new channel id
       dispatch(_addAChannel(channelInfo));
+      dispatch(setAChannelActive(channelInfo.channelId));
       return channelInfo.channelId;
     }
 

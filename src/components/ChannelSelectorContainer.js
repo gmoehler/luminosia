@@ -8,6 +8,7 @@ import { updateChannel, setChannelActive, unsetChannelActive, deleteChannel, dup
 import { uploadImageChannel, downloadImageChannel } from "../actions/generalActions";
 
 import { getSelectedImageChannelId } from "../reducers/viewReducer";
+import { getAllDenormalizedChannels } from "../reducers/achannelReducer";
 
 class ChannelSelectorContainer extends Component {
 
@@ -20,7 +21,7 @@ class ChannelSelectorContainer extends Component {
 
 const mapStateToProps = (state, props) => {
   return {
-    channelOverview: getAllChannelsOverview(state),
+    channelOverview: getAllDenormalizedChannels(state), //TODO: use subset only?
     selectedImageChannelId: getSelectedImageChannelId(state),
   };
 };

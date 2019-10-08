@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import { stopChannel, createImageChannel, uploadAudioFile, playChannelAndImage, setChannelActive, unsetChannelActive, pastePart } from "../actions/channelActions";
+import { stopChannel, uploadAudioFile, playChannelAndImage, setChannelActive, unsetChannelActive, pastePart, createAnImageChannel } from "../actions/channelActions";
 
 import { downloadConfig, uploadConfigFile, uploadConfig, updateFirmware } from "../actions/generalActions";
 import { setResolution, copyPart } from "../actions/viewActions";
@@ -67,7 +67,8 @@ const mapDispatchToProps = dispatch => ({
   uploadConfigFile: (configFile) => dispatch(uploadConfigFile(configFile, audioContext)),
   uploadAudioFile: (audioFile) => dispatch(uploadAudioFile(audioFile, audioContext)),
   uploadConfigAction: (config) => dispatch(uploadConfig(config, audioContext)),
-  createImageChannel: () => dispatch(createImageChannel()),
+  // createImageChannel: () => dispatch(createImageChannel()),
+  createImageChannel: () => dispatch(createAnImageChannel()),
   playChannelAndImage: (channelId) => dispatch(playChannelAndImage(channelId)),
   stopChannel: () => dispatch(stopChannel()),
   setResolution: (resolution) => dispatch(setResolution(resolution)),

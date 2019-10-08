@@ -5,7 +5,7 @@ import {
 } from "../actions/types";
 
 import { filterObjectByKeys } from "../utils/miscUtils";
-import { schema, denormalize } from "normalizr";
+import { denormalize } from "normalizr";
 import { partSchema, } from "./partReducer";
 
 export const channelSchema = {
@@ -15,14 +15,6 @@ export const channelsSchema = [{
   parts: [partSchema]
 }];
 
-export const channelSchema2 = new schema.Entity(
-  "byChannelId",
-  { parts: [partSchema] },
-  {
-    idAttribute: "channelId"
-  }
-);
-
 // TODO: improve this reducer using a sub-reducer on the selected channel
 
 const initialState = {
@@ -31,6 +23,7 @@ const initialState = {
 };
 
 export default (state = initialState, action) => {
+  return state;
   switch (action.type) {
 
     case CLEAR_CHANNELS:

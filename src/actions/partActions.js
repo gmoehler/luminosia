@@ -53,7 +53,6 @@ export const createPart = (partInfo) => {
         partId,
       }));
       dispatch(toggleEntitySelection(partId));
-      dispatch(setAChannelActive(partId));
       return partId;
     }
     console.error("cannot add incomplete part:", partInfo);
