@@ -7,10 +7,10 @@ import { downloadTextfile, readTextFile, /* downloadImagefile, */ downloadBinary
 
 import { getConfig } from "../reducers/rootReducer";
 
-import { addChannel, loadAChannel } from "./channelActions";
+import { loadAChannel, addAChannel } from "./channelActions";
 import { addImage, loadImage } from "./imageListActions";
 import { addToUploadLog } from "./viewActions";
-import { getMaxDuration, getChannel } from "../reducers/channelReducer";
+import { getMaxChannelDuration, getChannelGain, getChannelSampleRate, getChannelParts } from "../reducers/achannelReducer";
 import { imageExists } from "../reducers/imageListReducer";
 import { secondsToSamples } from "../utils/conversions";
 import { encodeImage } from "../utils/imageUtils";
@@ -82,7 +82,7 @@ export const uploadConfig =
             return loadAChannel(channelData, audioContext, getState())
               .then((channelInfo) => {
                 if (channelInfo) { // audio channels are not loaded yet
-                  dispatch(addChannel(channelInfo));
+                  dispatch(addAChannel(channelInfo));
                   console.log(`${channelData.type} channel added.`);
                 }
                 return Promise.resolve();
@@ -101,7 +101,7 @@ export const downloadConfig = (() => (dispatch, getState) => {
 // clear export image section (make black)
 export const clearExportImage = numChannels => (dispatch, getState) => {
   if (numChannels) {
-    const maxDuration = getMaxDuration(getState());
+    const maxDuration = getMaxChannelDuration(getState());
     const canvas = document.getElementById("imageExportCanvas");
     canvas.height = numChannels * 30;
     canvas.width = secondsToSamples(maxDuration, 100); // TODO: actual sample rate
@@ -114,25 +114,27 @@ export const clearExportImage = numChannels => (dispatch, getState) => {
 
 // draw a channel to the export at position idx
 export const drawExportImage = (channelId, idx, applyLog) => (dispatch, getState) => {
-  const channel = getChannel(getState(), channelId);
+  const chGain = getChannelGain(getState(), channelId);
+  const sampleRate = getChannelSampleRate(getState(), channelId);
+  const parts = getChannelParts(getState(), channelId);
 
-  if (channel && channel.parts) {
+  if (parts) {
     const canvas = document.getElementById("imageExportCanvas");
     const cc = canvas.getContext("2d");
 
-    channel.parts.forEach((partId) => {
+    parts.forEach((partId) => {
 
       const part = getPart(getState(), partId);
       const img = document.getElementById(part.imageId);
-      const offsetPx = part.offset ? secondsToSamples(part.offset, channel.sampleRate) : 0;
-      const widthPx = part.duration ? secondsToSamples(part.duration, channel.sampleRate) : 0;
+      const offsetPx = part.offset ? secondsToSamples(part.offset, sampleRate) : 0;
+      const widthPx = part.duration ? secondsToSamples(part.duration, sampleRate) : 0;
       cc.drawImage(img, 0, 0, img.width, 30, offsetPx, idx * 30, widthPx, 30);
     });
 
     // apply gain by adding a transparent black rectangle on top of the parts
-    if (channel.gain && channel.gain < 0.99) {
+    if (chGain && chGain < 0.99) {
       // use log gain because otherwise it fades to strongly
-      const gain = applyLog ? logScale.linearToLogarithmic(channel.gain) / 100 : channel.gain;
+      const gain = applyLog ? logScale.linearToLogarithmic(chGain) / 100 : chGain;
 
       cc.fillStyle = "black";
       cc.globalAlpha = 1.0 - gain;

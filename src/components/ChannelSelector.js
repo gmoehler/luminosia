@@ -1,17 +1,19 @@
 import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
-import { withStyles } from "@material-ui/core/styles";
-import FormGroup from "@material-ui/core/FormGroup";
-import { Tooltip, IconButton } from "@material-ui/core";
-import Slider from "@material-ui/lab/Slider";
-import { indigo } from "@material-ui/core/colors/indigo";
-import UploadChannelIcon from "@material-ui/icons/Publish";
-import DownloadChannelIcon from "@material-ui/icons/SaveAlt";
-import DeleteChannelIcon from "@material-ui/icons/DeleteForever";
-import ChannelDupIcon from "@material-ui/icons/FileCopy";
-import isElectron from "is-electron";
 import styled from "styled-components";
+import isElectron from "is-electron";
+
+import { withStyles } from "@material-ui/core/styles";
+import { Tooltip, IconButton } from "@material-ui/core";
+import { Slider } from "@material-ui/lab";
+import { indigo } from "@material-ui/core/colors/indigo";
+import {
+  Publish as UploadChannelIcon,
+  SaveAlt as DownloadChannelIcon,
+  DeleteForever as DeleteChannelIcon,
+  FileCopy as ChannelDupIcon,
+} from "@material-ui/icons";
 
 const WhiteSlider = styled(Slider)`
   .MuiSlider-track {
@@ -27,12 +29,6 @@ const WhiteSlider = styled(Slider)`
 const channelSelectorWidth = 96;
 
 const styles = () => ({
-  formGroup: {
-    paddingTop: "30px",
-    background: "#2c387e",
-    borderTop: "1px #3949ab solid",
-    borderBottom: "1px #3949ab solid",
-  },
   channelSelectorWrapper: {
     display: "flex",
     justifyContent: "space-between",
@@ -79,98 +75,92 @@ const styles = () => ({
   },
 });
 
-class ChannelSelector extends React.Component {
+function ChannelSelector(props) {
 
-  handleChange = (channelId, active) => (event, val) => {
-    this.props.updateChannel({
+  const handleChange = (channelId, active) => (event, val) => {
+    props.updateChannel({
       channelId,
       gain: val
     });
     if (val === 0 && active) {
-      this.props.unsetChannelActive(channelId);
+      props.unsetChannelActive(channelId);
     } else if (val > 0 && !active) {
-      this.props.setChannelActive(channelId);
+      props.setChannelActive(channelId);
     }
   };
 
-  render() {
-    const { classes, selectedImageChannelId, channelOverview } = this.props;
-    const electronVersion = isElectron();
+  const { classes, channelId, selected, active, gain } = props;
+  const electronVersion = isElectron();
 
-    const switches = channelOverview
-      .map((channel) =>
-        (<div key={ channel.channelId }
-          className={ classNames(
-            classes.channelSelectorWrapper,
-            selectedImageChannelId === channel.channelId && channel.active && classes.wrapperSelected,
-            !channel.active && classes.wrapperInActive)
-          }
-          background={ indigo }>
+  return (
+    <div key={ channelId }
+      className={ classNames(
+        classes.channelSelectorWrapper,
+        selected && active && classes.wrapperSelected,
+        !active && classes.wrapperInActive)
+      }
+      background={ indigo }>
 
-          <div className={ classes.actionsWrapper }>
-            <div className={ classes.actionsRow }>
-              <Tooltip title="Upload channel to poi">
-                <IconButton
-                  className={ classes.button }
-                  disabled={ !electronVersion }
-                  onClick={ () => this.props.uploadImageChannel(channel.channelId) }>
-                  <UploadChannelIcon className={ classes.icon } />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title={ "Download channel" }>
-                <IconButton
-                  className={ classes.button }
-                  onClick={ () => this.props.downloadImageChannel(channel.channelId) }>
-                  <DownloadChannelIcon className={ classes.icon } />
-                </IconButton>
-              </Tooltip>
-            </div>
+      <div className={ classes.actionsWrapper }>
+        <div className={ classes.actionsRow }>
+          <Tooltip title="Upload channel to poi">
+            <IconButton
+              className={ classes.button }
+              disabled={ !electronVersion }
+              onClick={ () => props.uploadImageChannel(channelId) }>
+              <UploadChannelIcon className={ classes.icon } />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title={ "Download channel" }>
+            <IconButton
+              className={ classes.button }
+              onClick={ () => props.downloadImageChannel(channelId) }>
+              <DownloadChannelIcon className={ classes.icon } />
+            </IconButton>
+          </Tooltip>
+        </div>
 
-            <div className={ classNames(
-              classes.actionsRow, classes.actionsRow2) }>
-              <Tooltip title="Duplicate channel">
-                <IconButton
-                  className={ classes.button }
-                  onClick={ () => this.props.duplicateChannel(channel.channelId) }>
-                  <ChannelDupIcon className={ classes.icon } />
-                </IconButton>
-              </Tooltip>
+        <div className={ classNames(
+          classes.actionsRow, classes.actionsRow2) }>
+          <Tooltip title="Duplicate channel">
+            <IconButton
+              className={ classes.button }
+              onClick={ () => props.duplicateChannel(channelId) }>
+              <ChannelDupIcon className={ classes.icon } />
+            </IconButton>
+          </Tooltip>
 
-              <Tooltip title="Delete channel">
-                <IconButton
-                  className={ classes.button }
-                  onClick={ () => this.props.deleteChannel(channel.channelId) }>
-                  <DeleteChannelIcon className={ classes.icon } />
-                </IconButton>
-              </Tooltip>
-            </div>
-          </div>
-          <div className={ classes.sliderWrapper }>
-            <Tooltip title={ channel.gain === 0 ? "channel off" : `gain: ${channel.gain.toPrecision(2)}` }>
-              <WhiteSlider vertical
-                className={ classes.slider }
-                value={ channel.gain }
-                onChange={ this.handleChange(channel.channelId, channel.active) }
-                min={ 0 }
-                max={ 1 }
-                step={ 0.05 } />
-            </Tooltip>
-          </div>
+          <Tooltip title="Delete channel">
+            <IconButton
+              className={ classes.button }
+              onClick={ () => props.deleteChannel(channelId) }>
+              <DeleteChannelIcon className={ classes.icon } />
+            </IconButton>
+          </Tooltip>
+        </div>
+      </div>
+      <div className={ classes.sliderWrapper }>
+        <Tooltip title={ gain === 0 ? "channel off" : `gain: ${gain.toPrecision(2)}` }>
+          <WhiteSlider vertical
+            className={ classes.slider }
+            value={ gain }
+            onChange={ handleChange(channelId, active) }
+            min={ 0 }
+            max={ 1 }
+            step={ 0.05 } />
+        </Tooltip>
+      </div>
 
-        </div>)
-      );
+    </div>);
 
-    return (
-      <FormGroup className={ classes.formGroup }>
-        {switches}
-      </FormGroup>
-    );
-  }
 }
 
 ChannelSelector.propTypes = {
   classes: PropTypes.object.isRequired,
-  channelOverview: PropTypes.array,
+  channelId: PropTypes.string.isRequired,
+  selected: PropTypes.bool,
+  active: PropTypes.bool,
+  gain: PropTypes.number,
   setChannelActive: PropTypes.func.isRequired,
   unsetChannelActive: PropTypes.func.isRequired,
   updateChannel: PropTypes.func.isRequired,

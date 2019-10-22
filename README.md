@@ -26,8 +26,9 @@ App
   ImageListContainer
     ImageList
 
-  ChannelSelectorContainer
-    ChannelSelector
+  ChannelSelectorGroupContainer
+    ChannelSelectorGroup
+      ChannelSelector
     
   AnimationPaneContainer
     withPlay

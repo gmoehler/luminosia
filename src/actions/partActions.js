@@ -10,7 +10,6 @@ import { syncPartMarkers } from "./markerActions";
 
 import { toggleEntitySelection, selectEntity } from "./entityActions";
 import { isEntitySelected, getSelectedEntityIdsOfType } from "../reducers/entityReducer";
-import { setAChannelActive } from "./channelActions";
 
 // first id will be 1 to avoid falsy ids
 let lastPartIdCount = 0;

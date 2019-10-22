@@ -3,11 +3,10 @@ import { connect } from "react-redux";
 
 import ChannelGroup from "./ChannelGroup";
 import { setMessage } from "../actions/viewActions";
-import { allChannelsStopped } from "../reducers/channelReducer";
 import { getSelectionRange, getResolution, getUploadLog, isUploadingConfig } from "../reducers/viewReducer";
 import { getImageSources } from "../reducers/imageListReducer";
 import { getAllMarkers } from "../reducers/markerReducer";
-import { getMaxChannelDuration, getAllChannelIds } from "../reducers/achannelReducer";
+import { getMaxChannelDuration, getAllChannelIds, allChannelsStopped } from "../reducers/achannelReducer";
 
 class ChannelGroupContainer extends Component {
 

@@ -8,7 +8,7 @@ import { downloadConfig, uploadConfigFile, uploadConfig, updateFirmware } from "
 import { setResolution, copyPart } from "../actions/viewActions";
 import { deleteSelectedEntities, } from "../actions/entityActions";
 import Header from "./Header";
-import { getChannelIds, allChannelsStopped } from "../reducers/channelReducer";
+import { getAllChannelIds, allChannelsStopped } from "../reducers/achannelReducer";
 import { getPartsToCopy, } from "../reducers/viewReducer";
 import { anyEntitySelected } from "../reducers/entityReducer";
 
@@ -55,11 +55,11 @@ class HeaderContainer extends Component {
 }
 
 const mapStateToProps = state => ({
-  channelIds: getChannelIds(state),
+  channelIds: getAllChannelIds(state),
   entitySelected: anyEntitySelected(state),
   hasPartToCopy: Boolean(getPartsToCopy(state)),
-  enablePlay: Boolean(getChannelIds(state).length > 0 && allChannelsStopped(state)),
-  enableStop: Boolean(getChannelIds(state).length && !allChannelsStopped(state)),
+  enablePlay: Boolean(getAllChannelIds(state).length > 0 && allChannelsStopped(state)),
+  enableStop: Boolean(getAllChannelIds(state).length && !allChannelsStopped(state)),
 });
 
 const mapDispatchToProps = dispatch => ({

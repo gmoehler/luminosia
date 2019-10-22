@@ -20,7 +20,7 @@ import ChannelGroupContainer from "./components/ChannelGroupContainer";
 import { Tooltip } from "@material-ui/core";
 import ImageExporter from "./components/ImageExporter";
 import AnimationPaneContainer from "./components/AnimationPaneContainer";
-import ChannelSelectorContainer from "./components/ChannelSelectorContainer";
+import ChannelSelectorGroupContainer from "./components/ChannelSelectorGroupContainer";
 import UploadLogViewContainer from "./components/UploadLogViewContainer";
 import MessageViewContainer from "./components/MessageViewContainer";
 
@@ -132,16 +132,16 @@ class App extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { 
+    this.state = {
       error: null,
       open: false,
     };
   }
 
   componentDidCatch(error, state) {
-    this.setState({ 
+    this.setState({
       ...this.state,
-      error 
+      error
     });
   }
 
@@ -162,14 +162,14 @@ class App extends React.Component {
 
   render() {
 
-    if (this.state.error){
+    if (this.state.error) {
       return (
         <div>
           <p> ERROR! Cannot continue. </p>
-          {this.state.error.message ?  <p> {this.state.error.message} </p> : null}
-          {this.state.error.stack ?  <p> {this.state.error.stack} </p> : null}
+          {this.state.error.message ? <p> {this.state.error.message} </p> : null}
+          {this.state.error.stack ? <p> {this.state.error.stack} </p> : null}
         </div>
-        );
+      );
     }
 
     const { classes, theme } = this.props;
@@ -179,65 +179,65 @@ class App extends React.Component {
       <div className={ classes.root }>
         <CssBaseline />
         <AppBar position="fixed"
-            className={ classNames(classes.appBar, {
+          className={ classNames(classes.appBar, {
             [classes.appBarShift]: open,
           }) }>
           <Toolbar disableGutters={ !open }>
             <div className={ classes.title }>
               <Typography
-                  variant="h6"
-                  className={ classes.title1 }>L</Typography>
+                variant="h6"
+                className={ classes.title1 }>L</Typography>
               <Typography variant="h6"
-                  className={ classes.title2 }>u</Typography>
+                className={ classes.title2 }>u</Typography>
               <Typography variant="h6"
-                  className={ classes.title3 }>m</Typography>
+                className={ classes.title3 }>m</Typography>
               <Typography variant="h6"
-                  className={ classes.title4 }>i</Typography>
+                className={ classes.title4 }>i</Typography>
               <Typography variant="h6"
-                  className={ classes.title5 }>n</Typography>
+                className={ classes.title5 }>n</Typography>
               <Typography variant="h6"
-                  className={ classes.title6 }>o</Typography>
+                className={ classes.title6 }>o</Typography>
               <Typography variant="h6"
-                  className={ classes.title7 }>s</Typography>
+                className={ classes.title7 }>s</Typography>
               <Typography variant="h6"
-                  className={ classes.title8 }>i</Typography>
+                className={ classes.title8 }>i</Typography>
               <Typography variant="h6"
-                  className={ classes.title9 }>a</Typography>
+                className={ classes.title9 }>a</Typography>
             </div>
             <HeaderContainer />
             <div className={ classes.grow }></div>
             <Tooltip title="Work with images">
               <IconButton color="inherit"
-                  aria-label="Open drawer"
-                  onClick={ this.handleDrawerOpen }
-                  className={ classNames(classes.menuButton, open && classes.hide) }>
+                aria-label="Open drawer"
+                onClick={ this.handleDrawerOpen }
+                className={ classNames(classes.menuButton, open && classes.hide) }>
                 <BurstModeIcon />
               </IconButton>
             </Tooltip>
           </Toolbar>
         </AppBar>
         <main className={ classNames(classes.content, {
-                            [classes.contentShift]: open,
-                          }) }>
+          [classes.contentShift]: open,
+        }) }>
           <div className={ classes.drawerHeader } />
           <MessageViewContainer />
           <UploadLogViewContainer />
           <AnimationPaneContainer drawerWidth={ open ? drawerWidth : 0 } />
           <div className={ classes.channelPane }>
-            <ChannelSelectorContainer />
+            <ChannelSelectorGroupContainer />
             <ChannelGroupContainer drawerWidth={ open ? drawerWidth + channelSelectorWidth : channelSelectorWidth }
-                width={ channelSelectorWidth } />
+              width={ channelSelectorWidth } />
           </div>
           <ImageExporter drawerWidth={ open ? drawerWidth : 0 } />
         </main>
         <Drawer className={ classes.drawer }
-            variant="persistent"
-            anchor="right"
-            open={ open }
-            classes={ { paper: classes.drawerPaper, } }>
+          variant="persistent"
+          anchor="right"
+          open={ open }
+          classes={ { paper: classes.drawerPaper, } }>
           <div className={ classes.drawerHeader }>
             <IconButton onClick={ this.handleDrawerClose }>
-              { theme.direction === "rtl" ? <ChevronLeftIcon /> : <ChevronRightIcon /> }
+              {theme.direction === "rtl" ? <ChevronLeftIcon /> : <ChevronRightIcon />}
             </IconButton>
             <ImageControlContainer />
           </div>
@@ -246,7 +246,7 @@ class App extends React.Component {
           <Divider />
         </Drawer>
       </div>
-      );
+    );
   }
 }
 

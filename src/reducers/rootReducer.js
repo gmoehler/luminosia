@@ -1,13 +1,12 @@
 import { combineReducers } from "redux";
 
-import channelReducer, { getChannelsConfig } from "./channelReducer";
+import { getChannelsConfig } from "./channelReducer";
 import viewReducer from "./viewReducer";
 import entityReducer from "./entityReducer";
 import { getImageListConfig } from "./imageListReducer";
 
 
 export default combineReducers({
-    channel: channelReducer,
     view: viewReducer,
     entities: entityReducer,
 });

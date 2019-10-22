@@ -8,7 +8,7 @@ import {
   SET_A_CHANNEL_INACTIVE, PLAY_THE_CHANNELS, STOP_ALL_CHANNELS,
   STOP_A_CHANNEL, SET_A_CHANNEL_ACTIVE, ADD_A_PART,
 } from "../actions/types";
-import { partSchema, } from "./partReducer";
+import { partSchema, getParts, } from "./partReducer";
 import { isEntitySelected } from "./entityReducer";
 
 // schemata for normalization
@@ -54,6 +54,9 @@ const byChannelId = (state = {}, action) => {
       const channel0 = {
         ...state[part0.channelId]
       };
+      if (!channel0) {
+        return state;
+      }
       const parts0 = [
         ...channel0.parts,
         partId0, // add new partId
@@ -157,13 +160,12 @@ export function getNumChannels(state) {
   return getAllChannelIds(state).length;
 }
 
-export function getActiveChannelIds(state) {
-  return state.entities.channels.activeChannels;
+export function allChannelsStopped(state) {
+  return state.entities.channels.playingChannels.length === 0;
 }
 
-function _getChannelDuration(state, channelId) {
-  const ch = _getChannel(state, channelId);
-  return ch ? ch.duration : 0;
+export function getActiveChannelIds(state) {
+  return state.entities.channels.activeChannels;
 }
 
 function _getChannel(state, channelId) {
@@ -171,6 +173,31 @@ function _getChannel(state, channelId) {
     return null;
   }
   return state.entities.channels.byChannelId[channelId];
+}
+
+function _getChannelDuration(state, channelId) {
+  const ch = _getChannel(state, channelId);
+  return ch ? ch.duration : 0;
+}
+
+export function getChannelGain(state, channelId) {
+  const ch = _getChannel(state, channelId);
+  return ch ? ch.gain : 0;
+}
+
+export function getChannelSampleRate(state, channelId) {
+  const ch = _getChannel(state, channelId);
+  return ch ? ch.sampleRate : 0;
+}
+
+export function getChannelPartIds(state, channelId) {
+  const ch = _getChannel(state, channelId);
+  return ch ? ch.parts : 0;
+}
+
+export function getChannelParts(state, channelId) {
+  const ch = _getChannel(state, channelId);
+  return ch ? getParts(state, ch.parts) : [];
 }
 
 // get the subpart of the channel that is needed for the channel display
@@ -190,8 +217,8 @@ export function getChannelSelectorData(state, channelId) {
   return { channelId, type, gain, active };
 }
 
-export const getMaxChannelDuration = state => (getNumChannels(state) === 0 ? 0
-  : state.entities.channels.allChannelIds
+export const getMaxChannelDuration = state => (getNumChannels(state) === 0 ?
+  0 : state.entities.channels.allChannelIds
     .reduce((duration, channeld) => Math.max(duration, _getChannelDuration(state, channeld)), 0));
 
 export const getDenormalizedChannel0 = (state, channelId) => {

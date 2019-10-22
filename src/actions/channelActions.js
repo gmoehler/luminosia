@@ -3,7 +3,6 @@ import {
   PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, ADD_CHANNEL, CLEAR_CHANNELS, UPLOAD_AUDIO_STARTED, UPLOAD_AUDIO_SUCCESS, UPLOAD_AUDIO_FAILURE, DELETE_CHANNEL, SET_CHANNEL_ACTIVE, UNSET_CHANNEL_ACTIVE, UPDATE_CHANNEL, ADD_A_CHANNEL, DELETE_A_CHANNEL, CLEAR_ALL_CHANNELS, SET_A_CHANNEL_ACTIVE, SET_A_CHANNEL_INACTIVE, PLAY_THE_CHANNELS, STOP_ALL_CHANNELS, STOP_A_CHANNEL,
 } from "./types";
 
-import { getActiveChannelIds, getMaxDuration, getChannel, getPartIdsInChannel, } from "../reducers/channelReducer";
 import { getImageDuration } from "../reducers/imageListReducer";
 import { defaultSampleRate } from "../components/ImageListContainer";
 import { readAudioFile } from "../utils/fileUtils";
@@ -11,7 +10,11 @@ import { drawExportImage, clearExportImage } from "./generalActions";
 import { createPart, deleteAPart } from "./partActions";
 import { deleteAMarker } from "./markerActions";
 import { toggleEntitySelection } from "./entityActions";
-import { getMaxChannelDuration, channelExists, getDenormalizedChannel, achannelSchema } from "../reducers/achannelReducer";
+import {
+  getMaxChannelDuration, channelExists,
+  getDenormalizedChannel, achannelSchema,
+  getActiveChannelIds, getChannelPartIds,
+} from "../reducers/achannelReducer";
 
 
 // first id will be 1 to avoid falsy ids
@@ -57,20 +60,22 @@ export const addAChannel = (channelInfo) => {
       channelInfo.gain = channelInfo.gain || 1;
       channelInfo.channelId = generateId();
 
-      // add parts and replace part field with partIds
+      // add channel with new channel id, but without parts yet
+      const parts = channelInfo.parts;
+      dispatch(_addAChannel({
+        ...channelInfo,
+        parts: [],
+      }));
+
+      // add parts (will also add it to the channel) 
       // audio channels have no parts and simply skipped this
-      const partIds = [];
-      channelInfo.parts.forEach((part) => {
-        const partId = dispatch(createPart({
+      parts.forEach((part) => {
+        dispatch(createPart({
           ...part,
           channelId: channelInfo.channelId
         }));
-        partIds.push(partId);
       });
-      channelInfo.parts = partIds;
 
-      // add channel with new channel id
-      dispatch(_addAChannel(channelInfo));
       dispatch(setAChannelActive(channelInfo.channelId));
       return channelInfo.channelId;
     }
@@ -171,7 +176,7 @@ export const addChannel = (channelInfo) => ({
 export const createImageChannel = () => {
   return (dispatch, getState) => {
     // we extend the duration to the longest channel
-    const duration = Math.max(10, getMaxDuration(getState()));
+    const duration = Math.max(10, getMaxChannelDuration(getState()));
     // add required fields
     dispatch(addChannel({
       type: "image",
@@ -193,7 +198,7 @@ export const deleteChannel = (channelId) => {
   return (dispatch, getState) => {
 
     // first delete parts & markers of channel
-    getPartIdsInChannel(getState(), channelId)
+    getChannelPartIds(getState(), channelId)
       .forEach((partId) => {
         dispatch(deleteAPart(partId));
       });
@@ -309,10 +314,8 @@ export const uploadAudioFile = (audioFile, audioContext) => {
 
 export const duplicateChannel = (channelId) => {
   return (dispatch, getState) => {
-    const ch = getChannel(getState(), channelId);
-    // also sanatizes the parts
-    dispatch(addChannel(ch));
-    // TODO: add new channel just after copied one
+    const ch = getDenormalizedChannel(getState(), channelId);
+    dispatch(addAChannel(ch));
   };
 };
 

@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 
 import AnimationPane from "./AnimationPane";
 import { getSelectionRange } from "../reducers/viewReducer";
-import { getActiveChannelIds, allChannelsStopped, getMaxDuration } from "../reducers/channelReducer";
+import { getActiveChannelIds, allChannelsStopped, getMaxChannelDuration } from "../reducers/achannelReducer";
 import { withPlay } from "./withPlay";
 
 const AnimationPaneWithPlay = withPlay(AnimationPane);
@@ -21,14 +21,14 @@ class AnimationPaneContainer extends Component {
   render() {
 
     return (
-      <AnimationPaneWithPlay 
-          sampleRate={ 100 } 
-          resolution={ 2 } 
-          type="animation" 
-          setChannelPlayState={ this.setChannelPlayState }
-          { ...this.props }
+      <AnimationPaneWithPlay
+        sampleRate={ 100 }
+        resolution={ 2 }
+        type="animation"
+        setChannelPlayState={ this.setChannelPlayState }
+        { ...this.props }
       />
-      );
+    );
   }
 }
 
@@ -36,7 +36,7 @@ const mapStateToProps = state => ({
   playState: allChannelsStopped(state) ? "stopped" : "playing",
   activeChannels: getActiveChannelIds(state, "image"),
   selection: getSelectionRange(state),
-  maxDuration: getMaxDuration(state),
+  maxDuration: getMaxChannelDuration(state),
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -6,7 +6,6 @@ import { schema, denormalize } from "normalizr";
 import {
   CLEAR_PARTS, ADD_A_PART, DELETE_A_PART, MOVE_A_PART, RESIZE_A_PART,
 } from "../actions/types";
-import { /* getPartIdsInChannel */ } from "./channelReducer";
 
 export const partSchema = new schema.Entity(
   "byPartId",
