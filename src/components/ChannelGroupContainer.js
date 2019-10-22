@@ -2,16 +2,12 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 
 import ChannelGroup from "./ChannelGroup";
-import { setChannelPlayState, insertNewPart, } from "../actions/channelActions";
-import { selectRange, deselectRange, setMessage, } from "../actions/viewActions";
+import { setMessage } from "../actions/viewActions";
 import { allChannelsStopped } from "../reducers/channelReducer";
-import { getSelectionRange, getResolution, getSelectedImageChannelId, getUploadLog, isUploadingConfig } from "../reducers/viewReducer";
+import { getSelectionRange, getResolution, getUploadLog, isUploadingConfig } from "../reducers/viewReducer";
 import { getImageSources } from "../reducers/imageListReducer";
-import { setOrReplaceInsertMarker } from "../actions/markerActions";
 import { getAllMarkers } from "../reducers/markerReducer";
-import { moveSelectedParts, resizeAPart, selectInInterval } from "../actions/partActions";
-import { toggleEntitySelection, toggleMultiEntitySelection, toggleInitialEntitySelection, deleteSelectedEntities } from "../actions/entityActions";
-import { getAllDenormalizedChannels, getMaxChannelDuration } from "../reducers/achannelReducer";
+import { getMaxChannelDuration, getAllChannelIds } from "../reducers/achannelReducer";
 
 class ChannelGroupContainer extends Component {
 
@@ -55,59 +51,21 @@ class ChannelGroupContainer extends Component {
 }
 
 const mapStateToProps = (state, props) => {
-  // get audio data and play state from redux
   return {
-    // allChannelsData: getAllChannelsDenorm(state),
-    allChannelsData: getAllDenormalizedChannels(state),
+    allchannelIds: getAllChannelIds(state),
     selection: getSelectionRange(state),
     resolution: getResolution(state),
     maxDuration: getMaxChannelDuration(state),
     markers: getAllMarkers(state),
     imageSources: getImageSources(state),
     playState: allChannelsStopped(state) ? "stopped" : "playing",
-    selectedImageChannelId: getSelectedImageChannelId(state),
     uploadLog: getUploadLog(state),
     isUploadingConfig: isUploadingConfig(state),
   };
 };
 
 const mapDispatchToProps = dispatch => ({
-  selectRange: (from, to, type) => dispatch(selectRange({
-    from,
-    to,
-    type
-  })),
-  deselectRange: () => dispatch(deselectRange()),
-  selectInInterval: (channelId, from, to) => dispatch(selectInInterval(channelId, from, to)),
-  setOrReplaceInsertMarker: (pos) => dispatch(setOrReplaceInsertMarker(pos)),
-  insertNewPart: (channelId, imageId, offset) => dispatch(insertNewPart({
-    channelId,
-    imageId,
-    offset,
-  })),
-  move: (partId, incr) => dispatch(moveSelectedParts({
-    partId,
-    incr
-  })),
-  resize: (channelId, partId, markerId, incr) => dispatch(resizeAPart({
-    channelId,
-    partId,
-    markerId,
-    incr
-  })),
-  toggleEntitySelection: (partId) => dispatch(toggleEntitySelection(partId)),
-  toggleMultiEntitySelection: (partId) => dispatch(toggleMultiEntitySelection(partId)),
-  toggleInitialEntitySelection: (partId) => dispatch(toggleInitialEntitySelection(partId)),
-  deleteSelectedEntities: () => dispatch(deleteSelectedEntities()),
-  setChannelPlayState: (channelId, playState) => dispatch(setChannelPlayState({
-    channelId,
-    playState
-  })),
-  setMessage: (text, type, title) => dispatch(setMessage({
-    text,
-    type,
-    title
-  })),
+  setMessage: (text, type, title) => dispatch(setMessage({ text, type, title })),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChannelGroupContainer);

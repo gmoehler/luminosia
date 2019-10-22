@@ -22,7 +22,7 @@ export function timeToPixels(WrappedComponent) {
 
     render() {
 
-      const { resolution, offset, progress, cursorPos, selection, maxDuration, parts, markers, select, move, handleMouseEvent, ...passthruProps } = this.props;
+      const { resolution, offset, progress, cursorPos, selection, maxDuration, parts, markers, handleMouseEvent, ...passthruProps } = this.props;
 
       // channel offset only used for audio buffer which does not contain parts
       const offsetPx = offset ? secondsToPixels(offset, resolution) : 0;
@@ -47,30 +47,28 @@ export function timeToPixels(WrappedComponent) {
       });
 
       return (<WrappedComponent { ...passthruProps }
-	offset={ offsetPx }
-	progress={ progressPx }
-	cursorPos={ cursorPosPx }
-	selection={ selectionPx }
-	maxWidth={ maxWidthPx }
-	parts={ partsPx }
-	markers={ markersPx }
-	select={ this.select }
-	move={ this.move }
-	resolution={ resolution } // needed by TimeScale (?)
-	handleMouseEvent={ (eventName, evInfo) => this.handleMouseEvent(eventName, evInfo, resolution) } />);
+        offset={ offsetPx }
+        progress={ progressPx }
+        cursorPos={ cursorPosPx }
+        selection={ selectionPx }
+        maxWidth={ maxWidthPx }
+        parts={ partsPx }
+        markers={ markersPx }
+        resolution={ resolution } // needed by TimeScale (?)
+        handleMouseEvent={ (eventName, evInfo) => this.handleMouseEvent(eventName, evInfo, resolution) } />);
     }
   }
   ;
 
   TimeToPixels.propTypes = {
     resolution: PropTypes.number.isRequired,
-
+    offset: PropTypes.number,
     progress: PropTypes.number,
     cursorPos: PropTypes.number,
     selection: PropTypes.object,
     maxDuration: PropTypes.number.isRequired,
     parts: PropTypes.array,
-
+    markers: PropTypes.array,
     handleMouseEvent: PropTypes.func,
   };
 

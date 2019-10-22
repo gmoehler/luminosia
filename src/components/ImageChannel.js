@@ -317,7 +317,7 @@ class ImageChannel extends Component {
 }
 
 ImageChannel.propTypes = {
-  channelId: PropTypes.number.isRequired,
+  channelId: PropTypes.string.isRequired,
   parts: PropTypes.arrayOf(
     PropTypes.shape({
       partId: PropTypes.string.isRequired,
@@ -338,7 +338,7 @@ ImageChannel.propTypes = {
   theme: PropTypes.object,
   maxWidth: PropTypes.number,
   selected: PropTypes.bool,
-  handleMouseEvent: PropTypes.func,
+  handleMouseEvent: PropTypes.func.isRequired,
   factor: PropTypes.number,
   gain: PropTypes.number,
 };

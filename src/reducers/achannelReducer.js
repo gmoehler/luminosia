@@ -9,6 +9,7 @@ import {
   STOP_A_CHANNEL, SET_A_CHANNEL_ACTIVE, ADD_A_PART,
 } from "../actions/types";
 import { partSchema, } from "./partReducer";
+import { isEntitySelected } from "./entityReducer";
 
 // schemata for normalization
 
@@ -170,6 +171,23 @@ function _getChannel(state, channelId) {
     return null;
   }
   return state.entities.channels.byChannelId[channelId];
+}
+
+// get the subpart of the channel that is needed for the channel display
+export function getChannelData(state, channelId) {
+  // eslint-disable-next-line no-unused-vars
+  const { type, loading, sampleRate, duration, parts, ...remainingObj } = _getChannel(state, channelId);
+  const active = isChannelActive(state, channelId);
+  const selected = isEntitySelected(state, channelId);
+  return { channelId, type, loading, active, sampleRate, duration, parts, selected, };
+}
+
+// get the subpart of the channel that is needed for the channel selector
+export function getChannelSelectorData(state, channelId) {
+  // eslint-disable-next-line no-unused-vars
+  const { type, gain, ...remainingObj } = _getChannel(state, channelId);
+  const active = isChannelActive(state, channelId);
+  return { channelId, type, gain, active };
 }
 
 export const getMaxChannelDuration = state => (getNumChannels(state) === 0 ? 0

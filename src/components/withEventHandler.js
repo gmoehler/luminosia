@@ -16,35 +16,35 @@ export function withEventHandler(WrappedComponent) {
 
     componentDidMount() {
       // add functions that the mouse handler can call
+      const {
+        selectRange, deselectRange, selectInInterval,
+        move, resize, setOrReplaceInsertMarker, insertNewPart,
+        toggleEntitySelection, toggleMultiEntitySelection, toggleInitialEntitySelection,
+        deleteSelectedEntities, setMessage } = this.props;
+
       this.mousehandler = new MouseHandler({
-        selectRange: this.props.selectRange,
-        deselectRange: this.props.deselectRange,
-        selectInInterval: this.props.selectInInterval,
-        move: this.props.move,
-        resize: this.props.resize,
-        setOrReplaceInsertMarker: this.props.setOrReplaceInsertMarker,
-        insertNewPart: this.props.insertNewPart,
-        toggleEntitySelection: this.props.toggleEntitySelection,
-        toggleMultiEntitySelection: this.props.toggleMultiEntitySelection,
-        toggleInitialEntitySelection: this.props.toggleInitialEntitySelection,
-        deleteSelectedEntities: this.props.deleteSelectedEntities,
-        setMessage: this.props.setMessage,
+        selectRange, deselectRange, selectInInterval,
+        move, resize, setOrReplaceInsertMarker, insertNewPart,
+        toggleEntitySelection, toggleMultiEntitySelection, toggleInitialEntitySelection,
+        deleteSelectedEntities, setMessage
       });
     }
 
     render() {
 
+      // remove functions from props
       const {
-        selectRange, deselectRange, move,
-        insertNewPart, toggleEntitySelection,
-        toggleMultiEntitySelection, toggleInitialEntitySelection,
-        deleteSelectedEntities,
+        selectRange, deselectRange, selectInInterval,
+        move, resize, setOrReplaceInsertMarker, insertNewPart,
+        toggleEntitySelection, toggleMultiEntitySelection, toggleInitialEntitySelection,
+        deleteSelectedEntities, setMessage,
         ...passthruProps } = this.props;
 
-      return (<WrappedComponent { ...passthruProps }
-        handleMouseEvent={ (eventName, evInfo) =>
-          this.mousehandler.handleMouseEvent(
-            eventName, evInfo, this.props.resolution) } />);
+      return (
+        <WrappedComponent { ...passthruProps }
+          handleMouseEvent={ (eventName, evInfo) =>
+            this.mousehandler.handleMouseEvent(eventName, evInfo, this.props.resolution) }
+        />);
     }
   }
 
@@ -65,5 +65,4 @@ export function withEventHandler(WrappedComponent) {
   };
 
   return WithEventHandler;
-
 }

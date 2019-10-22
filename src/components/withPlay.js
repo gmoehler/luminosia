@@ -169,7 +169,6 @@ export function withPlay(WrappedComponent) {
       return (
         <WrappedComponent { ...passthruProps }
           progress={ this.state.progress }
-          handleMouseEvent={ this.props.handleMouseEvent }
           factor={ this.props.resolution / this.props.sampleRate }
           peaks={ peaksDataMono }
           bits={ bits }
@@ -192,7 +191,6 @@ export function withPlay(WrappedComponent) {
       type: PropTypes.string,
     }),
     setChannelPlayState: PropTypes.func.isRequired,
-    handleMouseEvent: PropTypes.func.isRequired,
     parts: PropTypes.array,
     maxDuration: PropTypes.number,
   };
