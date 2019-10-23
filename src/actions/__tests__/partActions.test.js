@@ -48,7 +48,7 @@ describe("part actions", () => {
       type: types.DELETE_A_PART,
       payload: {
         partId: part1.partId,
-        channelId: "channel-1",
+        channelId: part1.channelId
       }
     }];
 

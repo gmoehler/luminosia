@@ -25,14 +25,17 @@ describe("channel actions", () => {
 
   it("should add a channel", () => {
     const expectedActions = [{
+      type: types.ADD_A_CHANNEL,
+      payload: {
+		...normalizedImageChannel1,
+		parts: [],
+	  }
+    }, {
       type: types.ADD_A_PART,
       payload: normalizedPart1,
     }, {
       type: types.ADD_A_PART,
       payload: normalizedPart2,
-    }, {
-      type: types.ADD_A_CHANNEL,
-      payload: normalizedImageChannel1,
     }, {
       type: types.SET_A_CHANNEL_ACTIVE,
       payload: imageChannel1.channelId,
@@ -74,7 +77,20 @@ describe("channel actions", () => {
   });
 
   it("should delete a channel", () => {
-    const expectedActions = [{
+    const expectedActions = [
+	  {
+		type: types.DELETE_A_PART,
+        payload: {
+          partId: part1.partId,
+          channelId: imageChannel1.channelId,
+        }
+      }, {
+		type: types.DELETE_A_PART,
+        payload: {
+          partId: part2.partId,
+          channelId: imageChannel1.channelId,
+        }
+      }, {
       type: types.DELETE_A_CHANNEL,
       payload: imageChannel1.channelId
     }];
