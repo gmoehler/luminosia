@@ -3,7 +3,7 @@ import thunk from "redux-thunk";
 
 import * as actions from "../channelActions";
 import * as types from "../types";
-import { audioChannelPayload, imageChannelPayload, initialImageChannelPayload, imageChannelState, normalizedPart } from "../../__fixtures__/channel.fixtures";
+import { imageChannelState, normalizedPart } from "../../__fixtures__/channel.fixtures";
 
 import { initialState as initialViewState } from "../../reducers/viewReducer";
 
@@ -13,92 +13,6 @@ jest.mock("../../utils/fileUtils");
 export const mockStore = configureMockStore([thunk]);
 
 describe("actions", () => {
-  it("should add an audio channel", () => {
-    const expectedAction = {
-      type: types.ADD_CHANNEL,
-      payload: audioChannelPayload
-    };
-    expect(actions.addChannel(audioChannelPayload)).toEqual(expectedAction);
-  });
-
-  it("should add an image channel", () => {
-    const expectedAction = {
-      type: types.ADD_CHANNEL,
-      payload: imageChannelPayload
-    };
-    expect(actions.addChannel(imageChannelPayload)).toEqual(expectedAction);
-  });
-
-  it("should create an initial image channel", () => {
-    const expectedActions = [{
-      type: types.ADD_CHANNEL,
-      payload: initialImageChannelPayload
-    }];
-
-    const store = mockStore({
-      channel: {
-        byChannelId: {},
-        lastChannelId: -1
-      }
-    });
-    store.dispatch(actions.createImageChannel());
-    const acts = store.getActions();
-    expect(acts).toEqual(expectedActions);
-
-  });
-
-
-  it("should clear all channels", () => {
-    const expectedAction = {
-      type: types.CLEAR_CHANNELS
-    };
-    expect(actions.clearChannels()).toEqual(expectedAction);
-  });
-
-  it("should set a channel to active", () => {
-    const expectedAction = {
-      type: types.SET_CHANNEL_ACTIVE,
-      payload: 2
-    };
-    expect(actions.setChannelActive(2)).toEqual(expectedAction);
-  });
-
-  it("should set a channel to inactive", () => {
-    const expectedAction = {
-      type: types.UNSET_CHANNEL_ACTIVE,
-      payload: 2
-    };
-    expect(actions.unsetChannelActive(2)).toEqual(expectedAction);
-  });
-
-  xit("should delete a channel", () => {
-
-    const store = mockStore(imageChannelState);
-
-    const expectedActions = [
-      {
-        "type": "DELETE_MARKER",
-        "payload": {
-          "markerId": "part-1-l",
-        },
-      },
-      {
-        "type": "DELETE_MARKER",
-        "payload": {
-          "markerId": "part-1-r",
-        },
-      },
-      {
-        type: types.DELETE_CHANNEL,
-        payload: 2
-      }
-    ];
-
-    store.dispatch(actions.deleteChannel(2));
-    const acts = store.getActions();
-    expect(acts).toEqual(expectedActions);
-  });
-
 
   it("should upload an audio file and create channel", () => {
 

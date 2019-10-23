@@ -3,8 +3,8 @@ import { connect } from "react-redux";
 
 import ChannelSelectorGroup from "./ChannelSelectorGroup";
 import {
-  updateChannel, setChannelActive, unsetChannelActive,
-  deleteChannel, duplicateChannel
+  updateChannel, setAChannelActive, unsetAChannelActive,
+  deleteAChannel, duplicateChannel
 } from "../actions/channelActions";
 import { uploadImageChannel, downloadImageChannel } from "../actions/generalActions";
 
@@ -31,11 +31,11 @@ const mapStateToProps = (state, props) => {
 
 const mapDispatchToProps = dispatch => ({
   updateChannel: (channelInfo) => dispatch(updateChannel(channelInfo)),
-  setChannelActive: (channelId) => dispatch(setChannelActive(channelId)),
-  unsetChannelActive: (channelId) => dispatch(unsetChannelActive(channelId)),
+  setChannelActive: (channelId) => dispatch(setAChannelActive(channelId)),
+  unsetChannelActive: (channelId) => dispatch(unsetAChannelActive(channelId)),
   uploadImageChannel: (channelId) => dispatch(uploadImageChannel(channelId)),
   downloadImageChannel: (channelId) => dispatch(downloadImageChannel(channelId)),
-  deleteChannel: (channelId) => dispatch(deleteChannel(channelId)),
+  deleteChannel: (channelId) => dispatch(deleteAChannel(channelId)),
   duplicateChannel: (channelId) => dispatch(duplicateChannel(channelId)),
 });
 

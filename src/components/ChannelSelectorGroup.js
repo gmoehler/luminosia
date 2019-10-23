@@ -23,6 +23,7 @@ function ChannelSelectorGroup(props) {
       const channelInfo = {
         ...passthruProps,
         ...props.getChannelSelectorData(channelId),
+        key: channelId,
       };
 
       return (<ChannelSelector { ...channelInfo } />);

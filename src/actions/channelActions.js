@@ -1,6 +1,6 @@
 import { normalize } from "normalizr";
 import {
-  PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, ADD_CHANNEL, CLEAR_CHANNELS, UPLOAD_AUDIO_STARTED, UPLOAD_AUDIO_SUCCESS, UPLOAD_AUDIO_FAILURE, DELETE_CHANNEL, SET_CHANNEL_ACTIVE, UNSET_CHANNEL_ACTIVE, UPDATE_CHANNEL, ADD_A_CHANNEL, DELETE_A_CHANNEL, CLEAR_ALL_CHANNELS, SET_A_CHANNEL_ACTIVE, SET_A_CHANNEL_INACTIVE, PLAY_THE_CHANNELS, STOP_ALL_CHANNELS, STOP_A_CHANNEL,
+  PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, UPLOAD_AUDIO_STARTED, UPLOAD_AUDIO_SUCCESS, UPLOAD_AUDIO_FAILURE, UPDATE_CHANNEL, ADD_A_CHANNEL, DELETE_A_CHANNEL, CLEAR_ALL_CHANNELS, SET_A_CHANNEL_ACTIVE, SET_A_CHANNEL_INACTIVE, PLAY_THE_CHANNELS, STOP_ALL_CHANNELS, STOP_A_CHANNEL,
 } from "./types";
 
 import { getImageDuration } from "../reducers/imageListReducer";
@@ -102,7 +102,7 @@ export const createAnImageChannel = () => {
 
 const _deleteAChannel = (channelId) => ({
   type: DELETE_A_CHANNEL,
-  // no normalization should not be required since we can achieve this with channelId alone
+  // no normalization required since we can achieve this with channelId alone
   payload: channelId,
 });
 
@@ -112,9 +112,35 @@ export const deleteAChannel = (channelId) => {
     // so reducers do not need to check assumptions
 
     if (channelId != null && channelExists(getState(), channelId)) {
+      // first delete parts & markers of channel
+      getChannelPartIds(getState(), channelId)
+        .forEach((partId) => {
+          dispatch(deleteAPart(partId));
+        });
+
+      // then delete channel      
       dispatch(_deleteAChannel(channelId));
     } else {
       console.error("cannot remove non-existing channelId:", channelId);
+    }
+  };
+};
+
+const _updateChannel = (channelInfo) => ({
+  type: UPDATE_CHANNEL,
+  payload: channelInfo
+});
+
+export const updateChannel = (channelInfo) => {
+  return (dispatch, getState) => {
+
+    const { channelId, ...updateInfo } = channelInfo;
+
+    if (channelId != null && channelExists(getState(), channelId)
+      && updateInfo) {
+      return dispatch(_updateChannel(channelInfo));
+    } else {
+      console.error("cannot update channel:", channelInfo);
     }
   };
 };
@@ -163,69 +189,38 @@ export const duplicateImageChannel = (channelId) => {
   };
 };
 
+export const duplicateChannel = (channelId) => {
+  return (dispatch, getState) => {
+    const ch = getDenormalizedChannel(getState(), channelId);
+    dispatch(addAChannel(ch));
+  };
+};
+
+// expected type:
+// partInfo: {imageId, channelId, offset, duration}
+export const insertNewPart = (partInfo) => {
+  return (dispatch, getState) => {
+
+    // remove insertion marker
+    dispatch(deleteAMarker("insert"));
+
+    const duration = getImageDuration(
+      getState(), partInfo.imageId);
+
+    // creates part and adds it to the channel
+    const pId = dispatch(createPart({
+      ...partInfo,
+      duration
+    }));
+
+    // select the new part
+    dispatch(toggleEntitySelection(pId));
+  };
+};
+
 /////////////// legacy function ////////////////
 
-// add channel with channelInfo containing complete channel information
 
-export const addChannel = (channelInfo) => ({
-  type: ADD_CHANNEL,
-  payload: channelInfo
-});
-
-// create an empty image channel
-export const createImageChannel = () => {
-  return (dispatch, getState) => {
-    // we extend the duration to the longest channel
-    const duration = Math.max(10, getMaxChannelDuration(getState()));
-    // add required fields
-    dispatch(addChannel({
-      type: "image",
-      sampleRate: defaultSampleRate,
-      active: true,
-      playState: "stopped",
-      gain: 1.0,
-      duration,
-    }));
-  };
-};
-
-const _deleteChannel = channelInfo => ({
-  type: DELETE_CHANNEL,
-  payload: channelInfo
-});
-
-export const deleteChannel = (channelId) => {
-  return (dispatch, getState) => {
-
-    // first delete parts & markers of channel
-    getChannelPartIds(getState(), channelId)
-      .forEach((partId) => {
-        dispatch(deleteAPart(partId));
-      });
-
-    // then delete channel
-    dispatch(_deleteChannel(channelId));
-  };
-};
-
-export const clearChannels = () => ({
-  type: CLEAR_CHANNELS
-});
-
-export const setChannelActive = (channelInfo) => ({
-  type: SET_CHANNEL_ACTIVE,
-  payload: channelInfo
-});
-
-export const unsetChannelActive = (channelInfo) => ({
-  type: UNSET_CHANNEL_ACTIVE,
-  payload: channelInfo
-});
-
-export const updateChannel = (channelInfo) => ({
-  type: UPDATE_CHANNEL,
-  payload: channelInfo
-});
 
 const uploadAudioStarted = startInfo => ({
   type: UPLOAD_AUDIO_STARTED
@@ -298,7 +293,6 @@ export const uploadAudioFile = (audioFile, audioContext) => {
           parts: [],
         };
         // console.log(channelInfo);
-        dispatch(addChannel(channelInfo));
         dispatch(addAChannel(channelInfo));
         dispatch(uploadAudioSuccess());
         console.log("File read.");
@@ -312,41 +306,12 @@ export const uploadAudioFile = (audioFile, audioContext) => {
   };
 };
 
-export const duplicateChannel = (channelId) => {
-  return (dispatch, getState) => {
-    const ch = getDenormalizedChannel(getState(), channelId);
-    dispatch(addAChannel(ch));
-  };
-};
-
-// expected type:
-// partInfo: {imageId, channelId, offset}
-export const insertNewPart = (partInfo) => {
-  return (dispatch, getState) => {
-
-    // remove insertion marker
-    dispatch(deleteAMarker("insert"));
-
-    const duration = getImageDuration(
-      getState(), partInfo.imageId);
-
-    // creates part and adds it to the channel
-    const pId = dispatch(createPart({
-      ...partInfo,
-      duration
-    }));
-
-    // select the new part
-    dispatch(toggleEntitySelection(pId));
-  };
-};
-
 export const pastePart = () => {
   return (dispatch, getState) => {
     /* getPartsToCopy(getState()).forEach((part) => {
       const originialPart = getPart(getState(), part.channelId, part.partId);
       const selectedImageChannelId = getSelectedImageChannelId(getState());
-
+ 
       const partToPaste = {
         ...originialPart,
         channelId: selectedImageChannelId,
@@ -355,8 +320,6 @@ export const pastePart = () => {
     });*/
   };
 };
-
-
 
 // play related actions
 

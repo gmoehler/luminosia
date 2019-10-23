@@ -2,7 +2,10 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import { stopChannel, uploadAudioFile, playChannelAndImage, setChannelActive, unsetChannelActive, pastePart, createAnImageChannel } from "../actions/channelActions";
+import {
+  stopChannel, uploadAudioFile, playChannelAndImage, setAChannelActive,
+  unsetAChannelActive, pastePart, createAnImageChannel
+} from "../actions/channelActions";
 
 import { downloadConfig, uploadConfigFile, uploadConfig, updateFirmware } from "../actions/generalActions";
 import { setResolution, copyPart } from "../actions/viewActions";
@@ -67,14 +70,13 @@ const mapDispatchToProps = dispatch => ({
   uploadConfigFile: (configFile) => dispatch(uploadConfigFile(configFile, audioContext)),
   uploadAudioFile: (audioFile) => dispatch(uploadAudioFile(audioFile, audioContext)),
   uploadConfigAction: (config) => dispatch(uploadConfig(config, audioContext)),
-  // createImageChannel: () => dispatch(createImageChannel()),
   createImageChannel: () => dispatch(createAnImageChannel()),
   playChannelAndImage: (channelId) => dispatch(playChannelAndImage(channelId)),
   stopChannel: () => dispatch(stopChannel()),
   setResolution: (resolution) => dispatch(setResolution(resolution)),
   deleteSelectedEntities: () => dispatch(deleteSelectedEntities()),
-  setChannelActive: (channelId) => dispatch(setChannelActive(channelId)),
-  unsetChannelActive: (channelId) => dispatch(unsetChannelActive(channelId)),
+  setChannelActive: (channelId) => dispatch(setAChannelActive(channelId)),
+  unsetChannelActive: (channelId) => dispatch(unsetAChannelActive(channelId)),
   copyPart: () => dispatch(copyPart()),
   pastePart: () => dispatch(pastePart()),
   updateFirmware: () => dispatch(updateFirmware()),

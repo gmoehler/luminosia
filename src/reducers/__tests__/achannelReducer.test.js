@@ -42,6 +42,26 @@ describe("part reducer", () => {
     });
   });
 
+  it("should update gain of a channel", () => {
+
+    const reducer0 = reducer(reducer(imageChannelState1, {}), {
+      type: types.UPDATE_CHANNEL,
+      payload: {
+        channelId: "channel-1",
+        gain: 0.5,
+      }
+    });
+
+    expect(reducer0).toEqual({
+      byChannelId: {
+        [imageChannel1.channelId]: { ...imageChannel1, gain: 0.5 }
+      },
+      allChannelIds: [imageChannel1.channelId],
+      activeChannels: [],
+      playingChannels: [],
+    });
+  });
+
   it("should set a channel active", () => {
     const reducer0 = reducer(reducer(imageChannelState1, {}), {
       type: types.SET_A_CHANNEL_ACTIVE,
