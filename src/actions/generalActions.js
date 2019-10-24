@@ -122,9 +122,8 @@ export const drawExportImage = (channelId, idx, applyLog) => (dispatch, getState
     const canvas = document.getElementById("imageExportCanvas");
     const cc = canvas.getContext("2d");
 
-    parts.forEach((partId) => {
+    parts.forEach((part) => {
 
-      const part = getPart(getState(), partId);
       const img = document.getElementById(part.imageId);
       const offsetPx = part.offset ? secondsToSamples(part.offset, sampleRate) : 0;
       const widthPx = part.duration ? secondsToSamples(part.duration, sampleRate) : 0;
