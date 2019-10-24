@@ -11,7 +11,7 @@ import { withEventHandler } from "./withEventHandler";
 import { withPlay } from "./withPlay";
 import { timeToPixels } from "./timeToPixels";
 import { moveSelectedParts, resizeAPart, selectInInterval } from "../actions/partActions";
-import { setChannelPlayState, insertNewPart } from "../actions/channelActions";
+import { stopAChannel, insertNewPart } from "../actions/channelActions";
 import { toggleEntitySelection, toggleMultiEntitySelection, toggleInitialEntitySelection, deleteSelectedEntities } from "../actions/entityActions";
 import { selectRange, deselectRange } from "../actions/viewActions";
 import { setOrReplaceInsertMarker } from "../actions/markerActions";
@@ -64,13 +64,8 @@ class ChannelContainer extends Component {
 
     return (
       type === "audio"
-        ? <ChannelWithPlay { ...this.props }
-          setChannelPlayState={ playState =>
-            this.props.setChannelPlayState(channelId, playState) }
-        />
+        ? <ChannelWithPlay { ...this.props } />
         : <ImageChannelWithPlay { ...this.props }
-          setChannelPlayState={ playState =>
-            this.props.setChannelPlayState(channelId, playState) }
           resize={ (partId, markerId, incr) =>
             this.props.resize(channelId, partId, markerId, incr) }
         />);
@@ -101,7 +96,7 @@ const mapDispatchToProps = dispatch => ({
   deleteSelectedEntities: () => dispatch(deleteSelectedEntities()),
   move: (partId, incr) => dispatch(moveSelectedParts({ partId, incr })),
   resize: (channelId, partId, markerId, incr) => dispatch(resizeAPart({ channelId, partId, markerId, incr })),
-  setChannelPlayState: (channelId, playState) => dispatch(setChannelPlayState({ channelId, playState })),
+  stopChannel: (channelId) => dispatch(stopAChannel(channelId)),
   toggleEntitySelection: (partId) => dispatch(toggleEntitySelection(partId)),
   toggleMultiEntitySelection: (partId) => dispatch(toggleMultiEntitySelection(partId)),
   toggleInitialEntitySelection: (partId) => dispatch(toggleInitialEntitySelection(partId)),
@@ -111,7 +106,7 @@ ChannelContainer.propTypes = {
   channelId: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
   loading: PropTypes.bool,
-  setChannelPlayState: PropTypes.func.isRequired,
+  stopChannel: PropTypes.func.isRequired,
   move: PropTypes.func.isRequired,
   resize: PropTypes.func.isRequired,
 };

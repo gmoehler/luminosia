@@ -154,7 +154,11 @@ export default combineReducers({
 // selectors
 
 export function getAllChannelIds(state) {
-  return state.entities.channels.allChannelIds;
+  return state.entities.channels.allChannelIds
+    .sort((chId1, chId2) => {
+      // return audio channels first
+      return chId1.localeCompare(chId2);
+    });
 }
 
 export function channelExists(state, channelId) {
@@ -215,11 +219,12 @@ export function getChannelParts(state, channelId) {
 
 // get the subpart of the channel that is needed for the channel display
 export function getChannelData(state, channelId) {
-  // eslint-disable-next-line no-unused-vars
-  const { type, loading, sampleRate, duration, parts, ...remainingObj } = _getChannel(state, channelId);
+
+  const { type, loading, sampleRate, duration, parts, buffer,
+    ...remainingObj } = _getChannel(state, channelId); // eslint-disable-line no-unused-vars
   const active = isChannelActive(state, channelId);
   const selected = isEntitySelected(state, channelId);
-  return { channelId, type, loading, active, sampleRate, duration, parts, selected, };
+  return { channelId, type, loading, active, sampleRate, duration, parts, selected, buffer };
 }
 
 // get the subpart of the channel that is needed for the channel selector

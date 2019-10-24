@@ -3,8 +3,8 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
 import {
-  stopChannel, uploadAudioFile, playChannelAndImage, setAChannelActive,
-  unsetAChannelActive, pastePart, createAnImageChannel
+  uploadAudioFile, playChannelAndImage, setAChannelActive,
+  unsetAChannelActive, pastePart, createAnImageChannel, stopAllChannels
 } from "../actions/channelActions";
 
 import { downloadConfig, uploadConfigFile, uploadConfig, updateFirmware } from "../actions/generalActions";
@@ -52,7 +52,9 @@ class HeaderContainer extends Component {
   render() {
 
     return (
-      <Header { ...this.props } zoomIn={ this.zoomIn } zoomOut={ this.zoomOut } />
+      <Header { ...this.props }
+        zoomIn={ this.zoomIn }
+        zoomOut={ this.zoomOut } />
     );
   }
 }
@@ -72,7 +74,7 @@ const mapDispatchToProps = dispatch => ({
   uploadConfigAction: (config) => dispatch(uploadConfig(config, audioContext)),
   createImageChannel: () => dispatch(createAnImageChannel()),
   playChannelAndImage: (channelId) => dispatch(playChannelAndImage(channelId)),
-  stopChannel: () => dispatch(stopChannel()),
+  stopChannel: () => dispatch(stopAllChannels()),
   setResolution: (resolution) => dispatch(setResolution(resolution)),
   deleteSelectedEntities: () => dispatch(deleteSelectedEntities()),
   setChannelActive: (channelId) => dispatch(setAChannelActive(channelId)),
@@ -86,6 +88,5 @@ HeaderContainer.propTypes = {
   setResolution: PropTypes.func.isRequired,
   deleteSelectedEntities: PropTypes.func.isRequired,
 };
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(HeaderContainer);

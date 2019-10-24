@@ -145,7 +145,7 @@ export function withPlay(WrappedComponent) {
     stopPlay = () => {
       this.playout && this.playout.stop();
       this.stopAnimateProgress();
-      this.props.setChannelPlayState("stopped");
+      this.props.stopChannel(this.props.channelId);
     }
 
     // only re-calc when buffer, resolution of bits change
@@ -178,6 +178,7 @@ export function withPlay(WrappedComponent) {
   ;
 
   WithPlay.propTypes = {
+    channelId: PropTypes.string.isRequired,
     type: PropTypes.oneOf(["audio", "image", "animation"]),
     offset: PropTypes.number,
     buffer: PropTypes.object,
@@ -190,12 +191,11 @@ export function withPlay(WrappedComponent) {
       to: PropTypes.number,
       type: PropTypes.string,
     }),
-    setChannelPlayState: PropTypes.func.isRequired,
-    parts: PropTypes.array,
+    stopChannel: PropTypes.func.isRequired,
     maxDuration: PropTypes.number,
   };
 
-  withPlay.displayName = `WithSubscription(${getDisplayName(WrappedComponent)})`;
+  withPlay.displayName = `WithPlay(${getDisplayName(WrappedComponent)})`;
   return WithPlay;
 }
 

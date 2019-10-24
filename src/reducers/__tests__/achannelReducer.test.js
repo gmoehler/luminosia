@@ -34,7 +34,7 @@ describe("part reducer", () => {
 
     const reducer0 = reducer(reducer(imageChannelState1, {}), {
       type: types.DELETE_A_CHANNEL,
-      payload: "channel-1"
+      payload: imageChannel1.channelId
     });
 
     expect(reducer0).toEqual({
@@ -47,7 +47,7 @@ describe("part reducer", () => {
     const reducer0 = reducer(reducer(imageChannelState1, {}), {
       type: types.UPDATE_CHANNEL,
       payload: {
-        channelId: "channel-1",
+        channelId: imageChannel1.channelId,
         gain: 0.5,
       }
     });
@@ -65,7 +65,7 @@ describe("part reducer", () => {
   it("should set a channel active", () => {
     const reducer0 = reducer(reducer(imageChannelState1, {}), {
       type: types.SET_A_CHANNEL_ACTIVE,
-      payload: "channel-1"
+      payload: imageChannel1.channelId
     });
 
     const expectedState = cloneDeep(imageChannelState1);
@@ -82,7 +82,7 @@ describe("part reducer", () => {
 
     const reducer0 = reducer(reducer(stateWithChannel1Active, {}), {
       type: types.SET_A_CHANNEL_INACTIVE,
-      payload: "channel-1"
+      payload: imageChannel1.channelId
     });
 
     expect(reducer0).toEqual(imageChannelState1);
@@ -91,7 +91,7 @@ describe("part reducer", () => {
   it("should play a channel", () => {
     const reducer0 = reducer(reducer(imageChannelState1, {}), {
       type: types.PLAY_THE_CHANNELS,
-      payload: ["channel-1"]
+      payload: [imageChannel1.channelId]
     });
 
     const expectedState = cloneDeep(imageChannelState1);
@@ -108,7 +108,7 @@ describe("part reducer", () => {
 
     const reducer0 = reducer(reducer(stateWithPlayingChannels, {}), {
       type: types.STOP_ALL_CHANNELS,
-      payload: "channel-1"
+      payload: imageChannel1.channelId
     });
 
     expect(reducer0).toEqual(imageChannelState1);

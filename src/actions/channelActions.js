@@ -1,6 +1,9 @@
 import { normalize } from "normalizr";
 import {
-  PLAY_CHANNELS, STOP_CHANNELS, SET_CHANNEL_PLAY_STATE, UPLOAD_AUDIO_STARTED, UPLOAD_AUDIO_SUCCESS, UPLOAD_AUDIO_FAILURE, UPDATE_CHANNEL, ADD_A_CHANNEL, DELETE_A_CHANNEL, CLEAR_ALL_CHANNELS, SET_A_CHANNEL_ACTIVE, SET_A_CHANNEL_INACTIVE, PLAY_THE_CHANNELS, STOP_ALL_CHANNELS, STOP_A_CHANNEL,
+  UPLOAD_AUDIO_STARTED, UPLOAD_AUDIO_SUCCESS,
+  UPLOAD_AUDIO_FAILURE, UPDATE_CHANNEL, ADD_A_CHANNEL, DELETE_A_CHANNEL,
+  CLEAR_ALL_CHANNELS, SET_A_CHANNEL_ACTIVE, SET_A_CHANNEL_INACTIVE,
+  PLAY_THE_CHANNELS, STOP_ALL_CHANNELS, STOP_A_CHANNEL,
 } from "./types";
 
 import { getImageDuration } from "../reducers/imageListReducer";
@@ -20,11 +23,11 @@ import {
 // first id will be 1 to avoid falsy ids
 let lastChannelIdCount = 0;
 
-function generateId() {
+function generateId(channelType) {
   // simple generator :-)
   // other options: cuid or uuid
   lastChannelIdCount++;
-  return "channel-" + lastChannelIdCount.toString();
+  return "channel-" + channelType + "-" + lastChannelIdCount.toString();
 }
 
 // should only be used with care (e.g. in tests)
@@ -58,7 +61,7 @@ export const addAChannel = (channelInfo) => {
 
       // add tags that are not usually externalized
       channelInfo.gain = channelInfo.gain || 1;
-      channelInfo.channelId = generateId();
+      channelInfo.channelId = generateId(channelInfo.type);
 
       // add channel with new channel id, but without parts yet
       const parts = channelInfo.parts;
@@ -173,11 +176,19 @@ export const stopAllChannels = () => ({
   type: STOP_ALL_CHANNELS
 });
 
-
 export const playActiveChannels = () => {
   return (dispatch, getState) => {
     const chs = getActiveChannelIds(getState());
     dispatch(playTheChannels(chs));
+  };
+};
+
+export const playChannelAndImage = () => {
+  return (dispatch, getState) => {
+    const selectedImageChannels = getActiveChannelIds(getState(), "image");
+    dispatch(clearExportImage(selectedImageChannels.length));
+    selectedImageChannels.map((channelId, idx) => dispatch(drawExportImage(channelId, idx)));
+    dispatch(playActiveChannels());
   };
 };
 
@@ -219,8 +230,6 @@ export const insertNewPart = (partInfo) => {
 };
 
 /////////////// legacy function ////////////////
-
-
 
 const uploadAudioStarted = startInfo => ({
   type: UPLOAD_AUDIO_STARTED
@@ -320,27 +329,3 @@ export const pastePart = () => {
     });*/
   };
 };
-
-// play related actions
-
-export const playChannel = () => ({
-  type: PLAY_CHANNELS
-});
-
-export const playChannelAndImage = () => {
-  return (dispatch, getState) => {
-    const selectedImageChannels = getActiveChannelIds(getState(), "image");
-    dispatch(clearExportImage(selectedImageChannels.length));
-    selectedImageChannels.map((channelId, idx) => dispatch(drawExportImage(channelId, idx)));
-    dispatch(playChannel());
-  };
-};
-
-export const stopChannel = () => ({
-  type: STOP_CHANNELS
-});
-
-export const setChannelPlayState = (stateInfo) => ({
-  type: SET_CHANNEL_PLAY_STATE,
-  payload: stateInfo
-});

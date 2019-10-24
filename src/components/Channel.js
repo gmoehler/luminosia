@@ -226,7 +226,7 @@ class Channel extends Component {
 }
 
 Channel.propTypes = {
-  channelId: PropTypes.number.isRequired,
+  channelId: PropTypes.string.isRequired,
   scale: PropTypes.number,
   progress: PropTypes.number,
   cursorPos: PropTypes.number,

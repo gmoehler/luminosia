@@ -7,7 +7,7 @@ import { initialState as initialEntityState } from "../reducers/entityReducer";
 // parts
 export const part1WithoutId = {
   imageId: "image1.png",
-  channelId: "channel-1",
+  channelId: "channel-image-1",
   offset: 1,
   duration: 1,
 };
@@ -28,18 +28,18 @@ export const part2 = {
 export const part3 = {
   ...part1,
   partId: "part-3",
-  channelId: "channel-2",
+  channelId: "channel-image-2",
 };
 // a copy of part2, but in channel2
 export const part4 = {
   ...part2,
   partId: "part-4",
-  channelId: "channel-2",
+  channelId: "channel-image-2",
 };
 
 // image channel without parts
 export const imageChannel0 = {
-  channelId: "channel-1",
+  channelId: "channel-image-1",
   type: "image",
   sampleRate: 100,
   duration: 10,
@@ -68,13 +68,13 @@ export const imageChannel2Import = {
 // image channel with props added by action
 export const imageChannel1 = {
   ...imageChannel1Import,
-  channelId: "channel-1",
+  channelId: "channel-image-1",
   gain: 1,
 };
 // duplicate of imageChannel1 (different part names)
 export const imageChannel2 = {
   ...imageChannel2Import,
-  channelId: "channel-2",
+  channelId: "channel-image-2",
   gain: 1,
 };
 

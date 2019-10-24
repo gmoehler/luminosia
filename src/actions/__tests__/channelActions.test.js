@@ -36,8 +36,8 @@ describe("actions", () => {
         payload: {
           entities: {
             byChannelId: {
-              "channel-1": {
-                channelId: "channel-1",
+              "channel-audio-1": {
+                channelId: "channel-audio-1",
                 type: "audio",
                 playState: "stopped",
                 src: audioFile.name,
@@ -54,12 +54,12 @@ describe("actions", () => {
               }
             }
           },
-          result: "channel-1",
+          result: "channel-audio-1",
         }
       },
       {
         type: types.SET_A_CHANNEL_ACTIVE,
-        payload: "channel-1",
+        payload: "channel-audio-1",
       },
       {
         type: types.UPLOAD_AUDIO_SUCCESS

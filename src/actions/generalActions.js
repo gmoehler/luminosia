@@ -14,7 +14,6 @@ import { getMaxChannelDuration, getChannelGain, getChannelSampleRate, getChannel
 import { imageExists } from "../reducers/imageListReducer";
 import { secondsToSamples } from "../utils/conversions";
 import { encodeImage } from "../utils/imageUtils";
-import { getPart } from "../reducers/partReducer";
 
 const logScale = new LogScale(0, 100);
 
@@ -35,25 +34,26 @@ const uploadConfigFailure = errorInfo => ({
   payload: errorInfo,
 });
 
-export const uploadConfigFile = (configFile, audioContext) => (dispatch, getState) => {
-  dispatch(uploadConfigStarted());
-  console.log(`Reading ${configFile.name}...`);
+export const uploadConfigFile = (configFile, audioContext) =>
+  (dispatch, getState) => {
+    dispatch(uploadConfigStarted());
+    console.log(`Reading ${configFile.name}...`);
 
-  return readTextFile(configFile)
-    .then((data) => {
-      const dataObj = JSON.parse(data);
-      return dispatch(uploadConfig(dataObj, audioContext));
-    })
-    .then(() => {
-      return dispatch(uploadConfigSuccess());
-    })
-    .catch((err) => {
-      console.error(err);
-      return dispatch(uploadConfigFailure({
-        err,
-      }));
-    });
-};
+    return readTextFile(configFile)
+      .then((data) => {
+        const dataObj = JSON.parse(data);
+        return dispatch(uploadConfig(dataObj, audioContext));
+      })
+      .then(() => {
+        return dispatch(uploadConfigSuccess());
+      })
+      .catch((err) => {
+        console.error(err);
+        return dispatch(uploadConfigFailure({
+          err,
+        }));
+      });
+  };
 
 export const uploadConfig =
   (configData, audioContext) => (dispatch, getState) => {

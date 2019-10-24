@@ -14,8 +14,8 @@ class AnimationPaneContainer extends Component {
     this.playState = "stopped";
   }
 
-  setChannelPlayState() {
-    // empty for now
+  stopChannel(channelId) {
+    // empty for now, but required for WithPlay
   }
 
   render() {
@@ -25,7 +25,8 @@ class AnimationPaneContainer extends Component {
         sampleRate={ 100 }
         resolution={ 2 }
         type="animation"
-        setChannelPlayState={ this.setChannelPlayState }
+        stopChannel={ this.stopChannel }
+        channelId="none"
         { ...this.props }
       />
     );

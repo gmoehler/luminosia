@@ -2,7 +2,7 @@
 export const partPayload0 = {
   partId: "part-1",
   imageId: "image1.png",
-  channelId: "channel-1",
+  channelId: "channel-image-1",
   offset: 0,
   duration: 1,
 };
@@ -13,7 +13,7 @@ export const normalizedPartPayload0 = {
       "part-1": {
         partId: "part-1",
         imageId: "image1.png",
-        channelId: "channel-1",
+        channelId: "channel-image-1",
         offset: 0,
         duration: 1,
       }
@@ -26,7 +26,7 @@ export const normalizedPartPayload0 = {
 export const partPayload2 = {
   partId: "part-2",
   imageId: "image2.png",
-  channelId: "channel-1",
+  channelId: "channel-image-1",
   offset: 2,
   duration: 2,
 };
@@ -37,7 +37,7 @@ export const normalizedPartPayload2 = {
       "part-2": {
         partId: "part-2",
         imageId: "image2.png",
-        channelId: "channel-1",
+        channelId: "channel-image-1",
         offset: 2,
         duration: 2,
       }
@@ -60,7 +60,7 @@ delete partPayload0WithoutChannelId.channelId;
 export const partPayload1 = {
   partId: "part-1",
   imageId: "image2.png",
-  channelId: "channel-1",
+  channelId: "channel-image-1",
   offset: 1,
   duration: 2,
 };

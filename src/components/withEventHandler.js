@@ -64,5 +64,10 @@ export function withEventHandler(WrappedComponent) {
     setMessage: PropTypes.func.isRequired,
   };
 
+  WithEventHandler.displayName = `WithEventHandler(${getDisplayName(WrappedComponent)})`;
   return WithEventHandler;
+}
+
+function getDisplayName(WrappedComponent) {
+  return WrappedComponent.displayName || WrappedComponent.name || "Component";
 }
