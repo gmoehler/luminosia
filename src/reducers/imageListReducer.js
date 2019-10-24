@@ -81,7 +81,7 @@ export const getImageDuration = (state, imageId) => {
 };
 
 // array of all images with relevant fields only
-export const getImageListConfig = (state) => {
+export const getImageListForShow = (state) => {
   const allowedProps = ["imageId",
     "filename", "src",
     "width", "height",

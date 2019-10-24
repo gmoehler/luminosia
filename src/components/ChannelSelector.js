@@ -8,12 +8,15 @@ import { withStyles } from "@material-ui/core/styles";
 import { Tooltip, IconButton } from "@material-ui/core";
 import { Slider } from "@material-ui/lab";
 import { indigo } from "@material-ui/core/colors/indigo";
+
 import {
-  Publish as UploadChannelIcon,
   SaveAlt as DownloadChannelIcon,
   DeleteForever as DeleteChannelIcon,
-  FileCopy as ChannelDupIcon,
 } from "@material-ui/icons";
+import {
+  LighthouseOn as UploadImageChannelToPoiIcon,
+  ContentDuplicate as ChannelDupIcon
+} from "mdi-material-ui";
 
 const WhiteSlider = styled(Slider)`
   .MuiSlider-track {
@@ -58,6 +61,9 @@ const styles = () => ({
     padding: 0,
     margin: 0,
   },
+  button1: {
+    paddingRight: "8px",
+  },
   actionsWrapper: {
     width: "100%",
     paddingRight: "18px",
@@ -68,7 +74,7 @@ const styles = () => ({
   actionsRow: {
     display: "flex",
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "flex-end",
   },
   actionsRow2: {
     padding: "8px 0 2px 0",
@@ -89,8 +95,9 @@ function ChannelSelector(props) {
     }
   };
 
-  const { classes, channelId, selected, active, gain } = props;
+  const { classes, channelId, selected, active, gain, type } = props;
   const electronVersion = isElectron();
+  const isImageChannel = type === "image";
 
   return (
     <div key={ channelId }
@@ -103,32 +110,31 @@ function ChannelSelector(props) {
 
       <div className={ classes.actionsWrapper }>
         <div className={ classes.actionsRow }>
-          <Tooltip title="Upload channel to poi">
+          {isImageChannel && <Tooltip title="Upload channel to poi">
             <IconButton
-              className={ classes.button }
+              className={ classNames(classes.button, classes.button1) }
               disabled={ !electronVersion }
-              onClick={ () => props.uploadImageChannel(channelId) }>
-              <UploadChannelIcon className={ classes.icon } />
+              onClick={ () => props.uploadImageChannelToPoi(channelId) }>
+              <UploadImageChannelToPoiIcon className={ classes.icon } />
             </IconButton>
-          </Tooltip>
-          <Tooltip title={ "Download channel" }>
+          </Tooltip>}
+          {isImageChannel && <Tooltip title={ "Save channel as binary" }>
             <IconButton
               className={ classes.button }
-              onClick={ () => props.downloadImageChannel(channelId) }>
+              onClick={ () => props.saveImageChannelAsBinary(channelId) }>
               <DownloadChannelIcon className={ classes.icon } />
             </IconButton>
-          </Tooltip>
+          </Tooltip>}
         </div>
 
-        <div className={ classNames(
-          classes.actionsRow, classes.actionsRow2) }>
-          <Tooltip title="Duplicate channel">
+        <div className={ classNames(classes.actionsRow, classes.actionsRow2) }>
+          {isImageChannel && <Tooltip title="Duplicate channel">
             <IconButton
-              className={ classes.button }
+              className={ classNames(classes.button, classes.button1) }
               onClick={ () => props.duplicateChannel(channelId) }>
               <ChannelDupIcon className={ classes.icon } />
             </IconButton>
-          </Tooltip>
+          </Tooltip>}
 
           <Tooltip title="Delete channel">
             <IconButton
@@ -158,6 +164,7 @@ function ChannelSelector(props) {
 ChannelSelector.propTypes = {
   classes: PropTypes.object.isRequired,
   channelId: PropTypes.string.isRequired,
+  type: PropTypes.oneOf(["image", "audio"]).isRequired,
   selected: PropTypes.bool,
   active: PropTypes.bool,
   gain: PropTypes.number,
@@ -166,8 +173,8 @@ ChannelSelector.propTypes = {
   updateChannel: PropTypes.func.isRequired,
   duplicateChannel: PropTypes.func.isRequired,
   deleteChannel: PropTypes.func.isRequired,
-  uploadImageChannel: PropTypes.func.isRequired,
-  downloadImageChannel: PropTypes.func.isRequired,
+  uploadImageChannelToPoi: PropTypes.func.isRequired,
+  saveImageChannelAsBinary: PropTypes.func.isRequired,
   selectedImageChannelId: PropTypes.number,
 };
 

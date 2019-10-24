@@ -1,22 +1,19 @@
 import { normalize } from "normalizr";
 import {
-  UPLOAD_AUDIO_STARTED, UPLOAD_AUDIO_SUCCESS,
-  UPLOAD_AUDIO_FAILURE, UPDATE_CHANNEL, ADD_A_CHANNEL, DELETE_A_CHANNEL,
-  CLEAR_ALL_CHANNELS, SET_A_CHANNEL_ACTIVE, SET_A_CHANNEL_INACTIVE,
-  PLAY_THE_CHANNELS, STOP_ALL_CHANNELS, STOP_A_CHANNEL,
+  UPDATE_CHANNEL, ADD_A_CHANNEL, DELETE_A_CHANNEL, CLEAR_ALL_CHANNELS,
+  SET_A_CHANNEL_ACTIVE, SET_A_CHANNEL_INACTIVE, PLAY_THE_CHANNELS,
+  STOP_ALL_CHANNELS, STOP_A_CHANNEL,
 } from "./types";
 
 import { getImageDuration } from "../reducers/imageListReducer";
 import { defaultSampleRate } from "../components/ImageListContainer";
-import { readAudioFile } from "../utils/fileUtils";
-import { drawExportImage, clearExportImage } from "./generalActions";
+import { drawExportImage, clearExportImage } from "./ioActions";
 import { createPart, deleteAPart } from "./partActions";
 import { deleteAMarker } from "./markerActions";
 import { toggleEntitySelection } from "./entityActions";
 import {
-  getMaxChannelDuration, channelExists,
-  getDenormalizedChannel, achannelSchema,
-  getActiveChannelIds, getChannelPartIds,
+  getMaxChannelDuration, channelExists, getDenormalizedChannel,
+  achannelSchema, getActiveChannelIds, getChannelPartIds,
 } from "../reducers/achannelReducer";
 
 
@@ -230,90 +227,6 @@ export const insertNewPart = (partInfo) => {
 };
 
 /////////////// legacy function ////////////////
-
-const uploadAudioStarted = startInfo => ({
-  type: UPLOAD_AUDIO_STARTED
-});
-
-const uploadAudioSuccess = channelInfo => ({
-  type: UPLOAD_AUDIO_SUCCESS
-});
-
-const uploadAudioFailure = errorInfo => ({
-  type: UPLOAD_AUDIO_FAILURE,
-  payload: errorInfo
-});
-
-// helper function (no action): load a channel based on a channel config
-export function loadAChannel(channelConfig, audioContext, state) {
-  if (channelConfig.type === "audio") {
-    return Promise.resolve(); // audio channels are curr. not loaded from config
-  }
-  return loadImageChannel(channelConfig, state);
-}
-
-function loadImageChannel(channelConfig, state) {
-
-  // first normalize the parts
-  // an incremented 'curid' is the part id used as key
-  const normalizedParts = channelConfig.parts ?
-    channelConfig.parts.reduce((res, part) => {
-      part.partId = res.curid;
-      part.duration = part.duration ?
-        part.duration : getImageDuration(state, part.src);
-      res[res.curid] = part;
-      res.curid++;
-      return res;
-    }, {
-      curid: 0
-    }) : {};
-
-  // incremented id no longer required
-  normalizedParts &&
-    delete normalizedParts.curid;
-  delete channelConfig.parts;
-  channelConfig.playState = "stopped";
-  channelConfig.gain = channelConfig.gain || 1.0;
-
-  return Promise.resolve({
-    ...channelConfig,
-    byPartId: normalizedParts
-  });
-}
-
-// load audio file to studio
-export const uploadAudioFile = (audioFile, audioContext) => {
-  return (dispatch, getState) => {
-    dispatch(uploadAudioStarted());
-    console.log("Reading " + audioFile.name + "...");
-
-    return readAudioFile(audioFile, audioContext)
-      .then((audioBuffer) => {
-        const channelInfo = {
-          type: "audio",
-          playState: "stopped", // TODO: remove
-          src: audioFile.name,
-          offset: 0,
-          sampleRate: audioBuffer.sampleRate,
-          gain: 1.0,
-          buffer: audioBuffer,
-          duration: audioBuffer.duration,
-          active: true, // TODO: remove
-          parts: [],
-        };
-        // console.log(channelInfo);
-        dispatch(addAChannel(channelInfo));
-        dispatch(uploadAudioSuccess());
-        console.log("File read.");
-      })
-      .catch(err => {
-        console.error(err);
-        return dispatch(uploadAudioFailure({
-          err
-        }));
-      });
-  };
-};
 
 export const pastePart = () => {
   return (dispatch, getState) => {

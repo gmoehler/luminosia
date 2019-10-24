@@ -1,18 +1,20 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+
 import { withStyles } from "@material-ui/core/styles";
 import { Tooltip, IconButton } from "@material-ui/core";
+import { ContentCopy, ContentPaste } from "mdi-material-ui";
+
 import PlaylistAddIcon from "@material-ui/icons/PlaylistAdd";
 import DeleteIcon from "@material-ui/icons/Delete";
-import DownloadConfigIcon from "@material-ui/icons/GetApp";
-import UploadConfigIcon from "@material-ui/icons/Publish";
+import SaveShowIcon from "@material-ui/icons/SaveAlt";
+import LoadShowIcon from "@material-ui/icons/OpenInBrowser";
 import UploadAudioChannelIcon from "@material-ui/icons/QueueMusic";
 import ZoomInIcon from "@material-ui/icons/ZoomIn";
 import ZoomOutIcon from "@material-ui/icons/ZoomOut";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import StopIcon from "@material-ui/icons/Stop";
 import Autorenew from "@material-ui/icons/Autorenew";
-import { ContentCopy, ContentPaste } from "mdi-material-ui";
 
 const styles = theme => ({
   root: {
@@ -51,14 +53,14 @@ export class Header extends Component {
     }
   }
 
-  uploadConfigFile = (evt) => {
+  loadShowFromFile = (evt) => {
     evt.preventDefault();
-    this.props.uploadConfigFile(evt.target.files[0]);
+    this.props.loadShowFromFile(evt.target.files[0]);
   };
 
-  uploadAudioFile = (evt) => {
+  loadAudioFromFile = (evt) => {
     evt.preventDefault();
-    this.props.uploadAudioFile(evt.target.files[0]);
+    this.props.loadAudioFromFile(evt.target.files[0]);
   };
 
   handleChannelSelectionChange = event => {
@@ -76,47 +78,51 @@ export class Header extends Component {
   render() {
 
     const { classes,
-      createImageChannel, downloadConfig, enablePlay, playChannelAndImage, enableStop,
+      createImageChannel, saveShow, enablePlay, playChannelAndImage, enableStop,
       stopChannel, zoomIn, zoomOut, entitySelected, deleteSelectedEntities,
       copyPart, pastePart, updateFirmware, hasPartToCopy } = this.props;
 
     return (
       <div className={ classes.wrapper }>
         <div className={ classes.headergroup }>
-          <input type="file"
-            accept="audio/*"
-            hidden
-            ref={ (fileUpload) => this.fileUpload = fileUpload }
-            onChange={ this.uploadAudioFile }
-            width={ 0 } />
+
           <Tooltip title="Load audio">
             <IconButton color="inherit"
               onClick={ () => this.fileUpload.click() }>
               <UploadAudioChannelIcon />
             </IconButton>
           </Tooltip>
+          <input type="file"
+            accept="audio/*"
+            hidden
+            ref={ (fileUpload) => this.fileUpload = fileUpload }
+            onChange={ this.loadAudioFromFile }
+            width={ 0 } />
+
           <Tooltip title="Add image channel">
             <IconButton color="inherit"
               onClick={ createImageChannel }>
               <PlaylistAddIcon />
             </IconButton>
           </Tooltip>
+
           <Tooltip title="Load show">
             <IconButton color="inherit"
-              onClick={ () => this.showUpload.click() }>
-              <UploadConfigIcon />
+              onClick={ () => this.loadShow.click() }>
+              <LoadShowIcon />
             </IconButton>
           </Tooltip>
           <input type="file"
             hidden
             value=""
-            ref={ (showUpload) => this.showUpload = showUpload }
-            onChange={ this.uploadConfigFile }
+            ref={ (loadShow) => this.loadShow = loadShow }
+            onChange={ this.loadShowFromFile }
             width={ 0 } />
-          <Tooltip title="Download show">
+
+          <Tooltip title="Save show">
             <IconButton color="inherit"
-              onClick={ downloadConfig }>
-              <DownloadConfigIcon />
+              onClick={ saveShow }>
+              <SaveShowIcon />
             </IconButton>
           </Tooltip>
         </div>
@@ -200,7 +206,7 @@ Header.propTypes = {
   classes: PropTypes.object.isRequired,
   channelIds: PropTypes.array,
   createImageChannel: PropTypes.func.isRequired,
-  downloadConfig: PropTypes.func.isRequired,
+  saveShow: PropTypes.func.isRequired,
   enablePlay: PropTypes.bool.isRequired,
   playChannelAndImage: PropTypes.func.isRequired,
   enableStop: PropTypes.bool.isRequired,
@@ -211,10 +217,10 @@ Header.propTypes = {
   zoomOut: PropTypes.func.isRequired,
   entitySelected: PropTypes.bool,
   deleteSelectedEntities: PropTypes.func.isRequired,
-  uploadConfigFile: PropTypes.func.isRequired,
+  loadShowFromFile: PropTypes.func.isRequired,
   unsetChannelActive: PropTypes.func.isRequired,
   setChannelActive: PropTypes.func.isRequired,
-  uploadAudioFile: PropTypes.func.isRequired,
+  loadAudioFromFile: PropTypes.func.isRequired,
   copyPart: PropTypes.func.isRequired,
   pastePart: PropTypes.func.isRequired,
   updateFirmware: PropTypes.func.isRequired,

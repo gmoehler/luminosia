@@ -1,5 +1,5 @@
 
-import { CLEAR_VIEW, UPLOAD_CONFIG_STARTED, UPLOAD_CONFIG_SUCCESS, UPLOAD_CONFIG_FAILURE, SELECT_RANGE, DESELECT_RANGE, SET_RESOLUTION, SELECT_IMAGE_CHANNEL, COPY_PART, ADD_TO_UPLOAD_LOG, CLEAR_UPLOAD_LOG, SET_MESSAGE, CLEAR_MESSAGE } from "../actions/types";
+import { CLEAR_VIEW, LOAD_SHOW_STARTED, LOAD_SHOW_SUCCESS, LOAD_SHOW_FAILURE, SELECT_RANGE, DESELECT_RANGE, SET_RESOLUTION, SELECT_IMAGE_CHANNEL, COPY_PART, ADD_TO_UPLOAD_LOG, CLEAR_UPLOAD_LOG, SET_MESSAGE, CLEAR_MESSAGE } from "../actions/types";
 
 // export for tests
 export const initialState = {
@@ -12,7 +12,7 @@ export const initialState = {
   selectedImageChannelId: null,
   partsToCopy: null,
   uploadLog: null,
-  uploadConfigStatus: null,
+  loadShowStatus: null,
   message: null,
 };
 
@@ -22,22 +22,22 @@ export default (state = initialState, action) => {
     case CLEAR_VIEW:
       return initialState;
 
-    case UPLOAD_CONFIG_STARTED:
+    case LOAD_SHOW_STARTED:
       return {
         ...state,
-        uploadConfigStatus: "started"
+        loadShowStatus: "started"
       };
 
-    case UPLOAD_CONFIG_SUCCESS:
+    case LOAD_SHOW_SUCCESS:
       return {
         ...state,
-        uploadConfigStatus: "success"
+        loadShowStatus: "success"
       };
 
-    case UPLOAD_CONFIG_FAILURE:
+    case LOAD_SHOW_FAILURE:
       return {
         ...state,
-        uploadConfigStatus: "failure"
+        loadShowStatus: "failure"
       };
 
     case SELECT_RANGE:
@@ -135,6 +135,6 @@ export const getUploadLog = (state) => state.view.uploadLog;
 
 export const getMessage = (state) => state.view.message;
 
-export const isUploadingConfig = (state) => {
-  return state.view.uploadConfigStatus === "started";
+export const isUploadingShow = (state) => {
+  return state.view.uploadShowStatus === "started";
 };

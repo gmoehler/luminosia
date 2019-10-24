@@ -1,7 +1,7 @@
 import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-import { getChannelExportData } from "../actions/generalActions";
+import { getChannelExportData } from "../actions/ioActions";
 import { samplesToRad } from "../utils/conversions";
 import { Typography } from "@material-ui/core";
 import Slider from "@material-ui/lab/Slider";

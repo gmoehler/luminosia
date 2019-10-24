@@ -7,11 +7,9 @@ import {
 } from "../actions/types";
 
 import imageListReducer, { imageExists, initialState as initialImageListState } from "./imageListReducer";
-import { initialState as initialChannelState } from "./achannelReducer";
+import channelReducer, { channelExists, initialState as initialChannelState } from "./achannelReducer";
 import partReducer, { partExists, initialState as initialPartState } from "./partReducer";
 import markerReducer, { aMarkerExists, initialState as initialMarkerState } from "./markerReducer";
-
-import channelReducer, { channelExists } from "./achannelReducer";
 
 export const initialState = {
   images: initialImageListState,
@@ -105,3 +103,4 @@ export function getSelectedEntityIdsOfType(state, type) {
 export function anyEntitySelected(state) {
   return getSelectedEntityIds(state).length > 0;
 }
+

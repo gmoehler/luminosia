@@ -2,15 +2,16 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
+import Header from "./Header";
+
 import {
-  uploadAudioFile, playChannelAndImage, setAChannelActive,
+  playChannelAndImage, setAChannelActive,
   unsetAChannelActive, pastePart, createAnImageChannel, stopAllChannels
 } from "../actions/channelActions";
-
-import { downloadConfig, uploadConfigFile, uploadConfig, updateFirmware } from "../actions/generalActions";
+import { saveShow, loadShowFromFile, updateFirmware, loadAudioFromFile } from "../actions/ioActions";
 import { setResolution, copyPart } from "../actions/viewActions";
 import { deleteSelectedEntities, } from "../actions/entityActions";
-import Header from "./Header";
+
 import { getAllChannelIds, allChannelsStopped } from "../reducers/achannelReducer";
 import { getPartsToCopy, } from "../reducers/viewReducer";
 import { anyEntitySelected } from "../reducers/entityReducer";
@@ -68,10 +69,9 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  downloadConfig: () => dispatch(downloadConfig()),
-  uploadConfigFile: (configFile) => dispatch(uploadConfigFile(configFile, audioContext)),
-  uploadAudioFile: (audioFile) => dispatch(uploadAudioFile(audioFile, audioContext)),
-  uploadConfigAction: (config) => dispatch(uploadConfig(config, audioContext)),
+  saveShow: () => dispatch(saveShow()),
+  loadShowFromFile: (showFile) => dispatch(loadShowFromFile(showFile)),
+  loadAudioFromFile: (audioFile) => dispatch(loadAudioFromFile(audioFile, audioContext)),
   createImageChannel: () => dispatch(createAnImageChannel()),
   playChannelAndImage: (channelId) => dispatch(playChannelAndImage(channelId)),
   stopChannel: () => dispatch(stopAllChannels()),
