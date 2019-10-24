@@ -7,9 +7,9 @@ import * as types from "../types";
 
 import {
   imageChannel1, normalizedPart1, normalizedPart2,
-  normalizedImageChannel0, normalizedImageChannel1, entityState0,
-  entityState1, denormImageChannel1Import, normalizedImageChannel2,
-  imageChannel2, normalizedPart4, normalizedPart3,
+  normalizedImageChannel0, entityState0,
+  entityState1, denormImageChannel1Import,
+  imageChannel2, normalizedPart4, normalizedPart3, part1, part2,
 } from "../../__fixtures__/entity.fixtures";
 
 export const mockStore = configureMockStore([thunk]);
@@ -24,12 +24,23 @@ describe("channel actions", () => {
   });
 
   it("should add a channel", () => {
+
+    // normalizedImageChannel1 without parts
+    const addChannelPayload = {
+      entities: {
+        byChannelId: {
+          [imageChannel1.channelId]: {
+            ...imageChannel1,
+            parts: [],
+          }
+        }
+      },
+      result: imageChannel1.channelId
+    };
+
     const expectedActions = [{
       type: types.ADD_A_CHANNEL,
-      payload: {
-		...normalizedImageChannel1,
-		parts: [],
-	  }
+      payload: addChannelPayload
     }, {
       type: types.ADD_A_PART,
       payload: normalizedPart1,
@@ -78,22 +89,22 @@ describe("channel actions", () => {
 
   it("should delete a channel", () => {
     const expectedActions = [
-	  {
-		type: types.DELETE_A_PART,
+      {
+        type: types.DELETE_A_PART,
         payload: {
           partId: part1.partId,
           channelId: imageChannel1.channelId,
         }
       }, {
-		type: types.DELETE_A_PART,
+        type: types.DELETE_A_PART,
         payload: {
           partId: part2.partId,
           channelId: imageChannel1.channelId,
         }
       }, {
-      type: types.DELETE_A_CHANNEL,
-      payload: imageChannel1.channelId
-    }];
+        type: types.DELETE_A_CHANNEL,
+        payload: imageChannel1.channelId
+      }];
 
     const store = mockStore(entityState1);
 
@@ -112,15 +123,28 @@ describe("channel actions", () => {
 
   it("should duplicate a channel", () => {
 
+    // normalizedImageChannel2 without parts
+    const addChannelPayload = {
+      entities: {
+        byChannelId: {
+          [imageChannel2.channelId]: {
+            ...imageChannel2,
+            parts: [],
+          }
+        }
+      },
+      result: imageChannel2.channelId
+    };
+
     const expectedActions = [{
+      type: types.ADD_A_CHANNEL,
+      payload: addChannelPayload,
+    }, {
       type: types.ADD_A_PART,
       payload: normalizedPart3,
     }, {
       type: types.ADD_A_PART,
       payload: normalizedPart4,
-    }, {
-      type: types.ADD_A_CHANNEL,
-      payload: normalizedImageChannel2,
     }, {
       type: types.SET_A_CHANNEL_ACTIVE,
       payload: imageChannel2.channelId,

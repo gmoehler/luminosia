@@ -31,27 +31,7 @@ describe("actions", () => {
     const expectedActions = [
       {
         type: types.UPLOAD_AUDIO_STARTED
-      },
-      {
-        type: types.ADD_CHANNEL,
-        payload: {
-          channelId: "channel-1",
-          type: "audio",
-          playState: "stopped",
-          src: audioFile.name,
-          offset: 0,
-          gain: 1,
-          sampleRate: 44100,
-          buffer: {
-            duration: 21.21,
-            sampleRate: 44100,
-          },
-          duration: 21.21,
-          active: true,
-          parts: [],
-        }
-      },
-      {
+      }, {
         type: types.ADD_A_CHANNEL,
         payload: {
           entities: {
