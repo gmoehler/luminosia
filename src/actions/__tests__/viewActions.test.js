@@ -26,6 +26,30 @@ describe("view actions", () => {
     expect(actions.copyPart(partWithChannelId)).toEqual(expectedAction);
   });
 
+  it("should set the load progress", () => {
+
+    const store = mockStore({
+      view: initialViewState
+    });
+
+    const expectedActions = [{
+      type: types.INIT_LOAD_PROGRESS,
+      payload: 50
+    }, {
+      type: types.SET_LOAD_PROGRESS,
+      payload: 20
+    }, {
+      type: types.INCR_LOAD_PROGRESS,
+      payload: 10
+    }];
+
+    store.dispatch(actions.initLoadProgress(50));
+    store.dispatch(actions.setLoadProgress(20));
+    store.dispatch(actions.incrLoadProgress(10));
+    const acts = store.getActions();
+    expect(acts).toEqual(expectedActions);
+  });
+
   xit("should paste a part from channel 2 to channel 1", () => {
 
     const state = {

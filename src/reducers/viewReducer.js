@@ -1,5 +1,5 @@
 
-import { CLEAR_VIEW, LOAD_SHOW_STARTED, LOAD_SHOW_SUCCESS, LOAD_SHOW_FAILURE, SELECT_RANGE, DESELECT_RANGE, SET_RESOLUTION, SELECT_IMAGE_CHANNEL, COPY_PART, ADD_TO_UPLOAD_LOG, CLEAR_UPLOAD_LOG, SET_MESSAGE, CLEAR_MESSAGE } from "../actions/types";
+import { CLEAR_VIEW, LOAD_SHOW_STARTED, LOAD_SHOW_SUCCESS, LOAD_SHOW_FAILURE, SELECT_RANGE, DESELECT_RANGE, SET_RESOLUTION, SELECT_IMAGE_CHANNEL, COPY_PART, ADD_TO_UPLOAD_LOG, CLEAR_UPLOAD_LOG, SET_MESSAGE, CLEAR_MESSAGE, SET_LOAD_PROGRESS, INCR_LOAD_PROGRESS, INIT_LOAD_PROGRESS } from "../actions/types";
 
 // export for tests
 export const initialState = {
@@ -14,6 +14,10 @@ export const initialState = {
   uploadLog: null,
   loadShowStatus: null,
   message: null,
+  loadProgress: {
+    base: 100,
+    progress: 0
+  }
 };
 
 export default (state = initialState, action) => {
@@ -38,6 +42,34 @@ export default (state = initialState, action) => {
       return {
         ...state,
         loadShowStatus: "failure"
+      };
+
+    case INIT_LOAD_PROGRESS:
+      return {
+        ...state,
+        loadProgress: {
+          base: action.payload || 100,
+          progress: 0,
+        }
+      };
+
+    case SET_LOAD_PROGRESS:
+      return {
+        ...state,
+        loadProgress: {
+          ...state.loadProgress,
+          progress: action.payload,
+        }
+      };
+
+    case INCR_LOAD_PROGRESS:
+      const updatedProgress = state.loadProgress.progress + action.payload;
+      return {
+        ...state,
+        loadProgress: {
+          ...state.loadProgress,
+          progress: updatedProgress > state.loadProgress.base ? state.loadProgress.base : updatedProgress,
+        }
       };
 
     case SELECT_RANGE:
@@ -135,6 +167,10 @@ export const getUploadLog = (state) => state.view.uploadLog;
 
 export const getMessage = (state) => state.view.message;
 
-export const isUploadingShow = (state) => {
-  return state.view.uploadShowStatus === "started";
+export const isLoadingShow = (state) => {
+  return state.view.loadShowStatus === "started";
+};
+
+export const getLoadProgressPercent = (state) => {
+  return 100.0 * state.view.loadProgress.progress / state.view.loadProgress.base;
 };

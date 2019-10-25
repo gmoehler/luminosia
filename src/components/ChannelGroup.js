@@ -57,7 +57,7 @@ export default class ChannelGroup extends Component {
 
   render() {
 
-    if (this.props.isUploadingShow) {
+    if (this.props.isLoadingShow) {
       return (<LoadProgressView disableShrink />);
     }
 
@@ -94,5 +94,5 @@ ChannelGroup.propTypes = {
   selectedImageChannelId: PropTypes.number,
   playState: PropTypes.string,
   maxDuration: PropTypes.number,
-  isUploadingShow: PropTypes.bool,
+  isLoadingShow: PropTypes.bool,
 };
