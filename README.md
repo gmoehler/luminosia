@@ -55,6 +55,7 @@ next gen:
 
 ---
 
+
 lessons learned:
 - generate ids in actions: can be returned, impure logic
 - check conditions in actions (e.g. for adding)
