@@ -5,12 +5,11 @@ import { connect } from "react-redux";
 import { getUploadLog } from "../reducers/viewReducer";
 import UploadLogView from "./UploadLogView";
 import { clearUploadLog } from "../actions/viewActions";
-import { cancelUpload } from "../actions/generalActions";
+import { cancelUpload } from "../actions/ioActions";
 
 class ImageControlContainer extends Component {
-
   render() {
-    return ( <UploadLogView { ...this.props } /> );
+    return (<UploadLogView { ...this.props } />);
   }
 }
 

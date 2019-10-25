@@ -12,8 +12,24 @@
       "program": "${workspaceFolder}/public/electron.js"
     },
     {
-      "type": "node",
       "name": "vscode-jest-tests",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/react-scripts",
+      "args": [
+        "test",
+        "--runInBand",
+        "--no-cache",
+        "--watchAll=false"
+      ],
+      "cwd": "${workspaceRoot}",
+      "protocol": "inspector",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen"
+    },
+    {
+      "type": "node",
+      "name": "vscode-jest-tests0",
       "request": "launch",
       "runtimeExecutable": "node",
       "args": [
@@ -33,6 +49,6 @@
       "name": "Launch Chrome against localhost",
       "url": "http://localhost:3000",
       "webRoot": "${workspaceFolder}"
-    } 
+    },
   ]
 }

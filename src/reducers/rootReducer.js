@@ -1,16 +1,9 @@
 import { combineReducers } from "redux";
 
-import imageListReducer, { getImageListConfig } from "./imageListReducer";
-import channelReducer, { getChannelsConfig } from "./channelReducer";
 import viewReducer from "./viewReducer";
+import entityReducer from "./entityReducer";
 
 export default combineReducers({
-    images: imageListReducer,
-    channel: channelReducer,
-    view: viewReducer
-});
-
-export const getConfig = (state) => ({
-    images: getImageListConfig(state),
-    channels: getChannelsConfig(state)
+    view: viewReducer,
+    entities: entityReducer,
 });

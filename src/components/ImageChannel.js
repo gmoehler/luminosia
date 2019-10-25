@@ -47,6 +47,8 @@ const ImageCanvas = styled.canvas`
   padding: 0;
   width: ${props => props.cssWidth}px;
   height: ${props => props.height}px;
+  border-left: ${props => props.channelSelected ? 2 : 1}px solid ${props => props.theme.markerColor};
+  border-right:  ${props => props.channelSelected ? 2 : 1}px solid ${props => props.theme.markerColor};
 `;
 
 const CanvasRefImage = styled.img`
@@ -133,7 +135,7 @@ class ImageChannel extends Component {
       e.preventDefault();
       const pos = eventName !== "keyDown" ?
         getMouseEventPosition(e, "ChannelWrapper", this.props.channelId) : {};
-      const src = e.dataTransfer && e.dataTransfer.getData("src");
+      // transfer data is not available until drop (not on dragEnter / dragOver)
       const imageId = e.dataTransfer && e.dataTransfer.getData("imageid");
       const duration = e.dataTransfer && Number(e.dataTransfer.getData("duration"));
       const key = e.key;
@@ -150,7 +152,6 @@ class ImageChannel extends Component {
       const evInfo = {
         ...pos, // x pos, channelId, partId, markerId
         timestamp: e.timeStamp,
-        src, // drag source path
         imageId,
         duration,
         key,
@@ -209,6 +210,8 @@ class ImageChannel extends Component {
               height={ imageHeight + 2 }
               ref={ this.createCanvasRef(partId, canvasCount) }
               data-partid={ partId }
+              theme={ theme }
+              channelSelected={ selected }
             />
           );
 
@@ -314,7 +317,7 @@ class ImageChannel extends Component {
 }
 
 ImageChannel.propTypes = {
-  channelId: PropTypes.number.isRequired,
+  channelId: PropTypes.string.isRequired,
   parts: PropTypes.arrayOf(
     PropTypes.shape({
       partId: PropTypes.string.isRequired,
@@ -335,7 +338,7 @@ ImageChannel.propTypes = {
   theme: PropTypes.object,
   maxWidth: PropTypes.number,
   selected: PropTypes.bool,
-  handleMouseEvent: PropTypes.func,
+  handleMouseEvent: PropTypes.func.isRequired,
   factor: PropTypes.number,
   gain: PropTypes.number,
 };

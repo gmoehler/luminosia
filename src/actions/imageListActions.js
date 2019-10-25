@@ -1,20 +1,53 @@
-import { ADD_IMAGE, CLEAR_IMAGELIST, REMOVE_IMAGE } from "./types";
-import { getImageList } from "../reducers/imageListReducer";
+import {
+  ADD_IMAGE, CLEAR_IMAGELIST, REMOVE_IMAGE
+} from "./types";
+import { getImageList, imageExists } from "../reducers/imageListReducer";
 
-
-export const addImage = (imageInfo) => ({
+const _addImage = (imageInfo) => ({
   type: ADD_IMAGE,
   payload: imageInfo
 });
+
+export function addImage(imageInfo) {
+  return (dispatch, getState) => {
+    // required fields
+    if ((imageInfo.filename || imageInfo.imageId) &&
+      imageInfo.src && imageInfo.width && imageInfo.height) {
+      // add imageId based on filename
+      const imageId = imageInfo.imageId || imageInfo.filename;
+      // only insert once
+      if (!imageExists(getState(), imageId)) {
+        dispatch(_addImage({
+          ...imageInfo,
+          imageId
+        }));
+        return imageId;
+      }
+    }
+    return null;
+  };
+};
 
 export const clearImageList = () => ({
   type: CLEAR_IMAGELIST
 });
 
-export const removeImage = (imageInfo) => ({
+const _removeImage = (imageId) => ({
   type: REMOVE_IMAGE,
-  payload: imageInfo
+  payload: imageId
 });
+
+export function removeImage(imageId) {
+  return (dispatch, getState) => {
+    if (imageExists(getState(), imageId)) {
+      dispatch(_removeImage(imageId));
+    }
+  };
+};
+
+/**************************************/
+/******* LOAD / 'STORE ACTIONS ********/
+/**************************************/
 
 export function loadImage(imageInfo) {
   // base64 encoded images
@@ -22,7 +55,7 @@ export function loadImage(imageInfo) {
     // we assume everything is in the record
     return Promise.resolve(imageInfo);
   }
-// no longer read file from server
+  // no longer read file from server
 }
 
 export function saveImageToStorage(image) {

@@ -88,7 +88,7 @@ export default class MoveMouseHandler {
 
   handleKeyDown = (evInfo) => {
     if (evInfo.key === "Delete" || evInfo.key === "Backspace") {
-      this.handlerFunctions.deleteSelectedPartAndMarkers();
+      this.handlerFunctions.deleteSelectedEntities();
     }
   }
 
@@ -97,14 +97,11 @@ export default class MoveMouseHandler {
     this.channelId = evInfo.channelId;
     this.partId = evInfo.partId;
     this.markerId = evInfo.markerId; // for resize
+    this.handlerFunctions.toggleInitialEntitySelection(evInfo.partId);
   }
 
   handleToggleSelection = (evInfo) => {
-    this.handlerFunctions.toggleElementSelection({
-      channelId: parseInt(evInfo.channelId),
-      partId: evInfo.partId,
-    // selected: true // select
-    });
+    this.handlerFunctions.toggleEntitySelection(evInfo.partId);
   }
 
   handleMoveTo = (evInfo, finalizeAction) => {
@@ -154,8 +151,9 @@ export default class MoveMouseHandler {
 
   handleMultiSelectFrom = (evInfo) => {
     this.selectFromX = evInfo.x;
+    this.channelId = evInfo.channelId;
     this.handlerFunctions.selectRange(evInfo.x, evInfo.x, "temp");
-    this.handlerFunctions.selectInInterval(evInfo.x, evInfo.x);
+    this.handlerFunctions.selectInInterval(evInfo.channelId, evInfo.x, evInfo.x);
   }
 
   handleMultiSelectTo = (evInfo, finalizeAction) => {
@@ -163,10 +161,10 @@ export default class MoveMouseHandler {
       // console.log('selection to: ', x);
       if (this.selectFromX < evInfo.x) {
         this.handlerFunctions.selectRange(this.selectFromX, evInfo.x, "temp");
-        this.handlerFunctions.selectInInterval(this.selectFromX, evInfo.x);
+        this.handlerFunctions.selectInInterval(evInfo.channelId, this.selectFromX, evInfo.x);
       } else {
         this.handlerFunctions.selectRange(evInfo.x, this.selectFromX, "temp");
-        this.handlerFunctions.selectInInterval(evInfo.x, this.selectFromX);
+        this.handlerFunctions.selectInInterval(evInfo.channelId, evInfo.x, this.selectFromX);
       }
       if (finalizeAction) {
         // range selection is only temporarily
@@ -177,12 +175,8 @@ export default class MoveMouseHandler {
     }
   }
 
-
   handleMultiSelect = (evInfo) => {
-    this.handlerFunctions.toggleElementMultiSelection({
-      channelId: parseInt(evInfo.channelId),
-      partId: evInfo.partId,
-    });
+    this.handlerFunctions.toggleMultiEntitySelection(evInfo.partId);
   }
 
   deselectRange = () => {

@@ -105,7 +105,7 @@ export function withPlay(WrappedComponent) {
 
       if (!this.animationStartTime) {
         this.animationStartTime = timestamp;
-      //TODO: sync with playout time
+        //TODO: sync with playout time
       }
 
 
@@ -145,7 +145,7 @@ export function withPlay(WrappedComponent) {
     stopPlay = () => {
       this.playout && this.playout.stop();
       this.stopAnimateProgress();
-      this.props.setChannelPlayState("stopped");
+      this.props.stopChannel(this.props.channelId);
     }
 
     // only re-calc when buffer, resolution of bits change
@@ -168,17 +168,17 @@ export function withPlay(WrappedComponent) {
       // time to pixel conversion is done in HOC TimeToPixel
       return (
         <WrappedComponent { ...passthruProps }
-progress={ this.state.progress }
-handleMouseEvent={ this.props.handleMouseEvent }
-factor={ this.props.resolution / this.props.sampleRate }
-peaks={ peaksDataMono }
-	bits={ bits }
-length={ length } /* only for audio */ />);
+          progress={ this.state.progress }
+          factor={ this.props.resolution / this.props.sampleRate }
+          peaks={ peaksDataMono }
+          bits={ bits }
+          length={ length } /* only for audio */ />);
     }
   }
   ;
 
   WithPlay.propTypes = {
+    channelId: PropTypes.string.isRequired,
     type: PropTypes.oneOf(["audio", "image", "animation"]),
     offset: PropTypes.number,
     buffer: PropTypes.object,
@@ -191,12 +191,11 @@ length={ length } /* only for audio */ />);
       to: PropTypes.number,
       type: PropTypes.string,
     }),
-    setChannelPlayState: PropTypes.func.isRequired,
-    parts: PropTypes.array,
+    stopChannel: PropTypes.func.isRequired,
     maxDuration: PropTypes.number,
   };
 
-  withPlay.displayName = `WithSubscription(${getDisplayName(WrappedComponent)})`;
+  withPlay.displayName = `WithPlay(${getDisplayName(WrappedComponent)})`;
   return WithPlay;
 }
 

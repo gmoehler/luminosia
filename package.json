@@ -32,6 +32,7 @@
     "is-electron": "^2.2.0",
     "log-scale": "1.0.1",
     "mdi-material-ui": "6.0.0",
+    "normalizr": "3.4.0",
     "promisify-child-process": "^3.1.0",
     "react": "16.8.6",
     "react-dom": "16.8.6",

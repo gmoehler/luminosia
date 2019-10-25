@@ -16,27 +16,35 @@ export function withEventHandler(WrappedComponent) {
 
     componentDidMount() {
       // add functions that the mouse handler can call
+      const {
+        selectRange, deselectRange, selectInInterval,
+        move, resize, setOrReplaceInsertMarker, insertNewPart,
+        toggleEntitySelection, toggleMultiEntitySelection, toggleInitialEntitySelection,
+        deleteSelectedEntities, setMessage } = this.props;
+
       this.mousehandler = new MouseHandler({
-        selectRange: this.props.selectRange,
-        deselectRange: this.props.deselectRange,
-        selectInInterval: this.props.selectInInterval,
-        move: this.props.move,
-        resize: this.props.resize,
-        setMarker: this.props.setMarker,
-        insertNewPart: this.props.insertNewPart,
-        toggleElementSelection: this.props.toggleElementSelection,
-        toggleElementMultiSelection: this.props.toggleElementMultiSelection,
-        deleteSelectedPartAndMarkers: this.props.deleteSelectedPartAndMarkers,
-        setMessage: this.props.setMessage,
+        selectRange, deselectRange, selectInInterval,
+        move, resize, setOrReplaceInsertMarker, insertNewPart,
+        toggleEntitySelection, toggleMultiEntitySelection, toggleInitialEntitySelection,
+        deleteSelectedEntities, setMessage
       });
     }
 
     render() {
 
-      const { selectRange, deselectRange, move, setMarker, insertNewPart, toggleElementSelection, deleteSelectedPartAndMarkers, toggleElementMultiSelection, ...passthruProps } = this.props;
+      // remove functions from props
+      const {
+        selectRange, deselectRange, selectInInterval,
+        move, resize, setOrReplaceInsertMarker, insertNewPart,
+        toggleEntitySelection, toggleMultiEntitySelection, toggleInitialEntitySelection,
+        deleteSelectedEntities, setMessage,
+        ...passthruProps } = this.props;
 
-      return (<WrappedComponent { ...passthruProps }
-        handleMouseEvent={ (eventName, evInfo) => this.mousehandler.handleMouseEvent(eventName, evInfo, this.props.resolution) } />);
+      return (
+        <WrappedComponent { ...passthruProps }
+          handleMouseEvent={ (eventName, evInfo) =>
+            this.mousehandler.handleMouseEvent(eventName, evInfo, this.props.resolution) }
+        />);
     }
   }
 
@@ -46,15 +54,20 @@ export function withEventHandler(WrappedComponent) {
     selectInInterval: PropTypes.func.isRequired,
     move: PropTypes.func.isRequired,
     resize: PropTypes.func.isRequired,
-    setMarker: PropTypes.func.isRequired,
+    setOrReplaceInsertMarker: PropTypes.func.isRequired,
     insertNewPart: PropTypes.func.isRequired,
-    toggleElementSelection: PropTypes.func.isRequired,
-    toggleElementMultiSelection: PropTypes.func.isRequired,
-    deleteSelectedPartAndMarkers: PropTypes.func.isRequired,
+    toggleEntitySelection: PropTypes.func.isRequired,
+    toggleMultiEntitySelection: PropTypes.func.isRequired,
+    toggleInitialEntitySelection: PropTypes.func.isRequired,
+    deleteSelectedEntities: PropTypes.func.isRequired,
     resolution: PropTypes.number.isRequired,
     setMessage: PropTypes.func.isRequired,
   };
 
+  WithEventHandler.displayName = `WithEventHandler(${getDisplayName(WrappedComponent)})`;
   return WithEventHandler;
+}
 
+function getDisplayName(WrappedComponent) {
+  return WrappedComponent.displayName || WrappedComponent.name || "Component";
 }

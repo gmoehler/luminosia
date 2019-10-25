@@ -26,10 +26,38 @@ App
   ImageListContainer
     ImageList
 
-  ChannelSelectorContainer
-    ChannelSelector
+  ChannelSelectorGroupContainer
+    ChannelSelectorGroup
+      ChannelSelector
+    
+  AnimationPaneContainer
+    withPlay
+      AnimationPane
+      
 
 ```
 
 Todos:
+- weaker marker colors
 - Redux: Make parts a first level state
+- snap to other objects
+- generate multiple copies of a part
+- group/ungroup of parts
+- drag and dop images out of list
+- markers in timeline
+
+performance:
+- evaluate playing
+- optimize marker add
+
+next gen:
+- parameter input
+
+---
+
+
+lessons learned:
+- generate ids in actions: can be returned, impure logic
+- check conditions in actions (e.g. for adding)
+    . reducers always work
+    . compound actions know wether action was successful (?)

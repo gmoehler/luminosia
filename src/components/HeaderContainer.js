@@ -2,13 +2,19 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import { stopChannel, deleteSelectedPartAndMarkers, createImageChannel, uploadAudioFile, playChannelAndImage, setChannelActive, unsetChannelActive, pastePart } from "../actions/channelActions";
-
-import { downloadConfig, uploadConfigFile, uploadConfig, updateFirmware } from "../actions/generalActions";
-import { setResolution, copyPart } from "../actions/viewActions";
 import Header from "./Header";
-import { getChannelIds, allChannelsStopped } from "../reducers/channelReducer";
-import { getPartsToCopy, getNumSelectedElements } from "../reducers/viewReducer";
+
+import {
+  playChannelAndImage, setAChannelActive,
+  unsetAChannelActive, pastePart, createAnImageChannel, stopAllChannels
+} from "../actions/channelActions";
+import { saveShow, loadShowFromFile, updateFirmware, loadAudioFromFile } from "../actions/ioActions";
+import { setResolution, copyPart } from "../actions/viewActions";
+import { deleteSelectedEntities, } from "../actions/entityActions";
+
+import { getAllChannelIds, allChannelsStopped } from "../reducers/achannelReducer";
+import { getPartsToCopy, } from "../reducers/viewReducer";
+import { anyEntitySelected } from "../reducers/entityReducer";
 
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
 const audioContext = window.AudioContext && new window.AudioContext();
@@ -49,32 +55,30 @@ class HeaderContainer extends Component {
     return (
       <Header { ...this.props }
         zoomIn={ this.zoomIn }
-        zoomOut={ this.zoomOut }
-      />
+        zoomOut={ this.zoomOut } />
     );
   }
 }
 
 const mapStateToProps = state => ({
-  channelIds: getChannelIds(state),
-  numSelectedElems: getNumSelectedElements(state),
+  channelIds: getAllChannelIds(state),
+  entitySelected: anyEntitySelected(state),
   hasPartToCopy: Boolean(getPartsToCopy(state)),
-  enablePlay: Boolean(getChannelIds(state).length > 0 && allChannelsStopped(state)),
-  enableStop: Boolean(getChannelIds(state).length && !allChannelsStopped(state)),
+  enablePlay: Boolean(getAllChannelIds(state).length > 0 && allChannelsStopped(state)),
+  enableStop: Boolean(getAllChannelIds(state).length && !allChannelsStopped(state)),
 });
 
 const mapDispatchToProps = dispatch => ({
-  downloadConfig: () => dispatch(downloadConfig()),
-  uploadConfigFile: (configFile) => dispatch(uploadConfigFile(configFile, audioContext)),
-  uploadAudioFile: (audioFile) => dispatch(uploadAudioFile(audioFile, audioContext)),
-  uploadConfigAction: (config) => dispatch(uploadConfig(config, audioContext)),
-  createImageChannel: () => dispatch(createImageChannel()),
+  saveShow: () => dispatch(saveShow()),
+  loadShowFromFile: (showFile) => dispatch(loadShowFromFile(showFile)),
+  loadAudioFromFile: (audioFile) => dispatch(loadAudioFromFile(audioFile, audioContext)),
+  createImageChannel: () => dispatch(createAnImageChannel()),
   playChannelAndImage: (channelId) => dispatch(playChannelAndImage(channelId)),
-  stopChannel: () => dispatch(stopChannel()),
+  stopChannel: () => dispatch(stopAllChannels()),
   setResolution: (resolution) => dispatch(setResolution(resolution)),
-  deleteSelectedPartAndMarkers: () => dispatch(deleteSelectedPartAndMarkers()),
-  setChannelActive: (channelId) => dispatch(setChannelActive(channelId)),
-  unsetChannelActive: (channelId) => dispatch(unsetChannelActive(channelId)),
+  deleteSelectedEntities: () => dispatch(deleteSelectedEntities()),
+  setChannelActive: (channelId) => dispatch(setAChannelActive(channelId)),
+  unsetChannelActive: (channelId) => dispatch(unsetAChannelActive(channelId)),
   copyPart: () => dispatch(copyPart()),
   pastePart: () => dispatch(pastePart()),
   updateFirmware: () => dispatch(updateFirmware()),
@@ -82,8 +86,7 @@ const mapDispatchToProps = dispatch => ({
 
 HeaderContainer.propTypes = {
   setResolution: PropTypes.func.isRequired,
-  deleteSelectedPartAndMarkers: PropTypes.func.isRequired,
+  deleteSelectedEntities: PropTypes.func.isRequired,
 };
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(HeaderContainer);

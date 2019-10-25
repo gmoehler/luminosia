@@ -1,7 +1,7 @@
 import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-import { getChannelExportData } from "../actions/generalActions";
+import { getChannelExportData } from "../actions/ioActions";
 import { samplesToRad } from "../utils/conversions";
 import { Typography } from "@material-ui/core";
 import Slider from "@material-ui/lab/Slider";
@@ -9,7 +9,7 @@ import Slider from "@material-ui/lab/Slider";
 const minRotationSpeed = 0.1;
 const maxRotationSpeed = 9.9;
 
-const WhiteSlider = styled(Slider) `
+const WhiteSlider = styled(Slider)`
   .MuiSlider-track {
     background-color: white;
   }
@@ -63,7 +63,7 @@ export default class AnimationPane extends PureComponent {
 	}
 
 	componentDidUpdate(prevProps) {
-		const initiallyBlack =  this.props.progress && !prevProps.progress;
+		const initiallyBlack = this.props.progress && !prevProps.progress;
 		this.draw(initiallyBlack);
 	}
 
@@ -82,7 +82,7 @@ export default class AnimationPane extends PureComponent {
 		cc.stroke();
 	}
 
-	draw(initiallyBlack=false) {
+	draw(initiallyBlack = false) {
 
 		const { progress, sampleRate, activeChannels } = this.props;
 
@@ -113,7 +113,7 @@ export default class AnimationPane extends PureComponent {
 						const startIdx = row * expData.width + w;
 						// console.log(`animate: ${row} ${startIdx}`)
 						const dataIdx = 4 * startIdx;
-						const color = `rgba(${d[dataIdx]},${d[dataIdx+1]},${d[dataIdx+2]},255)`;
+						const color = `rgba(${d[dataIdx]},${d[dataIdx + 1]},${d[dataIdx + 2]},255)`;
 						this.drawArc(cc, arcIdx, color, i + this.innerRadius, this.prevRad, toRad);
 					}
 				}
@@ -148,20 +148,20 @@ export default class AnimationPane extends PureComponent {
 		return (
 			<AnimationPaneWrapper drawerWidth={ drawerWidth }>
 				<AnimationControl>
-					<RotationSpeed>	{ rotationSpeed.toFixed(1) }</RotationSpeed>
-				
+					<RotationSpeed>	{rotationSpeed.toFixed(1)}</RotationSpeed>
+
 					<WhiteSlider value={ this.speed2slider(rotationSpeed) }
-    				onChange={ this.handleChange }
-    				vertical
-    				style={ { width: 0 } } />
+						onChange={ this.handleChange }
+						vertical
+						style={ { width: 0 } } />
 				</AnimationControl>
-				<AnimationCanvas 
-    			id="animationPaneCanvas"
-    			height={ resolution * 80 }
-    			width={ activeChannels.length * resolution * 80 } />
+				<AnimationCanvas
+					id="animationPaneCanvas"
+					height={ resolution * 80 }
+					width={ activeChannels.length * resolution * 80 } />
 			</AnimationPaneWrapper>
 
-			);
+		);
 	}
 }
 
@@ -169,6 +169,6 @@ AnimationPane.propTypes = {
 	progress: PropTypes.number,
 	sampleRate: PropTypes.number.isRequired,
 	resolution: PropTypes.number.isRequired,
-	activeChannels: PropTypes.arrayOf(PropTypes.number),
+	activeChannels: PropTypes.arrayOf(PropTypes.string),
 	drawerWidth: PropTypes.number,
 };
