@@ -6,7 +6,7 @@ import { denormalize, schema } from "normalizr";
 import {
   ADD_A_CHANNEL, DELETE_A_CHANNEL, CLEAR_ALL_CHANNELS,
   SET_A_CHANNEL_INACTIVE, PLAY_THE_CHANNELS, STOP_ALL_CHANNELS,
-  STOP_A_CHANNEL, SET_A_CHANNEL_ACTIVE, ADD_A_PART, UPDATE_CHANNEL
+  STOP_A_CHANNEL, SET_A_CHANNEL_ACTIVE, ADD_A_PART, UPDATE_CHANNEL, DELETE_A_PART
 } from "../actions/types";
 import { partSchema, getParts, } from "./partReducer";
 import { isEntitySelected } from "./entityReducer";
@@ -69,6 +69,23 @@ const byChannelId = (state = {}, action) => {
           ...channel0,
           parts: parts0,
           duration: duration0,
+        }
+      };
+
+    case DELETE_A_PART:
+      //TODO: add test
+      const partId2 = action.payload.partId;
+      const channelId2 = action.payload.channelId;
+      const channel2 = {
+        ...state[channelId2]
+      };
+      const parts2 = channel2.parts.filter(p => p !== partId2);
+      // TODO: adjust duration
+      return {
+        ...state,
+        [channelId2]: {
+          ...channel2,
+          parts: parts2,
         }
       };
 
