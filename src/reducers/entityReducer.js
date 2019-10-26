@@ -7,7 +7,7 @@ import {
 } from "../actions/types";
 
 import imageListReducer, { imageExists, initialState as initialImageListState } from "./imageListReducer";
-import channelReducer, { channelExists, initialState as initialChannelState } from "./achannelReducer";
+import channelReducer, { channelExists, initialState as initialChannelState } from "./channelReducer";
 import partReducer, { partExists, initialState as initialPartState } from "./partReducer";
 import markerReducer, { aMarkerExists, initialState as initialMarkerState } from "./markerReducer";
 

@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 
 import AnimationPane from "./AnimationPane";
 import { getSelectionRange } from "../reducers/viewReducer";
-import { getActiveChannelIds, allChannelsStopped, getMaxChannelDuration } from "../reducers/achannelReducer";
+import { getActiveChannelIds, allChannelsStopped, getMaxChannelDuration } from "../reducers/channelReducer";
 import { withPlay } from "./withPlay";
 
 const AnimationPaneWithPlay = withPlay(AnimationPane);
@@ -21,13 +21,7 @@ class AnimationPaneContainer extends Component {
   render() {
 
     return (
-      <AnimationPaneWithPlay
-        sampleRate={ 100 }
-        resolution={ 2 }
-        type="animation"
-        stopChannel={ this.stopChannel }
-        channelId="none"
-        { ...this.props }
+      <AnimationPaneWithPlay sampleRate={ 100 } resolution={ 2 } type="animation" stopChannel={ this.stopChannel } channelId="none" { ...this.props }
       />
     );
   }

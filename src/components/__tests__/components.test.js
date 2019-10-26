@@ -2,6 +2,7 @@ import React from "react";
 import renderer from "react-test-renderer";
 import AnimationPane from "../AnimationPane.js";
 import Channel from "../Channel";
+import { imageChannel1, imageChannel2 } from "../../__fixtures__/entity.fixtures";
 
 describe("simple component tests", () => {
   test("AnimationPane component", () => {
@@ -9,7 +10,8 @@ describe("simple component tests", () => {
     const props = {
       sampleRate: 1000,
       resolution: 100,
-      activeChannels: [1, 2],
+      activeChannels: [
+        imageChannel1.channelId, imageChannel2.channelId],
     };
 
     const component = renderer.create(
@@ -23,7 +25,7 @@ describe("simple component tests", () => {
   test("Channel component", () => {
 
     const props = {
-      channelId: 1,
+      channelId: imageChannel1.channelId,
       selection: {
         from: 0,
         to: 22

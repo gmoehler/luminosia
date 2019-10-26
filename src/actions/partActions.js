@@ -36,12 +36,12 @@ const _addPart = (partInfo) => ({
 });
 
 // create part id and add the part to the parts entities and channel
-// returns the new part id
-export const createPart = (partInfo) => {
+// and conditionally selects new part
+// returns the new part id 
+export const createPart = (partInfo, selectNewPart = true) => {
   return (dispatch, getState) => {
     // ensure we have what we need
     // so reducers do not need to check assumptions
-    // TODO: remove channelId number checking once channel ids are strings
     if (partInfo.imageId && partInfo.channelId != null
       && partInfo.offset != null && partInfo.duration != null) {
 
@@ -51,7 +51,9 @@ export const createPart = (partInfo) => {
         ...partInfo,
         partId,
       }));
-      dispatch(toggleEntitySelection(partId));
+      if (selectNewPart) {
+        dispatch(toggleEntitySelection(partId));
+      }
       return partId;
     }
     console.error("cannot add incomplete part:", partInfo);
@@ -71,7 +73,6 @@ export const deleteAPart = (partId) => {
   return (dispatch, getState) => {
     // ensure we have what we need
     // so reducers do not need to check assumptions
-    // TODO: remove channelId number checking once channel ids are strings
     const channelId = getChannelId(getState(), partId);
 
     if (partId && channelId != null) {

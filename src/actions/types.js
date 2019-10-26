@@ -1,10 +1,5 @@
 // action type constants
 
-// general actions
-export const LOAD_SHOW_STARTED = "LOAD_SHOW_STARTED";
-export const LOAD_SHOW_SUCCESS = "LOAD_SHOW_SUCCESS";
-export const LOAD_SHOW_FAILURE = "LOAD_SHOW_FAILURE";
-
 // channel actions
 export const ADD_A_CHANNEL = "ADD_A_CHANNEL";
 export const DELETE_A_CHANNEL = "DELETE_A_CHANNEL";
@@ -21,10 +16,6 @@ export const CLEAR_CHANNELS = "CLEAR_CHANNELS";
 export const SET_CHANNEL_ACTIVE = "SET_CHANNEL_ACTIVE";
 export const UNSET_CHANNEL_ACTIVE = "UNSET_CHANNEL_ACTIVE";
 export const UPDATE_CHANNEL = "UPDATE_CHANNEL";
-
-export const LOAD_AUDIO_STARTED = "LOAD_AUDIO_STARTED";
-export const LOAD_AUDIO_SUCCESS = "LOAD_AUDIO_SUCCESS";
-export const LOAD_AUDIO_FAILURE = "LOAD_AUDIO_FAILURE";
 
 export const PLAY_CHANNELS = "PLAY_CHANNELS";
 export const STOP_CHANNELS = "STOP_CHANNELS";
@@ -51,6 +42,19 @@ export const CLEAR_MARKERS = "CLEAR_MARKERS";
 export const SET_OR_REPLACE_A_MARKER = "SET_OR_REPLACE_A_MARKER";
 export const DELETE_A_MARKER = "DELETE_A_MARKER";
 export const UPDATE_A_MARKER = "UPDATE_A_MARKER";
+
+// io actions
+export const LOAD_SHOW_STARTED = "LOAD_SHOW_STARTED";
+export const LOAD_SHOW_SUCCESS = "LOAD_SHOW_SUCCESS";
+export const LOAD_SHOW_FAILURE = "LOAD_SHOW_FAILURE";
+
+export const LOAD_AUDIO_STARTED = "LOAD_AUDIO_STARTED";
+export const LOAD_AUDIO_SUCCESS = "LOAD_AUDIO_SUCCESS";
+export const LOAD_AUDIO_FAILURE = "LOAD_AUDIO_FAILURE";
+
+export const INIT_LOAD_PROGRESS = "INIT_LOAD_PROGRESS";
+export const SET_LOAD_PROGRESS = "SET_LOAD_PROGRESS";
+export const INCR_LOAD_PROGRESS = "INCR_LOAD_PROGRESS;";
 
 // view actions
 export const CLEAR_VIEW = "CLEAR_VIEW";

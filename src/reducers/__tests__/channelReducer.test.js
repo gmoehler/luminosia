@@ -1,5 +1,4 @@
-import reducer, { channelExists, getAllDenormalizedChannels } from "../achannelReducer";
-import { initialState, getDenormalizedChannel } from "../achannelReducer";
+import reducer, { initialState, getDenormalizedChannel, channelExists, getAllDenormalizedChannels } from "../channelReducer";
 
 import * as types from "../../actions/types";
 import { normalizedImageChannel1, imageChannelState1, imageChannel1, entityState1, denormImageChannel1 } from "../../__fixtures__/entity.fixtures";

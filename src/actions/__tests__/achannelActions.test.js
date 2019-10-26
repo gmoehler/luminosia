@@ -42,11 +42,18 @@ describe("channel actions", () => {
       type: types.ADD_A_CHANNEL,
       payload: addChannelPayload
     }, {
+      type: types.INIT_LOAD_PROGRESS,
+      payload: 2,
+    }, {
       type: types.ADD_A_PART,
       payload: normalizedPart1,
     }, {
+      type: types.INCR_LOAD_PROGRESS,
+    }, {
       type: types.ADD_A_PART,
       payload: normalizedPart2,
+    }, {
+      type: types.INCR_LOAD_PROGRESS,
     }, {
       type: types.SET_A_CHANNEL_ACTIVE,
       payload: imageChannel1.channelId,
@@ -76,6 +83,9 @@ describe("channel actions", () => {
     const expectedActions = [{
       type: types.ADD_A_CHANNEL,
       payload: normalizedImageChannel0,
+    }, {
+      type: types.INIT_LOAD_PROGRESS,
+      payload: 0,
     }, {
       type: types.SET_A_CHANNEL_ACTIVE,
       payload: imageChannel1.channelId,
@@ -140,11 +150,18 @@ describe("channel actions", () => {
       type: types.ADD_A_CHANNEL,
       payload: addChannelPayload,
     }, {
+      type: types.INIT_LOAD_PROGRESS,
+      payload: 2,
+    }, {
       type: types.ADD_A_PART,
       payload: normalizedPart3,
     }, {
+      type: types.INCR_LOAD_PROGRESS,
+    }, {
       type: types.ADD_A_PART,
       payload: normalizedPart4,
+    }, {
+      type: types.INCR_LOAD_PROGRESS,
     }, {
       type: types.SET_A_CHANNEL_ACTIVE,
       payload: imageChannel2.channelId,

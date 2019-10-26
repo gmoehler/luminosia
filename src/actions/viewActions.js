@@ -1,4 +1,4 @@
-import { SELECT_RANGE, DESELECT_RANGE, SET_RESOLUTION, CLEAR_VIEW, SELECT_IMAGE_CHANNEL, COPY_PART, ADD_TO_UPLOAD_LOG, CLEAR_UPLOAD_LOG, SET_MESSAGE, CLEAR_MESSAGE } from "./types";
+import { SELECT_RANGE, DESELECT_RANGE, SET_RESOLUTION, CLEAR_VIEW, SELECT_IMAGE_CHANNEL, COPY_PART, ADD_TO_UPLOAD_LOG, CLEAR_UPLOAD_LOG, SET_MESSAGE, CLEAR_MESSAGE, INIT_LOAD_PROGRESS, SET_LOAD_PROGRESS, INCR_LOAD_PROGRESS } from "./types";
 
 export const clearView = () => ({
   type: CLEAR_VIEW
@@ -45,3 +45,17 @@ export const clearMessage = () => ({
   type: CLEAR_MESSAGE
 });
 
+export const initLoadProgress = (base) => ({
+  type: INIT_LOAD_PROGRESS,
+  payload: base,
+});
+
+export const setLoadProgress = (progress) => ({
+  type: SET_LOAD_PROGRESS,
+  payload: progress,
+});
+
+export const incrLoadProgress = (incr) => ({
+  type: INCR_LOAD_PROGRESS,
+  payload: incr,
+});

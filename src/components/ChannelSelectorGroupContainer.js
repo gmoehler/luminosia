@@ -9,7 +9,7 @@ import {
 import { uploadImageChannelToPoi, saveImageChannelAsBinary } from "../actions/ioActions";
 
 import { getSelectedImageChannelId } from "../reducers/viewReducer";
-import { getChannelSelectorData, getAllChannelIds } from "../reducers/achannelReducer";
+import { getChannelSelectorData, getAllChannelIds } from "../reducers/channelReducer";
 
 class ChannelSelectorGroupContainer extends Component {
 
