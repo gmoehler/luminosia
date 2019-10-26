@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import ImageChannel from "./ImageChannel";
 import Channel from "./Channel";
 
-import { getChannelData } from "../reducers/achannelReducer";
+import { getChannelData } from "../reducers/channelReducer";
 import { getParts } from "../reducers/partReducer";
 import { withEventHandler } from "./withEventHandler";
 import { withPlay } from "./withPlay";
@@ -65,10 +65,7 @@ class ChannelContainer extends Component {
     return (
       type === "audio"
         ? <ChannelWithPlay { ...this.props } />
-        : <ImageChannelWithPlay { ...this.props }
-          resize={ (partId, markerId, incr) =>
-            this.props.resize(channelId, partId, markerId, incr) }
-        />);
+        : <ImageChannelWithPlay { ...this.props } resize={ (partId, markerId, incr) => this.props.resize(channelId, partId, markerId, incr) } />);
   }
 }
 
@@ -88,14 +85,30 @@ const mapStateToProps = (state, props) => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  selectRange: (from, to, type) => dispatch(selectRange({ from, to, type })),
+  selectRange: (from, to, type) => dispatch(selectRange({
+    from,
+    to,
+    type
+  })),
   deselectRange: () => dispatch(deselectRange()),
   selectInInterval: (channelId, from, to) => dispatch(selectInInterval(channelId, from, to)),
   setOrReplaceInsertMarker: (pos) => dispatch(setOrReplaceInsertMarker(pos)),
-  insertNewPart: (channelId, imageId, offset) => dispatch(insertNewPart({ channelId, imageId, offset })),
+  insertNewPart: (channelId, imageId, offset) => dispatch(insertNewPart({
+    channelId,
+    imageId,
+    offset
+  })),
   deleteSelectedEntities: () => dispatch(deleteSelectedEntities()),
-  move: (partId, incr) => dispatch(moveSelectedParts({ partId, incr })),
-  resize: (channelId, partId, markerId, incr) => dispatch(resizeAPart({ channelId, partId, markerId, incr })),
+  move: (partId, incr) => dispatch(moveSelectedParts({
+    partId,
+    incr
+  })),
+  resize: (channelId, partId, markerId, incr) => dispatch(resizeAPart({
+    channelId,
+    partId,
+    markerId,
+    incr
+  })),
   stopChannel: (channelId) => dispatch(stopAChannel(channelId)),
   toggleEntitySelection: (partId) => dispatch(toggleEntitySelection(partId)),
   toggleMultiEntitySelection: (partId) => dispatch(toggleMultiEntitySelection(partId)),

@@ -63,7 +63,8 @@ export default (state = initialState, action) => {
       };
 
     case INCR_LOAD_PROGRESS:
-      const updatedProgress = state.loadProgress.progress + action.payload;
+      const incr = action.payload || 1;
+      const updatedProgress = state.loadProgress.progress + incr;
       return {
         ...state,
         loadProgress: {
@@ -171,6 +172,6 @@ export const isLoadingShow = (state) => {
   return state.view.loadShowStatus === "started";
 };
 
-export const getLoadProgressPercent = (state) => {
+export const getLoadProgressInPercent = (state) => {
   return 100.0 * state.view.loadProgress.progress / state.view.loadProgress.base;
 };

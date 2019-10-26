@@ -12,7 +12,7 @@ import { saveShow, loadShowFromFile, updateFirmware, loadAudioFromFile } from ".
 import { setResolution, copyPart } from "../actions/viewActions";
 import { deleteSelectedEntities, } from "../actions/entityActions";
 
-import { getAllChannelIds, allChannelsStopped } from "../reducers/achannelReducer";
+import { getAllChannelIds, allChannelsStopped } from "../reducers/channelReducer";
 import { getPartsToCopy, } from "../reducers/viewReducer";
 import { anyEntitySelected } from "../reducers/entityReducer";
 

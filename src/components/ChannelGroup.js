@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 
-import { CircularProgress } from "@material-ui/core";
+import { LinearProgress } from "@material-ui/core";
 import TimeScale from "./TimeScale";
 import { timeToPixels } from "./timeToPixels";
 import { secondsToPixels } from "../utils/conversions";
@@ -15,7 +15,7 @@ const ChannelGroupWrapper = styled.div`
 	white-space: nowrap;
 `;
 
-const LoadProgressView = styled(CircularProgress)`
+const LoadProgressView = styled(LinearProgress)`
   margin: 20px;
 `;
 
@@ -58,7 +58,7 @@ export default class ChannelGroup extends Component {
   render() {
 
     if (this.props.isLoadingShow) {
-      return (<LoadProgressView disableShrink />);
+      return (<LoadProgressView variant="determinate" value={ this.props.loadProgress } />);
     }
 
     const { allchannelIds, ...passthruProps } = this.props;
@@ -95,4 +95,5 @@ ChannelGroup.propTypes = {
   playState: PropTypes.string,
   maxDuration: PropTypes.number,
   isLoadingShow: PropTypes.bool,
+  loadProgress: PropTypes.number,
 };

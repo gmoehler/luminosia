@@ -14,7 +14,8 @@ import { toggleEntitySelection } from "./entityActions";
 import {
   getMaxChannelDuration, channelExists, getDenormalizedChannel,
   achannelSchema, getActiveChannelIds, getChannelPartIds,
-} from "../reducers/achannelReducer";
+} from "../reducers/channelReducer";
+import { incrLoadProgress, initLoadProgress } from "./viewActions";
 
 
 // first id will be 1 to avoid falsy ids
@@ -69,11 +70,14 @@ export const addAChannel = (channelInfo) => {
 
       // add parts (will also add it to the channel) 
       // audio channels have no parts and simply skipped this
+      const numParts = parts.length;
+      dispatch(initLoadProgress(numParts));
       parts.forEach((part) => {
         dispatch(createPart({
           ...part,
-          channelId: channelInfo.channelId
-        }));
+          channelId: channelInfo.channelId,
+        }, false)); // do not update selection for performance reasons
+        dispatch(incrLoadProgress());
       });
 
       dispatch(setAChannelActive(channelInfo.channelId));

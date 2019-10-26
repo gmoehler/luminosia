@@ -4,7 +4,7 @@ import * as types from "../../actions/types";
 import { initialState as imageListInitialState } from "../imageListReducer";
 import { initialState as partInitialState } from "../partReducer";
 import { initialState as markerInitialState } from "../markerReducer";
-import { initialState as channelInitialState } from "../achannelReducer";
+import { initialState as channelInitialState } from "../channelReducer";
 import { imageListState0, imagePayload0 } from "../../__fixtures__/imageList.fixtures";
 
 

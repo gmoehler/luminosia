@@ -9,7 +9,7 @@ import { addAChannel } from "./channelActions";
 import { addImage, loadImage } from "./imageListActions";
 import { addToUploadLog } from "./viewActions";
 
-import { getMaxChannelDuration, getChannelGain, getChannelSampleRate, getChannelParts, getAllDenormalizedChannels } from "../reducers/achannelReducer";
+import { getMaxChannelDuration, getChannelGain, getChannelSampleRate, getChannelParts, getAllDenormalizedChannels } from "../reducers/channelReducer";
 import { imageExists, getImageList } from "../reducers/imageListReducer";
 
 import { secondsToSamples } from "../utils/conversions";
