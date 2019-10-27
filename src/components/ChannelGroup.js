@@ -17,6 +17,7 @@ const ChannelGroupWrapper = styled.div`
 
 const LoadProgressView = styled(LinearProgress)`
   margin: 20px;
+  width: 100%;
 `;
 
 // add time conversion functionality time scale
@@ -58,7 +59,10 @@ export default class ChannelGroup extends Component {
   render() {
 
     if (this.props.isLoadingShow) {
-      return (<LoadProgressView variant="determinate" value={ this.props.loadProgress } />);
+      return (<LoadProgressView
+        variant="determinate"
+        value={ this.props.loadProgress }
+      />);
     }
 
     const { allchannelIds, ...passthruProps } = this.props;
