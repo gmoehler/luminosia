@@ -25,9 +25,9 @@ export default class ImageExporter extends PureComponent {
 
 		return (
 			<ImageExporterWrapper drawerWidth={ this.props.drawerWidth }>
-     <ImageExporterCanvas id="imageExportCanvas" />
-   </ImageExporterWrapper>
-			);
+				<ImageExporterCanvas id="imageExportCanvas" />
+			</ImageExporterWrapper>
+		);
 	}
 }
 
