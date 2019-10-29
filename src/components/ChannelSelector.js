@@ -39,14 +39,14 @@ const styles = () => ({
     padding: "12px",
     height: "92px",
     width: `${channelSelectorWidth}px`,
-    border: "2px #3949ab solid",
+    border: "1px #3949ab solid",
     borderRight: "none",
   },
   wrapperInActive: {
     background: "#212121",
   },
   wrapperSelected: {
-    border: "2px #f50057 solid",
+    border: "1px #f50057 solid",
     borderRight: "none",
   },
   sliderWrapper: {

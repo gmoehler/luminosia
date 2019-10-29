@@ -70,7 +70,7 @@ const ImageChannelWrapper = styled.div`
   background: ${props => props.theme.imageBackgroundColor};
   width: ${props => props.cssWidth}px;
   height: ${props => props.height}px;
-  border: 2px solid ${props => props.borderColor};
+  border: 1px solid ${props => props.borderColor};
   border-left: none;
 `;
 

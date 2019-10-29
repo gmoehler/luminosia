@@ -5,9 +5,8 @@ import { entityExists, isEntitySingleSelected, isEntitySelected, getSelectedEnti
 import { clearMarkers, addPartSelectionMarkers, deletePartSelectionMarkers } from "./markerActions";
 import { partExists, getPart } from "../reducers/partReducer";
 import { removeImage } from "./imageListActions";
-import { deleteAPart } from "./partActions";
+import { deleteAPart, createPart } from "./partActions";
 import { getSelectedImageChannelId } from "../reducers/viewReducer";
-import { insertNewPart } from "./channelActions";
 
 const _selectEntity = (entityId) => ({
   type: SELECT_ENTITY,
@@ -108,7 +107,7 @@ export const pasteParts = () => {
           ...originalPart,
           channelId: selectedImageChannelId,
         };
-        dispatch(insertNewPart(partToPaste));
+        dispatch(createPart(partToPaste));
       }
     });
   };
