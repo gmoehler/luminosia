@@ -1,11 +1,13 @@
 import {
-  SELECT_ENTITY, DESELECT_ENTITY, CLEAR_ENTITY_SELECTION,
+  SELECT_ENTITY, DESELECT_ENTITY, CLEAR_ENTITY_SELECTION, COPY_ENTITIES,
 } from "./types";
-import { entityExists, isEntitySingleSelected, isEntitySelected, getSelectedEntityType, getEntityType, isEntitySelectable, getSelectedEntityIds } from "../reducers/entityReducer";
+import { entityExists, isEntitySingleSelected, isEntitySelected, getSelectedEntityType, getEntityType, isEntitySelectable, getSelectedEntityIds, getSelectedEntityIdsOfType, getEntitiesIdsToCopy } from "../reducers/entityReducer";
 import { clearMarkers, addPartSelectionMarkers, deletePartSelectionMarkers } from "./markerActions";
 import { partExists, getPart } from "../reducers/partReducer";
 import { removeImage } from "./imageListActions";
 import { deleteAPart } from "./partActions";
+import { getSelectedImageChannelId } from "../reducers/viewReducer";
+import { insertNewPart } from "./channelActions";
 
 const _selectEntity = (entityId) => ({
   type: SELECT_ENTITY,
@@ -22,6 +24,7 @@ export function selectEntity(entityId) {
       if (partExists(getState(), entityId)) {
         const part = getPart(getState(), entityId);
         dispatch(addPartSelectionMarkers(part));
+        // channel is directly selected thru mouse handler
       }
     } else {
       console.error("entity to select does not exist:", entityId);
@@ -73,6 +76,39 @@ export function deleteSelectedEntities() {
         dispatch(deletePartSelectionMarkers(entityId));
       } else if (entityType === "image") {
         dispatch(removeImage(entityId));
+      }
+    });
+  };
+};
+
+export const _copyEntities = (entityIds) => ({
+  type: COPY_ENTITIES,
+  payload: entityIds
+});
+
+// we only copy parts for now, no other entity types
+export function copyParts() {
+  return (dispatch, getState) => {
+    const parts = getSelectedEntityIdsOfType(getState(), "part");
+    if (parts.length > 0) {
+      dispatch(_copyEntities(parts));
+    }
+  };
+};
+
+export const pasteParts = () => {
+  return (dispatch, getState) => {
+    // expect only parts here
+    getEntitiesIdsToCopy(getState()).forEach((partId) => {
+      const originalPart = getPart(getState(), partId);
+      const selectedImageChannelId = getSelectedImageChannelId(getState());
+
+      if (selectedImageChannelId) {
+        const partToPaste = {
+          ...originalPart,
+          channelId: selectedImageChannelId,
+        };
+        dispatch(insertNewPart(partToPaste));
       }
     });
   };

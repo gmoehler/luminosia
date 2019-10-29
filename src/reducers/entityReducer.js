@@ -3,7 +3,7 @@ import { combineReducers } from "redux";
 
 import {
   SELECT_ENTITY, DESELECT_ENTITY, CLEAR_ENTITY_SELECTION,
-  DELETE_A_PART, CLEAR_PARTS, REMOVE_IMAGE, CLEAR_IMAGELIST
+  DELETE_A_PART, CLEAR_PARTS, REMOVE_IMAGE, CLEAR_IMAGELIST, COPY_ENTITIES
 } from "../actions/types";
 
 import imageListReducer, { imageExists, initialState as initialImageListState } from "./imageListReducer";
@@ -17,6 +17,7 @@ export const initialState = {
   parts: initialPartState,
   markers: initialMarkerState,
   selectedEntityIds: [],
+  entitiesIdsToCopy: [],
 };
 
 const selectedEntityIds = (state = [], action) => {
@@ -44,12 +45,24 @@ const selectedEntityIds = (state = [], action) => {
   }
 };
 
+const entitiesIdsToCopy = (state = [], action) => {
+  switch (action.type) {
+
+    case COPY_ENTITIES:
+      return [...action.payload];
+
+    default:
+      return state;
+  }
+};
+
 export default combineReducers({
   parts: partReducer,
   images: imageListReducer,
   markers: markerReducer,
   channels: channelReducer,
   selectedEntityIds,
+  entitiesIdsToCopy,
 });
 
 export function entityExists(state, entityId) {
@@ -104,3 +117,6 @@ export function anyEntitySelected(state) {
   return getSelectedEntityIds(state).length > 0;
 }
 
+export function getEntitiesIdsToCopy(state) {
+  return state.entities.entitiesIdsToCopy;
+}

@@ -229,20 +229,3 @@ export const insertNewPart = (partInfo) => {
     dispatch(toggleEntitySelection(pId));
   };
 };
-
-/////////////// legacy function ////////////////
-
-export const pastePart = () => {
-  return (dispatch, getState) => {
-    /* getPartsToCopy(getState()).forEach((part) => {
-      const originialPart = getPart(getState(), part.channelId, part.partId);
-      const selectedImageChannelId = getSelectedImageChannelId(getState());
- 
-      const partToPaste = {
-        ...originialPart,
-        channelId: selectedImageChannelId,
-      };
-      dispatch(insertNewPart(partToPaste));
-    });*/
-  };
-};

@@ -6,15 +6,14 @@ import Header from "./Header";
 
 import {
   playChannelAndImage, setAChannelActive,
-  unsetAChannelActive, pastePart, createAnImageChannel, stopAllChannels
+  unsetAChannelActive, createAnImageChannel, stopAllChannels
 } from "../actions/channelActions";
 import { saveShow, loadShowFromFile, updateFirmware, loadAudioFromFile } from "../actions/ioActions";
-import { setResolution, copyPart } from "../actions/viewActions";
-import { deleteSelectedEntities, } from "../actions/entityActions";
+import { setResolution } from "../actions/viewActions";
+import { deleteSelectedEntities, copyParts, pasteParts, } from "../actions/entityActions";
 
 import { getAllChannelIds, allChannelsStopped } from "../reducers/channelReducer";
-import { getPartsToCopy, } from "../reducers/viewReducer";
-import { anyEntitySelected } from "../reducers/entityReducer";
+import { anyEntitySelected, getEntitiesIdsToCopy } from "../reducers/entityReducer";
 
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
 const audioContext = window.AudioContext && new window.AudioContext();
@@ -63,7 +62,7 @@ class HeaderContainer extends Component {
 const mapStateToProps = state => ({
   channelIds: getAllChannelIds(state),
   entitySelected: anyEntitySelected(state),
-  hasPartToCopy: Boolean(getPartsToCopy(state)),
+  hasPartsToCopy: (getEntitiesIdsToCopy(state).length > 0),
   enablePlay: Boolean(getAllChannelIds(state).length > 0 && allChannelsStopped(state)),
   enableStop: Boolean(getAllChannelIds(state).length && !allChannelsStopped(state)),
 });
@@ -79,8 +78,8 @@ const mapDispatchToProps = dispatch => ({
   deleteSelectedEntities: () => dispatch(deleteSelectedEntities()),
   setChannelActive: (channelId) => dispatch(setAChannelActive(channelId)),
   unsetChannelActive: (channelId) => dispatch(unsetAChannelActive(channelId)),
-  copyPart: () => dispatch(copyPart()),
-  pastePart: () => dispatch(pastePart()),
+  copyParts: () => dispatch(copyParts()),
+  pasteParts: () => dispatch(pasteParts()),
   updateFirmware: () => dispatch(updateFirmware()),
 });
 

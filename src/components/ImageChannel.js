@@ -70,7 +70,8 @@ const ImageChannelWrapper = styled.div`
   background: ${props => props.theme.imageBackgroundColor};
   width: ${props => props.cssWidth}px;
   height: ${props => props.height}px;
-  border: 1px solid ${props => props.borderColor};
+  border: 2px solid ${props => props.borderColor};
+  border-left: none;
 `;
 
 class ImageChannel extends Component {
@@ -356,7 +357,7 @@ ImageChannel.defaultProps = {
     selectionColor: "rgba(200,200,255,0.5)",
     tempSelectionColor: "rgba(80,80,80,0.5)",
     imageBackgroundColor: "black",
-    borderColorSelected: "cornflowerblue",
+    borderColorSelected: "#f50057",
     borderColor: "#3f51b5",
   },
   factor: 1,

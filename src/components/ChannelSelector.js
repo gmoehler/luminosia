@@ -39,14 +39,15 @@ const styles = () => ({
     padding: "12px",
     height: "92px",
     width: `${channelSelectorWidth}px`,
-    borderTop: "1px #3949ab solid",
-    borderBottom: "1px #3949ab solid",
+    border: "2px #3949ab solid",
+    borderRight: "none",
   },
   wrapperInActive: {
     background: "#212121",
   },
   wrapperSelected: {
-    background: "#8c9eff",
+    border: "2px #f50057 solid",
+    borderRight: "none",
   },
   sliderWrapper: {
     display: "flex",
@@ -175,7 +176,6 @@ ChannelSelector.propTypes = {
   deleteChannel: PropTypes.func.isRequired,
   uploadImageChannelToPoi: PropTypes.func.isRequired,
   saveImageChannelAsBinary: PropTypes.func.isRequired,
-  selectedImageChannelId: PropTypes.number,
 };
 
 export default withStyles(styles)(ChannelSelector);

@@ -2,13 +2,9 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 
 import ChannelSelectorGroup from "./ChannelSelectorGroup";
-import {
-  updateChannel, setAChannelActive, unsetAChannelActive,
-  deleteAChannel, duplicateChannel
-} from "../actions/channelActions";
+import { updateChannel, setAChannelActive, unsetAChannelActive, deleteAChannel, duplicateChannel } from "../actions/channelActions";
 import { uploadImageChannelToPoi, saveImageChannelAsBinary } from "../actions/ioActions";
 
-import { getSelectedImageChannelId } from "../reducers/viewReducer";
 import { getChannelSelectorData, getAllChannelIds } from "../reducers/channelReducer";
 
 class ChannelSelectorGroupContainer extends Component {
@@ -16,15 +12,14 @@ class ChannelSelectorGroupContainer extends Component {
   render() {
     return (
       <ChannelSelectorGroup { ...this.props } />
-    );
+      );
   };
 
 }
 
 const mapStateToProps = (state, props) => {
   return {
-    channelIds: getAllChannelIds(state), //TODO: use subset only?
-    selectedImageChannelId: getSelectedImageChannelId(state),
+    channelIds: getAllChannelIds(state),
     getChannelSelectorData: (channelId) => getChannelSelectorData(state, channelId),
   };
 };

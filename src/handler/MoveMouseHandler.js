@@ -101,7 +101,12 @@ export default class MoveMouseHandler {
   }
 
   handleToggleSelection = (evInfo) => {
-    this.handlerFunctions.toggleEntitySelection(evInfo.partId);
+    if (evInfo.partId) {
+      this.handlerFunctions.toggleEntitySelection(evInfo.partId);
+    }
+    if (evInfo.channelId) {
+      this.handlerFunctions.selectImageChannel(evInfo.channelId);
+    }
   }
 
   handleMoveTo = (evInfo, finalizeAction) => {

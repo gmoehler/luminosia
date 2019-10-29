@@ -80,7 +80,7 @@ export class Header extends Component {
     const { classes,
       createImageChannel, saveShow, enablePlay, playChannelAndImage, enableStop,
       stopChannel, zoomIn, zoomOut, entitySelected, deleteSelectedEntities,
-      copyPart, pastePart, updateFirmware, hasPartToCopy } = this.props;
+      copyParts, pasteParts, hasPartsToCopy, updateFirmware } = this.props;
 
     return (
       <div className={ classes.wrapper }>
@@ -163,16 +163,16 @@ export class Header extends Component {
             <div>
               <IconButton disabled={ !entitySelected }
                 color="inherit"
-                onClick={ copyPart }>
+                onClick={ copyParts }>
                 <ContentCopy />
               </IconButton>
             </div>
           </Tooltip>
           <Tooltip title="Paste part">
             <div>
-              <IconButton disabled={ !hasPartToCopy }
+              <IconButton disabled={ !hasPartsToCopy }
                 color="inherit"
-                onClick={ pastePart }>
+                onClick={ pasteParts }>
                 <ContentPaste />
               </IconButton>
             </div>
@@ -221,10 +221,10 @@ Header.propTypes = {
   unsetChannelActive: PropTypes.func.isRequired,
   setChannelActive: PropTypes.func.isRequired,
   loadAudioFromFile: PropTypes.func.isRequired,
-  copyPart: PropTypes.func.isRequired,
-  pastePart: PropTypes.func.isRequired,
+  copyParts: PropTypes.func.isRequired,
+  pasteParts: PropTypes.func.isRequired,
+  hasPartsToCopy: PropTypes.bool,
   updateFirmware: PropTypes.func.isRequired,
-  hasPartToCopy: PropTypes.bool,
 };
 
 export default withStyles(styles, {
