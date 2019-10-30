@@ -2,13 +2,9 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 
 import ChannelSelectorGroup from "./ChannelSelectorGroup";
-import {
-  updateChannel, setAChannelActive, unsetAChannelActive,
-  deleteAChannel, duplicateChannel
-} from "../actions/channelActions";
+import { updateChannel, setChannelActive, setChannelInactive, deleteChannel, duplicateChannel } from "../actions/channelActions";
 import { uploadImageChannelToPoi, saveImageChannelAsBinary } from "../actions/ioActions";
 
-import { getSelectedImageChannelId } from "../reducers/viewReducer";
 import { getChannelSelectorData, getAllChannelIds } from "../reducers/channelReducer";
 
 class ChannelSelectorGroupContainer extends Component {
@@ -23,19 +19,18 @@ class ChannelSelectorGroupContainer extends Component {
 
 const mapStateToProps = (state, props) => {
   return {
-    channelIds: getAllChannelIds(state), //TODO: use subset only?
-    selectedImageChannelId: getSelectedImageChannelId(state),
+    channelIds: getAllChannelIds(state),
     getChannelSelectorData: (channelId) => getChannelSelectorData(state, channelId),
   };
 };
 
 const mapDispatchToProps = dispatch => ({
   updateChannel: (channelInfo) => dispatch(updateChannel(channelInfo)),
-  setChannelActive: (channelId) => dispatch(setAChannelActive(channelId)),
-  unsetChannelActive: (channelId) => dispatch(unsetAChannelActive(channelId)),
+  setChannelActive: (channelId) => dispatch(setChannelActive(channelId)),
+  setChannelInactive: (channelId) => dispatch(setChannelInactive(channelId)),
   uploadImageChannelToPoi: (channelId) => dispatch(uploadImageChannelToPoi(channelId)),
   saveImageChannelAsBinary: (channelId) => dispatch(saveImageChannelAsBinary(channelId)),
-  deleteChannel: (channelId) => dispatch(deleteAChannel(channelId)),
+  deleteChannel: (channelId) => dispatch(deleteChannel(channelId)),
   duplicateChannel: (channelId) => dispatch(duplicateChannel(channelId)),
 });
 

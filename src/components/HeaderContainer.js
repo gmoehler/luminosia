@@ -5,16 +5,15 @@ import PropTypes from "prop-types";
 import Header from "./Header";
 
 import {
-  playChannelAndImage, setAChannelActive,
-  unsetAChannelActive, pastePart, createAnImageChannel, stopAllChannels
+  playChannelAndImage, setChannelActive, setChannelInactive,
+  createImageChannel, stopChannels
 } from "../actions/channelActions";
 import { saveShow, loadShowFromFile, updateFirmware, loadAudioFromFile } from "../actions/ioActions";
-import { setResolution, copyPart } from "../actions/viewActions";
-import { deleteSelectedEntities, } from "../actions/entityActions";
+import { setResolution } from "../actions/viewActions";
+import { deleteSelectedEntities, copyParts, pasteParts, } from "../actions/entityActions";
 
 import { getAllChannelIds, allChannelsStopped } from "../reducers/channelReducer";
-import { getPartsToCopy, } from "../reducers/viewReducer";
-import { anyEntitySelected } from "../reducers/entityReducer";
+import { anyEntitySelected, getEntitiesIdsToCopy } from "../reducers/entityReducer";
 
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
 const audioContext = window.AudioContext && new window.AudioContext();
@@ -63,7 +62,7 @@ class HeaderContainer extends Component {
 const mapStateToProps = state => ({
   channelIds: getAllChannelIds(state),
   entitySelected: anyEntitySelected(state),
-  hasPartToCopy: Boolean(getPartsToCopy(state)),
+  hasPartsToCopy: (getEntitiesIdsToCopy(state).length > 0),
   enablePlay: Boolean(getAllChannelIds(state).length > 0 && allChannelsStopped(state)),
   enableStop: Boolean(getAllChannelIds(state).length && !allChannelsStopped(state)),
 });
@@ -72,15 +71,15 @@ const mapDispatchToProps = dispatch => ({
   saveShow: () => dispatch(saveShow()),
   loadShowFromFile: (showFile) => dispatch(loadShowFromFile(showFile)),
   loadAudioFromFile: (audioFile) => dispatch(loadAudioFromFile(audioFile, audioContext)),
-  createImageChannel: () => dispatch(createAnImageChannel()),
+  createImageChannel: () => dispatch(createImageChannel()),
   playChannelAndImage: (channelId) => dispatch(playChannelAndImage(channelId)),
-  stopChannel: () => dispatch(stopAllChannels()),
+  stopChannel: () => dispatch(stopChannels()),
   setResolution: (resolution) => dispatch(setResolution(resolution)),
   deleteSelectedEntities: () => dispatch(deleteSelectedEntities()),
-  setChannelActive: (channelId) => dispatch(setAChannelActive(channelId)),
-  unsetChannelActive: (channelId) => dispatch(unsetAChannelActive(channelId)),
-  copyPart: () => dispatch(copyPart()),
-  pastePart: () => dispatch(pastePart()),
+  setChannelActive: (channelId) => dispatch(setChannelActive(channelId)),
+  setChannelInactive: (channelId) => dispatch(setChannelInactive(channelId)),
+  copyParts: () => dispatch(copyParts()),
+  pasteParts: () => dispatch(pasteParts()),
   updateFirmware: () => dispatch(updateFirmware()),
 });
 

@@ -20,13 +20,13 @@ export function withEventHandler(WrappedComponent) {
         selectRange, deselectRange, selectInInterval,
         move, resize, setOrReplaceInsertMarker, insertNewPart,
         toggleEntitySelection, toggleMultiEntitySelection, toggleInitialEntitySelection,
-        deleteSelectedEntities, setMessage } = this.props;
+        deleteSelectedEntities, selectImageChannel, setMessage } = this.props;
 
       this.mousehandler = new MouseHandler({
         selectRange, deselectRange, selectInInterval,
         move, resize, setOrReplaceInsertMarker, insertNewPart,
         toggleEntitySelection, toggleMultiEntitySelection, toggleInitialEntitySelection,
-        deleteSelectedEntities, setMessage
+        deleteSelectedEntities, selectImageChannel, setMessage
       });
     }
 
@@ -60,6 +60,7 @@ export function withEventHandler(WrappedComponent) {
     toggleMultiEntitySelection: PropTypes.func.isRequired,
     toggleInitialEntitySelection: PropTypes.func.isRequired,
     deleteSelectedEntities: PropTypes.func.isRequired,
+    selectImageChannel: PropTypes.func.isRequired,
     resolution: PropTypes.number.isRequired,
     setMessage: PropTypes.func.isRequired,
   };

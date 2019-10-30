@@ -39,14 +39,15 @@ const styles = () => ({
     padding: "12px",
     height: "92px",
     width: `${channelSelectorWidth}px`,
-    borderTop: "1px #3949ab solid",
-    borderBottom: "1px #3949ab solid",
+    border: "1px #3949ab solid",
+    borderRight: "none",
   },
   wrapperInActive: {
     background: "#212121",
   },
   wrapperSelected: {
-    background: "#8c9eff",
+    border: "1px #f50057 solid",
+    borderRight: "none",
   },
   sliderWrapper: {
     display: "flex",
@@ -89,7 +90,7 @@ function ChannelSelector(props) {
       gain: val
     });
     if (val === 0 && active) {
-      props.unsetChannelActive(channelId);
+      props.setChannelInactive(channelId);
     } else if (val > 0 && !active) {
       props.setChannelActive(channelId);
     }
@@ -169,13 +170,12 @@ ChannelSelector.propTypes = {
   active: PropTypes.bool,
   gain: PropTypes.number,
   setChannelActive: PropTypes.func.isRequired,
-  unsetChannelActive: PropTypes.func.isRequired,
+  setChannelInactive: PropTypes.func.isRequired,
   updateChannel: PropTypes.func.isRequired,
   duplicateChannel: PropTypes.func.isRequired,
   deleteChannel: PropTypes.func.isRequired,
   uploadImageChannelToPoi: PropTypes.func.isRequired,
   saveImageChannelAsBinary: PropTypes.func.isRequired,
-  selectedImageChannelId: PropTypes.number,
 };
 
 export default withStyles(styles)(ChannelSelector);

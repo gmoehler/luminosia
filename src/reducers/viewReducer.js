@@ -1,5 +1,5 @@
 
-import { CLEAR_VIEW, LOAD_SHOW_STARTED, LOAD_SHOW_SUCCESS, LOAD_SHOW_FAILURE, SELECT_RANGE, DESELECT_RANGE, SET_RESOLUTION, SELECT_IMAGE_CHANNEL, COPY_PART, ADD_TO_UPLOAD_LOG, CLEAR_UPLOAD_LOG, SET_MESSAGE, CLEAR_MESSAGE, SET_LOAD_PROGRESS, INCR_LOAD_PROGRESS, INIT_LOAD_PROGRESS } from "../actions/types";
+import { CLEAR_VIEW, LOAD_SHOW_STARTED, LOAD_SHOW_SUCCESS, LOAD_SHOW_FAILURE, SELECT_RANGE, DESELECT_RANGE, SET_RESOLUTION, SELECT_IMAGE_CHANNEL, ADD_TO_UPLOAD_LOG, CLEAR_UPLOAD_LOG, SET_MESSAGE, CLEAR_MESSAGE, SET_LOAD_PROGRESS, INCR_LOAD_PROGRESS, INIT_LOAD_PROGRESS } from "../actions/types";
 
 // export for tests
 export const initialState = {
@@ -96,7 +96,7 @@ export default (state = initialState, action) => {
     case SELECT_IMAGE_CHANNEL:
       return {
         ...state,
-        selectedImageChannelId: action.payload.channelId
+        selectedImageChannelId: action.payload
       };
 
     case SET_RESOLUTION:
@@ -104,18 +104,6 @@ export default (state = initialState, action) => {
         ...state,
         resolution: action.payload
       };
-
-    case COPY_PART:
-      /*  if (_getSelectionType(state) !== "part") {
-         return state;
-       }
-       // duplicate parts array
-       const partsToCopy = _getSelectedElements(state).slice(0);
-       return {
-         ...state,
-         partsToCopy
-       }; */
-      return state;
 
     case ADD_TO_UPLOAD_LOG:
       return {

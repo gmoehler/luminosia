@@ -12,7 +12,7 @@ describe("part reducer", () => {
 
   it("should create a new part", () => {
     const reducer0 = reducer(reducer(undefined, {}), {
-      type: types.ADD_A_PART,
+      type: types.ADD_PART,
       payload: normalizedPart1
     });
 
@@ -32,7 +32,7 @@ describe("part reducer", () => {
   it("should delete a part", () => {
 
     const reducer0 = reducer(reducer(partState2, {}), {
-      type: types.DELETE_A_PART,
+      type: types.DELETE_PART,
       payload: {
         partId: "part-2",
         channelId: "channel-1",
@@ -44,7 +44,7 @@ describe("part reducer", () => {
 
   it("should move part", () => {
     const reducer0 = reducer(reducer(partState2, {}), {
-      type: types.MOVE_A_PART,
+      type: types.MOVE_PART,
       payload: {
         partId: "part-1",
         incr: 0.5,
@@ -60,7 +60,7 @@ describe("part reducer", () => {
   it("should not move part left to 0", () => {
 
     const reducer0 = reducer(reducer(partState2, {}), {
-      type: types.MOVE_A_PART,
+      type: types.MOVE_PART,
       payload: {
         partId: "part-1",
         incr: -0.5,
@@ -76,7 +76,7 @@ describe("part reducer", () => {
   it("should resize the left boundary of a part", () => {
 
     const reducer0 = reducer(reducer(partState2, {}), {
-      type: types.RESIZE_A_PART,
+      type: types.RESIZE_PART,
       payload: {
         partId: "part-1",
         bound: "left",
@@ -94,7 +94,7 @@ describe("part reducer", () => {
   it("should not resize the left boundary more than right bound", () => {
 
     const reducer0 = reducer(reducer(partState2, {}), {
-      type: types.RESIZE_A_PART,
+      type: types.RESIZE_PART,
       payload: {
         partId: "part-1",
         bound: "left",
@@ -108,7 +108,7 @@ describe("part reducer", () => {
   it("should not resize the left boundary lower than 0", () => {
 
     const reducer0 = reducer(reducer(partState2, {}), {
-      type: types.RESIZE_A_PART,
+      type: types.RESIZE_PART,
       payload: {
         partId: "part-1",
         bound: "left",
@@ -127,7 +127,7 @@ describe("part reducer", () => {
   it("should resize the right boundary of a part", () => {
 
     const reducer0 = reducer(reducer(partState2, {}), {
-      type: types.RESIZE_A_PART,
+      type: types.RESIZE_PART,
       payload: {
         partId: "part-1",
         bound: "right",
@@ -144,7 +144,7 @@ describe("part reducer", () => {
   it("should not resize the right boundary to the left of the left bound", () => {
 
     const reducer0 = reducer(reducer(partState2, {}), {
-      type: types.RESIZE_A_PART,
+      type: types.RESIZE_PART,
       payload: {
         partId: "part-1",
         bound: "right",

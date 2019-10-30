@@ -29,7 +29,7 @@ describe("io actions", () => {
       {
         type: types.LOAD_AUDIO_STARTED
       }, {
-        type: types.ADD_A_CHANNEL,
+        type: types.ADD_CHANNEL,
         payload: {
           entities: {
             byChannelId: {
@@ -57,7 +57,7 @@ describe("io actions", () => {
         type: types.INIT_LOAD_PROGRESS,
         payload: 0,
       }, {
-        type: types.SET_A_CHANNEL_ACTIVE,
+        type: types.SET_CHANNEL_ACTIVE,
         payload: "channel-audio-1",
       },
       {

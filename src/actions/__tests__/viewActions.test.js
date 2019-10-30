@@ -11,21 +11,6 @@ import { initialState as initialViewState } from "../../reducers/viewReducer";
 export const mockStore = configureMockStore([thunk]);
 
 describe("view actions", () => {
-
-  it("should add a part to the clipboard", () => {
-
-    const partWithChannelId = {
-      ...part,
-      channelId: 2,
-    };
-
-    const expectedAction = {
-      type: types.COPY_PART,
-    };
-
-    expect(actions.copyPart(partWithChannelId)).toEqual(expectedAction);
-  });
-
   it("should set the load progress", () => {
 
     const store = mockStore({
@@ -78,7 +63,7 @@ describe("view actions", () => {
         markerId: "insert"
       }
     }, {
-      type: types.ADD_A_PART,
+      type: types.ADD_PART,
       payload: {
         ...normalizedPartCh1,
       }

@@ -17,7 +17,7 @@ describe("part actions", () => {
 
   it("should create a channel part", () => {
     const expectedActions = [{
-      type: types.ADD_A_PART,
+      type: types.ADD_PART,
       payload: {
         ...normalizedPart1,
       }
@@ -45,7 +45,7 @@ describe("part actions", () => {
 
   it("should delete a channel part", () => {
     const expectedActions = [{
-      type: types.DELETE_A_PART,
+      type: types.DELETE_PART,
       payload: {
         partId: part1.partId,
         channelId: part1.channelId

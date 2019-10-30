@@ -9,7 +9,7 @@ describe("marker reducer", () => {
 
   it("should set a new maker", () => {
     const reducer0 = reducer(reducer(undefined, {}), {
-      type: types.SET_OR_REPLACE_A_MARKER,
+      type: types.SET_OR_REPLACE_MARKER,
       payload: markerPayload0
     });
 
@@ -18,13 +18,13 @@ describe("marker reducer", () => {
 
   it("should update a marker by a position increment", () => {
     const reducer0 = reducer(reducer(undefined, {}), {
-      type: types.SET_OR_REPLACE_A_MARKER,
+      type: types.SET_OR_REPLACE_MARKER,
       payload: markerPayload0
     });
     expect(reducer0).toEqual(markerState0);
 
     const reducer1 = reducer(reducer0, {
-      type: types.UPDATE_A_MARKER,
+      type: types.UPDATE_MARKER,
       payload: {
         markerId: "part-2--left",
         incr: 0.5,
@@ -47,13 +47,13 @@ describe("marker reducer", () => {
 
   it("should update a marker by a new position", () => {
     const reducer0 = reducer(reducer(undefined, {}), {
-      type: types.SET_OR_REPLACE_A_MARKER,
+      type: types.SET_OR_REPLACE_MARKER,
       payload: markerPayload0
     });
     expect(reducer0).toEqual(markerState0);
 
     const reducer1 = reducer(reducer0, {
-      type: types.UPDATE_A_MARKER,
+      type: types.UPDATE_MARKER,
       payload: {
         markerId: "part-2--left",
         pos: 33.34,
@@ -74,13 +74,13 @@ describe("marker reducer", () => {
 
   it("should update the type of a marker", () => {
     const reducer0 = reducer(reducer(undefined, {}), {
-      type: types.SET_OR_REPLACE_A_MARKER,
+      type: types.SET_OR_REPLACE_MARKER,
       payload: markerPayload0
     });
     expect(reducer0).toEqual(markerState0);
 
     const reducer1 = reducer(reducer0, {
-      type: types.UPDATE_A_MARKER,
+      type: types.UPDATE_MARKER,
       payload: {
         markerId: "part-2--left",
         type: "right",
@@ -102,14 +102,14 @@ describe("marker reducer", () => {
   it("should delete a marker", () => {
 
     const reducer0 = reducer(reducer(undefined, {}), {
-      type: types.SET_OR_REPLACE_A_MARKER,
+      type: types.SET_OR_REPLACE_MARKER,
       payload: markerPayload0
     });
 
     expect(reducer0).toEqual(markerState0);
 
     const reducer1 = reducer(reducer0, {
-      type: types.DELETE_A_MARKER,
+      type: types.DELETE_MARKER,
       payload: "part-2--left",
     });
 
@@ -121,7 +121,7 @@ describe("marker reducer", () => {
 
   it("should clear all markers", () => {
     const reducer0 = reducer(reducer(undefined, {}), {
-      type: types.SET_OR_REPLACE_A_MARKER,
+      type: types.SET_OR_REPLACE_MARKER,
       payload: markerPayload0
     });
 

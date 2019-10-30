@@ -1,4 +1,4 @@
-import { SELECT_RANGE, DESELECT_RANGE, SET_RESOLUTION, CLEAR_VIEW, SELECT_IMAGE_CHANNEL, COPY_PART, ADD_TO_UPLOAD_LOG, CLEAR_UPLOAD_LOG, SET_MESSAGE, CLEAR_MESSAGE, INIT_LOAD_PROGRESS, SET_LOAD_PROGRESS, INCR_LOAD_PROGRESS } from "./types";
+import { SELECT_RANGE, DESELECT_RANGE, SET_RESOLUTION, CLEAR_VIEW, SELECT_IMAGE_CHANNEL, ADD_TO_UPLOAD_LOG, CLEAR_UPLOAD_LOG, SET_MESSAGE, CLEAR_MESSAGE, INIT_LOAD_PROGRESS, SET_LOAD_PROGRESS, INCR_LOAD_PROGRESS } from "./types";
 
 export const clearView = () => ({
   type: CLEAR_VIEW
@@ -18,13 +18,9 @@ export const setResolution = (resolutionInfo) => ({
   payload: resolutionInfo
 });
 
-export const selectImageChannel = (channelInfo) => ({
+export const selectImageChannel = (channelId) => ({
   type: SELECT_IMAGE_CHANNEL,
-  payload: channelInfo
-});
-
-export const copyPart = () => ({
-  type: COPY_PART
+  payload: channelId
 });
 
 export const addToUploadLog = (text) => ({

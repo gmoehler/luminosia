@@ -11,9 +11,9 @@ import { withEventHandler } from "./withEventHandler";
 import { withPlay } from "./withPlay";
 import { timeToPixels } from "./timeToPixels";
 import { moveSelectedParts, resizeAPart, selectInInterval } from "../actions/partActions";
-import { stopAChannel, insertNewPart } from "../actions/channelActions";
+import { stopChannel, insertNewPart } from "../actions/channelActions";
 import { toggleEntitySelection, toggleMultiEntitySelection, toggleInitialEntitySelection, deleteSelectedEntities } from "../actions/entityActions";
-import { selectRange, deselectRange } from "../actions/viewActions";
+import { selectRange, deselectRange, selectImageChannel } from "../actions/viewActions";
 import { setOrReplaceInsertMarker } from "../actions/markerActions";
 
 
@@ -109,7 +109,8 @@ const mapDispatchToProps = dispatch => ({
     markerId,
     incr
   })),
-  stopChannel: (channelId) => dispatch(stopAChannel(channelId)),
+  stopChannel: (channelId) => dispatch(stopChannel(channelId)),
+  selectImageChannel: (channelId) => dispatch(selectImageChannel(channelId)),
   toggleEntitySelection: (partId) => dispatch(toggleEntitySelection(partId)),
   toggleMultiEntitySelection: (partId) => dispatch(toggleMultiEntitySelection(partId)),
   toggleInitialEntitySelection: (partId) => dispatch(toggleInitialEntitySelection(partId)),

@@ -8,8 +8,6 @@ const styles = () => ({
   formGroup: {
     paddingTop: "30px",
     background: "#2c387e",
-    borderTop: "1px #3949ab solid",
-    borderBottom: "1px #3949ab solid",
   },
 });
 
