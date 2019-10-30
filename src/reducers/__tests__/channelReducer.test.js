@@ -11,7 +11,7 @@ describe("part reducer", () => {
 
   it("should create a new channel", () => {
     const reducer0 = reducer(reducer(undefined, {}), {
-      type: types.ADD_A_CHANNEL,
+      type: types.ADD_CHANNEL,
       payload: normalizedImageChannel1
     });
 
@@ -21,7 +21,7 @@ describe("part reducer", () => {
   it("should clear channels", () => {
 
     const reducer0 = reducer(reducer(imageChannelState1, {}), {
-      type: types.CLEAR_ALL_CHANNELS,
+      type: types.CLEAR_CHANNELS,
     });
 
     expect(reducer0).toEqual({
@@ -32,7 +32,7 @@ describe("part reducer", () => {
   it("should delete a channel", () => {
 
     const reducer0 = reducer(reducer(imageChannelState1, {}), {
-      type: types.DELETE_A_CHANNEL,
+      type: types.DELETE_CHANNEL,
       payload: imageChannel1.channelId
     });
 
@@ -53,7 +53,10 @@ describe("part reducer", () => {
 
     expect(reducer0).toEqual({
       byChannelId: {
-        [imageChannel1.channelId]: { ...imageChannel1, gain: 0.5 }
+        [imageChannel1.channelId]: {
+          ...imageChannel1,
+          gain: 0.5
+        }
       },
       allChannelIds: [imageChannel1.channelId],
       activeChannels: [],
@@ -63,7 +66,7 @@ describe("part reducer", () => {
 
   it("should set a channel active", () => {
     const reducer0 = reducer(reducer(imageChannelState1, {}), {
-      type: types.SET_A_CHANNEL_ACTIVE,
+      type: types.SET_CHANNEL_ACTIVE,
       payload: imageChannel1.channelId
     });
 
@@ -80,7 +83,7 @@ describe("part reducer", () => {
     stateWithChannel1Active.activeChannels = [imageChannel1.channelId];
 
     const reducer0 = reducer(reducer(stateWithChannel1Active, {}), {
-      type: types.SET_A_CHANNEL_INACTIVE,
+      type: types.SET_CHANNEL_INACTIVE,
       payload: imageChannel1.channelId
     });
 
@@ -89,7 +92,7 @@ describe("part reducer", () => {
 
   it("should play a channel", () => {
     const reducer0 = reducer(reducer(imageChannelState1, {}), {
-      type: types.PLAY_THE_CHANNELS,
+      type: types.PLAY_CHANNELS,
       payload: [imageChannel1.channelId]
     });
 
@@ -106,7 +109,7 @@ describe("part reducer", () => {
     stateWithPlayingChannels.playingChannels = [imageChannel1.channelId];
 
     const reducer0 = reducer(reducer(stateWithPlayingChannels, {}), {
-      type: types.STOP_ALL_CHANNELS,
+      type: types.STOP_CHANNELS,
       payload: imageChannel1.channelId
     });
 

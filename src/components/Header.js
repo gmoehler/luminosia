@@ -66,7 +66,7 @@ export class Header extends Component {
   handleChannelSelectionChange = event => {
     const channelId = event.target.value;
     if (this.state[event.target.name]) {
-      this.props.unsetChannelActive(this.state[event.target.name]);
+      this.props.setChannelInactive(this.state[event.target.name]);
     }
     this.props.setChannelActive(channelId);
     this.setState({
@@ -218,7 +218,7 @@ Header.propTypes = {
   entitySelected: PropTypes.bool,
   deleteSelectedEntities: PropTypes.func.isRequired,
   loadShowFromFile: PropTypes.func.isRequired,
-  unsetChannelActive: PropTypes.func.isRequired,
+  setChannelInactive: PropTypes.func.isRequired,
   setChannelActive: PropTypes.func.isRequired,
   loadAudioFromFile: PropTypes.func.isRequired,
   copyParts: PropTypes.func.isRequired,

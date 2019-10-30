@@ -36,14 +36,14 @@ describe("part actions", () => {
     const partlIds = [part1.partId, part2.partId];
 
     const expectedActions = [{
-      type: types.ADD_A_PART,
+      type: types.ADD_PART,
       payload: normalizedPart1,
     }, {
       type: "CLEAR_ENTITY_SELECTION",
     }, {
       type: "CLEAR_MARKERS",
     }, {
-      type: types.ADD_A_PART,
+      type: types.ADD_PART,
       payload: normalizedPart2,
     }, {
       type: "CLEAR_ENTITY_SELECTION",

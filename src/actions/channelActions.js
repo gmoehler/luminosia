@@ -1,8 +1,8 @@
 import { normalize } from "normalizr";
 import {
-  UPDATE_CHANNEL, ADD_A_CHANNEL, DELETE_A_CHANNEL, CLEAR_ALL_CHANNELS,
-  SET_A_CHANNEL_ACTIVE, SET_A_CHANNEL_INACTIVE, PLAY_THE_CHANNELS,
-  STOP_ALL_CHANNELS, STOP_A_CHANNEL,
+  UPDATE_CHANNEL, ADD_CHANNEL, DELETE_CHANNEL, CLEAR_CHANNELS,
+  SET_CHANNEL_ACTIVE, SET_CHANNEL_INACTIVE, PLAY_CHANNELS,
+  STOP_CHANNELS, STOP_CHANNEL,
 } from "./types";
 
 import { getImageDuration } from "../reducers/imageListReducer";
@@ -36,14 +36,14 @@ export function _setInitialChannelIdCount(newCount) {
   lastChannelIdCount = newCount;
 }
 
-const _addAChannel = (channelInfo) => ({
-  type: ADD_A_CHANNEL,
+const _addChannel = (channelInfo) => ({
+  type: ADD_CHANNEL,
   payload: normalize(channelInfo, achannelSchema),
 });
 
 // add channel with channelInfo containing complete 
 // denormalized channel information
-export const addAChannel = (channelInfo) => {
+export const addChannel = (channelInfo) => {
   return (dispatch, getState) => {
 
     // check requirements for channels
@@ -63,7 +63,7 @@ export const addAChannel = (channelInfo) => {
 
       // add channel with new channel id, but without parts yet
       const parts = channelInfo.parts;
-      dispatch(_addAChannel({
+      dispatch(_addChannel({
         ...channelInfo,
         parts: [],
       }));
@@ -80,7 +80,7 @@ export const addAChannel = (channelInfo) => {
         dispatch(incrLoadProgress());
       });
 
-      dispatch(setAChannelActive(channelInfo.channelId));
+      dispatch(setChannelActive(channelInfo.channelId));
       return channelInfo.channelId;
     }
 
@@ -90,12 +90,12 @@ export const addAChannel = (channelInfo) => {
 };
 
 // create an empty image channel
-export const createAnImageChannel = () => {
+export const createImageChannel = () => {
   return (dispatch, getState) => {
     // we extend the duration to the longest channel
     const duration = Math.max(10, getMaxChannelDuration(getState()));
     // add required fields
-    return dispatch(addAChannel({
+    return dispatch(addChannel({
       type: "image",
       sampleRate: defaultSampleRate,
       duration,
@@ -104,13 +104,13 @@ export const createAnImageChannel = () => {
   };
 };
 
-const _deleteAChannel = (channelId) => ({
-  type: DELETE_A_CHANNEL,
+const _deleteChannel = (channelId) => ({
+  type: DELETE_CHANNEL,
   // no normalization required since we can achieve this with channelId alone
   payload: channelId,
 });
 
-export const deleteAChannel = (channelId) => {
+export const deleteChannel = (channelId) => {
   return (dispatch, getState) => {
     // ensure we have what we need
     // so reducers do not need to check assumptions
@@ -123,7 +123,7 @@ export const deleteAChannel = (channelId) => {
         });
 
       // then delete channel      
-      dispatch(_deleteAChannel(channelId));
+      dispatch(_deleteChannel(channelId));
     } else {
       console.error("cannot remove non-existing channelId:", channelId);
     }
@@ -149,32 +149,32 @@ export const updateChannel = (channelInfo) => {
   };
 };
 
-export const clearAllChannels = () => ({
-  type: CLEAR_ALL_CHANNELS
+export const clearChannels = () => ({
+  type: CLEAR_CHANNELS
 });
 
-export const setAChannelActive = (channelId) => ({
-  type: SET_A_CHANNEL_ACTIVE,
+export const setChannelActive = (channelId) => ({
+  type: SET_CHANNEL_ACTIVE,
   payload: channelId
 });
 
-export const unsetAChannelActive = (channelId) => ({
-  type: SET_A_CHANNEL_INACTIVE,
+export const setChannelInactive = (channelId) => ({
+  type: SET_CHANNEL_INACTIVE,
   payload: channelId
 });
 
 export const playTheChannels = (channelIds) => ({
-  type: PLAY_THE_CHANNELS,
+  type: PLAY_CHANNELS,
   payload: channelIds
 });
 
-export const stopAChannel = (channelId) => ({
-  type: STOP_A_CHANNEL,
+export const stopChannel = (channelId) => ({
+  type: STOP_CHANNEL,
   payload: channelId,
 });
 
-export const stopAllChannels = () => ({
-  type: STOP_ALL_CHANNELS
+export const stopChannels = () => ({
+  type: STOP_CHANNELS
 });
 
 export const playActiveChannels = () => {
@@ -197,14 +197,14 @@ export const duplicateImageChannel = (channelId) => {
   return (dispatch, getState) => {
 
     const ch = getDenormalizedChannel(getState(), channelId);
-    return dispatch(addAChannel(ch));
+    return dispatch(addChannel(ch));
   };
 };
 
 export const duplicateChannel = (channelId) => {
   return (dispatch, getState) => {
     const ch = getDenormalizedChannel(getState(), channelId);
-    dispatch(addAChannel(ch));
+    dispatch(addChannel(ch));
   };
 };
 

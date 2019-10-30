@@ -12,7 +12,7 @@ describe("marker actions", () => {
 
   it("should set a marker", () => {
     const expectedActions = [{
-      type: types.SET_OR_REPLACE_A_MARKER,
+      type: types.SET_OR_REPLACE_MARKER,
       payload: markerPayload0
     }];
 
@@ -51,7 +51,7 @@ describe("marker actions", () => {
 
   it("should update a marker with incr", () => {
     const expectedActions = [{
-      type: types.UPDATE_A_MARKER,
+      type: types.UPDATE_MARKER,
       payload: {
         markerId: "part-2--left",
         incr: 12
@@ -71,7 +71,7 @@ describe("marker actions", () => {
 
   it("should update a marker with pos", () => {
     const expectedActions = [{
-      type: types.UPDATE_A_MARKER,
+      type: types.UPDATE_MARKER,
       payload: {
         markerId: "part-2--left",
         pos: 12
@@ -91,7 +91,7 @@ describe("marker actions", () => {
 
   it("should update a marker with type", () => {
     const expectedActions = [{
-      type: types.UPDATE_A_MARKER,
+      type: types.UPDATE_MARKER,
       payload: {
         markerId: "part-2--left",
         type: "part-22--right"
@@ -141,7 +141,7 @@ describe("marker actions", () => {
 
   it("should delete a marker", () => {
     const expectedActions = [{
-      type: types.DELETE_A_MARKER,
+      type: types.DELETE_MARKER,
       payload: "part-2--left"
     }];
 

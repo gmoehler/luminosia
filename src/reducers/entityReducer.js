@@ -3,7 +3,7 @@ import { combineReducers } from "redux";
 
 import {
   SELECT_ENTITY, DESELECT_ENTITY, CLEAR_ENTITY_SELECTION,
-  DELETE_A_PART, CLEAR_PARTS, REMOVE_IMAGE, CLEAR_IMAGELIST, COPY_ENTITIES
+  DELETE_PART, CLEAR_PARTS, REMOVE_IMAGE, CLEAR_IMAGELIST, COPY_ENTITIES
 } from "../actions/types";
 
 import imageListReducer, { imageExists, initialState as initialImageListState } from "./imageListReducer";
@@ -34,7 +34,7 @@ const selectedEntityIds = (state = [], action) => {
     case CLEAR_PARTS:
       return [];
 
-    case DELETE_A_PART:
+    case DELETE_PART:
       return state.filter(p => p !== action.payload.partId);
 
     case REMOVE_IMAGE:

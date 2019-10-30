@@ -1,6 +1,4 @@
-import {
-  CLEAR_MARKERS, SET_OR_REPLACE_A_MARKER, DELETE_A_MARKER,
-  UPDATE_A_MARKER,
+import { CLEAR_MARKERS, SET_OR_REPLACE_MARKER, DELETE_MARKER, UPDATE_MARKER,
 } from "./types";
 import { aMarkerExists } from "../reducers/markerReducer";
 
@@ -9,7 +7,7 @@ export const clearMarkers = () => ({
 });
 
 const _setOrReplaceMarker = (markerInfo) => ({
-  type: SET_OR_REPLACE_A_MARKER,
+  type: SET_OR_REPLACE_MARKER,
   payload: markerInfo
 });
 
@@ -24,7 +22,8 @@ export function _setOrReplaceAMarker(markerInfo) {
     }
     return null;
   };
-};
+}
+;
 
 export function setOrReplaceInsertMarker(pos) {
   return (dispatch, getState) => {
@@ -34,10 +33,11 @@ export function setOrReplaceInsertMarker(pos) {
       type: "insert"
     }));
   };
-};
+}
+;
 
 const _deleteMarker = (markerId) => ({
-  type: DELETE_A_MARKER,
+  type: DELETE_MARKER,
   payload: markerId
 });
 
@@ -47,10 +47,11 @@ export function deleteAMarker(markerId) {
       dispatch(_deleteMarker(markerId));
     }
   };
-};
+}
+;
 
 const _updateMarker = (markerInfo) => ({
-  type: UPDATE_A_MARKER,
+  type: UPDATE_MARKER,
   payload: markerInfo
 });
 
@@ -134,8 +135,14 @@ export const syncPartMarkers = (part) => {
   return (dispatch, getState) => {
     // will only update, when markers exist
     const leftMarkerId = _getPartLeftMarkerId(part.partId);
-    dispatch(updateAMarker({ pos: part.offset, markerId: leftMarkerId }));
+    dispatch(updateAMarker({
+      pos: part.offset,
+      markerId: leftMarkerId
+    }));
     const rightMarkerId = _getPartRightMarkerId(part.partId);
-    dispatch(updateAMarker({ pos: part.offset + part.duration, markerId: rightMarkerId }));
+    dispatch(updateAMarker({
+      pos: part.offset + part.duration,
+      markerId: rightMarkerId
+    }));
   };
 };

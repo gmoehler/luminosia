@@ -1,11 +1,9 @@
 
 import { normalize } from "normalizr";
 import {
-  CLEAR_PARTS, ADD_A_PART, DELETE_A_PART, RESIZE_A_PART, MOVE_A_PART,
+  CLEAR_PARTS, ADD_PART, DELETE_PART, RESIZE_PART, MOVE_PART,
 } from "./types";
-import {
-  getChannelId, partSchema, getPart, getParts, getPartIdsInInterval
-} from "../reducers/partReducer";
+import { getChannelId, partSchema, getPart, getParts, getPartIdsInInterval } from "../reducers/partReducer";
 import { syncPartMarkers } from "./markerActions";
 
 import { toggleEntitySelection, selectEntity } from "./entityActions";
@@ -27,7 +25,7 @@ function generateId() {
 }
 
 const _addPart = (partInfo) => ({
-  type: ADD_A_PART,
+  type: ADD_PART,
   // normalize for easy usage in partReducer
   // also add channelId for channelReducer
   payload: {
@@ -64,7 +62,7 @@ export const createPart = (partInfo, selectNewPart = true) => {
 
 
 const _deletePart = (partIdAndChannelId) => ({
-  type: DELETE_A_PART,
+  type: DELETE_PART,
   // no normalization should not be required since we can achieve this with partId and channelId alone
   payload: partIdAndChannelId,
 });
@@ -93,7 +91,7 @@ export const clearParts = () => ({
 });
 
 const _movePart = (moveInfo) => ({
-  type: MOVE_A_PART,
+  type: MOVE_PART,
   payload: moveInfo
 });
 
@@ -143,7 +141,7 @@ export const moveSelectedParts = (moveInfo) => {
 };
 
 const _resizePart = (resizeInfo) => ({
-  type: RESIZE_A_PART,
+  type: RESIZE_PART,
   payload: resizeInfo
 });
 

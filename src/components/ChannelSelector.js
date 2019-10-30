@@ -90,7 +90,7 @@ function ChannelSelector(props) {
       gain: val
     });
     if (val === 0 && active) {
-      props.unsetChannelActive(channelId);
+      props.setChannelInactive(channelId);
     } else if (val > 0 && !active) {
       props.setChannelActive(channelId);
     }
@@ -170,7 +170,7 @@ ChannelSelector.propTypes = {
   active: PropTypes.bool,
   gain: PropTypes.number,
   setChannelActive: PropTypes.func.isRequired,
-  unsetChannelActive: PropTypes.func.isRequired,
+  setChannelInactive: PropTypes.func.isRequired,
   updateChannel: PropTypes.func.isRequired,
   duplicateChannel: PropTypes.func.isRequired,
   deleteChannel: PropTypes.func.isRequired,

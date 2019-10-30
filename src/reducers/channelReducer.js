@@ -3,11 +3,7 @@
 import { combineReducers } from "redux";
 import { denormalize, schema } from "normalizr";
 
-import {
-  ADD_A_CHANNEL, DELETE_A_CHANNEL, CLEAR_ALL_CHANNELS,
-  SET_A_CHANNEL_INACTIVE, PLAY_THE_CHANNELS, STOP_ALL_CHANNELS,
-  STOP_A_CHANNEL, SET_A_CHANNEL_ACTIVE, ADD_A_PART, UPDATE_CHANNEL, DELETE_A_PART
-} from "../actions/types";
+import { ADD_CHANNEL, DELETE_CHANNEL, CLEAR_CHANNELS, SET_CHANNEL_INACTIVE, PLAY_CHANNELS, STOP_CHANNELS, STOP_CHANNEL, SET_CHANNEL_ACTIVE, ADD_PART, UPDATE_CHANNEL, DELETE_PART } from "../actions/types";
 import { partSchema, getParts, } from "./partReducer";
 import { getSelectedImageChannelId } from "./viewReducer";
 
@@ -32,22 +28,23 @@ export const initialState = {
 const byChannelId = (state = {}, action) => {
   switch (action.type) {
 
-    case ADD_A_CHANNEL: {
+    case ADD_CHANNEL: {
       return {
         ...state,
         ...action.payload.entities.byChannelId, // normalized channels
       };
     }
-
-    case DELETE_A_CHANNEL:
-      const newState = { ...state };
+    case DELETE_CHANNEL:
+      const newState = {
+        ...state
+      };
       delete newState[action.payload];
       return newState;
 
-    case CLEAR_ALL_CHANNELS:
+    case CLEAR_CHANNELS:
       return {};
 
-    case ADD_A_PART:
+    case ADD_PART:
       //TODO: add test
       const partId0 = action.payload.result;
       const part0 = action.payload.entities.byPartId[partId0];
@@ -72,7 +69,7 @@ const byChannelId = (state = {}, action) => {
         }
       };
 
-    case DELETE_A_PART:
+    case DELETE_PART:
       //TODO: add test
       const partId2 = action.payload.partId;
       const channelId2 = action.payload.channelId;
@@ -110,13 +107,13 @@ const byChannelId = (state = {}, action) => {
 const allChannelIds = (state = [], action) => {
   switch (action.type) {
 
-    case ADD_A_CHANNEL:
+    case ADD_CHANNEL:
       return [...state, action.payload.result];
 
-    case DELETE_A_CHANNEL:
+    case DELETE_CHANNEL:
       return state.filter(p => p !== action.payload);
 
-    case CLEAR_ALL_CHANNELS:
+    case CLEAR_CHANNELS:
       return [];
 
     default:
@@ -127,14 +124,14 @@ const allChannelIds = (state = [], action) => {
 const activeChannels = (state = [], action) => {
   switch (action.type) {
 
-    case SET_A_CHANNEL_ACTIVE:
+    case SET_CHANNEL_ACTIVE:
       return [...state, action.payload];
 
-    case DELETE_A_CHANNEL:
-    case SET_A_CHANNEL_INACTIVE:
+    case DELETE_CHANNEL:
+    case SET_CHANNEL_INACTIVE:
       return state.filter(p => p !== action.payload);
 
-    case CLEAR_ALL_CHANNELS:
+    case CLEAR_CHANNELS:
       return [];
 
     default:
@@ -145,15 +142,15 @@ const activeChannels = (state = [], action) => {
 const playingChannels = (state = [], action) => {
   switch (action.type) {
 
-    case PLAY_THE_CHANNELS:
+    case PLAY_CHANNELS:
       return [...state, ...action.payload];
 
-    case DELETE_A_CHANNEL:
-    case STOP_A_CHANNEL:
+    case DELETE_CHANNEL:
+    case STOP_CHANNEL:
       return state.filter(p => p !== action.payload);
 
-    case CLEAR_ALL_CHANNELS:
-    case STOP_ALL_CHANNELS:
+    case CLEAR_CHANNELS:
+    case STOP_CHANNELS:
       return [];
 
     default:
@@ -237,11 +234,13 @@ export function getChannelParts(state, channelId) {
 // get the subpart of the channel that is needed for the channel display
 export function getChannelData(state, channelId) {
 
-  const { type, loading, sampleRate, duration, parts, buffer,
-    ...remainingObj } = _getChannel(state, channelId); // eslint-disable-line no-unused-vars
+  const { type, loading, sampleRate, duration, parts, buffer, ...remainingObj } = _getChannel(state, channelId); // eslint-disable-line no-unused-vars
   const active = isChannelActive(state, channelId);
   const selected = getSelectedImageChannelId(state) === channelId;
-  return { channelId, type, loading, active, sampleRate, duration, parts, selected, buffer };
+  return {
+    channelId, type, loading, active, sampleRate, duration,
+    parts, selected, buffer
+  };
 }
 
 // get the subpart of the channel that is needed for the channel selector
@@ -250,7 +249,9 @@ export function getChannelSelectorData(state, channelId) {
   const { type, gain, ...remainingObj } = _getChannel(state, channelId);
   const active = isChannelActive(state, channelId);
   const selected = getSelectedImageChannelId(state) === channelId;
-  return { channelId, type, gain, active, selected };
+  return {
+    channelId, type, gain, active, selected
+  };
 }
 
 export const getMaxChannelDuration = state => (getNumChannels(state) === 0 ?

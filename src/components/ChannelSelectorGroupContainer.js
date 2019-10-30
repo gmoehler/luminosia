@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 
 import ChannelSelectorGroup from "./ChannelSelectorGroup";
-import { updateChannel, setAChannelActive, unsetAChannelActive, deleteAChannel, duplicateChannel } from "../actions/channelActions";
+import { updateChannel, setChannelActive, setChannelInactive, deleteChannel, duplicateChannel } from "../actions/channelActions";
 import { uploadImageChannelToPoi, saveImageChannelAsBinary } from "../actions/ioActions";
 
 import { getChannelSelectorData, getAllChannelIds } from "../reducers/channelReducer";
@@ -12,7 +12,7 @@ class ChannelSelectorGroupContainer extends Component {
   render() {
     return (
       <ChannelSelectorGroup { ...this.props } />
-      );
+    );
   };
 
 }
@@ -26,11 +26,11 @@ const mapStateToProps = (state, props) => {
 
 const mapDispatchToProps = dispatch => ({
   updateChannel: (channelInfo) => dispatch(updateChannel(channelInfo)),
-  setChannelActive: (channelId) => dispatch(setAChannelActive(channelId)),
-  unsetChannelActive: (channelId) => dispatch(unsetAChannelActive(channelId)),
+  setChannelActive: (channelId) => dispatch(setChannelActive(channelId)),
+  setChannelInactive: (channelId) => dispatch(setChannelInactive(channelId)),
   uploadImageChannelToPoi: (channelId) => dispatch(uploadImageChannelToPoi(channelId)),
   saveImageChannelAsBinary: (channelId) => dispatch(saveImageChannelAsBinary(channelId)),
-  deleteChannel: (channelId) => dispatch(deleteAChannel(channelId)),
+  deleteChannel: (channelId) => dispatch(deleteChannel(channelId)),
   duplicateChannel: (channelId) => dispatch(duplicateChannel(channelId)),
 });
 

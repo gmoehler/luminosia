@@ -63,7 +63,7 @@ describe("view actions", () => {
         markerId: "insert"
       }
     }, {
-      type: types.ADD_A_PART,
+      type: types.ADD_PART,
       payload: {
         ...normalizedPartCh1,
       }

@@ -4,7 +4,7 @@ import { combineReducers } from "redux";
 import { schema, denormalize } from "normalizr";
 
 import {
-  CLEAR_PARTS, ADD_A_PART, DELETE_A_PART, MOVE_A_PART, RESIZE_A_PART,
+  CLEAR_PARTS, ADD_PART, DELETE_PART, MOVE_PART, RESIZE_PART,
 } from "../actions/types";
 
 export const partSchema = new schema.Entity(
@@ -23,14 +23,13 @@ export const initialState = {
 const byPartId = (state = {}, action) => {
   switch (action.type) {
 
-    case ADD_A_PART: {
+    case ADD_PART: {
       return {
         ...state,
         ...action.payload.entities.byPartId, // normalized parts
       };
     }
-
-    case MOVE_A_PART:
+    case MOVE_PART:
       const part0 = state[action.payload.partId];
       const currentOffset0 = part0.offset || 0;
       const offsetIncr0 = action.payload.incr;
@@ -45,7 +44,7 @@ const byPartId = (state = {}, action) => {
         [action.payload.partId]: newPart0,
       };
 
-    case RESIZE_A_PART:
+    case RESIZE_PART:
       const part1 = state[action.payload.partId];
       const currentOffset1 = part1.offset || 0;
 
@@ -90,7 +89,7 @@ const byPartId = (state = {}, action) => {
       };
 
 
-    case DELETE_A_PART:
+    case DELETE_PART:
       const newState = {
         ...state
       };
@@ -108,10 +107,10 @@ const byPartId = (state = {}, action) => {
 const allPartIds = (state = [], action) => {
   switch (action.type) {
 
-    case ADD_A_PART:
+    case ADD_PART:
       return [...state, action.payload.result];
 
-    case DELETE_A_PART:
+    case DELETE_PART:
       return state.filter(p => p !== action.payload.partId);
 
     case CLEAR_PARTS:

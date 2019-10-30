@@ -5,7 +5,7 @@ import { LOAD_SHOW_STARTED, LOAD_SHOW_SUCCESS, LOAD_SHOW_FAILURE, LOAD_AUDIO_SUC
 
 import { downloadTextfile, readTextFile, /* downloadImagefile, */ downloadBinaryFile, readAudioFile } from "../utils/fileUtils";
 
-import { addAChannel } from "./channelActions";
+import { addChannel } from "./channelActions";
 import { addImage, loadImage } from "./imageListActions";
 import { addToUploadLog } from "./viewActions";
 
@@ -79,7 +79,7 @@ const _uploadShow = (showData) => (dispatch, getState) => {
       const channelPromises = showData.channels
         .map((channelData) => {
           if (channelData.type === "image") {
-            const channelId = dispatch(addAChannel(channelData));
+            const channelId = dispatch(addChannel(channelData));
             if (!channelId) {
               console.log("Loading image channel failed. Skipped channel...");
             } else {
@@ -161,12 +161,12 @@ export const saveImageChannelAsBinary = channelId => (dispatch, getState) => {
   // export/save binary encoded image for poi
   downloadBinaryFile(`result-${channelId}.poi`, encodeImage(data));
 
-  // image file download
-  /* const canvas = document.getElementById("imageExportCanvas");
-  const resultImage = canvas.toDataURL("image/png");
-  if (resultImage) {
-    downloadImagefile(`result-${channelId}.png`, resultImage);
-  } */
+// image file download
+/* const canvas = document.getElementById("imageExportCanvas");
+const resultImage = canvas.toDataURL("image/png");
+if (resultImage) {
+  downloadImagefile(`result-${channelId}.png`, resultImage);
+} */
 };
 
 // export one channel to canvas and upload to poi
@@ -267,7 +267,7 @@ export const loadAudioFromFile = (audioFile, audioContext) => {
           parts: [],
         };
         // console.log(channelInfo);
-        dispatch(addAChannel(channelInfo));
+        dispatch(addChannel(channelInfo));
         dispatch(loadAudioSuccess());
         console.log("File read.");
       })
