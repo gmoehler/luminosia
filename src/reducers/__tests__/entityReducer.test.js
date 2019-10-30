@@ -13,7 +13,8 @@ const emptyEntities = {
   parts: partInitialState,
   markers: markerInitialState,
   channels: channelInitialState,
-  selectedEntityIds: []
+  selectedEntityIds: [],
+  entityIdsToCopy: [],
 };
 
 const entitiesWithSelection = {

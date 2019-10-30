@@ -17,7 +17,7 @@ export const initialState = {
   parts: initialPartState,
   markers: initialMarkerState,
   selectedEntityIds: [],
-  entitiesIdsToCopy: [],
+  entityIdsToCopy: [],
 };
 
 const selectedEntityIds = (state = [], action) => {
@@ -45,7 +45,7 @@ const selectedEntityIds = (state = [], action) => {
   }
 };
 
-const entitiesIdsToCopy = (state = [], action) => {
+const entityIdsToCopy = (state = [], action) => {
   switch (action.type) {
 
     case COPY_ENTITIES:
@@ -62,7 +62,7 @@ export default combineReducers({
   markers: markerReducer,
   channels: channelReducer,
   selectedEntityIds,
-  entitiesIdsToCopy,
+  entityIdsToCopy,
 });
 
 export function entityExists(state, entityId) {
@@ -118,5 +118,5 @@ export function anyEntitySelected(state) {
 }
 
 export function getEntitiesIdsToCopy(state) {
-  return state.entities.entitiesIdsToCopy;
+  return state.entities.entityIdsToCopy;
 }
