@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 
 import ChannelGroup from "./ChannelGroup";
 import { setMessage } from "../actions/viewActions";
-import { getSelectionRange, getResolution, getUploadLog, isLoadingShow, getLoadProgressInPercent } from "../reducers/viewReducer";
+import { getSelectionRange, getResolution, isLoadingShow, getLoadProgressInPercent } from "../reducers/viewReducer";
 import { getImageSources } from "../reducers/imageListReducer";
 import { getAllMarkers } from "../reducers/markerReducer";
 import { getMaxChannelDuration, getAllChannelIds, allChannelsStopped } from "../reducers/channelReducer";
@@ -52,15 +52,15 @@ class ChannelGroupContainer extends Component {
 const mapStateToProps = (state, props) => {
   return {
     allchannelIds: getAllChannelIds(state),
-    selection: getSelectionRange(state),
-    resolution: getResolution(state),
     maxDuration: getMaxChannelDuration(state),
-    markers: getAllMarkers(state),
     imageSources: getImageSources(state),
-    playState: allChannelsStopped(state) ? "stopped" : "playing",
-    uploadLog: getUploadLog(state),
+    playState: allChannelsStopped(state) ? "stopped" : "playing", // for HOC withPlay only
     isLoadingShow: isLoadingShow(state),
     loadProgress: getLoadProgressInPercent(state),
+    resolution: getResolution(state),
+
+    markers: getAllMarkers(state),
+    selection: getSelectionRange(state),
   };
 };
 
