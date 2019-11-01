@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import styled, { withTheme } from "styled-components";
 import { getMouseEventPosition, isImplementedKey } from "../utils/eventUtils";
 import ChannelMarkersContainer from "./ChannelMarkersContainer";
+import deepEqual from "fast-deep-equal";
 
 const MAX_CANVAS_WIDTH = 1000;
 
@@ -54,31 +55,36 @@ class ImageChannel extends Component {
     });
   }
 
-  componentDidUpdate(prevProps) {
+  shouldComponentUpdate(nextProps) {
+    // shallow comparison ("pure") for all but parts and progress
+    //TODO: find a way to make shallow equal work
+    //TODO: find a way to not pass progress thru channel
+    let doUpdate = false;
+    Object.entries(this.props).forEach(([key, val]) => {
+      if (key === "parts") {
+        if (!deepEqual(nextProps.parts, this.props.parts)) {
+          doUpdate = true;
+        }
+      }
+      else if (nextProps[key] !== val) {
+        doUpdate = true;
+      }
+    });
+    return doUpdate;
+  }
+
+  componentDidUpdate(prevProps, prevState) {
     this.draw();
 
     /*
-    // print why this updates...
-    const allKeys = Object.keys({ ...prevProps, ...this.props });
-    // Use this object to keep track of changed props
-    const changesObj = {};
-    // Iterate through keys
-    allKeys.forEach(key => {
-      // If previous is different from current
-      if (prevProps[key] !== this.props[key]) {
-        // Add to changesObj
-        changesObj[key] = {
-          from: prevProps[key],
-          to: this.props[key]
-        };
-      }
-    });
-
-    // If changesObj not empty then output to console
-    if (Object.keys(changesObj).length) {
-      console.log("[why-did-you-update]", changesObj);
-    }
-    */
+    Object.entries(this.props).forEach(([key, val]) =>
+      prevProps[key] !== val && console.log(`Prop '${key}' changed`)
+    );
+    if (this.state) {
+      Object.entries(this.state).forEach(([key, val]) =>
+        prevState[key] !== val && console.log(`State '${key}' changed`)
+      );
+    } */
   }
 
   componentWillUnmount() {

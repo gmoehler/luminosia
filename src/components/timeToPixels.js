@@ -12,10 +12,10 @@ import { secondsToPixels, pixelsToSeconds } from "../utils/conversions";
 export function timeToPixels(WrappedComponent) {
   class TimeToPixels extends PureComponent {
 
-    handleMouseEvent = (eventName, evInfo, resolution) => {
+    handleMouseEvent = (eventName, evInfo) => {
       if (this.props.handleMouseEvent) {
-        evInfo.x = pixelsToSeconds(evInfo.x, resolution);
-        evInfo.duration = pixelsToSeconds(evInfo.duration, resolution);
+        evInfo.x = pixelsToSeconds(evInfo.x, this.props.resolution);
+        evInfo.duration = pixelsToSeconds(evInfo.duration, this.props.resolution);
         this.props.handleMouseEvent(eventName, evInfo);
       }
     }
@@ -45,7 +45,7 @@ export function timeToPixels(WrappedComponent) {
       };
 
       return (<WrappedComponent { ...pixelProps }
-        handleMouseEvent={ (eventName, evInfo) => this.handleMouseEvent(eventName, evInfo, resolution) } />);
+        handleMouseEvent={ this.handleMouseEvent } />);
     }
   }
   ;
