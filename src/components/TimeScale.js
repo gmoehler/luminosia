@@ -153,10 +153,10 @@ class TimeScale extends Component {
       if (scaleInfo.marker && (counter % scaleInfo.marker === 0)) {
         const timestamp = formatTime(counter);
         timeMarkers.push(
-          <TimeStamp 
-              key={ timestamp }
-              pix={ pix }>
-              { timestamp }
+          <TimeStamp
+            key={ timestamp }
+            pix={ pix }>
+            {timestamp}
           </TimeStamp>);
         canvasInfo[pix] = timeScaleHeight;
       } else if (scaleInfo.bigStep && (counter % scaleInfo.bigStep === 0)) {
@@ -173,15 +173,15 @@ class TimeScale extends Component {
     return (
       <PlaylistTimeScale cssWidth={ maxWidth }>
         <PlaylistTimeScaleScroll cssWidth={ maxWidth }>
-          { timeMarkers }
+          {timeMarkers}
           <TimeTicks cssWidth={ maxWidth }
-              width={ maxWidth * scale }
-              height={ timeScaleHeight * scale }
-              ref={ this.setCanvasRef }
+            width={ maxWidth * scale }
+            height={ timeScaleHeight * scale }
+            ref={ this.setCanvasRef }
           />
         </PlaylistTimeScaleScroll>
       </PlaylistTimeScale>
-      );
+    );
   }
 }
 
@@ -196,10 +196,6 @@ TimeScale.propTypes = {
 
 
 TimeScale.defaultProps = {
-  theme: {
-    // color of the time ticks on the canvas
-    timeColor: "grey",
-  },
   // checking `window.devicePixelRatio` when drawing to canvas.
   scale: 1,
   // time length in seconds

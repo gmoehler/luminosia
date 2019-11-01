@@ -16,7 +16,6 @@ import { toggleEntitySelection, toggleMultiEntitySelection, toggleInitialEntityS
 import { selectRange, deselectRange, selectImageChannel } from "../actions/viewActions";
 import { setOrReplaceInsertMarker } from "../actions/markerActions";
 
-
 // add play functionality to audio channels
 const ChannelWithPlay = withEventHandler(withPlay(timeToPixels(Channel)));
 const ImageChannelWithPlay = withEventHandler(withPlay(timeToPixels(ImageChannel)));
@@ -65,7 +64,8 @@ class ChannelContainer extends Component {
     return (
       type === "audio"
         ? <ChannelWithPlay { ...this.props } />
-        : <ImageChannelWithPlay { ...this.props } resize={ (partId, markerId, incr) => this.props.resize(channelId, partId, markerId, incr) } />);
+        : <ImageChannelWithPlay { ...this.props }
+          resize={ (partId, markerId, incr) => this.props.resize(channelId, partId, markerId, incr) } />);
   }
 }
 

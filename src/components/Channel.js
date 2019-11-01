@@ -146,7 +146,8 @@ class Channel extends Component {
       </WaveformCanvases>
       <ChannelMarkersContainer
         channelId={ channelId }
-        progress={ progress } />
+        progress={ progress }
+        theme={ theme } />
     </ChannelWrapper>
     );
   }
@@ -176,16 +177,6 @@ Channel.propTypes = {
 };
 
 Channel.defaultProps = {
-  theme: {
-    // color of the waveform outline
-    waveOutlineColor: "#282c34",
-    waveFillColor: "#05a0cd",
-    waveProgressColor: "transparent", //'rgb(255,120,0)',
-    waveProgressBorderColor: "rgb(255,255,255)",
-
-    borderColorSelected: "#3f51b5",
-    borderColor: "#2c387e",
-  },
   // checking `window.devicePixelRatio` when drawing to canvas.
   scale: 1,
   offset: 0,

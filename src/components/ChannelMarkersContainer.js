@@ -7,7 +7,6 @@ import { getAllMarkers } from "../reducers/markerReducer";
 import { getSelectionRange, getResolution, getSelectedImageChannelId } from "../reducers/viewReducer";
 import { secondsToPixels } from "../utils/conversions";
 
-
 class ChannelMarkersContainer extends Component {
 
   static getDerivedStateFromError(error) {

@@ -251,7 +251,8 @@ class ImageChannel extends Component {
         {allImageCanvases}
         <ChannelMarkersContainer
           channelId={ channelId }
-          progress={ progress } />
+          progress={ progress }
+          theme={ theme } />
       </ImageChannelWrapper>
     );
   }
@@ -277,12 +278,6 @@ ImageChannel.propTypes = {
 };
 
 ImageChannel.defaultProps = {
-  theme: {
-    markerColor: "rgba(255,255, 0, 0.5)", // transparent yellow
-    imageBackgroundColor: "black",
-    borderColorSelected: "#f50057",
-    borderColor: "#3f51b5",
-  },
   factor: 1,
   // checking `window.devicePixelRatio` when drawing to canvas.
   scale: 1,

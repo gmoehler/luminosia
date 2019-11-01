@@ -6,6 +6,7 @@ import { setMessage } from "../actions/viewActions";
 import { getSelectionRange, getResolution, isLoadingShow, getLoadProgressInPercent } from "../reducers/viewReducer";
 import { getImageSources } from "../reducers/imageListReducer";
 import { getMaxChannelDuration, getAllChannelIds, allChannelsStopped } from "../reducers/channelReducer";
+import { defaultTheme } from "./themes";
 
 class ChannelGroupContainer extends Component {
 
@@ -42,8 +43,14 @@ class ChannelGroupContainer extends Component {
       );
     }
 
+
+    const renderProps = {
+      ...this.props,
+      theme: defaultTheme
+    };
+
     return (
-      <ChannelGroup { ...this.props } />
+      <ChannelGroup { ...renderProps } />
     );
   }
 }

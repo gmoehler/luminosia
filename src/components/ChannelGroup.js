@@ -84,6 +84,7 @@ export default class ChannelGroup extends Component {
         <TimeScaleInSecs
           maxDuration={ this.props.maxDuration }
           resolution={ this.props.resolution }
+          theme={ this.props.theme }
         />
 
         {channelComponents}
@@ -102,4 +103,5 @@ ChannelGroup.propTypes = {
   maxDuration: PropTypes.number,
   isLoadingShow: PropTypes.bool,
   loadProgress: PropTypes.number,
+  theme: PropTypes.object.isRequired,
 };
