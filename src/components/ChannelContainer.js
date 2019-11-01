@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import memoize from "memoize-one";
+import extractPeaks from "webaudio-peaks";
 
-import ImageChannel from "./ImageChannel";
 import Channel from "./Channel";
 
 import { getChannelData } from "../reducers/channelReducer";
@@ -16,9 +17,8 @@ import { toggleEntitySelection, toggleMultiEntitySelection, toggleInitialEntityS
 import { selectRange, deselectRange, selectImageChannel } from "../actions/viewActions";
 import { setOrReplaceInsertMarker } from "../actions/markerActions";
 
-// add play functionality to audio channels
+// add play functionality to channels
 const ChannelWithPlay = withEventHandler(withPlay(timeToPixels(Channel)));
-const ImageChannelWithPlay = withEventHandler(withPlay(timeToPixels(ImageChannel)));
 
 class ChannelContainer extends Component {
 
@@ -41,6 +41,11 @@ class ChannelContainer extends Component {
     });
   }
 
+  // only re-calc when buffer, resolution of bits change
+  doExtractPeaks = memoize(
+    (buffer, pixPerSample, bits) => extractPeaks(buffer, pixPerSample, true, 0, buffer.length, bits));
+
+
   render() {
 
     if (this.state.error) {
@@ -55,17 +60,30 @@ class ChannelContainer extends Component {
       );
     }
 
-    const { type, loading, channelId } = this.props;
+    const { loading, channelId, buffer, sampleRate, resolution } = this.props;
 
     if (loading) {
       return null;
     }
 
+    // memoized audio peak data
+    const { data, length, bits } = buffer ?
+      this.doExtractPeaks(buffer, sampleRate / resolution, 16)
+      : { data: [], length: 0, bits: 0 };
+    const peaks = Array.isArray(data) ? data[0] : []; // only one channel for now
+
+    const renderProps = {
+      ...this.props,
+      factor: resolution / sampleRate,
+      peaks,
+      bits,
+      length,
+    };
+
     return (
-      type === "audio"
-        ? <ChannelWithPlay { ...this.props } />
-        : <ImageChannelWithPlay { ...this.props }
-          resize={ (partId, markerId, incr) => this.props.resize(channelId, partId, markerId, incr) } />);
+      <ChannelWithPlay { ...renderProps }
+        resize={ (partId, markerId, incr) => this.props.resize(channelId, partId, markerId, incr) }
+      />);
   }
 }
 
@@ -121,6 +139,9 @@ ChannelContainer.propTypes = {
   stopChannel: PropTypes.func.isRequired,
   move: PropTypes.func.isRequired,
   resize: PropTypes.func.isRequired,
+  buffer: PropTypes.object,
+  sampleRate: PropTypes.number.isRequired,
+  resolution: PropTypes.number.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChannelContainer);

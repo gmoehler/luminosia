@@ -1,7 +1,7 @@
 import React from "react";
 import renderer from "react-test-renderer";
 import AnimationPane from "../AnimationPane.js";
-import Channel from "../Channel";
+import Channel from "../AudioChannel";
 import { imageChannel1, imageChannel2 } from "../../__fixtures__/entity.fixtures";
 
 describe("simple component tests", () => {

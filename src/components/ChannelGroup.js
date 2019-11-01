@@ -71,6 +71,7 @@ export default class ChannelGroup extends Component {
       .map((channelId) => (
 
         <ChannelContainer { ...passthruProps }
+          className="ChannelContainer"
           channelId={ channelId }
           key={ channelId }
           reportProgress={ this.reportProgress }
@@ -78,10 +79,12 @@ export default class ChannelGroup extends Component {
 
     return (
       <ChannelGroupWrapper
+        className="ChannelGroupWrapper"
         drawerWidth={ this.props.drawerWidth || 0 }
         ref={ (ref) => this.groupRef = ref }>
 
         <TimeScaleInSecs
+          className="TimeScaleInSecs"
           maxDuration={ this.props.maxDuration }
           resolution={ this.props.resolution }
           theme={ this.props.theme }

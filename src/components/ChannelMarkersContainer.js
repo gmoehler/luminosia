@@ -43,7 +43,8 @@ class ChannelMarkersContainer extends Component {
     }
 
     return (
-      <ChannelMarkers { ...this.props } />
+      <ChannelMarkers { ...this.props }
+        className="ChannelMarkers" />
     );
   }
 }

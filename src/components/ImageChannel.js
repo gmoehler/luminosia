@@ -1,8 +1,7 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import styled, { withTheme } from "styled-components";
 import { getMouseEventPosition, isImplementedKey } from "../utils/eventUtils";
-import ChannelMarkersContainer from "./ChannelMarkersContainer";
 import deepEqual from "fast-deep-equal";
 
 const MAX_CANVAS_WIDTH = 1000;
@@ -27,18 +26,6 @@ const ImageCanvases = styled.div`
   position: absolute;
   left: ${props => props.offset}px;
   cursor: ${props => props.cursor};
-`;
-
-// need position:relative so children will respect parent margin/padding
-const ImageChannelWrapper = styled.div`
-  position: relative; 
-  margin: 0;
-  padding: 0;
-  background: ${props => props.theme.imageBackgroundColor};
-  width: ${props => props.cssWidth}px;
-  height: ${props => props.height}px;
-  border: 1px solid ${props => props.borderColor};
-  border-left: none;
 `;
 
 class ImageChannel extends Component {
@@ -174,8 +161,7 @@ class ImageChannel extends Component {
   }
 
   render() {
-    const { channelId, parts, imageHeight, scale, progress,
-      theme, maxWidth, selected, imageSources } = this.props;
+    const { parts, imageHeight, scale, theme, selected, imageSources } = this.props;
 
     // loop thru all images/parts
     const allImageCanvases = [];
@@ -236,30 +222,10 @@ class ImageChannel extends Component {
     }
 
     return (
-      <ImageChannelWrapper className="ChannelWrapper"
-        onMouseDown={ (e) => this.handleMouseEvent(e, "mouseDown") }
-        onMouseUp={ (e) => this.handleMouseEvent(e, "mouseUp") }
-        onMouseMove={ (e) => this.handleMouseEvent(e, "mouseMove") }
-        onMouseLeave={ (e) => this.handleMouseEvent(e, "mouseLeave") }
-        onDragEnter={ (e) => this.handleMouseEvent(e, "dragEnter") }
-        onDragEnd={ (e) => this.handleMouseEvent(e, "dragEnd") }
-        onDragExit={ (e) => this.handleMouseEvent(e, "dragExit") }
-        onDragLeave={ (e) => this.handleMouseEvent(e, "dragLeave") }
-        onDragOver={ (e) => this.handleMouseEvent(e, "dragOver") }
-        onDragStart={ (e) => this.handleMouseEvent(e, "dragStart") }
-        onDrop={ (e) => this.handleMouseEvent(e, "drop") }
-        cssWidth={ maxWidth }
-        theme={ theme }
-        height={ 2 + imageHeight } // add border
-        tabIndex={ 0 }
-        borderColor={ selected ? theme.borderColorSelected : theme.borderColor }>
+      <Fragment>
         {allCanvasRefImages}
         {allImageCanvases}
-        <ChannelMarkersContainer
-          channelId={ channelId }
-          progress={ progress }
-          theme={ theme } />
-      </ImageChannelWrapper>
+      </Fragment>
     );
   }
 }
