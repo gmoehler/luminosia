@@ -157,13 +157,6 @@ Channel.propTypes = {
   channelId: PropTypes.string.isRequired,
   scale: PropTypes.number,
   progress: PropTypes.number,
-  cursorPos: PropTypes.number,
-  selection: PropTypes.exact({
-    from: PropTypes.number,
-    to: PropTypes.number,
-    type: PropTypes.string,
-  }).isRequired,
-  markers: PropTypes.arrayOf(PropTypes.object),
   theme: PropTypes.object,
   maxWidth: PropTypes.number,
   selected: PropTypes.bool,
