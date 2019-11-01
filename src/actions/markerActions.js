@@ -1,4 +1,5 @@
-import { CLEAR_MARKERS, SET_OR_REPLACE_MARKER, DELETE_MARKER, UPDATE_MARKER,
+import {
+  CLEAR_MARKERS, SET_OR_REPLACE_MARKER, DELETE_MARKER, UPDATE_MARKER,
 } from "./types";
 import { aMarkerExists } from "../reducers/markerReducer";
 

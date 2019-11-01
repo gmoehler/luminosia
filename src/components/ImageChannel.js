@@ -2,43 +2,9 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import styled, { withTheme } from "styled-components";
 import { getMouseEventPosition, isImplementedKey } from "../utils/eventUtils";
+import ChannelMarkersContainer from "./ChannelMarkersContainer";
 
 const MAX_CANVAS_WIDTH = 1000;
-
-const ImageProgress = styled.div`
-  position: absolute;
-  background: ${props => props.theme.waveProgressColor};
-  width: 1px;
-  left: ${props => props.progress}px;
-  height: ${props => props.height}px;
-  border-right: 1px solid ${props => props.theme.waveProgressBorderColor};
-`;
-
-const ImageCursor = styled.div`
-  position: absolute;
-  background: ${props => props.theme.cursorColor};
-  width: 1px;
-  left: ${props => props.cursorPos}px;
-  height: ${props => props.height}px;
-`;
-
-const ImageMarker = styled.div`
-  position: absolute;
-  background: ${props => props.markerColor || props.theme.markerColor};
-  width: 2px;
-  left: ${props => props.markerPos}px;
-  height: ${props => props.height}px;
-  cursor: ${props => props.cursor};
-`;
-
-const ImageSelection = styled.div`
-  position: absolute;
-  left: ${props => props.selection.from}px;
-  background: ${props => props.selection.type === "temp" ? props.theme.tempSelectionColor :
-    props.theme.selectionColor};
-  width: ${props => props.selection.to - props.selection.from}px;
-  height: ${props => props.height}px;
-`;
 
 const ImageCanvas = styled.canvas`
   float: left;
@@ -88,8 +54,31 @@ class ImageChannel extends Component {
     });
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     this.draw();
+
+    /*
+    // print why this updates...
+    const allKeys = Object.keys({ ...prevProps, ...this.props });
+    // Use this object to keep track of changed props
+    const changesObj = {};
+    // Iterate through keys
+    allKeys.forEach(key => {
+      // If previous is different from current
+      if (prevProps[key] !== this.props[key]) {
+        // Add to changesObj
+        changesObj[key] = {
+          from: prevProps[key],
+          to: this.props[key]
+        };
+      }
+    });
+
+    // If changesObj not empty then output to console
+    if (Object.keys(changesObj).length) {
+      console.log("[why-did-you-update]", changesObj);
+    }
+    */
   }
 
   componentWillUnmount() {
@@ -179,7 +168,8 @@ class ImageChannel extends Component {
   }
 
   render() {
-    const { channelId, parts, imageHeight, scale, progress, cursorPos, selection, markers, theme, maxWidth, selected, imageSources } = this.props;
+    const { channelId, parts, imageHeight, scale, progress,
+      theme, maxWidth, selected, imageSources } = this.props;
 
     // loop thru all images/parts
     const allImageCanvases = [];
@@ -239,55 +229,6 @@ class ImageChannel extends Component {
       });
     }
 
-    const progressElem = progress ?
-      (<ImageProgress className="Progress"
-        progress={ progress }
-        theme={ theme }
-        height={ imageHeight } />)
-      : null;
-
-    const selectionElem = selection && selection.from && selection.to ?
-      (<ImageSelection
-        className="Selection"
-        selection={ selection }
-        theme={ theme }
-        height={ imageHeight } />)
-      : null;
-
-    const cursorElem = cursorPos ?
-      (<ImageCursor className="Cursor"
-        cursorPos={ cursorPos }
-        theme={ theme }
-        height={ imageHeight } />)
-      : null;
-
-    const markerElems = markers && Array.isArray(markers) ?
-      markers.map((marker) => {
-        let color = theme.markerColor;
-        let cursor = "default";
-        // marker color depends on type (insert / normal), selection status
-        //  and whether the part belongs to this channel
-        if (marker.type === "insert" || marker.markerId === "insert") {
-          color = theme.insertMarkerColor;
-        } else if (marker.type === "selected" && marker.channelId === channelId) {
-          color = theme.selectedMarkerColor;
-          cursor = "col-resize";
-        } else if (marker.type === "selected") {
-          color = theme.selectedMarkerColorOther;
-        } else if (marker.channelId !== channelId) {
-          color = theme.markerColorOther;
-        }
-        return (<ImageMarker key={ marker.markerId }
-          className="Marker"
-          markerPos={ marker.pos }
-          markerColor={ color }
-          cursor={ cursor }
-          theme={ theme }
-          height={ imageHeight }
-          data-markerid={ marker.markerId }
-          data-partid={ marker.partId } />);
-      }) : null;
-
     return (
       <ImageChannelWrapper className="ChannelWrapper"
         onMouseDown={ (e) => this.handleMouseEvent(e, "mouseDown") }
@@ -308,10 +249,9 @@ class ImageChannel extends Component {
         borderColor={ selected ? theme.borderColorSelected : theme.borderColor }>
         {allCanvasRefImages}
         {allImageCanvases}
-        {progressElem}
-        {selectionElem}
-        {cursorElem}
-        {markerElems}
+        <ChannelMarkersContainer
+          channelId={ channelId }
+          progress={ progress } />
       </ImageChannelWrapper>
     );
   }
@@ -329,33 +269,16 @@ ImageChannel.propTypes = {
   imageHeight: PropTypes.number,
   scale: PropTypes.number,
   progress: PropTypes.number,
-  cursorPos: PropTypes.number,
-  selection: PropTypes.exact({
-    from: PropTypes.number,
-    to: PropTypes.number,
-    type: PropTypes.string
-  }).isRequired,
-  markers: PropTypes.arrayOf(PropTypes.object),
   theme: PropTypes.object,
   maxWidth: PropTypes.number,
   selected: PropTypes.bool,
   handleMouseEvent: PropTypes.func.isRequired,
   factor: PropTypes.number,
-  gain: PropTypes.number,
 };
 
 ImageChannel.defaultProps = {
   theme: {
-    waveProgressColor: "transparent", // 'rgb(255,255,255,0.3)', // transparent white
-    waveProgressBorderColor: "rgb(255,255,255,1)", // transparent white
-    cursorColor: "red",
     markerColor: "rgba(255,255, 0, 0.5)", // transparent yellow
-    markerColorOther: "rgba(255,255, 0, 0.2)", // more transparent yellow
-    insertMarkerColor: "rgba(255,165, 0, 0.5)", // transparent orange
-    selectedMarkerColor: "rgba(255,165, 0, 1)", // orange
-    selectedMarkerColorOther: "rgba(255,165, 0, 0.3)", // orange slightly transp
-    selectionColor: "rgba(200,200,255,0.5)",
-    tempSelectionColor: "rgba(80,80,80,0.5)",
     imageBackgroundColor: "black",
     borderColorSelected: "#f50057",
     borderColor: "#3f51b5",
@@ -367,17 +290,6 @@ ImageChannel.defaultProps = {
   offset: 0,
   // height in CSS pixels of each canvas element an image is on.
   imageHeight: 90, // multiple of num LEDs
-  // all x pixel values are from 0 regardless of offset
-  // width in CSS pixels of the progress on the channel. (null: do not draw)
-  progress: null,
-  // position of the cursor in CSS pixels from the left of channel (null: do not draw)
-  cursorPos: null,
-  // position of the selection in CSS pixels from the left of channel (null: do not draw)
-  selection: null,
-  // positions of the markers in CSS pixels from the left of channel (null: do not draw)
-  markers: [],
-  // brightness gain of the window: 1 is fully bright, 0 is black
-  gain: 1.0
 };
 
 export default withTheme(ImageChannel);

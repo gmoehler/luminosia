@@ -70,7 +70,7 @@ class ChannelContainer extends Component {
 }
 
 const mapStateToProps = (state, props) => {
-  const { channelId, selection, markers, imageSources } = props;
+  const { channelId, imageSources } = props;
 
   const channelData = getChannelData(state, channelId);
   const parts = getParts(state, channelData.parts);
@@ -78,8 +78,6 @@ const mapStateToProps = (state, props) => {
   return {
     ...channelData,
     parts,
-    selection,
-    markers,
     imageSources,
   };
 };

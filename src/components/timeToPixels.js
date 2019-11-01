@@ -22,17 +22,11 @@ export function timeToPixels(WrappedComponent) {
 
     render() {
 
-      const { resolution, offset, progress, cursorPos, selection, maxDuration, parts, markers, handleMouseEvent, ...passthruProps } = this.props;
+      const { resolution, offset, maxDuration, parts, handleMouseEvent, ...passthruProps } = this.props;
+
 
       // channel offset only used for audio buffer which does not contain parts
       const offsetPx = offset ? secondsToPixels(offset, resolution) : 0;
-      const progressPx = progress ? secondsToPixels(progress, resolution) - offsetPx : 0;
-      const selectionPx = selection ? {
-        from: selection.from ? secondsToPixels(selection.from, resolution) - offsetPx : 0,
-        to: selection.to ? secondsToPixels(selection.to, resolution) - offsetPx : 0,
-        type: selection.type
-      } : null;
-      const cursorPosPx = selection && selection.from ? secondsToPixels(selection.from, resolution) - offsetPx : 0;
       const maxWidthPx = maxDuration ? secondsToPixels(maxDuration, resolution) : 0;
       const partsPx = parts ? cloneDeep(parts) : [];
       partsPx.forEach(part => {
@@ -41,20 +35,16 @@ export function timeToPixels(WrappedComponent) {
         part.cuein = part.cuein ? secondsToPixels(part.cuein, resolution) : 0;
         part.cueout = part.cueout ? secondsToPixels(part.cueout, resolution) : 0;
       });
-      const markersPx = markers ? cloneDeep(markers) : [];
-      markersPx.forEach((marker) => {
-        marker.pos = marker.pos ? secondsToPixels(marker.pos, resolution) - offsetPx : 0;
-      });
 
-      return (<WrappedComponent { ...passthruProps }
-        offset={ offsetPx }
-        progress={ progressPx }
-        cursorPos={ cursorPosPx }
-        selection={ selectionPx }
-        maxWidth={ maxWidthPx }
-        parts={ partsPx }
-        markers={ markersPx }
-        resolution={ resolution } // needed by TimeScale (?)
+      const pixelProps = {
+        ...passthruProps,
+        offset: offsetPx,
+        maxWidth: maxWidthPx,
+        parts: partsPx,
+        resolution: resolution,
+      };
+
+      return (<WrappedComponent { ...pixelProps }
         handleMouseEvent={ (eventName, evInfo) => this.handleMouseEvent(eventName, evInfo, resolution) } />);
     }
   }

@@ -2,40 +2,9 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import styled, { withTheme } from "styled-components";
 import { getMouseEventPosition } from "../utils/eventUtils";
+import ChannelMarkersContainer from "./ChannelMarkersContainer";
 
 const MAX_CANVAS_WIDTH = 1000;
-
-const Progress = styled.div`
-  position: absolute;
-  background: ${props => props.theme.waveProgressColor};
-  width: ${props => props.progress + props.offset}px;
-  height: ${props => props.waveHeight}px;
-  border-right: 1px solid ${props => props.theme.waveProgressBorderColor};
-`;
-
-const Cursor = styled.div`
-  position: absolute;
-  background: ${props => props.theme.cursorColor};
-  width: 1px;
-  left: ${props => props.offset + props.cursorPos}px;
-  height: ${props => props.waveHeight}px;
-`;
-
-const Marker = styled.div`
-  position: absolute;
-  background: ${props => props.markerColor || props.theme.markerColor};
-  width: 1px;
-  left: ${props => props.offset + props.markerPos}px;
-  height: ${props => props.waveHeight}px;
-`;
-
-const Selection = styled.div`
-  position: absolute;
-  left: ${props => props.offset + props.selection.from}px;
-  background: ${props => props.theme.selectionColor};
-  width: ${props => props.selection.to - props.selection.from}px;
-  height: ${props => props.waveHeight}px;
-`;
 
 const Waveform = styled.canvas`
   float: left;
@@ -137,7 +106,8 @@ class Channel extends Component {
   }
 
   render() {
-    const { length, waveHeight, scale, progress, cursorPos, selection, markers, theme, offset, selected } = this.props;
+    const { length, waveHeight, scale, progress,
+      theme, offset, selected, channelId } = this.props;
 
     let totalWidth = length;
     let waveformCount = 0;
@@ -158,48 +128,6 @@ class Channel extends Component {
       waveformCount += 1;
     }
 
-    const progressElem = progress ?
-      (<Progress className="Progress"
-        progress={ progress }
-        theme={ theme }
-        waveHeight={ waveHeight }
-        offset={ offset } />)
-      : null;
-
-    const selectionElem = selection && selection.from && selection.to ?
-      (<Selection className="Selection"
-        selection={ selection }
-        theme={ theme }
-        waveHeight={ waveHeight }
-        offset={ offset } />)
-      : null;
-
-    const cursorElem = cursorPos ?
-      (<Cursor className="Cursor"
-        cursorPos={ cursorPos }
-        theme={ theme }
-        waveHeight={ waveHeight }
-        offset={ offset } />)
-      : null;
-
-    const markerElems = markers && Array.isArray(markers) ?
-      markers.map((marker) => {
-        let color = theme.markerColor;
-        if (marker.type === "insert" || marker.markerId === "insert") {
-          color = theme.insertMarkerColor;
-        } else if (marker.type === "selected") {
-          color = theme.selectedMarkerColor;
-        }
-        return (<Marker className="Marker"
-          key={ marker.markerId }
-          markerPos={ marker.pos }
-          markerColor={ color }
-          theme={ theme }
-          waveHeight={ waveHeight }
-          offset={ offset } />);
-      }
-      ) : null;
-
     const borderColor = selected ? theme.borderColorSelected : theme.borderColor;
 
     return (<ChannelWrapper className="ChannelWrapper"
@@ -216,10 +144,9 @@ class Channel extends Component {
         offset={ offset }>
         {waveforms}
       </WaveformCanvases>
-      {progressElem}
-      {selectionElem}
-      {cursorElem}
-      {markerElems}
+      <ChannelMarkersContainer
+        channelId={ channelId }
+        progress={ progress } />
     </ChannelWrapper>
     );
   }
@@ -255,11 +182,7 @@ Channel.defaultProps = {
     waveFillColor: "#05a0cd",
     waveProgressColor: "transparent", //'rgb(255,120,0)',
     waveProgressBorderColor: "rgb(255,255,255)",
-    cursorColor: "red",
-    markerColor: "rgba(255,255, 0, 0.5)", // transparent yellow
-    insertMarkerColor: "rgba(255,165, 0, 0.5)", // transparent orange
-    selectedMarkerColor: "rgba(255,165, 0, 1)", // orange
-    selectionColor: "rgba(0,0,255,0.5)",
+
     borderColorSelected: "#3f51b5",
     borderColor: "#2c387e",
   },
