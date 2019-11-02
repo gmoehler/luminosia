@@ -1,7 +1,6 @@
-import React, { Component, Fragment } from "react";
+import React, { PureComponent, Fragment } from "react";
 import PropTypes from "prop-types";
 import styled, { withTheme } from "styled-components";
-import { getMouseEventPosition } from "../utils/eventUtils";
 
 const MAX_CANVAS_WIDTH = 1000;
 
@@ -21,7 +20,7 @@ const WaveformCanvases = styled.div`
   background: ${props => props.theme.waveFillColor};
 `;
 
-class Channel extends Component {
+class Channel extends PureComponent {
   constructor(props) {
     super(props);
     this.canvases = [];
@@ -31,8 +30,17 @@ class Channel extends Component {
     this.draw();
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps, prevState) {
     this.draw();
+    /*
+    Object.entries(this.props).forEach(([key, val]) =>
+      prevProps[key] !== val && console.log(`AC Prop '${key}' changed`)
+    );
+    if (this.state) {
+      Object.entries(this.state).forEach(([key, val]) =>
+        prevState[key] !== val && console.log(`AC State '${key}' changed`)
+      );
+    }*/
   }
 
   draw() {
@@ -67,23 +75,6 @@ class Channel extends Component {
       }
 
       offset += MAX_CANVAS_WIDTH;
-    }
-  }
-
-  handleMouseEvent(e, eventName) {
-    if (this.props.handleMouseEvent) {
-      e.preventDefault();
-      const pos = getMouseEventPosition(e, "ChannelWrapper");
-      const shiftKey = e.shiftKey;
-      const adaptedEventName = shiftKey ? "shift-" + eventName : eventName;
-      const eventInfo = {
-        ...pos, // x pos, channelId, partId
-        timestamp: e.timeStamp,
-        // no drag source path
-      };
-      this.props.handleMouseEvent(adaptedEventName, eventInfo);
-
-      return;
     }
   }
 
@@ -127,39 +118,29 @@ class Channel extends Component {
 }
 
 Channel.propTypes = {
-  channelId: PropTypes.string.isRequired,
-  scale: PropTypes.number,
-  progress: PropTypes.number,
   theme: PropTypes.object,
-  maxWidth: PropTypes.number,
-  selected: PropTypes.bool,
-  handleMouseEvent: PropTypes.func,
+  scale: PropTypes.number,
+
   factor: PropTypes.number,
   length: PropTypes.number,
+
   offset: PropTypes.number,
   peaks: PropTypes.object,
   bits: PropTypes.number,
-  waveHeight: PropTypes.number,
+  waveHeight: PropTypes.number, // currently only default
 };
 
 Channel.defaultProps = {
+  factor: 1,
   // checking `window.devicePixelRatio` when drawing to canvas.
   scale: 1,
   offset: 0,
-  peaks: [],
   length: 0,
+
+  peaks: [],
   bits: 0,
   // height in CSS pixels of each canvas element a waveform is on.
   waveHeight: 92,
-  // all x pixel values are from 0 regardless of offset
-  // width in CSS pixels of the progress on the channel  (not drawn on null)
-  progress: null,
-  // position of the cursor in CSS pixels from the left of channel (not drawn on null)
-  cursorPos: null,
-  // position of the selection in CSS pixels from the left of channel (not drawn on null)
-  selection: null,
-  // positions of the markers in CSS pixels from the left of channel (null: do not draw)
-  markers: [],
 };
 
 export default withTheme(Channel);

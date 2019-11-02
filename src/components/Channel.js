@@ -64,7 +64,8 @@ class Channel extends Component {
 
   render() {
     const { channelId, imageHeight, progress,
-      theme, maxWidth, selected, type, length } = this.props;
+      theme, maxWidth, selected, type, length, scale, factor, offset,
+      peaks, bits, parts, images } = this.props;
 
 
     const channelWrapperProps = {
@@ -75,9 +76,28 @@ class Channel extends Component {
       borderColor: selected ? theme.borderColorSelected : theme.borderColor
     };
 
+    // separate props
+    const channelProps = type === "audio" ? {
+      theme,
+      scale,
+      factor,
+      offset,
+      length,
+      peaks,
+      bits,
+    } : {
+        theme,
+        scale,
+        maxWidth,
+        parts,
+        images,
+        selected,
+        bits,
+      };
+
     const innerChannel = type === "audio"
-      ? <AudioChannel { ...this.props } />
-      : <ImageChannel { ...this.props } />;
+      ? <AudioChannel { ...channelProps } />
+      : <ImageChannel { ...channelProps } />;
 
     return (
       <ChannelWrapper { ...channelWrapperProps }
@@ -114,6 +134,13 @@ Channel.propTypes = {
   length: PropTypes.number, // width for audio // TODO: make one width
   selected: PropTypes.bool,
   handleMouseEvent: PropTypes.func.isRequired,
+  scale: PropTypes.number,
+  factor: PropTypes.number,
+  offset: PropTypes.number,
+  peaks: PropTypes.object,
+  bits: PropTypes.number,
+  parts: PropTypes.arrayOf(PropTypes.object),
+  images: PropTypes.object,
 };
 
 Channel.defaultProps = {

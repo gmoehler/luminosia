@@ -10,18 +10,19 @@ App
   HeaderContainer
     Header
 
-  ChannelGroupContainer
+ *ChannelGroupContainer
     time2pixels
       TimeScale
     ChannelGroup
       withEventHandler
         withPlay
           time2pixels
+           *ChannelContainer
             Channel
-      withEventHandler
-        withPlay
-          time2pixels
-            ImageChannel
+              ImageChannel
+              AudioChannel
+             *ChannelMarkersContainer
+                ChannelMarkers
 
   ImageListContainer
     ImageList
@@ -37,14 +38,28 @@ App
 
 ```
 
-Todos:
-- weaker marker colors
-- Redux: Make parts a first level state
+Issues:
+- not possible to load same waveform twice
+- selection stays when channel is deleted
+- show loading progress component only on channel loaded
+
+Usability:
+- make zoom stay at position
+- dont scroll for play when start is in view
+- fix selection behaviour_
+  . single click drag for selection
+- weaker marker colors for small zoom level
 - snap to other objects
-- generate multiple copies of a part
 - group/ungroup of parts
 - drag and dop images out of list
 - markers in timeline
+- channel names
+- show image names with tooltip
+
+Tech depts:
+- make ImageChannel pure component (parts) with Part component
+  -> only read partIds in channel
+- ChannelMarkersContainer required?
 
 performance:
 - evaluate playing
@@ -52,6 +67,7 @@ performance:
 
 next gen:
 - parameter input
+- concept for gyro
 
 ---
 

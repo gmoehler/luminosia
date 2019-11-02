@@ -1,4 +1,4 @@
-import reducer, { initialState, getImageList, getImageSources } from "../imageListReducer";
+import reducer, { initialState, getImageList, getImages } from "../imageListReducer";
 import * as types from "../../actions/types";
 import {
   imagePayload0, imageListState0, fullState0,
@@ -63,15 +63,10 @@ describe("selector functions", () => {
     expect(getImageList(fullState0)).toEqual([imagePayload0]);
   });
 
-  it("should get the image sources", () => {
-    expect(getImageSources(fullState0)).toEqual(
-      {
-        "grummelschnubbel.png": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJMAAAAeCAYAAAAoyywTAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAACLSURBVHhe7daxDQIxEADBg+7o4akOeqA8nsAh+g/YgGBGsnyJHa0sX2bm/VkceNyeazp2f21r+u7snrPz/+66dviZmMiIiYyYyPiAk/EykRETGTGRERMZMZERExkxkRETGTGRERMZMZERExkxkRETGTGRERMZMZERExkxkRETGTGRERMZMZERE5GZHUbWCDnvLRwMAAAAAElFTkSuQmCC"
-      }
-    );
+  it("should get the images", () => {
+    expect(getImages(fullState0)).toEqual({
+      [imagePayload0.imageId]: imagePayload0
+    });
   });
-
-
-
 
 });

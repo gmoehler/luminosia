@@ -1,7 +1,6 @@
 import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import styled, { withTheme } from "styled-components";
-import { getMouseEventPosition, isImplementedKey } from "../utils/eventUtils";
 import deepEqual from "fast-deep-equal";
 
 const MAX_CANVAS_WIDTH = 1000;
@@ -31,21 +30,17 @@ const ImageCanvases = styled.div`
 class ImageChannel extends Component {
   constructor(props) {
     super(props);
-    this.canvases = [];
-    this.images = [];
+    this.canvaseRefs = [];
+    this.imageRefs = [];
   }
 
   componentDidMount() {
     this.draw();
-    document.addEventListener("keydown", (e) => {
-      if (isImplementedKey(e)) return this.handleMouseEvent(e, "keyDown");
-    });
   }
 
   shouldComponentUpdate(nextProps) {
-    // shallow comparison ("pure") for all but parts and progress
+    // shallow comparison ("pure") for all but parts
     //TODO: find a way to make shallow equal work
-    //TODO: find a way to not pass progress thru channel
     let doUpdate = false;
     Object.entries(this.props).forEach(([key, val]) => {
       if (key === "parts") {
@@ -62,35 +57,30 @@ class ImageChannel extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     this.draw();
-
     /*
     Object.entries(this.props).forEach(([key, val]) =>
-      prevProps[key] !== val && console.log(`Prop '${key}' changed`)
+      prevProps[key] !== val && console.log(`IC: Prop '${key}' changed`)
     );
     if (this.state) {
       Object.entries(this.state).forEach(([key, val]) =>
-        prevState[key] !== val && console.log(`State '${key}' changed`)
+        prevState[key] !== val && console.log(`IC: State '${key}' changed`)
       );
     } */
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener("keydown", (e) => this.handleMouseEvent(e, "keyDown"));
   }
 
   draw() {
     const { imageHeight, scale, factor } = this.props;
 
-    Object.keys(this.images).forEach((idx) => {
+    Object.keys(this.imageRefs).forEach((idx) => {
 
-      const img = this.images[idx];
+      const img = this.imageRefs[idx];
       let canvasOffset = 0; // TODO: use cue
       if (!img) {
         return;
       }
 
-      for (let c = 0; c < this.canvases[idx].length; c++) {
-        const canvas = this.canvases[idx][c];
+      for (let c = 0; c < this.canvaseRefs[idx].length; c++) {
+        const canvas = this.canvaseRefs[idx][c];
         if (!canvas) {
           break;
         }
@@ -113,61 +103,29 @@ class ImageChannel extends Component {
     });
   }
 
-  handleMouseEvent(e, eventName) {
-    if (this.props.handleMouseEvent) {
-      e.preventDefault();
-      const pos = eventName !== "keyDown" ?
-        getMouseEventPosition(e, "ChannelWrapper", this.props.channelId) : {};
-      // transfer data is not available until drop (not on dragEnter / dragOver)
-      const imageId = e.dataTransfer && e.dataTransfer.getData("imageid");
-      const duration = e.dataTransfer && Number(e.dataTransfer.getData("duration"));
-      const key = e.key;
-      const shiftKey = e.shiftKey;
-      const ctrlKey = e.ctrlKey;
-
-      let adaptedEventName = eventName;
-      if (shiftKey) {
-        adaptedEventName = "shift-" + adaptedEventName;
-      }
-      if (ctrlKey) {
-        adaptedEventName = "crtl-" + adaptedEventName;
-      }
-      const evInfo = {
-        ...pos, // x pos, channelId, partId, markerId
-        timestamp: e.timeStamp,
-        imageId,
-        duration,
-        key,
-        shiftKey,
-      };
-      this.props.handleMouseEvent(adaptedEventName, evInfo);
-      return;
-    }
-  }
-
   createCanvasRef(i, c) {
     return (canvas) => {
-      if (!this.canvases[i]) {
-        this.canvases[i] = [];
+      if (!this.canvaseRefs[i]) {
+        this.canvaseRefs[i] = [];
       }
-      this.canvases[i][c] = canvas;
+      this.canvaseRefs[i][c] = canvas;
     };
   }
 
   createImageRef(i) {
     return (image) => {
-      this.images[i] = image;
+      this.imageRefs[i] = image;
     };
   }
 
   render() {
-    const { parts, imageHeight, scale, theme, selected, imageSources } = this.props;
+    const { parts, imageHeight, scale, theme, selected, images } = this.props;
 
     // loop thru all images/parts
     const allImageCanvases = [];
     const allCanvasRefImages = [];
-    this.canvases = [];
-    this.images = [];
+    this.canvaseRefs = [];
+    this.imageRefs = [];
 
     if (parts && Array.isArray(parts)) {
 
@@ -177,7 +135,7 @@ class ImageChannel extends Component {
           ...part
         };
 
-        const src = imageSources[imageId];
+        const src = images[imageId].src;
 
         // paint images of canvases with max with MAX_CANVAS_WIDTH
         const canvasImages = [];
@@ -231,30 +189,29 @@ class ImageChannel extends Component {
 }
 
 ImageChannel.propTypes = {
-  channelId: PropTypes.string.isRequired,
+  theme: PropTypes.object,
+  scale: PropTypes.number,
+  factor: PropTypes.number,
+  maxWidth: PropTypes.number,
+
   parts: PropTypes.arrayOf(
     PropTypes.shape({
       partId: PropTypes.string.isRequired,
       offset: PropTypes.number, // might be zero
       duration: PropTypes.number.isRequired,
     })),
-  imageSources: PropTypes.object.isRequired,
-  imageHeight: PropTypes.number,
-  scale: PropTypes.number,
-  progress: PropTypes.number,
-  theme: PropTypes.object,
-  maxWidth: PropTypes.number,
+  images: PropTypes.object.isRequired,
   selected: PropTypes.bool,
-  handleMouseEvent: PropTypes.func.isRequired,
-  factor: PropTypes.number,
+  imageHeight: PropTypes.number, // currently only default
 };
 
 ImageChannel.defaultProps = {
   factor: 1,
   // checking `window.devicePixelRatio` when drawing to canvas.
   scale: 1,
-  maxWidth: 800,
   offset: 0,
+  maxWidth: 800,
+
   // height in CSS pixels of each canvas element an image is on.
   imageHeight: 90, // multiple of num LEDs
 };
