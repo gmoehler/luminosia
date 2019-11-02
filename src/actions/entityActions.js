@@ -5,7 +5,7 @@ import { entityExists, isEntitySingleSelected, isEntitySelected, getSelectedEnti
 import { clearMarkers, addPartSelectionMarkers, deletePartSelectionMarkers } from "./markerActions";
 import { partExists, getPart } from "../reducers/partReducer";
 import { removeImage } from "./imageListActions";
-import { deleteAPart, createPart } from "./partActions";
+import { deletePart, createPart } from "./partActions";
 import { getSelectedImageChannelId } from "../reducers/viewReducer";
 
 const _selectEntity = (entityId) => ({
@@ -71,7 +71,7 @@ export function deleteSelectedEntities() {
 
     getSelectedEntityIds(getState()).forEach((entityId) => {
       if (entityType === "part") {
-        dispatch(deleteAPart(entityId));
+        dispatch(deletePart(entityId));
         dispatch(deletePartSelectionMarkers(entityId));
       } else if (entityType === "image") {
         dispatch(removeImage(entityId));

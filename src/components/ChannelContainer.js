@@ -11,7 +11,7 @@ import { getParts } from "../reducers/partReducer";
 import { withEventHandler } from "./withEventHandler";
 import { withPlay } from "./withPlay";
 import { timeToPixels } from "./timeToPixels";
-import { moveSelectedParts, resizeAPart, selectInInterval } from "../actions/partActions";
+import { moveSelectedParts, resizePart, selectInInterval } from "../actions/partActions";
 import { stopChannel, insertNewPart } from "../actions/channelActions";
 import { toggleEntitySelection, toggleMultiEntitySelection, toggleInitialEntitySelection, deleteSelectedEntities } from "../actions/entityActions";
 import { selectRange, deselectRange, selectImageChannel } from "../actions/viewActions";
@@ -60,11 +60,7 @@ class ChannelContainer extends Component {
       );
     }
 
-    const { loading, channelId, buffer, sampleRate, resolution } = this.props;
-
-    if (loading) {
-      return null;
-    }
+    const { channelId, buffer, sampleRate, resolution } = this.props;
 
     // memoized audio peak data
     const { data, length, bits } = buffer ?
@@ -119,7 +115,7 @@ const mapDispatchToProps = dispatch => ({
     partId,
     incr
   })),
-  resize: (channelId, partId, markerId, incr) => dispatch(resizeAPart({
+  resize: (channelId, partId, markerId, incr) => dispatch(resizePart({
     channelId,
     partId,
     markerId,

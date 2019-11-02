@@ -54,7 +54,7 @@ describe("part actions", () => {
 
     const store2 = mockStore(entityState1);
 
-    store2.dispatch(actions.deleteAPart(part1.partId));
+    store2.dispatch(actions.deletePart(part1.partId));
     const acts = store2.getActions();
     expect(acts).toEqual(expectedActions);
 

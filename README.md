@@ -41,7 +41,6 @@ App
 Issues:
 - not possible to load same waveform twice
 - selection stays when channel is deleted
-- show loading progress component only on channel loaded
 
 Usability:
 - make zoom stay at position

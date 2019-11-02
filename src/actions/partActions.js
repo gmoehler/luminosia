@@ -67,7 +67,7 @@ const _deletePart = (partIdAndChannelId) => ({
   payload: partIdAndChannelId,
 });
 
-export const deleteAPart = (partId) => {
+export const deletePart = (partId) => {
   return (dispatch, getState) => {
     // ensure we have what we need
     // so reducers do not need to check assumptions
@@ -84,8 +84,6 @@ export const deleteAPart = (partId) => {
   };
 };
 
-
-
 export const clearParts = () => ({
   type: CLEAR_PARTS
 });
@@ -95,7 +93,7 @@ const _movePart = (moveInfo) => ({
   payload: moveInfo
 });
 
-export const moveAPart = (moveInfo) => {
+export const movePart = (moveInfo) => {
   return (dispatch, getState) => {
 
     // ensure we have what we need
@@ -132,7 +130,7 @@ export const moveSelectedParts = (moveInfo) => {
     }
 
     partIdsToMove.forEach((partId) => {
-      dispatch(moveAPart({
+      dispatch(movePart({
         partId,
         incr,
       }));
@@ -145,7 +143,7 @@ const _resizePart = (resizeInfo) => ({
   payload: resizeInfo
 });
 
-export const resizeAPart = (resizeInfo) => {
+export const resizePart = (resizeInfo) => {
   return (dispatch, getState) => {
 
     // ensure we have what we need

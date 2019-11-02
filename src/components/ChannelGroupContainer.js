@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 
 import ChannelGroup from "./ChannelGroup";
 import { setMessage } from "../actions/viewActions";
-import { getSelectionRange, getResolution, isLoadingShow, getLoadProgressInPercent } from "../reducers/viewReducer";
+import { getSelectionRange, getResolution, isLoadingShow } from "../reducers/viewReducer";
 import { getImages } from "../reducers/imageListReducer";
 import { getMaxChannelDuration, getAllChannelIds, allChannelsStopped } from "../reducers/channelReducer";
 import { defaultTheme } from "./themes";
@@ -62,7 +62,6 @@ const mapStateToProps = (state, props) => {
     images: getImages(state),
     playState: allChannelsStopped(state) ? "stopped" : "playing", // for HOC withPlay only
     isLoadingShow: isLoadingShow(state),
-    loadProgress: getLoadProgressInPercent(state),
     resolution: getResolution(state),
 
     selection: getSelectionRange(state),
