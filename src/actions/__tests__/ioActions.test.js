@@ -54,9 +54,6 @@ describe("io actions", () => {
           result: "channel-audio-1",
         }
       }, {
-        type: types.INIT_LOAD_PROGRESS,
-        payload: 0,
-      }, {
         type: types.SET_CHANNEL_ACTIVE,
         payload: "channel-audio-1",
       },
