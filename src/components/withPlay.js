@@ -6,8 +6,6 @@
 
 import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
-import extractPeaks from "webaudio-peaks";
-import memoize from "memoize-one";
 
 import Playout from "../player/Playout";
 
@@ -152,8 +150,8 @@ export function withPlay(WrappedComponent) {
 
       // time to pixel conversion is done in HOC TimeToPixel
       return (
-        <WrappedComponent { ... this.props }
-          progress={ this.state.progress } />);
+        <WrappedComponent {... this.props}
+          progress={this.state.progress} />);
     }
   }
   ;
