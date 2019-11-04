@@ -12,8 +12,6 @@ const ImageCanvas = styled.canvas`
   padding: 0;
   width: ${props => props.cssWidth}px;
   height: ${props => props.height}px;
-  border-left: ${props => props.channelSelected ? 2 : 1}px solid ${props => props.theme.markerColor};
-  border-right:  ${props => props.channelSelected ? 2 : 1}px solid ${props => props.theme.markerColor};
 `;
 
 const CanvasRefImage = styled.img`
@@ -25,11 +23,16 @@ const ImageCanvases = styled.div`
   position: absolute;
   left: ${props => props.offset}px;
   cursor: ${props => props.cursor};
+  border-left: ${props => props.selected ? 2 : 1}px solid ${props => props.theme.markerColor};
+  border-right:  ${props => props.selected ? 2 : 1}px solid ${props => props.theme.markerColor};
 `;
 
 class ImageChannel extends Component {
   constructor(props) {
     super(props);
+    // factor for width to facilitate drawing: pixels / sample
+    // alternative: calculate resolution / sampleRate in container and pass it in
+    this.widthFactor = 1;
     this.canvaseRefs = [];
     this.imageRefs = [];
   }
@@ -69,7 +72,7 @@ class ImageChannel extends Component {
   }
 
   draw() {
-    const { imageHeight, scale, factor } = this.props;
+    const { imageHeight, scale } = this.props;
 
     Object.keys(this.imageRefs).forEach((idx) => {
 
@@ -88,12 +91,12 @@ class ImageChannel extends Component {
         const cc = canvas.getContext("2d");
         cc.clearRect(0, 0, canvas.width, canvas.height);
 
-        const imageOffset = canvasOffset / factor;
+        const imageOffset = canvasOffset / this.widthFactor;
 
         cc.scale(scale, scale);
         if (img.src) {
           img.onload = cc.drawImage(img, imageOffset, 0, img.width, img.height,
-            0, 0, canvas.width, imageHeight);
+            0, 0, img.width * this.widthFactor, imageHeight);
         } else {
           cc.fillStyle = "#FF0000"; // red rectangle if image is missing
           cc.fillRect(0, 0, canvas.width, imageHeight);
@@ -136,13 +139,15 @@ class ImageChannel extends Component {
         };
 
         const src = images[imageId].src;
+        this.widthFactor = duration / images[imageId].width; // is the same for all images
 
         // paint images of canvases with max with MAX_CANVAS_WIDTH
         const canvasImages = [];
-        let totalWidth = duration;
+        let totalWidth = duration; // duration in pixels
         let canvasCount = 0;
 
         while (totalWidth > 0) {
+          // split up image into parts of MAX_CANVAS_WIDTH
           const currentWidth = Math.min(totalWidth, MAX_CANVAS_WIDTH);
           const canvasImage = (
             <ImageCanvas key={ String(partId) + "-" + String(canvasCount) }
@@ -152,7 +157,6 @@ class ImageChannel extends Component {
               ref={ this.createCanvasRef(partId, canvasCount) }
               data-partid={ partId }
               theme={ theme }
-              channelSelected={ selected }
             />
           );
 
@@ -165,7 +169,8 @@ class ImageChannel extends Component {
             className="ImageCanvases"
             theme={ theme }
             offset={ offset }
-            cursor={ "hand" }>
+            cursor={ "move" }
+            selected={ selected }>
             {canvasImages}
           </ImageCanvases>
         );
@@ -191,7 +196,6 @@ class ImageChannel extends Component {
 ImageChannel.propTypes = {
   theme: PropTypes.object,
   scale: PropTypes.number,
-  factor: PropTypes.number,
   maxWidth: PropTypes.number,
 
   parts: PropTypes.arrayOf(
@@ -206,9 +210,7 @@ ImageChannel.propTypes = {
 };
 
 ImageChannel.defaultProps = {
-  factor: 1,
-  // checking `window.devicePixelRatio` when drawing to canvas.
-  scale: 1,
+  scale: 1,  // currently always default, could use `window.devicePixelRatio`
   offset: 0,
   maxWidth: 800,
 

@@ -44,7 +44,7 @@ class Channel extends PureComponent {
   }
 
   draw() {
-    const { peaks, bits, /* length,*/ waveHeight, theme, scale } = this.props;
+    const { peaks, bits, waveHeight, theme, scale } = this.props;
 
     let offset = 0;
     for (let i = 0; i < this.canvases.length; i++) {
@@ -85,15 +85,15 @@ class Channel extends PureComponent {
   }
 
   render() {
-    const { length, waveHeight, scale, theme, offset, } = this.props;
+    const { maxWidth, waveHeight, scale, theme, offset, } = this.props;
 
-    let totalWidth = length;
+    let totalWidth = maxWidth;
     let waveformCount = 0;
     const waveforms = [];
     while (totalWidth > 0) {
       const currentWidth = Math.min(totalWidth, MAX_CANVAS_WIDTH);
       const waveform = (
-        <Waveform key={ `${length}-${waveformCount}` }
+        <Waveform key={ `${maxWidth}-${waveformCount}` }
           cssWidth={ currentWidth }
           width={ currentWidth * scale }
           height={ waveHeight * scale }
@@ -120,9 +120,7 @@ class Channel extends PureComponent {
 Channel.propTypes = {
   theme: PropTypes.object,
   scale: PropTypes.number,
-
-  factor: PropTypes.number,
-  length: PropTypes.number,
+  maxWidth: PropTypes.number,
 
   offset: PropTypes.number,
   peaks: PropTypes.object,
@@ -131,11 +129,9 @@ Channel.propTypes = {
 };
 
 Channel.defaultProps = {
-  factor: 1,
-  // checking `window.devicePixelRatio` when drawing to canvas.
-  scale: 1,
+  scale: 1, // currently always default, could use `window.devicePixelRatio`
   offset: 0,
-  length: 0,
+  maxWidth: 0,
 
   peaks: [],
   bits: 0,

@@ -196,8 +196,7 @@ TimeScale.propTypes = {
 
 
 TimeScale.defaultProps = {
-  // checking `window.devicePixelRatio` when drawing to canvas.
-  scale: 1,
+  scale: 1, // currently always default, could use `window.devicePixelRatio`
   // time length in seconds
   duration: 0,
   samplesPerPixel: 1000,

@@ -64,14 +64,14 @@ class Channel extends Component {
 
   render() {
     const { channelId, imageHeight, progress,
-      theme, maxWidth, selected, type, length, scale, factor, offset,
+      theme, maxWidth, selected, type, offset,
       peaks, bits, parts, images } = this.props;
 
 
     const channelWrapperProps = {
-      cssWidth: type === "audio" ? 2 + length : maxWidth,
+      cssWidth: maxWidth + 2, // to give room for border
       theme,
-      height: type === "audio" ? 2 + imageHeight : imageHeight,
+      height: imageHeight + 2, // to give room for border
       tabIndex: 0,
       borderColor: selected ? theme.borderColorSelected : theme.borderColor
     };
@@ -79,20 +79,16 @@ class Channel extends Component {
     // separate props
     const channelProps = type === "audio" ? {
       theme,
-      scale,
-      factor,
+      maxWidth,
       offset,
-      length,
       peaks,
       bits,
     } : {
         theme,
-        scale,
         maxWidth,
+        selected,
         parts,
         images,
-        selected,
-        bits,
       };
 
     const innerChannel = type === "audio"
@@ -130,12 +126,9 @@ Channel.propTypes = {
   imageHeight: PropTypes.number,
   progress: PropTypes.number,
   theme: PropTypes.object,
-  maxWidth: PropTypes.number, // width for image
-  length: PropTypes.number, // width for audio // TODO: make one width
+  maxWidth: PropTypes.number, // max width of all channels
   selected: PropTypes.bool,
   handleMouseEvent: PropTypes.func.isRequired,
-  scale: PropTypes.number,
-  factor: PropTypes.number,
   offset: PropTypes.number,
   peaks: PropTypes.object,
   bits: PropTypes.number,
@@ -144,7 +137,7 @@ Channel.propTypes = {
 };
 
 Channel.defaultProps = {
-  maxWidth: 800,
+  maxWidth: 800, // initial width without audio
   imageHeight: 90, // multiple of num LEDs
 };
 

@@ -63,17 +63,17 @@ class ChannelContainer extends Component {
     const { channelId, buffer, sampleRate, resolution } = this.props;
 
     // memoized audio peak data
-    const { data, length, bits } = buffer ?
-      this.doExtractPeaks(buffer, sampleRate / resolution, 16)
-      : { data: [], length: 0, bits: 0 };
+    const { data, duration, bits
+    } = buffer ?
+        this.doExtractPeaks(buffer, sampleRate / resolution, 16)
+        : { data: [], length: 0, bits: 0 };
     const peaks = Array.isArray(data) ? data[0] : []; // only one channel for now
 
     const renderProps = {
       ...this.props,
-      factor: resolution / sampleRate,
       peaks,
       bits,
-      length,
+      duration,
     };
 
     return (
