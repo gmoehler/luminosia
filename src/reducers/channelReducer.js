@@ -234,11 +234,11 @@ export function getChannelParts(state, channelId) {
 // get the subpart of the channel that is needed for the channel display
 export function getChannelData(state, channelId) {
 
-  const { type, loading, sampleRate, duration, parts, buffer, ...remainingObj } = _getChannel(state, channelId); // eslint-disable-line no-unused-vars
+  const { type, sampleRate, duration, parts, buffer, ...remainingObj } = _getChannel(state, channelId); // eslint-disable-line no-unused-vars
   const active = isChannelActive(state, channelId);
   const selected = getSelectedImageChannelId(state) === channelId;
   return {
-    channelId, type, loading, active, sampleRate, duration,
+    channelId, type, active, sampleRate, duration,
     parts, selected, buffer
   };
 }

@@ -5,7 +5,7 @@ import { entityExists, isEntitySingleSelected, isEntitySelected, getSelectedEnti
 import { clearMarkers, addPartSelectionMarkers, deletePartSelectionMarkers } from "./markerActions";
 import { partExists, getPart } from "../reducers/partReducer";
 import { removeImage } from "./imageListActions";
-import { deleteAPart, createPart } from "./partActions";
+import { deletePart, createPart } from "./partActions";
 import { getSelectedImageChannelId } from "../reducers/viewReducer";
 
 const _selectEntity = (entityId) => ({
@@ -16,21 +16,21 @@ const _selectEntity = (entityId) => ({
 export function selectEntity(entityId) {
   return (dispatch, getState) => {
     // ensure that entity exists and is selectable
-    if (entityExists(getState(), entityId) && isEntitySelectable(getState(), entityId)
-      && !isEntitySelected(getState(), entityId)) {
-      dispatch(_selectEntity(entityId));
-      // for part: also add markers
-      if (partExists(getState(), entityId)) {
-        const part = getPart(getState(), entityId);
-        dispatch(addPartSelectionMarkers(part));
-        // channel is directly selected thru mouse handler
+    if (entityExists(getState(), entityId) && isEntitySelectable(getState(), entityId)) {
+      if (!isEntitySelected(getState(), entityId)) {
+        dispatch(_selectEntity(entityId));
+        // for part: also add markers
+        if (partExists(getState(), entityId)) {
+          const part = getPart(getState(), entityId);
+          dispatch(addPartSelectionMarkers(part));
+          // channel is directly selected thru mouse handler
+        }
       }
     } else {
-      console.error("entity to select does not exist:", entityId);
+      console.error("entity to select does not exist or is not selectable:", entityId);
     }
   };
-}
-;
+};
 
 export const _deselectEntity = (entityId) => ({
   type: DESELECT_ENTITY,
@@ -47,7 +47,7 @@ export function deselectEntity(entityId) {
         dispatch(deletePartSelectionMarkers(entityId));
       }
     } else {
-      console.error("entity to select does not exist:", entityId);
+      console.error("entity to deselect does not exist or is not selectable:", entityId);
     }
   };
 };
@@ -71,7 +71,7 @@ export function deleteSelectedEntities() {
 
     getSelectedEntityIds(getState()).forEach((entityId) => {
       if (entityType === "part") {
-        dispatch(deleteAPart(entityId));
+        dispatch(deletePart(entityId));
         dispatch(deletePartSelectionMarkers(entityId));
       } else if (entityType === "image") {
         dispatch(removeImage(entityId));

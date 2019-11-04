@@ -148,31 +148,12 @@ export function withPlay(WrappedComponent) {
       this.props.stopChannel(this.props.channelId);
     }
 
-    // only re-calc when buffer, resolution of bits change
-    doExtractPeaks = memoize(
-      (buffer, pixPerSample, bits) => extractPeaks(buffer, pixPerSample, true, 0, buffer.length, bits));
-
     render() {
-
-      const { buffer, ...passthruProps } = this.props;
-
-      // memoized audio peak data
-      const { data, length, bits } = buffer ? this.doExtractPeaks(buffer, this.props.sampleRate / this.props.resolution, 16)
-        : {
-          data: [],
-          length: 0,
-          bits: 0
-        };
-      const peaksDataMono = Array.isArray(data) ? data[0] : []; // only one channel for now
 
       // time to pixel conversion is done in HOC TimeToPixel
       return (
-        <WrappedComponent { ...passthruProps }
-          progress={ this.state.progress }
-          factor={ this.props.resolution / this.props.sampleRate }
-          peaks={ peaksDataMono }
-          bits={ bits }
-          length={ length } /* only for audio */ />);
+        <WrappedComponent { ... this.props }
+          progress={ this.state.progress } />);
     }
   }
   ;

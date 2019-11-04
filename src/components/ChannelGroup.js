@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 
-import { LinearProgress } from "@material-ui/core";
+import { CircularProgress } from "@material-ui/core";
 import TimeScale from "./TimeScale";
 import { timeToPixels } from "./timeToPixels";
 import { secondsToPixels } from "../utils/conversions";
@@ -15,7 +15,7 @@ const ChannelGroupWrapper = styled.div`
 	white-space: nowrap;
 `;
 
-const LoadProgressView = styled(LinearProgress)`
+const LoadProgressView = styled(CircularProgress)`
   margin: 20px;
   width: 100%;
 `;
@@ -58,19 +58,13 @@ export default class ChannelGroup extends Component {
 
   render() {
 
-    if (this.props.isLoadingShow) {
-      return (<LoadProgressView
-        variant="determinate"
-        value={ this.props.loadProgress }
-      />);
-    }
-
     const { allchannelIds, ...passthruProps } = this.props;
 
     const channelComponents = allchannelIds
       .map((channelId) => (
 
         <ChannelContainer { ...passthruProps }
+          className="ChannelContainer"
           channelId={ channelId }
           key={ channelId }
           reportProgress={ this.reportProgress }
@@ -78,15 +72,22 @@ export default class ChannelGroup extends Component {
 
     return (
       <ChannelGroupWrapper
+        className="ChannelGroupWrapper"
         drawerWidth={ this.props.drawerWidth || 0 }
         ref={ (ref) => this.groupRef = ref }>
 
         <TimeScaleInSecs
+          className="TimeScaleInSecs"
           maxDuration={ this.props.maxDuration }
           resolution={ this.props.resolution }
+          theme={ this.props.theme }
         />
 
         {channelComponents}
+
+        {this.props.isLoadingShow &&
+          <LoadProgressView disableShrink />
+        }
 
       </ChannelGroupWrapper>
     );
@@ -101,5 +102,5 @@ ChannelGroup.propTypes = {
   playState: PropTypes.string,
   maxDuration: PropTypes.number,
   isLoadingShow: PropTypes.bool,
-  loadProgress: PropTypes.number,
+  theme: PropTypes.object.isRequired,
 };

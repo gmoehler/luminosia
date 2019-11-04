@@ -24,6 +24,7 @@
     "download-github-release": "0.3.2",
     "electron-is-dev": "^1.1.0",
     "electron-devtools-installer": "2.2.4",
+    "fast-deep-equal": "2.0.1",
     "fade-maker": "1.0.3",
     "file-saver": "2.0.2",
     "gh-pages": "2.0.1",

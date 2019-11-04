@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import memoize from "memoize-one";
+import extractPeaks from "webaudio-peaks";
 
-import ImageChannel from "./ImageChannel";
 import Channel from "./Channel";
 
 import { getChannelData } from "../reducers/channelReducer";
@@ -10,16 +11,14 @@ import { getParts } from "../reducers/partReducer";
 import { withEventHandler } from "./withEventHandler";
 import { withPlay } from "./withPlay";
 import { timeToPixels } from "./timeToPixels";
-import { moveSelectedParts, resizeAPart, selectInInterval } from "../actions/partActions";
+import { moveSelectedParts, resizePart, selectInInterval } from "../actions/partActions";
 import { stopChannel, insertNewPart } from "../actions/channelActions";
 import { toggleEntitySelection, toggleMultiEntitySelection, toggleInitialEntitySelection, deleteSelectedEntities } from "../actions/entityActions";
 import { selectRange, deselectRange, selectImageChannel } from "../actions/viewActions";
 import { setOrReplaceInsertMarker } from "../actions/markerActions";
 
-
-// add play functionality to audio channels
+// add play functionality to channels
 const ChannelWithPlay = withEventHandler(withPlay(timeToPixels(Channel)));
-const ImageChannelWithPlay = withEventHandler(withPlay(timeToPixels(ImageChannel)));
 
 class ChannelContainer extends Component {
 
@@ -42,6 +41,11 @@ class ChannelContainer extends Component {
     });
   }
 
+  // only re-calc when buffer, resolution of bits change
+  doExtractPeaks = memoize(
+    (buffer, pixPerSample, bits) => extractPeaks(buffer, pixPerSample, true, 0, buffer.length, bits));
+
+
   render() {
 
     if (this.state.error) {
@@ -56,21 +60,31 @@ class ChannelContainer extends Component {
       );
     }
 
-    const { type, loading, channelId } = this.props;
+    const { channelId, buffer, sampleRate, resolution } = this.props;
 
-    if (loading) {
-      return null;
-    }
+    // memoized audio peak data
+    const { data, duration, bits
+    } = buffer ?
+        this.doExtractPeaks(buffer, sampleRate / resolution, 16)
+        : { data: [], length: 0, bits: 0 };
+    const peaks = Array.isArray(data) ? data[0] : []; // only one channel for now
+
+    const renderProps = {
+      ...this.props,
+      peaks,
+      bits,
+      duration,
+    };
 
     return (
-      type === "audio"
-        ? <ChannelWithPlay { ...this.props } />
-        : <ImageChannelWithPlay { ...this.props } resize={ (partId, markerId, incr) => this.props.resize(channelId, partId, markerId, incr) } />);
+      <ChannelWithPlay { ...renderProps }
+        resize={ (partId, markerId, incr) => this.props.resize(channelId, partId, markerId, incr) }
+      />);
   }
 }
 
 const mapStateToProps = (state, props) => {
-  const { channelId, selection, markers, imageSources } = props;
+  const { channelId, images } = props;
 
   const channelData = getChannelData(state, channelId);
   const parts = getParts(state, channelData.parts);
@@ -78,9 +92,7 @@ const mapStateToProps = (state, props) => {
   return {
     ...channelData,
     parts,
-    selection,
-    markers,
-    imageSources,
+    images,
   };
 };
 
@@ -103,7 +115,7 @@ const mapDispatchToProps = dispatch => ({
     partId,
     incr
   })),
-  resize: (channelId, partId, markerId, incr) => dispatch(resizeAPart({
+  resize: (channelId, partId, markerId, incr) => dispatch(resizePart({
     channelId,
     partId,
     markerId,
@@ -123,6 +135,9 @@ ChannelContainer.propTypes = {
   stopChannel: PropTypes.func.isRequired,
   move: PropTypes.func.isRequired,
   resize: PropTypes.func.isRequired,
+  buffer: PropTypes.object,
+  sampleRate: PropTypes.number.isRequired,
+  resolution: PropTypes.number.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChannelContainer);

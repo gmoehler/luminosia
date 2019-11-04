@@ -88,15 +88,7 @@ exports[`simple component tests AnimationPane component 1`] = `
 
 exports[`simple component tests Channel component 1`] = `
 <div
-  className="ChannelWrapper sc-jTzLTM hsYvS"
-  onMouseDown={[Function]}
-  onMouseLeave={[Function]}
-  onMouseMove={[Function]}
-  onMouseUp={[Function]}
->
-  <div
-    className="WaveformCanvases sc-VigVT dnCORY"
-    offset={0}
-  />
-</div>
+  className="WaveformCanvases sc-dnqmqq kKGkmx"
+  offset={0}
+/>
 `;

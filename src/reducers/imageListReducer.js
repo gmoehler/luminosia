@@ -2,7 +2,6 @@ import { cloneDeep } from "lodash";
 import {
   CLEAR_IMAGELIST, ADD_IMAGE, REMOVE_IMAGE,
 } from "../actions/types";
-import { filterObjectByKeys } from "../utils/miscUtils";
 import { combineReducers } from "redux";
 
 export const initialState = {
@@ -55,18 +54,12 @@ export default combineReducers({
   allImageIds,
 });
 
-export const getImageList = (state) => {
-  return Object.values(state.entities.images.byImageId);
+export const getImages = (state) => {
+  return state.entities.images.byImageId;
 };
 
-// an map with imageIds pointing to image sources
-// TODO: think about denorm with image sources or lookup func
-export const getImageSources = (state) => {
-  const ret = Object.values(state.entities.images.byImageId).reduce((srcMap, img) => {
-    srcMap[img.imageId] = img.src;
-    return srcMap;
-  }, {});
-  return ret;
+export const getImageList = (state) => {
+  return Object.values(state.entities.images.byImageId);
 };
 
 // TODO: move sample rate to part
@@ -78,19 +71,6 @@ export const getImageSampleRate = (state) => {
 export const getImageDuration = (state, imageId) => {
   const img = state.entities.images.byImageId[imageId];
   return img ? img.duration : 0;
-};
-
-// array of all images with relevant fields only
-export const getImageListForShow = (state) => {
-  const allowedProps = ["imageId",
-    "filename", "src",
-    "width", "height",
-    "sampleRate", "duration"];
-
-  const images = state.entities.images.byImageId ?
-    Object.values(state.entities.images.byImageId) : [];
-
-  return images.map((img) => filterObjectByKeys(img, allowedProps));
 };
 
 export const imageExists = (state, id) =>
