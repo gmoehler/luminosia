@@ -72,7 +72,6 @@ export function deleteSelectedEntities() {
     getSelectedEntityIds(getState()).forEach((entityId) => {
       if (entityType === "part") {
         dispatch(deletePart(entityId));
-        dispatch(deletePartSelectionMarkers(entityId));
       } else if (entityType === "image") {
         dispatch(removeImage(entityId));
       }

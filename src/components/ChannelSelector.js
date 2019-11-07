@@ -46,8 +46,7 @@ const styles = () => ({
     background: "#212121",
   },
   wrapperSelected: {
-    border: "1px #f50057 solid",
-    borderRight: "none",
+    backgroundColor: "#3f51b5",
   },
   sliderWrapper: {
     display: "flex",

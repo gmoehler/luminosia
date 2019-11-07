@@ -25,7 +25,7 @@ describe("marker actions", () => {
       }
     });
 
-    store.dispatch(actions._setOrReplaceAMarker(markerPayload0));
+    store.dispatch(actions.setOrReplaceMarker(markerPayload0));
     const acts = store.getActions();
     expect(acts).toEqual(expectedActions);
   });
@@ -60,7 +60,7 @@ describe("marker actions", () => {
 
     const store = mockStore(fullMarkerState0);
 
-    store.dispatch(actions.updateAMarker(
+    store.dispatch(actions.updateMarker(
       {
         markerId: "part-2--left",
         incr: 12
@@ -80,7 +80,7 @@ describe("marker actions", () => {
 
     const store = mockStore(fullMarkerState0);
 
-    store.dispatch(actions.updateAMarker(
+    store.dispatch(actions.updateMarker(
       {
         markerId: "part-2--left",
         pos: 12
@@ -100,7 +100,7 @@ describe("marker actions", () => {
 
     const store = mockStore(fullMarkerState0);
 
-    store.dispatch(actions.updateAMarker(
+    store.dispatch(actions.updateMarker(
       {
         markerId: "part-2--left",
         type: "part-22--right"
@@ -115,7 +115,7 @@ describe("marker actions", () => {
 
     const store = mockStore(fullMarkerState0);
 
-    store.dispatch(actions.updateAMarker(
+    store.dispatch(actions.updateMarker(
       {
         markerId: "unkown-marker",
         incr: 12
@@ -129,7 +129,7 @@ describe("marker actions", () => {
 
     const store = mockStore(fullMarkerState0);
 
-    store.dispatch(actions.updateAMarker(
+    store.dispatch(actions.updateMarker(
       {
         markerId: "part-2--left"
       }));
@@ -147,7 +147,7 @@ describe("marker actions", () => {
 
     const store = mockStore(fullMarkerState0);
 
-    store.dispatch(actions.deleteAMarker("part-2--left"));
+    store.dispatch(actions.deleteMarker("part-2--left"));
     const acts = store.getActions();
     expect(acts).toEqual(expectedActions);
   });
@@ -157,7 +157,7 @@ describe("marker actions", () => {
 
     const store = mockStore(fullMarkerState0);
 
-    store.dispatch(actions.deleteAMarker("nonexisting-marker"));
+    store.dispatch(actions.deleteMarker("nonexisting-marker"));
     const acts = store.getActions();
     expect(acts).toEqual([]);
   });

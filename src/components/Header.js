@@ -88,7 +88,11 @@ export class Header extends Component {
 
           <Tooltip title="Load audio">
             <IconButton color="inherit"
-              onClick={ () => this.fileUpload.click() }>
+              onClick={ () => {
+                /* reset input to allow re-loading */
+                this.fileUpload.value = "";
+                this.fileUpload.click();
+              } }>
               <UploadAudioChannelIcon />
             </IconButton>
           </Tooltip>

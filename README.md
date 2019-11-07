@@ -39,9 +39,7 @@ App
 ```
 
 Issues:
-- not possible to load same waveform twice
-- selection stays when channel is deleted
-- right marker is 2px too lefty
+ 
 
 Usability:
 - make zoom stay at position
