@@ -14,7 +14,7 @@ export const defaultTheme = {
   tempSelectionColor: "rgba(80,80,80,0.5)",
 
   imageBackgroundColor: "black",
-  borderColorSelected: "#f50057",
+  imageBackgroundColorSelected: "#101010",
   borderColor: "#3f51b5",
 
   timeColor: "grey", // color of the time ticks on the canvas

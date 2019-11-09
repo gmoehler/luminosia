@@ -81,5 +81,5 @@ export const getAllMarkers = (state) => {
   return Object.values(state.entities.markers.byMarkerId);
 };
 
-export const aMarkerExists = (state, id) =>
+export const markerExists = (state, id) =>
   state.entities.markers.allMarkerIds.includes(id);

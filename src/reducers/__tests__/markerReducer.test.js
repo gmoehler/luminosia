@@ -1,4 +1,4 @@
-import reducer, { initialState, getAllMarkers, aMarkerExists } from "../markerReducer";
+import reducer, { initialState, getAllMarkers, markerExists } from "../markerReducer";
 import * as types from "../../actions/types";
 import { markerState0, markerPayload0, fullMarkerState0 } from "../../__fixtures__/marker.fixtures";
 
@@ -146,7 +146,7 @@ describe("marker selector functions", () => {
   });
 
   it("check whether marker exists", () => {
-    expect(aMarkerExists(fullMarkerState0, "part-2--left")).toBeTruthy();
+    expect(markerExists(fullMarkerState0, "part-2--left")).toBeTruthy();
   });
 
 

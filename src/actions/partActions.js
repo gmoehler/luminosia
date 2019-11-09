@@ -4,7 +4,7 @@ import {
   CLEAR_PARTS, ADD_PART, DELETE_PART, RESIZE_PART, MOVE_PART,
 } from "./types";
 import { getChannelId, partSchema, getPart, getParts, getPartIdsInInterval } from "../reducers/partReducer";
-import { syncPartMarkers } from "./markerActions";
+import { syncPartMarkers, deletePartSelectionMarkers } from "./markerActions";
 
 import { toggleEntitySelection, selectEntity } from "./entityActions";
 import { isEntitySelected, getSelectedEntityIdsOfType } from "../reducers/entityReducer";
@@ -78,6 +78,8 @@ export const deletePart = (partId) => {
         partId,
         channelId
       }));
+      // in case it is selected:
+      dispatch(deletePartSelectionMarkers(partId));
     } else {
       console.error("cannot remove non-existing part:", partId);
     }

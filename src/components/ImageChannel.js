@@ -23,8 +23,8 @@ const ImageCanvases = styled.div`
   position: absolute;
   left: ${props => props.offset}px;
   cursor: ${props => props.cursor};
-  border-left: ${props => props.selected ? 2 : 1}px solid ${props => props.theme.markerColor};
-  border-right:  ${props => props.selected ? 2 : 1}px solid ${props => props.theme.markerColor};
+  border-left: 1px solid ${props => props.theme.markerColor};
+  border-right:  1px solid ${props => props.theme.markerColor};
 `;
 
 class ImageChannel extends Component {
@@ -122,7 +122,7 @@ class ImageChannel extends Component {
   }
 
   render() {
-    const { parts, imageHeight, scale, theme, selected, images } = this.props;
+    const { parts, imageHeight, scale, theme, images } = this.props;
 
     // loop thru all images/parts
     const allImageCanvases = [];
@@ -169,8 +169,7 @@ class ImageChannel extends Component {
             className="ImageCanvases"
             theme={ theme }
             offset={ offset }
-            cursor={ "move" }
-            selected={ selected }>
+            cursor={ "move" }>
             {canvasImages}
           </ImageCanvases>
         );
@@ -205,7 +204,6 @@ ImageChannel.propTypes = {
       duration: PropTypes.number.isRequired,
     })),
   images: PropTypes.object.isRequired,
-  selected: PropTypes.bool,
   imageHeight: PropTypes.number, // currently only default
 };
 

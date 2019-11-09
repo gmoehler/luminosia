@@ -11,10 +11,10 @@ const ChannelWrapper = styled.div`
   position: relative; 
   margin: 0;
   padding: 0;
-  background: ${props => props.theme.imageBackgroundColor};
+  background: ${props => props.backgroundColor};
   width: ${props => props.cssWidth}px;
   height: ${props => props.height}px;
-  border: 1px solid ${props => props.borderColor};
+  border: 1px solid ${props => props.theme.borderColor};
   border-left: none;
 `;
 
@@ -73,7 +73,7 @@ class Channel extends Component {
       theme,
       height: imageHeight + 2, // to give room for border
       tabIndex: 0,
-      borderColor: selected ? theme.borderColorSelected : theme.borderColor
+      backgroundColor: selected ? theme.imageBackgroundColorSelected : theme.imageBackgroundColor,
     };
 
     // separate props

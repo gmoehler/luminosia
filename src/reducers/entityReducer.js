@@ -9,7 +9,7 @@ import {
 import imageListReducer, { imageExists, initialState as initialImageListState } from "./imageListReducer";
 import channelReducer, { channelExists, initialState as initialChannelState } from "./channelReducer";
 import partReducer, { partExists, initialState as initialPartState } from "./partReducer";
-import markerReducer, { aMarkerExists, initialState as initialMarkerState } from "./markerReducer";
+import markerReducer, { markerExists, initialState as initialMarkerState } from "./markerReducer";
 
 export const initialState = {
   images: initialImageListState,
@@ -83,7 +83,7 @@ export function getEntityType(state, entityId) {
     return "part";
   } else if (imageExists(state, entityId)) {
     return "image";
-  } else if (aMarkerExists(state, entityId)) {
+  } else if (markerExists(state, entityId)) {
     return "marker";
   } else if (channelExists(state, entityId)) {
     return "channel";

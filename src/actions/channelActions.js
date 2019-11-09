@@ -9,7 +9,7 @@ import { getImageDuration } from "../reducers/imageListReducer";
 import { defaultSampleRate } from "../components/ImageListContainer";
 import { drawExportImage, clearExportImage } from "./ioActions";
 import { createPart, deletePart } from "./partActions";
-import { deleteAMarker } from "./markerActions";
+import { deleteMarker } from "./markerActions";
 import { toggleEntitySelection } from "./entityActions";
 import {
   getMaxChannelDuration, channelExists, getDenormalizedChannel,
@@ -210,7 +210,7 @@ export const insertNewPart = (partInfo) => {
   return (dispatch, getState) => {
 
     // remove insertion marker
-    dispatch(deleteAMarker("insert"));
+    dispatch(deleteMarker("insert"));
 
     const duration = getImageDuration(
       getState(), partInfo.imageId);
