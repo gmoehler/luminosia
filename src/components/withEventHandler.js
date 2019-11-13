@@ -20,13 +20,14 @@ export function withEventHandler(WrappedComponent) {
         selectRange, deselectRange, selectInInterval,
         move, resize, setOrReplaceInsertMarker, insertNewPart,
         toggleEntitySelection, toggleMultiEntitySelection, toggleInitialEntitySelection,
-        deleteSelectedEntities, selectImageChannel, setMessage } = this.props;
+        deleteSelectedEntities, selectImageChannel, setMessage, setOrReplaceMarker
+      } = this.props;
 
       this.mousehandler = new MouseHandler({
         selectRange, deselectRange, selectInInterval,
         move, resize, setOrReplaceInsertMarker, insertNewPart,
         toggleEntitySelection, toggleMultiEntitySelection, toggleInitialEntitySelection,
-        deleteSelectedEntities, selectImageChannel, setMessage
+        deleteSelectedEntities, selectImageChannel, setMessage, setOrReplaceMarker
       });
     }
 
@@ -37,7 +38,7 @@ export function withEventHandler(WrappedComponent) {
         selectRange, deselectRange, selectInInterval,
         move, resize, setOrReplaceInsertMarker, insertNewPart,
         toggleEntitySelection, toggleMultiEntitySelection, toggleInitialEntitySelection,
-        deleteSelectedEntities, setMessage,
+        deleteSelectedEntities, setMessage, setOrReplaceMarker,
         ...passthruProps } = this.props;
 
       return (
@@ -63,6 +64,7 @@ export function withEventHandler(WrappedComponent) {
     selectImageChannel: PropTypes.func.isRequired,
     resolution: PropTypes.number.isRequired,
     setMessage: PropTypes.func.isRequired,
+    setOrReplaceMarker: PropTypes.func.isRequired,
   };
 
   WithEventHandler.displayName = `WithEventHandler(${getDisplayName(WrappedComponent)})`;

@@ -63,10 +63,9 @@ class ChannelContainer extends Component {
     const { channelId, buffer, sampleRate, resolution } = this.props;
 
     // memoized audio peak data
-    const { data, duration, bits
-    } = buffer ?
-        this.doExtractPeaks(buffer, sampleRate / resolution, 16)
-        : { data: [], length: 0, bits: 0 };
+    const { data, duration, bits } = buffer ?
+      this.doExtractPeaks(buffer, sampleRate / resolution, 16)
+      : { data: [], length: 0, bits: 0 };
     const peaks = Array.isArray(data) ? data[0] : []; // only one channel for now
 
     const renderProps = {
@@ -77,9 +76,7 @@ class ChannelContainer extends Component {
     };
 
     return (
-      <ChannelWithPlay { ...renderProps }
-        resize={ (partId, markerId, incr) => this.props.resize(channelId, partId, markerId, incr) }
-      />);
+      <ChannelWithPlay { ...renderProps } resize={ (partId, markerId, incr) => this.props.resize(channelId, partId, markerId, incr) } />);
   }
 }
 

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 
 import styled, { withTheme } from "styled-components";
+import { handleEvent } from "../utils/eventUtils";
 
 const TIME_INFO = {
   20000: {
@@ -138,6 +139,10 @@ class TimeScale extends Component {
     });
   }
 
+  handleMouseEvent(e, eventName) {
+    handleEvent(e, eventName, this.props.handleMouseEvent, "PlaylistTimeScale");
+  }
+
   render() {
     const { maxWidth, resolution, scale, timeScaleHeight } = this.props;
 
@@ -171,7 +176,10 @@ class TimeScale extends Component {
     this.canvasInfo = canvasInfo;
 
     return (
-      <PlaylistTimeScale cssWidth={ maxWidth }>
+      <PlaylistTimeScale
+        className="PlaylistTimeScale"
+        onClick={ (e) => this.handleMouseEvent(e, "click") }
+        cssWidth={ maxWidth }>
         <PlaylistTimeScaleScroll cssWidth={ maxWidth }>
           {timeMarkers}
           <TimeTicks cssWidth={ maxWidth }
@@ -192,6 +200,7 @@ TimeScale.propTypes = {
   theme: PropTypes.object,
   scale: PropTypes.number,
   timeScaleHeight: PropTypes.number,
+  handleMouseEvent: PropTypes.func.isRequired,
 };
 
 

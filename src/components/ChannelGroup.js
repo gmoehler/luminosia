@@ -7,6 +7,7 @@ import TimeScale from "./TimeScale";
 import { timeToPixels } from "./timeToPixels";
 import { secondsToPixels } from "../utils/conversions";
 import ChannelContainer from "./ChannelContainer";
+import { withEventHandler } from "./withEventHandler";
 
 const ChannelGroupWrapper = styled.div`
   width:  calc(95vw - ${props => props.drawerWidth}px);
@@ -21,7 +22,7 @@ const LoadProgressView = styled(CircularProgress)`
 `;
 
 // add time conversion functionality time scale
-const TimeScaleInSecs = timeToPixels(TimeScale);
+const TimeScaleInSecs = withEventHandler(timeToPixels(TimeScale));
 
 // contains multiple Channels
 export default class ChannelGroup extends Component {
@@ -81,6 +82,7 @@ export default class ChannelGroup extends Component {
           maxDuration={ this.props.maxDuration }
           resolution={ this.props.resolution }
           theme={ this.props.theme }
+          setOrReplaceMarker={ this.props.setOrReplaceMarker }
         />
 
         {channelComponents}
@@ -103,4 +105,5 @@ ChannelGroup.propTypes = {
   maxDuration: PropTypes.number,
   isLoadingShow: PropTypes.bool,
   theme: PropTypes.object.isRequired,
+  setOrReplaceMarker: PropTypes.func.isRequired,
 };

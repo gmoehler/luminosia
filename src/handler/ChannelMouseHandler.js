@@ -1,6 +1,7 @@
-// handles all mouse events for the move action
+// handles all mouse events for the move action for the parts in the channel
+// gestures: click to select, drag to move
 
-export default class MoveMouseHandler {
+export default class ChannelMouseHandler {
 
   constructor(handlerFunctions) {
     this.handlerFunctions = handlerFunctions;

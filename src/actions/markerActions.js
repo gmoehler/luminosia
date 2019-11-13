@@ -16,7 +16,7 @@ const _setOrReplaceMarker = (markerInfo) => ({
 export function setOrReplaceMarker(markerInfo) {
   return (dispatch, getState) => {
     // required fields
-    if (markerInfo.markerId && markerInfo.pos && markerInfo.type) {
+    if (markerInfo.markerId && typeof markerInfo.pos == "number" && markerInfo.type) {
       dispatch(_setOrReplaceMarker({
         ...markerInfo
       }));
