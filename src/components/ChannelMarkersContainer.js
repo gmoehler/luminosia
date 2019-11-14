@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { cloneDeep } from "lodash";
 
 import ChannelMarkers from "./ChannelMarkers";
-import { getAllMarkers } from "../reducers/markerReducer";
+import { getAllMarkerIds, getMarker } from "../reducers/markerReducer";
 import { getSelectionRange, getResolution, getSelectedImageChannelId } from "../reducers/viewReducer";
 import { secondsToPixels } from "../utils/conversions";
 
@@ -68,10 +68,12 @@ const mapStateToProps = (state, props) => {
     type: selection.type
   } : null;
 
-  const markers = getAllMarkers(state);
-  const markersPx = cloneDeep(markers);
-  markersPx.forEach((marker) => {
+  const markerIds = getAllMarkerIds(state);
+  const markersPx = [];
+  markerIds.forEach((markerId) => {
+    const marker = cloneDeep(getMarker(state, markerId));
     marker.pos = marker.pos ? secondsToPixels(marker.pos, resolution) - offsetPx : 0;
+    markersPx.push(marker);
   });
 
   return {

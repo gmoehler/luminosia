@@ -15,7 +15,7 @@ const ImageProgress = styled.div`
 
 const ImageMarker = styled.div`
   position: absolute;
-  background: ${props => props.markerColor || props.theme.markerColor};
+  background: ${props => props.color || props.theme.markerColor};
   width: 2px;
   left: ${props => props.markerPos}px;
   height: 100%;
@@ -57,6 +57,11 @@ function ChannelMarkers(props) {
       //  and whether the part belongs to this channel
       if (marker.type === "insert") {
         color = theme.insertMarkerColor;
+      } else if (marker.type === "insertTimeScale") {
+        color = theme.insertMarkerColor;
+        cursor = "copy"; // with '+' sign
+      } else if (marker.type === "timeScale") {
+        cursor = "pointer";
       } else if (marker.type === "selected" && marker.channelId === channelId) {
         color = theme.selectedMarkerColor;
         cursor = "col-resize";
@@ -65,14 +70,20 @@ function ChannelMarkers(props) {
       } else if (marker.channelId !== channelId) {
         color = theme.markerColorOther;
       }
-      return (<ImageMarker key={ marker.markerId }
-        className="Marker"
-        markerPos={ marker.pos }
-        markerColor={ color }
-        cursor={ cursor }
-        theme={ theme }
-        data-markerid={ marker.markerId }
-        data-partid={ marker.partId } />);
+
+      const markerProps = {
+        key: marker.markerId,
+        className: "Marker",
+        markerPos: marker.pos,
+        color,
+        cursor,
+        theme,
+        "data-markerid": marker.markerId,
+        "data-markertype": marker.type,
+        "data-partid": marker.partId,
+      };
+      return (<ImageMarker { ...markerProps } />);
+
     }) : null;
 
   return (

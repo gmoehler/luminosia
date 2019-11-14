@@ -20,14 +20,16 @@ export function withEventHandler(WrappedComponent) {
         selectRange, deselectRange, selectInInterval,
         move, resize, setOrReplaceInsertMarker, insertNewPart,
         toggleEntitySelection, toggleMultiEntitySelection, toggleInitialEntitySelection,
-        deleteSelectedEntities, selectImageChannel, setMessage, setOrReplaceMarker
+        deleteSelectedEntities, selectImageChannel, setMessage,
+        setOrReplaceMarker, deleteMarker,
       } = this.props;
 
       this.mousehandler = new MouseHandler({
         selectRange, deselectRange, selectInInterval,
         move, resize, setOrReplaceInsertMarker, insertNewPart,
         toggleEntitySelection, toggleMultiEntitySelection, toggleInitialEntitySelection,
-        deleteSelectedEntities, selectImageChannel, setMessage, setOrReplaceMarker
+        deleteSelectedEntities, selectImageChannel, setMessage,
+        setOrReplaceMarker, deleteMarker
       });
     }
 
@@ -38,7 +40,7 @@ export function withEventHandler(WrappedComponent) {
         selectRange, deselectRange, selectInInterval,
         move, resize, setOrReplaceInsertMarker, insertNewPart,
         toggleEntitySelection, toggleMultiEntitySelection, toggleInitialEntitySelection,
-        deleteSelectedEntities, setMessage, setOrReplaceMarker,
+        deleteSelectedEntities, setMessage, setOrReplaceMarker, deleteMarker,
         ...passthruProps } = this.props;
 
       return (
@@ -50,21 +52,22 @@ export function withEventHandler(WrappedComponent) {
   }
 
   WithEventHandler.propTypes = {
-    selectRange: PropTypes.func.isRequired,
-    deselectRange: PropTypes.func.isRequired,
-    selectInInterval: PropTypes.func.isRequired,
-    move: PropTypes.func.isRequired,
-    resize: PropTypes.func.isRequired,
-    setOrReplaceInsertMarker: PropTypes.func.isRequired,
-    insertNewPart: PropTypes.func.isRequired,
-    toggleEntitySelection: PropTypes.func.isRequired,
-    toggleMultiEntitySelection: PropTypes.func.isRequired,
-    toggleInitialEntitySelection: PropTypes.func.isRequired,
-    deleteSelectedEntities: PropTypes.func.isRequired,
-    selectImageChannel: PropTypes.func.isRequired,
-    resolution: PropTypes.number.isRequired,
-    setMessage: PropTypes.func.isRequired,
-    setOrReplaceMarker: PropTypes.func.isRequired,
+    selectRange: PropTypes.func,
+    deselectRange: PropTypes.func,
+    selectInInterval: PropTypes.func,
+    move: PropTypes.func,
+    resize: PropTypes.func,
+    setOrReplaceInsertMarker: PropTypes.func,
+    insertNewPart: PropTypes.func,
+    toggleEntitySelection: PropTypes.func,
+    toggleMultiEntitySelection: PropTypes.func,
+    toggleInitialEntitySelection: PropTypes.func,
+    deleteSelectedEntities: PropTypes.func,
+    selectImageChannel: PropTypes.func,
+    resolution: PropTypes.number,
+    setMessage: PropTypes.func,
+    setOrReplaceMarker: PropTypes.func,
+    deleteMarker: PropTypes.func,
   };
 
   WithEventHandler.displayName = `WithEventHandler(${getDisplayName(WrappedComponent)})`;

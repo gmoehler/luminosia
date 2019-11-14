@@ -169,7 +169,7 @@ class ImageChannel extends Component {
             className="ImageCanvases"
             theme={ theme }
             offset={ offset }
-            cursor={ "move" }>
+            cursor={ "ew-resize" }>
             {canvasImages}
           </ImageCanvases>
         );

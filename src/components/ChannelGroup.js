@@ -83,6 +83,7 @@ export default class ChannelGroup extends Component {
           resolution={ this.props.resolution }
           theme={ this.props.theme }
           setOrReplaceMarker={ this.props.setOrReplaceMarker }
+          deleteMarker={ this.props.deleteMarker }
         />
 
         {channelComponents}
@@ -106,4 +107,5 @@ ChannelGroup.propTypes = {
   isLoadingShow: PropTypes.bool,
   theme: PropTypes.object.isRequired,
   setOrReplaceMarker: PropTypes.func.isRequired,
+  deleteMarker: PropTypes.func.isRequired,
 };

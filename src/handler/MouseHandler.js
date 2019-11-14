@@ -15,7 +15,7 @@ export default class MouseHandler {
     if (eventName.includes("drag") || eventName.includes("drop")) {
       return this.dropMouseHandler.handleMouseEvent(eventName, evInfo);
     }
-    if (eventName.includes("click")) {
+    if (evInfo.className === "PlaylistTimeScale") {
       return this.timeScaleMouseHandler.handleMouseEvent(eventName, evInfo);
     }
     return this.channelMousehandler.handleMouseEvent(eventName, evInfo);

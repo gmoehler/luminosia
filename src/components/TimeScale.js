@@ -85,6 +85,7 @@ const PlaylistTimeScale = styled.div`
   height: 30px;
   background: #2c387e;
   color: white;
+  cursor: copy
 `;
 
 const PlaylistTimeScaleScroll = styled.div`
@@ -180,6 +181,8 @@ class TimeScale extends Component {
       <PlaylistTimeScale
         className="PlaylistTimeScale"
         onClick={ (e) => this.handleMouseEvent(e, "click") }
+        onMouseMove={ (e) => this.handleMouseEvent(e, "mouseMove") }
+        onMouseLeave={ (e) => this.handleMouseEvent(e, "mouseLeave") }
         cssWidth={ maxWidth }>
         <PlaylistTimeScaleScroll cssWidth={ maxWidth }>
           {timeMarkers}

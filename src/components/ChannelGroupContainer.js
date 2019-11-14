@@ -7,7 +7,7 @@ import { getSelectionRange, getResolution, isLoadingShow } from "../reducers/vie
 import { getImages } from "../reducers/imageListReducer";
 import { getMaxChannelDuration, getAllChannelIds, allChannelsStopped } from "../reducers/channelReducer";
 import { defaultTheme } from "./themes";
-import { setOrReplaceMarker } from "../actions/markerActions";
+import { setOrReplaceMarker, deleteMarker } from "../actions/markerActions";
 
 class ChannelGroupContainer extends Component {
 
@@ -72,6 +72,7 @@ const mapStateToProps = (state, props) => {
 const mapDispatchToProps = dispatch => ({
   setMessage: (text, type, title) => dispatch(setMessage({ text, type, title })),
   setOrReplaceMarker: (markerInfo) => dispatch(setOrReplaceMarker(markerInfo)),
+  deleteMarker: (markerId) => dispatch(deleteMarker(markerId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChannelGroupContainer);

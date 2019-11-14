@@ -4,6 +4,7 @@ export function getMouseEventPosition(e, className, channelId) {
   let el = e.target;
   const partId = el.getAttribute("data-partid");
   const markerId = el.getAttribute("data-markerid");
+  const markerType = el.getAttribute("data-markertype");
   let position = 0;
 
   while (el && el.classList && el.classList[0] !== className) {
@@ -21,7 +22,9 @@ export function getMouseEventPosition(e, className, channelId) {
     x: position,
     partId,
     markerId,
-    channelId
+    markerType,
+    channelId,
+    className,
   };
 }
 

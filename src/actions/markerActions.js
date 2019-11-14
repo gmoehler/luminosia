@@ -15,11 +15,12 @@ function generateId() {
   // simple generator :-)
   // other options: cuid or uuid
   lastMarkerIdCount++;
-  return "markerId-" + lastMarkerIdCount.toString();
+  return "marker-" + lastMarkerIdCount.toString();
 }
 
 function isValidMarkerType(type) {
-  return ["insert", "selected", "timeScale"].includes(type);
+  return ["insert", "selected", "timeScale", "insertTimeScale"]
+    .includes(type);
 }
 
 export const clearMarkers = () => ({
