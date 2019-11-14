@@ -2,7 +2,7 @@ import {
   SELECT_ENTITY, DESELECT_ENTITY, CLEAR_ENTITY_SELECTION, COPY_ENTITIES,
 } from "./types";
 import { entityExists, isEntitySingleSelected, isEntitySelected, getSelectedEntityType, getEntityType, isEntitySelectable, getSelectedEntityIds, getSelectedEntityIdsOfType, getEntitiesIdsToCopy } from "../reducers/entityReducer";
-import { clearMarkers, addPartSelectionMarkers, deletePartSelectionMarkers } from "./markerActions";
+import { clearMarkersOfType, addPartSelectionMarkers, deletePartSelectionMarkers } from "./markerActions";
 import { partExists, getPart } from "../reducers/partReducer";
 import { removeImage } from "./imageListActions";
 import { deletePart, createPart } from "./partActions";
@@ -59,7 +59,7 @@ export const _clearEntitySelection = () => ({
 export function clearEntitySelection() {
   return (dispatch, getState) => {
     dispatch(_clearEntitySelection());
-    dispatch(clearMarkers()); // just do it in any case
+    dispatch(clearMarkersOfType("selected")); // just do it in any case
   };
 };
 

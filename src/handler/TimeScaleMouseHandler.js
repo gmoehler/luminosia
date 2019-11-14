@@ -22,9 +22,9 @@ export default class TimeScaleMouseHandler {
 
   handleClick = (evInfo) => {
     const markerInfo = {
+      //markerId will be generated
       pos: evInfo.x,
-      markerId: "some-marker",
-      type: "timescale-marker"
+      type: "timeScale"
     };
     this.handlerFunctions.setOrReplaceMarker(markerInfo);
   }

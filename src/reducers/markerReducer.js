@@ -76,7 +76,6 @@ export default combineReducers({
   allMarkerIds,
 });
 
-
 export const getAllMarkers = (state) => {
   return Object.values(state.entities.markers.byMarkerId);
 };
