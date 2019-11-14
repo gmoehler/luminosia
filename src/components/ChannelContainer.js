@@ -11,11 +11,7 @@ import { getParts } from "../reducers/partReducer";
 import { withEventHandler } from "./withEventHandler";
 import { withPlay } from "./withPlay";
 import { timeToPixels } from "./timeToPixels";
-import { moveSelectedParts, resizePart, selectInInterval } from "../actions/partActions";
-import { stopChannel, insertNewPart } from "../actions/channelActions";
-import { toggleEntitySelection, toggleMultiEntitySelection, toggleInitialEntitySelection, deleteSelectedEntities } from "../actions/entityActions";
-import { selectRange, deselectRange, selectImageChannel } from "../actions/viewActions";
-import { setOrReplaceInsertMarker } from "../actions/markerActions";
+import { stopChannel, } from "../actions/channelActions";
 
 // add play functionality to channels
 const ChannelWithPlay = withEventHandler(withPlay(timeToPixels(Channel)));
@@ -60,7 +56,7 @@ class ChannelContainer extends Component {
       );
     }
 
-    const { channelId, buffer, sampleRate, resolution } = this.props;
+    const { buffer, sampleRate, resolution } = this.props;
 
     // memoized audio peak data
     const { data, duration, bits } = buffer ?
@@ -76,7 +72,7 @@ class ChannelContainer extends Component {
     };
 
     return (
-      <ChannelWithPlay { ...renderProps } resize={ (partId, markerId, incr) => this.props.resize(channelId, partId, markerId, incr) } />);
+      <ChannelWithPlay { ...renderProps } />);
   }
 }
 
@@ -94,35 +90,8 @@ const mapStateToProps = (state, props) => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  selectRange: (from, to, type) => dispatch(selectRange({
-    from,
-    to,
-    type
-  })),
-  deselectRange: () => dispatch(deselectRange()),
-  selectInInterval: (channelId, from, to) => dispatch(selectInInterval(channelId, from, to)),
-  setOrReplaceInsertMarker: (pos) => dispatch(setOrReplaceInsertMarker(pos)),
-  insertNewPart: (channelId, imageId, offset) => dispatch(insertNewPart({
-    channelId,
-    imageId,
-    offset
-  })),
-  deleteSelectedEntities: () => dispatch(deleteSelectedEntities()),
-  move: (partId, incr) => dispatch(moveSelectedParts({
-    partId,
-    incr
-  })),
-  resize: (channelId, partId, markerId, incr) => dispatch(resizePart({
-    channelId,
-    partId,
-    markerId,
-    incr
-  })),
   stopChannel: (channelId) => dispatch(stopChannel(channelId)),
-  selectImageChannel: (channelId) => dispatch(selectImageChannel(channelId)),
-  toggleEntitySelection: (partId) => dispatch(toggleEntitySelection(partId)),
-  toggleMultiEntitySelection: (partId) => dispatch(toggleMultiEntitySelection(partId)),
-  toggleInitialEntitySelection: (partId) => dispatch(toggleInitialEntitySelection(partId)),
+
 });
 
 ChannelContainer.propTypes = {
@@ -130,8 +99,6 @@ ChannelContainer.propTypes = {
   type: PropTypes.string.isRequired,
   loading: PropTypes.bool,
   stopChannel: PropTypes.func.isRequired,
-  move: PropTypes.func.isRequired,
-  resize: PropTypes.func.isRequired,
   buffer: PropTypes.object,
   sampleRate: PropTypes.number.isRequired,
   resolution: PropTypes.number.isRequired,

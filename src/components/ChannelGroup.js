@@ -82,8 +82,6 @@ export default class ChannelGroup extends Component {
           maxDuration={ this.props.maxDuration }
           resolution={ this.props.resolution }
           theme={ this.props.theme }
-          setOrReplaceMarker={ this.props.setOrReplaceMarker }
-          deleteMarker={ this.props.deleteMarker }
         />
 
         {channelComponents}
@@ -106,6 +104,4 @@ ChannelGroup.propTypes = {
   maxDuration: PropTypes.number,
   isLoadingShow: PropTypes.bool,
   theme: PropTypes.object.isRequired,
-  setOrReplaceMarker: PropTypes.func.isRequired,
-  deleteMarker: PropTypes.func.isRequired,
 };
