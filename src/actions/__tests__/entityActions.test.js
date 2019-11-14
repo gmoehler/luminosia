@@ -41,14 +41,10 @@ describe("part actions", () => {
     }, {
       type: "CLEAR_ENTITY_SELECTION",
     }, {
-      type: "CLEAR_MARKERS",
-    }, {
       type: types.ADD_PART,
       payload: normalizedPart2,
     }, {
       type: "CLEAR_ENTITY_SELECTION",
-    }, {
-      type: "CLEAR_MARKERS",
     }];
 
     const stateWithPartsToCopy = {
