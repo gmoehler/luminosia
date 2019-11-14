@@ -52,7 +52,7 @@ export function withEventHandler(WrappedComponent) {
       return (
         <WrappedComponent { ...passthruProps }
           handleMouseEvent={ (eventName, evInfo) =>
-            this.mousehandler.handleMouseEvent(eventName, evInfo, this.props.resolution) }
+            this.mousehandler.handleMouseEvent(eventName, evInfo) }
         />);
     }
   }
