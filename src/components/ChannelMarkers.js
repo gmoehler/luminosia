@@ -85,7 +85,7 @@ function ChannelMarkers(props) {
 }
 
 ChannelMarkers.propTypes = {
-  channelId: PropTypes.string.isRequired,
+  channelId: PropTypes.string,
 
   progress: PropTypes.number,
   cursorPos: PropTypes.number,

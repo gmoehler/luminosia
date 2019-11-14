@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 
 import styled, { withTheme } from "styled-components";
 import { handleEvent } from "../utils/eventUtils";
+import ChannelMarkersContainer from "./ChannelMarkersContainer";
 
 const TIME_INFO = {
   20000: {
@@ -188,6 +189,9 @@ class TimeScale extends Component {
             ref={ this.setCanvasRef }
           />
         </PlaylistTimeScaleScroll>
+        <ChannelMarkersContainer
+          className="ChannelMarkersContainer"
+          theme={ this.props.theme } />
       </PlaylistTimeScale>
     );
   }

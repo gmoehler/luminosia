@@ -60,6 +60,7 @@ export function clearEntitySelection() {
   return (dispatch, getState) => {
     dispatch(_clearEntitySelection());
     dispatch(clearMarkersOfType("selected")); // just do it in any case
+    dispatch(clearMarkersOfType("insert"));
   };
 };
 

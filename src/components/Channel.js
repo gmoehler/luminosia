@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import styled, { withTheme } from "styled-components";
-import { getMouseEventPosition, isImplementedKey, handleEvent } from "../utils/eventUtils";
+import { isImplementedKey, handleEvent } from "../utils/eventUtils";
 import ChannelMarkersContainer from "./ChannelMarkersContainer";
 import ImageChannel from "./ImageChannel";
 import AudioChannel from "./AudioChannel";
