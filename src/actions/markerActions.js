@@ -1,41 +1,78 @@
 import {
   CLEAR_MARKERS, SET_OR_REPLACE_MARKER, DELETE_MARKER, UPDATE_MARKER,
 } from "./types";
-import { markerExists } from "../reducers/markerReducer";
+import { markerExists, getAllMarkers } from "../reducers/markerReducer";
+
+// first id will be 1 to avoid falsy ids
+let lastMarkerIdCount = 0;
+
+// should only be used with care (e.g. in tests)
+export function _setInitialMarkerIdCount(newId) {
+  lastMarkerIdCount = newId;
+}
+
+function generateId() {
+  // simple generator :-)
+  // other options: cuid or uuid
+  lastMarkerIdCount++;
+  return "marker-" + lastMarkerIdCount.toString();
+}
+
+function isValidMarkerType(type) {
+  return ["insert", "selected", "timeScale", "insertTimeScale"]
+    .includes(type);
+}
 
 export const clearMarkers = () => ({
   type: CLEAR_MARKERS,
 });
+
+export function clearMarkersOfType(type) {
+  return (dispatch, getState) => {
+    if (isValidMarkerType(type)) {
+      Object.values(getAllMarkers(getState())).forEach((marker) => {
+        if (marker.type === type) {
+          dispatch(_deleteMarker(marker.markerId));
+        }
+      });
+    } else {
+      console.error("cannot clear markers of unknown type:", type);
+    }
+  };
+}
 
 const _setOrReplaceMarker = (markerInfo) => ({
   type: SET_OR_REPLACE_MARKER,
   payload: markerInfo
 });
 
-// only exported for test
 export function setOrReplaceMarker(markerInfo) {
   return (dispatch, getState) => {
     // required fields
-    if (markerInfo.markerId && markerInfo.pos && markerInfo.type) {
+    if (typeof markerInfo.pos == "number" &&
+      isValidMarkerType(markerInfo.type)) {
+      if (!markerInfo.markerId) {
+        markerInfo.markerId = generateId();
+      }
       dispatch(_setOrReplaceMarker({
         ...markerInfo
       }));
+      return markerInfo.markerId;
     }
+    console.error("cannot set or replace incomplete marker:", markerInfo);
     return null;
   };
 }
-;
 
 export function setOrReplaceInsertMarker(pos) {
   return (dispatch, getState) => {
     dispatch(setOrReplaceMarker({
-      markerId: "insertMarker",
+      markerId: "insertMarker", // just one allowed
       pos,
       type: "insert"
     }));
   };
 }
-;
 
 const _deleteMarker = (markerId) => ({
   type: DELETE_MARKER,
@@ -49,7 +86,6 @@ export function deleteMarker(markerId) {
     }
   };
 }
-;
 
 const _updateMarker = (markerInfo) => ({
   type: UPDATE_MARKER,

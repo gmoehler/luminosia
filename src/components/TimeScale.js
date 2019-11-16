@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 
 import styled, { withTheme } from "styled-components";
+import { handleEvent } from "../utils/eventUtils";
+import ChannelMarkersContainer from "./ChannelMarkersContainer";
 
 const TIME_INFO = {
   20000: {
@@ -83,6 +85,7 @@ const PlaylistTimeScale = styled.div`
   height: 30px;
   background: #2c387e;
   color: white;
+  cursor: default
 `;
 
 const PlaylistTimeScaleScroll = styled.div`
@@ -138,6 +141,10 @@ class TimeScale extends Component {
     });
   }
 
+  handleMouseEvent(e, eventName) {
+    handleEvent(e, eventName, this.props.handleMouseEvent, "PlaylistTimeScale");
+  }
+
   render() {
     const { maxWidth, resolution, scale, timeScaleHeight } = this.props;
 
@@ -171,7 +178,13 @@ class TimeScale extends Component {
     this.canvasInfo = canvasInfo;
 
     return (
-      <PlaylistTimeScale cssWidth={ maxWidth }>
+      <PlaylistTimeScale
+        className="PlaylistTimeScale"
+        onMouseDown={ (e) => this.handleMouseEvent(e, "mouseDown") }
+        onMouseUp={ (e) => this.handleMouseEvent(e, "mouseUp") }
+        onMouseMove={ (e) => this.handleMouseEvent(e, "mouseMove") }
+        onMouseLeave={ (e) => this.handleMouseEvent(e, "mouseLeave") }
+        cssWidth={ maxWidth }>
         <PlaylistTimeScaleScroll cssWidth={ maxWidth }>
           {timeMarkers}
           <TimeTicks cssWidth={ maxWidth }
@@ -180,6 +193,9 @@ class TimeScale extends Component {
             ref={ this.setCanvasRef }
           />
         </PlaylistTimeScaleScroll>
+        <ChannelMarkersContainer
+          className="ChannelMarkersContainer"
+          theme={ this.props.theme } />
       </PlaylistTimeScale>
     );
   }
@@ -192,6 +208,7 @@ TimeScale.propTypes = {
   theme: PropTypes.object,
   scale: PropTypes.number,
   timeScaleHeight: PropTypes.number,
+  handleMouseEvent: PropTypes.func.isRequired,
 };
 
 

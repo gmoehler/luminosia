@@ -3,7 +3,7 @@ export const markerPayload0 = {
   markerId: "part-2--left",
   partId: "part-2",
   pos: 22.34,
-  type: "left",
+  type: "selected",
 };
 
 export const markerState0 = {

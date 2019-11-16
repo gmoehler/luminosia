@@ -2,6 +2,7 @@ import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 
 import styled, { withTheme } from "styled-components";
+import { Menu, MenuItem } from "@material-ui/core";
 
 
 const ImageProgress = styled.div`
@@ -15,7 +16,7 @@ const ImageProgress = styled.div`
 
 const ImageMarker = styled.div`
   position: absolute;
-  background: ${props => props.markerColor || props.theme.markerColor};
+  background: ${props => props.color || props.theme.markerColor};
   width: 2px;
   left: ${props => props.markerPos}px;
   height: 100%;
@@ -33,6 +34,25 @@ const ImageSelection = styled.div`
 
 
 function ChannelMarkers(props) {
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const openContextMenu = event => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const closeContextMenu = () => {
+    setAnchorEl(null);
+  };
+
+  const handleRemoveMarker = (anchorEl) => {
+    const markerId = anchorEl.getAttribute("data-markerid");
+    props.deleteMarker(markerId);
+    // make sure no insert marker exists for the first moment
+    // to not confuse user
+    props.deleteMarker("insertTimeScaleId");
+    closeContextMenu();
+  };
 
   const { channelId, progress, selection, markers, theme, } = props;
 
@@ -53,10 +73,17 @@ function ChannelMarkers(props) {
     markers.map((marker) => {
       let color = theme.markerColor;
       let cursor = "default";
+      let withContextMenu = false;
       // marker color depends on type (insert / normal), selection status
       //  and whether the part belongs to this channel
       if (marker.type === "insert") {
         color = theme.insertMarkerColor;
+      } else if (marker.type === "insertTimeScale") {
+        color = theme.insertMarkerColor;
+        cursor = "copy"; // with '+' sign
+      } else if (marker.type === "timeScale") {
+        cursor = "ew-resize";
+        withContextMenu = true;
       } else if (marker.type === "selected" && marker.channelId === channelId) {
         color = theme.selectedMarkerColor;
         cursor = "col-resize";
@@ -65,27 +92,46 @@ function ChannelMarkers(props) {
       } else if (marker.channelId !== channelId) {
         color = theme.markerColorOther;
       }
-      return (<ImageMarker key={ marker.markerId }
-        className="Marker"
-        markerPos={ marker.pos }
-        markerColor={ color }
-        cursor={ cursor }
-        theme={ theme }
-        data-markerid={ marker.markerId }
-        data-partid={ marker.partId } />);
+
+      const markerProps = {
+        key: marker.markerId,
+        className: "Marker",
+        markerPos: marker.pos,
+        onContextMenu: withContextMenu ? openContextMenu : null,
+        color,
+        cursor,
+        theme,
+        "data-markerid": marker.markerId,
+        "data-markertype": marker.type,
+        "data-partid": marker.partId,
+      };
+      return (<ImageMarker { ...markerProps } />);
+
     }) : null;
+
+  const contextMenu = (<Menu
+    id="simple-menu"
+    anchorEl={ anchorEl }
+    keepMounted
+    open={ Boolean(anchorEl) }
+    onClose={ closeContextMenu }
+  >
+    <MenuItem onClick={ () =>
+      handleRemoveMarker(anchorEl) }>Remove marker</MenuItem>
+  </Menu>);
 
   return (
     <Fragment>
       {progressElem}
       {selectionElem}
       {markerElems}
+      {contextMenu}
     </Fragment>
   );
 }
 
 ChannelMarkers.propTypes = {
-  channelId: PropTypes.string.isRequired,
+  channelId: PropTypes.string,
 
   progress: PropTypes.number,
   cursorPos: PropTypes.number,
@@ -101,6 +147,8 @@ ChannelMarkers.propTypes = {
     channelId: PropTypes.string,
     partId: PropTypes.string,
   })).isRequired,
+
+  deleteMarker: PropTypes.func.isRequired,
 
   theme: PropTypes.object,
 };

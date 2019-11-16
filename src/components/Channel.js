@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import styled, { withTheme } from "styled-components";
-import { getMouseEventPosition, isImplementedKey } from "../utils/eventUtils";
+import { isImplementedKey, handleEvent } from "../utils/eventUtils";
 import ChannelMarkersContainer from "./ChannelMarkersContainer";
 import ImageChannel from "./ImageChannel";
 import AudioChannel from "./AudioChannel";
@@ -31,35 +31,7 @@ class Channel extends Component {
   }
 
   handleMouseEvent(e, eventName) {
-    if (this.props.handleMouseEvent) {
-      e.preventDefault();
-      const pos = eventName !== "keyDown" ?
-        getMouseEventPosition(e, "ChannelWrapper", this.props.channelId) : {};
-      // transfer data is not available until drop (not on dragEnter / dragOver)
-      const imageId = e.dataTransfer && e.dataTransfer.getData("imageid");
-      const duration = e.dataTransfer && Number(e.dataTransfer.getData("duration"));
-      const key = e.key;
-      const shiftKey = e.shiftKey;
-      const ctrlKey = e.ctrlKey;
-
-      let adaptedEventName = eventName;
-      if (shiftKey) {
-        adaptedEventName = "shift-" + adaptedEventName;
-      }
-      if (ctrlKey) {
-        adaptedEventName = "crtl-" + adaptedEventName;
-      }
-      const evInfo = {
-        ...pos, // x pos, channelId, partId, markerId
-        timestamp: e.timeStamp,
-        imageId,
-        duration,
-        key,
-        shiftKey,
-      };
-      this.props.handleMouseEvent(adaptedEventName, evInfo);
-      return;
-    }
+    handleEvent(e, eventName, this.props.handleMouseEvent, "ChannelWrapper", this.props.channelId);
   }
 
   render() {

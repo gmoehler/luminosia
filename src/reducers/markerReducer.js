@@ -76,9 +76,21 @@ export default combineReducers({
   allMarkerIds,
 });
 
-
 export const getAllMarkers = (state) => {
   return Object.values(state.entities.markers.byMarkerId);
+};
+
+export const getAllMarkerIds = (state) => {
+  return state.entities.markers.allMarkerIds
+    .sort((mId1, mId2) => {
+      // insert markers first (first letter 'i' vs 'p' / 't')
+      // so that existing markers are above the insert marker
+      return mId1.localeCompare(mId2);
+    });;
+};
+
+export const getMarker = (state, markerId) => {
+  return state.entities.markers.byMarkerId[markerId];
 };
 
 export const markerExists = (state, id) =>
