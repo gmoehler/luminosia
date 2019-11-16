@@ -2,6 +2,7 @@ import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 
 import styled, { withTheme } from "styled-components";
+import { Menu, MenuItem } from "@material-ui/core";
 
 
 const ImageProgress = styled.div`
@@ -34,6 +35,25 @@ const ImageSelection = styled.div`
 
 function ChannelMarkers(props) {
 
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const openContextMenu = event => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const closeContextMenu = () => {
+    setAnchorEl(null);
+  };
+
+  const handleRemoveMarker = (anchorEl) => {
+    const markerId = anchorEl.getAttribute("data-markerid");
+    props.deleteMarker(markerId);
+    // make sure no insert marker exists for the first moment
+    // to not confuse user
+    props.deleteMarker("insertTimeScaleId");
+    closeContextMenu();
+  };
+
   const { channelId, progress, selection, markers, theme, } = props;
 
   const progressElem = progress ?
@@ -53,6 +73,7 @@ function ChannelMarkers(props) {
     markers.map((marker) => {
       let color = theme.markerColor;
       let cursor = "default";
+      let withContextMenu = false;
       // marker color depends on type (insert / normal), selection status
       //  and whether the part belongs to this channel
       if (marker.type === "insert") {
@@ -61,7 +82,8 @@ function ChannelMarkers(props) {
         color = theme.insertMarkerColor;
         cursor = "copy"; // with '+' sign
       } else if (marker.type === "timeScale") {
-        cursor = "pointer";
+        cursor = "ew-resize";
+        withContextMenu = true;
       } else if (marker.type === "selected" && marker.channelId === channelId) {
         color = theme.selectedMarkerColor;
         cursor = "col-resize";
@@ -75,6 +97,7 @@ function ChannelMarkers(props) {
         key: marker.markerId,
         className: "Marker",
         markerPos: marker.pos,
+        onContextMenu: withContextMenu ? openContextMenu : null,
         color,
         cursor,
         theme,
@@ -86,11 +109,23 @@ function ChannelMarkers(props) {
 
     }) : null;
 
+  const contextMenu = (<Menu
+    id="simple-menu"
+    anchorEl={ anchorEl }
+    keepMounted
+    open={ Boolean(anchorEl) }
+    onClose={ closeContextMenu }
+  >
+    <MenuItem onClick={ () =>
+      handleRemoveMarker(anchorEl) }>Remove marker</MenuItem>
+  </Menu>);
+
   return (
     <Fragment>
       {progressElem}
       {selectionElem}
       {markerElems}
+      {contextMenu}
     </Fragment>
   );
 }
@@ -112,6 +147,8 @@ ChannelMarkers.propTypes = {
     channelId: PropTypes.string,
     partId: PropTypes.string,
   })).isRequired,
+
+  deleteMarker: PropTypes.func.isRequired,
 
   theme: PropTypes.object,
 };

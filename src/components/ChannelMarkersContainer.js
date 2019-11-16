@@ -6,6 +6,7 @@ import ChannelMarkers from "./ChannelMarkers";
 import { getAllMarkerIds, getMarker } from "../reducers/markerReducer";
 import { getSelectionRange, getResolution, getSelectedImageChannelId } from "../reducers/viewReducer";
 import { secondsToPixels } from "../utils/conversions";
+import { deleteMarker } from "../actions/markerActions";
 
 class ChannelMarkersContainer extends Component {
 
@@ -86,6 +87,7 @@ const mapStateToProps = (state, props) => {
 };
 
 const mapDispatchToProps = dispatch => ({
+  deleteMarker: (markerId) => dispatch(deleteMarker(markerId)),
 });
 
 

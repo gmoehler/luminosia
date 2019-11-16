@@ -6,6 +6,7 @@ export function getMouseEventPosition(e, className, channelId) {
   const markerId = el.getAttribute("data-markerid");
   const markerType = el.getAttribute("data-markertype");
   let position = 0;
+  let cn = className;
 
   while (el && el.classList && el.classList[0] !== className) {
     el = el.parentNode;
@@ -16,6 +17,7 @@ export function getMouseEventPosition(e, className, channelId) {
     position = Math.max(0, e.clientX - el.offsetLeft + parentScroll);
   } else {
     console.debug(`Event did not find ${className}`);
+    cn = null;
   }
 
   return {
@@ -24,7 +26,7 @@ export function getMouseEventPosition(e, className, channelId) {
     markerId,
     markerType,
     channelId,
-    className,
+    className: cn,
   };
 }
 
@@ -52,7 +54,7 @@ export function handleEvent(e, eventName, mouseHandler, wrapper4pos, channelId) 
       adaptedEventName = "crtl-" + adaptedEventName;
     }
     const evInfo = {
-      ...pos, // x pos, channelId, partId, markerId
+      ...pos, // x pos, channelId, partId, markerId, className
       timestamp: e.timeStamp,
       imageId,
       duration,
