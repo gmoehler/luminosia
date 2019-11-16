@@ -21,6 +21,7 @@ export default class TimeScaleMouseHandler {
         break;
 
       case "mouseUp":
+        // create marker or stop moving marker
         this.handleFinalizeMove(evInfo);
         this.handleMoveEnd(evInfo);
         break;
