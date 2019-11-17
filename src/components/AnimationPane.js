@@ -3,8 +3,8 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 import { getChannelExportData } from "../actions/ioActions";
 import { samplesToRad } from "../utils/conversions";
-import { Typography } from "@material-ui/core";
-import Slider from "@material-ui/lab/Slider";
+import { Typography, Slider } from "@material-ui/core";
+
 
 const minRotationSpeed = 0.1;
 const maxRotationSpeed = 9.9;

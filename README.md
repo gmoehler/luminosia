@@ -50,7 +50,6 @@ Usability:
 - snap to other objects
 - group/ungroup of parts
 - drag and dop images out of list
-- markers in timeline
 - channel names
 - show image names with tooltip
 

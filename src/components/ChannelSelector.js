@@ -5,8 +5,7 @@ import styled from "styled-components";
 import isElectron from "is-electron";
 
 import { withStyles } from "@material-ui/core/styles";
-import { Tooltip, IconButton } from "@material-ui/core";
-import { Slider } from "@material-ui/lab";
+import { Tooltip, IconButton, Slider } from "@material-ui/core";
 import { indigo } from "@material-ui/core/colors/indigo";
 
 import {
