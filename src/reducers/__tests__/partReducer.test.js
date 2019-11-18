@@ -1,5 +1,5 @@
 import { cloneDeep } from "lodash";
-import reducer, { partExists, getChannelId, getPart, getParts } from "../partReducer";
+import reducer, { partExists, getChannelId, getPart, getParts, closestSnapDiff } from "../partReducer";
 import { initialState } from "../partReducer";
 
 import * as types from "../../actions/types";
@@ -46,13 +46,17 @@ describe("part reducer", () => {
     const reducer0 = reducer(reducer(partState2, {}), {
       type: types.MOVE_PART,
       payload: {
-        partId: "part-1",
-        incr: 0.5,
+        part: {
+          partId: "part-1",
+          incr: 0.5,
+        }
       }
     });
 
     const expectedState = cloneDeep(partState2);
     expectedState.byPartId[part1.partId].offset += 0.5;
+    expectedState.byPartId[part1.partId].actOffset =
+      expectedState.byPartId[part1.partId].offset;
 
     expect(reducer0).toEqual(expectedState);
   });
@@ -62,13 +66,17 @@ describe("part reducer", () => {
     const reducer0 = reducer(reducer(partState2, {}), {
       type: types.MOVE_PART,
       payload: {
-        partId: "part-1",
-        incr: -0.5,
+        part: {
+          partId: "part-1",
+          incr: -0.5,
+        }
       }
     });
 
     const expectedState = cloneDeep(partState2);
     expectedState.byPartId[part1.partId].offset -= 0.5;
+    expectedState.byPartId[part1.partId].actOffset =
+      expectedState.byPartId[part1.partId].offset;
 
     expect(reducer0).toEqual(expectedState);
   });
@@ -186,4 +194,28 @@ describe("selector functions", () => {
     expect(getParts(entityState1, [part1.partId])).toEqual([part1]);
   });
 
+});
+
+describe("helper functions", () => {
+
+  it("find closest value", () => {
+    const a = [5, 6, 7, 8, 9];
+    expect(closestSnapDiff(6.8, a)).toEqual({
+      idx: 2,
+      diff: 7 - 6.8,
+    });
+    const b = [3.75, 5.2];
+    expect(closestSnapDiff(1.75, b)).toEqual({
+      idx: 0,
+      diff: 3.75 - 1.75,
+    });
+  });
+
+  it("find closest value with empty array", () => {
+    const a = [];
+    expect(closestSnapDiff(6.8, a)).toEqual({
+      idx: null,
+      diff: null
+    });
+  });
 });

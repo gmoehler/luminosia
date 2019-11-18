@@ -30,18 +30,20 @@ const byPartId = (state = {}, action) => {
       };
     }
     case MOVE_PART:
-      const part0 = state[action.payload.partId];
-      const currentOffset0 = part0.offset || 0;
-      const offsetIncr0 = action.payload.incr;
+      const part0 = state[action.payload.part.partId];
+      const snapPositions0 = action.payload.snapPositions;
+      // actOffset is the actuall offset without snap
+      const currentOffset0 = part0.actOffset || part0.offset || 0;
+      const offsetIncr0 = action.payload.part.incr;
       const updatedOffset0 = currentOffset0 + offsetIncr0;
+      const maxDist0 = action.payload.maxDist || 0.2;
       const newPart0 = {
         ...part0,
-        // TODO: check against 0 should no longer be required
-        offset: Math.max(0, updatedOffset0),
+        ...snapTo(updatedOffset0, part0.duration, snapPositions0, maxDist0)
       };
       return {
         ...state,
-        [action.payload.partId]: newPart0,
+        [action.payload.part.partId]: newPart0,
       };
 
     case RESIZE_PART:
@@ -125,6 +127,53 @@ export default combineReducers({
   byPartId,
   allPartIds,
 });
+
+function snapTo(myPos, myDur, snapPositions, maxDist) {
+  // snap to part begin
+  const snapDiffLeft = closestSnapDiff(myPos, snapPositions);
+  if (Number.isInteger(snapDiffLeft.idx) && snapDiffLeft.diff < maxDist) {
+    return {
+      offset: snapPositions[snapDiffLeft.idx],
+      actOffset: myPos,
+    };
+  }
+
+  // snap to part end
+  const snapDiffRight = closestSnapDiff(myPos + myDur, snapPositions);
+  if (Number.isInteger(snapDiffRight.idx) && snapDiffRight.diff < maxDist) {
+    return {
+      offset: snapPositions[snapDiffRight.idx] - myDur,
+      actOffset: myPos,
+    };
+  }
+
+  // no snap
+  return {
+    offset: myPos,
+    actOffset: myPos,
+  };
+}
+
+// export for testing only
+export function closestSnapDiff(myPos, positions) {
+  const diffs = positions ? positions
+    .map((pos) => Math.abs(pos - myPos)) : [];
+  const idx = diffs
+    .reduce((iMin, val, i, dif) =>
+      (Number.isInteger(iMin) && val >= dif[iMin]) ? iMin : i, null);
+
+  if (Number.isInteger(idx)) {
+    return {
+      idx,
+      diff: diffs[idx]
+    };
+  }
+  return {
+    idx,
+    diff: null
+  };
+
+}
 
 export function partExists(state, partId) {
   return state.entities.parts.allPartIds.includes(partId);

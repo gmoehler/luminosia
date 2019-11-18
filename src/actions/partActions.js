@@ -8,6 +8,10 @@ import { syncPartMarkers, deletePartSelectionMarkers } from "./markerActions";
 
 import { toggleEntitySelection, selectEntity } from "./entityActions";
 import { isEntitySelected, getSelectedEntityIdsOfType } from "../reducers/entityReducer";
+import { getAllMarkerPosOfType } from "../reducers/markerReducer";
+import { pixelsToSeconds } from "../utils/conversions";
+import { getResolution } from "../reducers/viewReducer";
+import { getChannelSampleRate } from "../reducers/channelReducer";
 
 // first id will be 1 to avoid falsy ids
 let lastPartIdCount = 0;
@@ -90,11 +94,16 @@ export const clearParts = () => ({
   type: CLEAR_PARTS
 });
 
-const _movePart = (moveInfo) => ({
+const _movePart = (moveInfo, snapPositions, maxDist) => ({
   type: MOVE_PART,
-  payload: moveInfo
+  payload: {
+    part: moveInfo,
+    snapPositions,
+    maxDist,
+  }
 });
 
+// move part with snapping to markers
 export const movePart = (moveInfo) => {
   return (dispatch, getState) => {
 
@@ -103,7 +112,12 @@ export const movePart = (moveInfo) => {
     if (moveInfo.partId) {
       // if incr is 0 no need to move
       if (moveInfo.incr) {
-        dispatch(_movePart(moveInfo));
+        // all markers are snap positions for start / end of part
+        const markerPositions = getAllMarkerPosOfType(getState(), "timeScale");
+        // TODO: maxDist could be cached for a channel and zoom state
+        const maxDist = pixelsToSeconds(10, getResolution(getState(),
+          getChannelSampleRate(getState(), getChannelId(getState(), moveInfo.partId))));
+        dispatch(_movePart(moveInfo, markerPositions, maxDist));
         // update markers based on actual move
         dispatch(syncPartDeps(moveInfo.partId));
       }

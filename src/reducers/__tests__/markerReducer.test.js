@@ -1,6 +1,6 @@
-import reducer, { initialState, getAllMarkers, markerExists } from "../markerReducer";
+import reducer, { initialState, getAllMarkers, markerExists, getAllMarkerPosOfType } from "../markerReducer";
 import * as types from "../../actions/types";
-import { markerState0, markerPayload0, fullMarkerState0 } from "../../__fixtures__/marker.fixtures";
+import { markerState0, markerPayload0, fullMarkerState0, fullMarkerState1 } from "../../__fixtures__/marker.fixtures";
 
 describe("marker reducer", () => {
   it("should return the initial state", () => {
@@ -147,6 +147,11 @@ describe("marker selector functions", () => {
 
   it("check whether marker exists", () => {
     expect(markerExists(fullMarkerState0, "part-2--left")).toBeTruthy();
+  });
+
+  it("should sort the marker offsets", () => {
+    expect(getAllMarkerPosOfType(fullMarkerState1, "selected"))
+      .toEqual([20.34, 22.34]);
   });
 
 

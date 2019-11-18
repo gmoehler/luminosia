@@ -1,4 +1,4 @@
-import { cloneDeep } from "lodash";
+import { cloneDeep, omit } from "lodash";
 import { CLEAR_MARKERS, SET_OR_REPLACE_MARKER, DELETE_MARKER, UPDATE_MARKER, } from "../actions/types";
 import { combineReducers } from "redux";
 
@@ -87,6 +87,20 @@ export const getAllMarkerIds = (state) => {
       // so that existing markers are above the insert marker
       return mId1.localeCompare(mId2);
     });;
+};
+
+export const getAllMarkerPosOfType = (state, type) => {
+  return Object.values(state.entities.markers.byMarkerId)
+    .filter((marker) => marker.type === type)
+    .map((marker) => marker.pos)
+    .sort();
+};
+
+// for file export
+export const getAllMarkersOfType = (state, type) => {
+  return Object.values(state.entities.markers.byMarkerId)
+    .filter((marker) => marker.type === type)
+    .map((marker) => omit(marker, ["markerId"]));
 };
 
 export const getMarker = (state, markerId) => {
