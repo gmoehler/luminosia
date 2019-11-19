@@ -112,11 +112,16 @@ export const movePart = (moveInfo) => {
     if (moveInfo.partId) {
       // if incr is 0 no need to move
       if (moveInfo.incr) {
-        // all markers are snap positions for start / end of part
-        const markerPositions = getAllMarkerPosOfType(getState(), "timeScale");
-        // TODO: maxDist could be cached for a channel and zoom state
-        const maxDist = pixelsToSeconds(10, getResolution(getState(),
-          getChannelSampleRate(getState(), getChannelId(getState(), moveInfo.partId))));
+
+        let markerPositions = [];
+        let maxDist = null;
+        if (moveInfo.withSnap) {
+          // all markers are snap positions for start / end of part
+          markerPositions = getAllMarkerPosOfType(getState(), "timeScale");
+          // TODO: maxDist could be cached for a channel and zoom state
+          maxDist = pixelsToSeconds(10, getResolution(getState(),
+            getChannelSampleRate(getState(), getChannelId(getState(), moveInfo.partId))));
+        }
         dispatch(_movePart(moveInfo, markerPositions, maxDist));
         // update markers based on actual move
         dispatch(syncPartDeps(moveInfo.partId));
@@ -149,6 +154,7 @@ export const moveSelectedParts = (moveInfo) => {
       dispatch(movePart({
         partId,
         incr,
+        withSnap: moveInfo.withSnap,
       }));
     });
   };

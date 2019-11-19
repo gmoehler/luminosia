@@ -11,11 +11,12 @@ export default class ChannelMouseHandler {
     this.partId = null;
     this.markerId = null;
     this.selected = false;
-    this.inMove = false;
+    this.currAction = null;
   }
 
   // TimeToPixels HOC wraps the Channel: pos is in secs
   handleMouseEvent = (eventName, evInfo) => {
+    console.log(eventName);
     switch (eventName) {
 
       case "keyDown":
@@ -24,7 +25,8 @@ export default class ChannelMouseHandler {
 
       // also handles click selection
       case "mouseDown":
-        this.inMove = false;
+      case "ctrl-mouseDown":
+        this.currAction = null; // reset
         this.deselectRange();
         this.handleMoveFrom(evInfo);
         break;
@@ -33,17 +35,26 @@ export default class ChannelMouseHandler {
         this.handleMoveTo(evInfo, false);
         break;
 
+      case "ctrl-mouseMove":
+        this.handleMoveTo(evInfo, false, true);
+        break;
+
       case "mouseUp":
+      case "ctrl-mouseUp":
         this.handleMoveTo(evInfo, true);
-        if (!this.inMove) {
+        if (!this.currAction) {
           // only change selection at a simple click (no move)
-          this.handleToggleSelection(evInfo);
+          if (eventName === "ctrl-mouseUp") {
+            this.handleMultiSelect(evInfo);
+          } else {
+            this.handleToggleSelection(evInfo);
+          }
         }
         break;
 
       case "mouseLeave":
         this.handleMoveTo(evInfo, true);
-        this.inMove = false;
+        this.currAction = null;
         break;
 
       case "shift-mouseDown":
@@ -62,24 +73,20 @@ export default class ChannelMouseHandler {
         this.handleMultiSelectTo(evInfo, true);
         break;
 
-      case "crtl-shift-mouseDown":
+      case "ctrl-shift-mouseDown":
         this.handleRangeFrom(evInfo);
         break;
 
-      case "crtl-shift-mouseMove":
+      case "ctrl-shift-mouseMove":
         this.handleRangeTo(evInfo, false);
         break;
 
-      case "crtl-shift-mouseUp":
+      case "ctrl-shift-mouseUp":
         this.handleRangeTo(evInfo, true);
         break;
 
-      case "crtl-shift-mouseLeave":
+      case "ctrl-shift-mouseLeave":
         this.handleRangeTo(evInfo, true);
-        break;
-
-      case "crtl-mouseUp":
-        this.handleMultiSelect(evInfo);
         break;
 
       default:
@@ -94,6 +101,7 @@ export default class ChannelMouseHandler {
   }
 
   handleMoveFrom = (evInfo) => {
+    // covers mouse down for select, move & resize
     this.moveFromX = evInfo.x;
     this.channelId = evInfo.channelId;
     this.partId = evInfo.partId;
@@ -110,20 +118,21 @@ export default class ChannelMouseHandler {
     }
   }
 
-  handleMoveTo = (evInfo, finalizeAction) => {
+  handleMoveTo = (evInfo, finalizeAction, withCtrl = false) => {
     // only move selected when we select a part
     if (this.moveFromX && this.partId && this.channelId) {
       // only when mouse down has occured
       // console.log(`move from ${this.moveFromX} to ${x}`);
       const incrX = evInfo.x - this.moveFromX;
       if (Math.abs(incrX) > 0) {
+        // now we know that it was a move or resize
+        this.currAction = "moveResize";
         if (this.markerId) {
-          this.handlerFunctions.resize(this.partId, this.markerId, incrX);
+          this.handlerFunctions.resize(this.partId, this.markerId, incrX, !withCtrl);
         } else {
-          this.handlerFunctions.move(this.partId, incrX);
+          this.handlerFunctions.move(this.partId, incrX, !withCtrl);
         }
         this.moveFromX = evInfo.x;
-        this.inMove = true;
       }
 
       if (finalizeAction) {
