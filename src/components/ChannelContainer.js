@@ -72,7 +72,7 @@ class ChannelContainer extends Component {
     };
 
     return (
-      <ChannelWithPlay { ...renderProps } />);
+      <ChannelWithPlay {...renderProps} />);
   }
 }
 
@@ -91,7 +91,6 @@ const mapStateToProps = (state, props) => {
 
 const mapDispatchToProps = dispatch => ({
   stopChannel: (channelId) => dispatch(stopChannel(channelId)),
-
 });
 
 ChannelContainer.propTypes = {

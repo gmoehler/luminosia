@@ -30,66 +30,74 @@ const byPartId = (state = {}, action) => {
       };
     }
     case MOVE_PART:
-      const part0 = state[action.payload.part.partId];
+      const part0 = state[action.payload.partId];
       const snapPositions0 = action.payload.snapPositions;
       // actOffset is the actuall offset without snap
       const currentOffset0 = part0.actOffset || part0.offset || 0;
-      const offsetIncr0 = action.payload.part.incr;
+      const offsetIncr0 = action.payload.incr;
       const updatedOffset0 = currentOffset0 + offsetIncr0;
       const maxDist0 = action.payload.maxDist || 0.2;
+
+      // potentially snap to next snap position
+      const snapOffsetLeft0 = snapTo(updatedOffset0, snapPositions0, maxDist0);
+      const snapOffsetRight0 = (snapOffsetLeft0 === updatedOffset0)
+        ? snapTo(updatedOffset0 + part0.duration, snapPositions0, maxDist0)
+        : snapOffsetLeft0 + part0.duration;
+
       const newPart0 = {
         ...part0,
-        ...snapTo(updatedOffset0, part0.duration, snapPositions0, maxDist0)
+        offset: snapOffsetRight0 - part0.duration,
+        duration: part0.duration,
+        actOffset: updatedOffset0,
+        actRightBound: null,
       };
       return {
         ...state,
-        [action.payload.part.partId]: newPart0,
+        [action.payload.partId]: newPart0,
       };
 
     case RESIZE_PART:
       const part1 = state[action.payload.partId];
-      const currentOffset1 = part1.offset || 0;
-
-      let updatedOffset1 = currentOffset1;
-      let updatedDuration1 = part1.duration;
+      const maxDist1 = action.payload.maxDist || 0.2;
+      const snapPositions1 = action.payload.snapPositions;
+      let newPart1;
 
       // left part boundary moved
-      // between 0 and right boundary
       if (action.payload.bound === "left") {
-        const maxOffset = part1.offset + part1.duration;
+        const rightBound1 = part1.offset + part1.duration;
+        const currentOffset1 = part1.actOffset || part1.offset || 0;;
+        const snapOffsetLeft1 = snapTo(currentOffset1 + action.payload.incr,
+          snapPositions1, maxDist1);
+        const updatedOffset1 = bound(snapOffsetLeft1, 0, rightBound1);
 
-        // moving right: cannot exceed right end of part
-        if (action.payload.incr > 0) {
-          updatedDuration1 = Math.max(0, updatedDuration1 - action.payload.incr);
-          if (updatedDuration1 === 0) { // never allow duration 0
-            updatedDuration1 = part1.duration;
-          }
-          updatedOffset1 = maxOffset - updatedDuration1;
-        } else { // move left: cannot be left of 0
-          updatedOffset1 = Math.max(0, updatedOffset1 + action.payload.incr);
-          updatedDuration1 = maxOffset - updatedOffset1;
-        }
+        newPart1 = {
+          ...part1,
+          offset: updatedOffset1,
+          duration: rightBound1 - updatedOffset1,
+          actOffset: currentOffset1 + action.payload.incr,
+          actRightBound: null,
+        };
 
-        // right boundary moved 
-        // right to the start of part 
       } else {
-        updatedDuration1 = Math.max(0, updatedDuration1 + action.payload.incr);
-        if (updatedDuration1 === 0) { // never allow duration 0
-          updatedDuration1 = part1.duration;
-        }
-      }
+        // right part bound moved
+        const rightBound2 = part1.actRightBound || (part1.offset + part1.duration);
+        const updatedRightBound2 = rightBound2 + action.payload.incr;
+        const snapOffsetRight2 = snapTo(updatedRightBound2, snapPositions1, maxDist1);
+        const updatedDuration2 = snapOffsetRight2 < part1.offset ? 0 : snapOffsetRight2 - part1.offset;
 
-      const newPart1 = {
-        ...part1,
-        duration: updatedDuration1,
-        offset: updatedOffset1,
-      };
+        newPart1 = {
+          ...part1,
+          duration: updatedDuration2,
+          offset: part1.offset,
+          actRightBound: updatedRightBound2,
+          actOffset: null,
+        };
+      }
 
       return {
         ...state,
         [action.payload.partId]: newPart1,
       };
-
 
     case DELETE_PART:
       const newState = {
@@ -128,30 +136,21 @@ export default combineReducers({
   allPartIds,
 });
 
-function snapTo(myPos, myDur, snapPositions, maxDist) {
-  // snap to part begin
-  const snapDiffLeft = closestSnapDiff(myPos, snapPositions);
+function bound(val, leftBound, rightBound) {
+  const left = Math.min(leftBound, rightBound);
+  const right = Math.max(leftBound, rightBound);
+  if (val > right) {
+    return right;
+  }
+  return Math.max(val, left);
+}
+
+function snapTo(posToSnap, snapPositions, maxDist) {
+  const snapDiffLeft = closestSnapDiff(posToSnap, snapPositions);
   if (Number.isInteger(snapDiffLeft.idx) && snapDiffLeft.diff < maxDist) {
-    return {
-      offset: snapPositions[snapDiffLeft.idx],
-      actOffset: myPos,
-    };
+    return snapPositions[snapDiffLeft.idx]; // snap
   }
-
-  // snap to part end
-  const snapDiffRight = closestSnapDiff(myPos + myDur, snapPositions);
-  if (Number.isInteger(snapDiffRight.idx) && snapDiffRight.diff < maxDist) {
-    return {
-      offset: snapPositions[snapDiffRight.idx] - myDur,
-      actOffset: myPos,
-    };
-  }
-
-  // no snap
-  return {
-    offset: myPos,
-    actOffset: myPos,
-  };
+  return posToSnap;
 }
 
 // export for testing only

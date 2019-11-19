@@ -97,7 +97,7 @@ export const clearParts = () => ({
 const _movePart = (moveInfo, snapPositions, maxDist) => ({
   type: MOVE_PART,
   payload: {
-    part: moveInfo,
+    ...moveInfo,
     snapPositions,
     maxDist,
   }
@@ -117,6 +117,7 @@ export const movePart = (moveInfo) => {
         let maxDist = null;
         if (moveInfo.withSnap) {
           // all markers are snap positions for start / end of part
+          // TODO: cache for one move operation
           markerPositions = getAllMarkerPosOfType(getState(), "timeScale");
           // TODO: maxDist could be cached for a channel and zoom state
           maxDist = pixelsToSeconds(10, getResolution(getState(),
@@ -160,9 +161,13 @@ export const moveSelectedParts = (moveInfo) => {
   };
 };
 
-const _resizePart = (resizeInfo) => ({
+const _resizePart = (resizeInfo, snapPositions, maxDist) => ({
   type: RESIZE_PART,
-  payload: resizeInfo
+  payload: {
+    ...resizeInfo,
+    snapPositions,
+    maxDist,
+  }
 });
 
 export const resizePart = (resizeInfo) => {
@@ -176,7 +181,18 @@ export const resizePart = (resizeInfo) => {
       // if incr is 0 no need to resize
       if (resizeInfo.incr) {
         resizeInfo.bound = resizeInfo.markerId.includes("right") ? "right" : "left";
-        dispatch(_resizePart(resizeInfo));
+
+        let markerPositions = [];
+        let maxDist = null;
+        if (resizeInfo.withSnap) {
+          // all markers are snap positions for start / end of part
+          // TODO: cache for one resize operation
+          markerPositions = getAllMarkerPosOfType(getState(), "timeScale");
+          // TODO: maxDist could be cached for a channel and zoom state
+          maxDist = pixelsToSeconds(10, getResolution(getState(),
+            getChannelSampleRate(getState(), getChannelId(getState(), resizeInfo.partId))));
+        }
+        dispatch(_resizePart(resizeInfo, markerPositions, maxDist));
         // update markers based on actual resize
         dispatch(syncPartDeps(resizeInfo.partId));
       }

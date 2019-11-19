@@ -16,7 +16,7 @@ export default class ChannelMouseHandler {
 
   // TimeToPixels HOC wraps the Channel: pos is in secs
   handleMouseEvent = (eventName, evInfo) => {
-    console.log(eventName);
+    // console.log(eventName);
     switch (eventName) {
 
       case "keyDown":
