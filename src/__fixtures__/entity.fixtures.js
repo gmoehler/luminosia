@@ -44,7 +44,9 @@ export const imageChannel0 = {
   sampleRate: 100,
   duration: 10,
   gain: 1,
-  parts: []
+  parts: [],
+  minPartDuration: 0.0625,
+  snapDist: 0.125,
 };
 
 // image channel with 2 parts
@@ -54,6 +56,8 @@ export const imageChannel1Import = {
   sampleRate: 100,
   duration: 55.5,
   gain: 1,
+  minPartDuration: 0.0625,
+  snapDist: 0.125,
   parts: ["part-1", "part-2"]
 };
 // copied channel imageChannel1Import 
@@ -62,6 +66,8 @@ export const imageChannel2Import = {
   sampleRate: 100,
   duration: 55.5,
   gain: 1,
+  minPartDuration: 0.0625,
+  snapDist: 0.125,
   parts: ["part-3", "part-4"]
 };
 
@@ -203,6 +209,9 @@ export const partState2 = {
 export const entityState0 = {
   entities: {
     ...initialEntityState
+  },
+  view: {
+    resolution: 80,
   }
 };
 
@@ -211,5 +220,8 @@ export const entityState1 = {
     ...initialEntityState,
     channels: imageChannelState1,
     parts: partState2,
+  },
+  view: {
+    resolution: 80,
   }
 };

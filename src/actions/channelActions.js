@@ -62,9 +62,9 @@ export const addChannel = (channelInfo) => {
       channelInfo.gain = channelInfo.gain || 1;
       channelInfo.channelId = generateId(channelInfo.type);
       // parts need to be at least 5 pixel wide when resizing
-      // channelInfo.minPartDuration = pixelsToSeconds(5, getResolution(getState()), channelInfo.sampleRate);
+      channelInfo.minPartDuration = pixelsToSeconds(5, getResolution(getState()), channelInfo.sampleRate);
       // snap distance is 10 pixels (for each resolution)
-      // channelInfo.snapDist = pixelsToSeconds(10, getResolution(getState()), channelInfo.sampleRate);
+      channelInfo.snapDist = pixelsToSeconds(10, getResolution(getState()), channelInfo.sampleRate);
 
       // add channel with new channel id, but without parts yet
       const parts = channelInfo.parts;

@@ -9,9 +9,7 @@ import { syncPartMarkers, deletePartSelectionMarkers } from "./markerActions";
 import { toggleEntitySelection, selectEntity } from "./entityActions";
 import { isEntitySelected, getSelectedEntityIdsOfType } from "../reducers/entityReducer";
 import { getAllMarkerPosOfType } from "../reducers/markerReducer";
-import { pixelsToSeconds } from "../utils/conversions";
-import { getResolution } from "../reducers/viewReducer";
-import { getChannelSampleRate } from "../reducers/channelReducer";
+import { getChannelSnapDist, getChannelMinPartDuration } from "../reducers/channelReducer";
 
 // first id will be 1 to avoid falsy ids
 let lastPartIdCount = 0;
@@ -117,11 +115,10 @@ export const movePart = (moveInfo) => {
         let snapDist = null;
         if (moveInfo.withSnap) {
           // all markers are snap positions for start / end of part
-          // TODO: cache for one move operation
+          // TODO: cache markers for one move operation
           markerPositions = getAllMarkerPosOfType(getState(), "timeScale");
-          // TODO: maxDist could be cached for a channel and zoom state
-          snapDist = pixelsToSeconds(10, getResolution(getState(),
-            getChannelSampleRate(getState(), getChannelId(getState(), moveInfo.partId))));
+          const channelId = getChannelId(getState(), moveInfo.partId);
+          snapDist = getChannelSnapDist(getState(), channelId);
         }
         dispatch(_movePart(moveInfo, markerPositions, snapDist));
         // update markers based on actual move
@@ -181,19 +178,17 @@ export const resizePart = (resizeInfo) => {
       dispatch(toggleEntitySelection(resizeInfo.partId));
       // if incr is 0 no need to resize
       if (resizeInfo.incr) {
+        const channelId = getChannelId(getState(), resizeInfo.partId);
         resizeInfo.bound = resizeInfo.markerId.includes("right") ? "right" : "left";
 
         let markerPositions = [];
         let snapDist = null;
-        const minDuration = pixelsToSeconds(5, getResolution(getState(),
-          getChannelSampleRate(getState(), getChannelId(getState(), resizeInfo.partId))));
+        const minDuration = getChannelMinPartDuration(getState(), channelId);
         if (resizeInfo.withSnap) {
           // all markers are snap positions for start / end of part
-          // TODO: cache for one resize operation
+          // TODO: cache markers for one move operation
           markerPositions = getAllMarkerPosOfType(getState(), "timeScale");
-          // TODO: maxDist could be cached for a channel and zoom state
-          snapDist = pixelsToSeconds(10, getResolution(getState(),
-            getChannelSampleRate(getState(), getChannelId(getState(), resizeInfo.partId))));
+          snapDist = getChannelSnapDist(getState(), channelId);
         }
         dispatch(_resizePart(resizeInfo, markerPositions, snapDist, minDuration));
         // update markers based on actual resize
