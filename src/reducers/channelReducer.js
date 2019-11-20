@@ -221,6 +221,16 @@ export function getChannelSampleRate(state, channelId) {
   return ch ? ch.sampleRate : 0;
 }
 
+export function getChannelMinPartDuration(state, channelId) {
+  const ch = _getChannel(state, channelId);
+  return ch ? ch.minPartDuration : 0;
+}
+
+export function getChannelSnapDist(state, channelId) {
+  const ch = _getChannel(state, channelId);
+  return ch ? ch.snapDist : 0;
+}
+
 export function getChannelPartIds(state, channelId) {
   const ch = _getChannel(state, channelId);
   return ch ? ch.parts : 0;

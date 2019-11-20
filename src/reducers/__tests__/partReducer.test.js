@@ -5,7 +5,7 @@ import { initialState } from "../partReducer";
 import * as types from "../../actions/types";
 import { normalizedPart1, partState1, partState2, part1, entityState1 } from "../../__fixtures__/entity.fixtures";
 
-xdescribe("part reducer", () => {
+describe("part reducer", () => {
   it("should return the initial state", () => {
     expect(reducer(undefined, {})).toEqual(initialState);
   });
@@ -87,6 +87,8 @@ xdescribe("part reducer", () => {
         partId: "part-1",
         bound: "left",
         incr: 0.5,
+        snapDist: 0.2,
+        minDuration: 0.1
       }
     });
 
@@ -108,11 +110,17 @@ xdescribe("part reducer", () => {
         partId: "part-1",
         bound: "left",
         incr: 1.5,
+        snapDist: 0.2,
+        minDuration: 0.1
       }
     });
 
     const expectedState = cloneDeep(partState2);
-    expectedState.byPartId[part1.partId].actRightBound = null;
+    const expPart1 = expectedState.byPartId[part1.partId];
+    expPart1.duration = 2 - 1.9; // calc because of rounding error
+    expPart1.offset = 1.9;
+    expPart1.actOffset = 1.9;
+    expPart1.actRightBound = null;
 
     expect(reducer0).toEqual(expectedState);
   });
@@ -125,12 +133,17 @@ xdescribe("part reducer", () => {
         partId: "part-1",
         bound: "left",
         incr: -1.5,
+        snapDist: 0.2,
+        minDuration: 0.1
       }
     });
 
     const expectedState = cloneDeep(partState2);
-    expectedState.byPartId[part1.partId].offset = 0;
-    expectedState.byPartId[part1.partId].duration = 2.0;
+    const expPart1 = expectedState.byPartId[part1.partId];
+    expPart1.offset = 0;
+    expPart1.actOffset = expPart1.offset;
+    expPart1.duration = 2.0;
+    expPart1.actRightBound = null;
 
     expect(reducer0).toEqual(expectedState);
   });
@@ -144,11 +157,16 @@ xdescribe("part reducer", () => {
         partId: "part-1",
         bound: "right",
         incr: 0.5,
+        snapDist: 0.2,
+        minDuration: 0.1
       }
     });
 
     const expectedState = cloneDeep(partState2);
     expectedState.byPartId[part1.partId].duration += 0.5;
+    expectedState.byPartId[part1.partId].actOffset = null;
+    expectedState.byPartId[part1.partId].actRightBound =
+      expectedState.byPartId[part1.partId].offset + expectedState.byPartId[part1.partId].duration;
 
     expect(reducer0).toEqual(expectedState);
   });
@@ -161,9 +179,17 @@ xdescribe("part reducer", () => {
         partId: "part-1",
         bound: "right",
         incr: -1.5,
+        snapDist: 0.2,
+        minDuration: 0.1
       }
     });
-    expect(reducer0).toEqual(partState2);
+
+    const expectedState = cloneDeep(partState2);
+    expectedState.byPartId[part1.partId].actOffset = null;
+    expectedState.byPartId[part1.partId].duration = 2 - 1.9; // calc because of round error
+    expectedState.byPartId[part1.partId].actRightBound = expectedState.byPartId[part1.partId].offset + expectedState.byPartId[part1.partId].duration;
+
+    expect(reducer0).toEqual(expectedState);
   });
 
 });
