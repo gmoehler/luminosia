@@ -39,7 +39,7 @@ App
 ```
 
 Issues:
- 
+- fix multi-select
 
 Usability:
 - make zoom stay at position

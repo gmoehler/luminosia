@@ -31,25 +31,15 @@ const byPartId = (state = {}, action) => {
     }
     case MOVE_PART:
       const part0 = state[action.payload.partId];
-      const snapPositions0 = action.payload.snapPositions;
-      // actOffset is the actuall offset without snap
       const currentOffset0 = part0.actOffset || part0.offset || 0;
-      const offsetIncr0 = action.payload.incr;
-      const updatedOffset0 = currentOffset0 + offsetIncr0;
-      const snapDist0 = action.payload.snapDist || 0.2;
-
-      // potentially snap to next snap position
-      const snapOffsetLeft0 = snapTo(updatedOffset0, snapPositions0, snapDist0);
-      const snapOffsetRight0 = (snapOffsetLeft0 === updatedOffset0)
-        ? snapTo(updatedOffset0 + part0.duration, snapPositions0, snapDist0)
-        : snapOffsetLeft0 + part0.duration;
+      const partUpdate0 = movePartWithSnap(
+        currentOffset0, part0.duration,
+        action.payload.incr, action.payload.snapPositions,
+        action.payload.snapDist);
 
       const newPart0 = {
         ...part0,
-        offset: snapOffsetRight0 - part0.duration,
-        duration: part0.duration,
-        actOffset: updatedOffset0,
-        actRightBound: null,
+        ...partUpdate0
       };
       return {
         ...state,
@@ -136,6 +126,25 @@ export default combineReducers({
   byPartId,
   allPartIds,
 });
+
+function movePartWithSnap(offset, duration, incr, snapPositions, snapDist) {
+  // actOffset is the actuall offset without snap
+  const updatedOffset = offset + incr;
+
+  // potentially snap left to next snap position
+  const snapOffsetLeft = snapTo(updatedOffset, snapPositions, snapDist);
+  // only snap right when left was not snapped yet
+  const snapOffsetRight = (snapOffsetLeft === updatedOffset)
+    ? snapTo(updatedOffset + duration, snapPositions, snapDist)
+    : snapOffsetLeft + duration;
+
+  return {
+    offset: snapOffsetRight - duration,
+    duration,
+    actOffset: updatedOffset,
+    actRightBound: null,
+  };
+}
 
 function bound(val, leftBound, rightBound) {
   let left = leftBound;
