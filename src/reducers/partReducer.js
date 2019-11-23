@@ -51,11 +51,8 @@ const byPartId = (state = {}, action) => {
       const incr = getIncrWithSnap(action.payload.partIds, state,
         action.payload.incr, action.payload.snapPositions, action.payload.snapDist);
 
-      if (!incr) {
-        return state; // no movement
-      }
-
       // update offset
+      // actOffset keeps going independent of snap
       const newByPartId = cloneDeep(state);
       action.payload.partIds.forEach((partId) => {
         const part = state[partId];
