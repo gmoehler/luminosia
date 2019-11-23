@@ -151,6 +151,8 @@ export default combineReducers({
   allPartIds,
 });
 
+// calc one increment for all parts, which depends on snap of
+// first and last part
 function getIncrWithSnap(partIdsToMove, partsById, incr, snapPositions, snapDist) {
   // find index of left most and right most part
   const [minId, maxId] = partIdsToMove.reduce(([minId, maxId], partId) => {
