@@ -4,8 +4,9 @@ import { combineReducers } from "redux";
 import { schema, denormalize } from "normalizr";
 
 import {
-  CLEAR_PARTS, ADD_PART, DELETE_PART, MOVE_PART, RESIZE_PART,
+  CLEAR_PARTS, ADD_PART, DELETE_PART, MOVE_PART, RESIZE_PART, MOVE_PARTS,
 } from "../actions/types";
+import { cloneDeep } from "lodash";
 
 export const partSchema = new schema.Entity(
   "byPartId",
@@ -44,6 +45,62 @@ const byPartId = (state = {}, action) => {
       return {
         ...state,
         [action.payload.partId]: newPart0,
+      };
+
+    case MOVE_PARTS:
+      // find first and last part
+      const [minId, maxId] = action.payload.partIds.reduce(([minId, maxId], partId) => {
+        if (minId === null || maxId === null) {
+          return [partId, partId];
+        }
+        const part = state[partId];
+        if (part.offset < state[minId].offset) {
+          return [part.partId, maxId];
+        }
+        if (part.offset + part.duration > state[minId].offset + state[minId].duration) {
+          return [minId, part.partId];
+        }
+        return [minId, maxId];
+      }, [null, null]);
+
+      // dont pass zero
+      if (state[minId].offset + action.payload.incr < 0) {
+        return state;
+      }
+
+      // do we snap?
+      const updatedOffset = (state[minId].actOffset || state[minId].offset) + action.payload.incr;
+      let incr = action.payload.incr;
+      // potentially snap left to next snap position
+      const snapOffsetLeft = snapTo(updatedOffset, action.payload.snapPositions, action.payload.snapDist);
+      if (snapOffsetLeft !== updatedOffset) {
+        // ok we snapped to the left, recalc incr
+        incr = snapOffsetLeft - state[minId].offset;
+      } else {
+        // try to snap at the right
+        const updatedOffsetRight = (state[maxId].actOffset || state[maxId].offset)
+          + state[maxId].duration + action.payload.incr;
+        const snapOffsetRight = snapTo(updatedOffsetRight,
+          action.payload.snapPositions, action.payload.snapDist);
+        incr = snapOffsetRight - (state[maxId].offset + state[maxId].duration);
+      }
+
+      // update offset
+      const newByPartId = cloneDeep(state);
+      action.payload.partIds.forEach((partId) => {
+        const part = state[partId];
+        const offset = part.offset + incr;
+        const actOffset = (part.actOffset || part.offset) + action.payload.incr;
+
+        newByPartId[part.partId] = {
+          ...part,
+          offset,
+          actOffset,
+        };
+      });
+
+      return {
+        ...newByPartId
       };
 
     case RESIZE_PART:

@@ -27,6 +27,7 @@ export const CLEAR_PARTS = "CLEAR_PARTS";
 export const ADD_PART = "ADD_PART";
 export const DELETE_PART = "DELETE_PART";
 export const MOVE_PART = "MOVE_PART";
+export const MOVE_PARTS = "MOVE_PARTS";
 export const RESIZE_PART = "RESIZE_PART";
 
 // marker actions
