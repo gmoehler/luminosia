@@ -48,41 +48,11 @@ const byPartId = (state = {}, action) => {
       };
 
     case MOVE_PARTS:
-      // find first and last part
-      const [minId, maxId] = action.payload.partIds.reduce(([minId, maxId], partId) => {
-        if (minId === null || maxId === null) {
-          return [partId, partId];
-        }
-        const part = state[partId];
-        if (part.offset < state[minId].offset) {
-          return [part.partId, maxId];
-        }
-        if (part.offset + part.duration > state[minId].offset + state[minId].duration) {
-          return [minId, part.partId];
-        }
-        return [minId, maxId];
-      }, [null, null]);
+      const incr = getIncrWithSnap(action.payload.partIds, state,
+        action.payload.incr, action.payload.snapPositions, action.payload.snapDist);
 
-      // dont pass zero
-      if (state[minId].offset + action.payload.incr < 0) {
-        return state;
-      }
-
-      // do we snap?
-      const updatedOffset = (state[minId].actOffset || state[minId].offset) + action.payload.incr;
-      let incr = action.payload.incr;
-      // potentially snap left to next snap position
-      const snapOffsetLeft = snapTo(updatedOffset, action.payload.snapPositions, action.payload.snapDist);
-      if (snapOffsetLeft !== updatedOffset) {
-        // ok we snapped to the left, recalc incr
-        incr = snapOffsetLeft - state[minId].offset;
-      } else {
-        // try to snap at the right
-        const updatedOffsetRight = (state[maxId].actOffset || state[maxId].offset)
-          + state[maxId].duration + action.payload.incr;
-        const snapOffsetRight = snapTo(updatedOffsetRight,
-          action.payload.snapPositions, action.payload.snapDist);
-        incr = snapOffsetRight - (state[maxId].offset + state[maxId].duration);
+      if (!incr) {
+        return state; // no movement
       }
 
       // update offset
@@ -183,6 +153,44 @@ export default combineReducers({
   byPartId,
   allPartIds,
 });
+
+function getIncrWithSnap(partIdsToMove, partsById, incr, snapPositions, snapDist) {
+  // find index of left most and right most part
+  const [minId, maxId] = partIdsToMove.reduce(([minId, maxId], partId) => {
+    if (minId === null || maxId === null) {
+      return [partId, partId];
+    }
+    const part = partsById[partId];
+    if (part.offset < partsById[minId].offset) {
+      return [part.partId, maxId];
+    }
+    if (part.offset + part.duration > partsById[minId].offset + partsById[minId].duration) {
+      return [minId, part.partId];
+    }
+    return [minId, maxId];
+  }, [null, null]);
+
+  const updatedOffset = (partsById[minId].actOffset || partsById[minId].offset) + incr;
+  let updatedIncr = incr;
+  // potentially snap left to next snap position
+  const snapOffsetLeft = snapTo(updatedOffset, snapPositions, snapDist);
+  if (snapOffsetLeft !== updatedOffset) {
+    // ok we snapped to the left, recalc incr
+    updatedIncr = snapOffsetLeft - partsById[minId].offset;
+  } else {
+    // try to snap at the right
+    const updatedOffsetRight = (partsById[maxId].actOffset || partsById[maxId].offset)
+      + partsById[maxId].duration + incr;
+    const snapOffsetRight = snapTo(updatedOffsetRight, snapPositions, snapDist);
+    updatedIncr = snapOffsetRight - (partsById[maxId].offset + partsById[maxId].duration);
+  }
+
+  if (partsById[minId].offset + updatedIncr < 0) {
+    updatedIncr = 0;
+  }
+
+  return updatedIncr;
+}
 
 function movePartWithSnap(offset, duration, incr, snapPositions, snapDist) {
   // actOffset is the actuall offset without snap

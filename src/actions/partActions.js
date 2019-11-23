@@ -140,6 +140,7 @@ const _moveParts = (partIds, incr, snapPositions, snapDist) => ({
   }
 });
 
+// move selected parts and snap
 export const moveSelectedParts = (moveInfo) => {
   return (dispatch, getState) => {
     if (!isEntitySelected(getState(), moveInfo.partId)) {
@@ -163,34 +164,6 @@ export const moveSelectedParts = (moveInfo) => {
       partIdsToMove.forEach((partId) =>
         dispatch(syncPartDeps(partId)));
     }
-  };
-};
-
-export const moveSelectedParts0 = (moveInfo) => {
-  return (dispatch, getState) => {
-    if (!isEntitySelected(getState(), moveInfo.partId)) {
-      // if part was not selected then exclusively select it for move
-      dispatch(toggleEntitySelection(moveInfo.partId));
-    }
-
-    const partIdsToMove = getSelectedEntityIdsOfType(getState(), "part");
-    let incr = moveInfo.incr;
-    if (moveInfo.incr < 0) {
-      // need to check that no part crosses 0
-      const partsToMove = getParts(getState(), partIdsToMove);
-      const minOffset = partsToMove.reduce((minPos, part) =>
-        minPos === null ? part.offset : Math.min(minPos, part.offset),
-        null);
-      incr = Math.max(-minOffset, moveInfo.incr);
-    }
-
-    partIdsToMove.forEach((partId) => {
-      dispatch(movePart({
-        partId,
-        incr,
-        withSnap: moveInfo.withSnap,
-      }));
-    });
   };
 };
 
