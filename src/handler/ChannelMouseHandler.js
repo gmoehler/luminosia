@@ -101,12 +101,11 @@ export default class ChannelMouseHandler {
   }
 
   handleMoveFrom = (evInfo) => {
-    // covers mouse down for select, move & resize
+    // initialize for select, move & resize
     this.moveFromX = evInfo.x;
     this.channelId = evInfo.channelId;
     this.partId = evInfo.partId;
     this.markerId = evInfo.markerId; // for resize
-    this.handlerFunctions.toggleInitialEntitySelection(evInfo.partId);
   }
 
   handleToggleSelection = (evInfo) => {
@@ -126,7 +125,12 @@ export default class ChannelMouseHandler {
       const incrX = evInfo.x - this.moveFromX;
       if (Math.abs(incrX) > 0) {
         // now we know that it was a move or resize
-        this.currAction = "moveResize";
+        if (!this.currAction === "moveResize") {
+          //first time call
+          this.currAction = "moveResize";
+          this.handlerFunctions.toggleInitialEntitySelection(evInfo.partId);
+        }
+
         if (this.markerId) {
           this.handlerFunctions.resize(this.partId, this.markerId, incrX, !withCtrl);
         } else {
