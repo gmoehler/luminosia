@@ -272,7 +272,7 @@ describe("part reducer", () => {
       type: types.MOVE_PARTS,
       payload: {
         partIds: ["part-1"],
-        incr: -1.1,
+        incr: -0.9,
         snapPositions,
         snapDist,
       }
@@ -282,6 +282,7 @@ describe("part reducer", () => {
     const expPart1 = expectedState.byPartId[part1.partId];
     expPart1.actOffset = 0;
     expPart1.offset = 1 - 0.9; //snap
+    expPart1.actOffset = expPart1.offset;
 
     expect(reducer0).toEqual(expectedState);
   });

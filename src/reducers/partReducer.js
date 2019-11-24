@@ -55,18 +55,18 @@ const byPartId = (state = {}, action) => {
       // actOffset keeps going independent of snap
       const newByPartId = cloneDeep(state);
       action.payload.partIds.forEach((partId) => {
-        const part = state[partId];
-        let offset = (part.offset + incr) < 0 ? 0 : part.offset + incr;
-        let actOffset = (part.actOffset || part.offset) + action.payload.incr;
-        if (actOffset < 0) {
-          actOffset = 0;
-        }
+        // no updates when incr is null (we are crossing 0)
+        if (incr !== null) {
+          const part = state[partId];
+          const offset = part.offset + incr;
+          const actOffset = (part.actOffset || part.offset) + action.payload.incr;
 
-        newByPartId[part.partId] = {
-          ...part,
-          offset,
-          actOffset,
-        };
+          newByPartId[part.partId] = {
+            ...part,
+            offset,
+            actOffset,
+          };
+        }
       });
 
       return {
@@ -173,9 +173,7 @@ function getIncrWithSnap(partIdsToMove, partsById, incr, snapPositions, snapDist
   }, [null, null]);
 
   let updatedOffset = (partsById[minId].actOffset || partsById[minId].offset) + incr;
-  if (updatedOffset < 0) {
-    updatedOffset = 0;
-  }
+
   let updatedIncr = incr;
   // potentially snap left to next snap position
   const snapOffsetLeft = snapTo(updatedOffset, snapPositions, snapDist);
@@ -188,6 +186,11 @@ function getIncrWithSnap(partIdsToMove, partsById, incr, snapPositions, snapDist
       + partsById[maxId].duration + incr;
     const snapOffsetRight = snapTo(updatedOffsetRight, snapPositions, snapDist);
     updatedIncr = snapOffsetRight - (partsById[maxId].offset + partsById[maxId].duration);
+  }
+
+  if (partsById[minId].offset + updatedIncr < 0) {
+    // special value to signalize that actOffset should not be changed
+    updatedIncr = null;
   }
 
   return updatedIncr;

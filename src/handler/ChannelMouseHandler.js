@@ -16,7 +16,7 @@ export default class ChannelMouseHandler {
 
   // TimeToPixels HOC wraps the Channel: pos is in secs
   handleMouseEvent = (eventName, evInfo) => {
-    // console.log(eventName);
+    // console.log(eventName, this.currAction);
     switch (eventName) {
 
       case "keyDown":
@@ -41,9 +41,11 @@ export default class ChannelMouseHandler {
 
       case "mouseUp":
       case "ctrl-mouseUp":
-        this.handleMoveTo(evInfo, true);
-        if (!this.currAction) {
-          // only change selection at a simple click (no move)
+        if (this.currAction === "moveResize") {
+          this.handleMoveTo(evInfo, true);
+        }
+        else if (!this.currAction) {
+          // just a simple click (no move)
           if (eventName === "ctrl-mouseUp") {
             this.handleMultiSelect(evInfo);
           } else {
@@ -125,16 +127,17 @@ export default class ChannelMouseHandler {
       const incrX = evInfo.x - this.moveFromX;
       if (Math.abs(incrX) > 0) {
         // now we know that it was a move or resize
-        if (!this.currAction === "moveResize") {
+        if (!this.currAction) {
           //first time call
           this.currAction = "moveResize";
           this.handlerFunctions.toggleInitialEntitySelection(evInfo.partId);
         }
 
+        const doSnap = !withCtrl;
         if (this.markerId) {
-          this.handlerFunctions.resize(this.partId, this.markerId, incrX, !withCtrl);
+          this.handlerFunctions.resize(this.partId, this.markerId, incrX, doSnap);
         } else {
-          this.handlerFunctions.move(this.partId, incrX, !withCtrl);
+          this.handlerFunctions.move(this.partId, incrX, doSnap);
         }
         this.moveFromX = evInfo.x;
       }
@@ -144,6 +147,7 @@ export default class ChannelMouseHandler {
         this.moveFromX = null;
         this.partId = null;
         this.markerId = null;
+        this.currAction = null;
       }
     }
   }
