@@ -61,7 +61,7 @@ describe("part reducer", () => {
   });
 
 
-  it("should move part with snap", () => {
+  it("should move part with snap - 1", () => {
 
     const snapPositions = [2];
     const snapDist = 0.2;
@@ -85,7 +85,7 @@ describe("part reducer", () => {
     expect(reducer0).toEqual(expectedState);
   });
 
-  it("should move part with snap", () => {
+  it("should move part with snap - 2", () => {
 
     const snapPositions = [2];
     const snapDist = 0.2;
@@ -109,7 +109,7 @@ describe("part reducer", () => {
     expect(reducer0).toEqual(expectedState);
   });
 
-  it("should move part with snap", () => {
+  it("should move part with snap - 3", () => {
 
     const snapPositions = [0.5];
     const snapDist = 0.2;
@@ -152,7 +152,7 @@ describe("part reducer", () => {
     expect(reducer0).toEqual(expectedState);
   });
 
-  it("should move to a position close to 0", () => {
+  it("should move part to a position close to 0", () => {
 
     const snapPositions = [0.1];
     const snapDist = 0.2;
@@ -172,6 +172,116 @@ describe("part reducer", () => {
     expPart1.actOffset = 0;
     expPart1.offset = -1 + 1.1; //snap
     expPart1.actRightBound = null;
+
+    expect(reducer0).toEqual(expectedState);
+  });
+
+  it("should move parts with snap - 1", () => {
+
+    const snapPositions = [2];
+    const snapDist = 0.2;
+
+    const reducer0 = reducer(reducer(partState2, {}), {
+      type: types.MOVE_PARTS,
+      payload: {
+        partIds: ["part-1"],
+        incr: 0.9,
+        snapPositions,
+        snapDist,
+      }
+    });
+
+    const expectedState = cloneDeep(partState2);
+    const expPart1 = expectedState.byPartId[part1.partId];
+    expPart1.actOffset = expPart1.offset + 0.9;
+    expPart1.offset = snapPositions[0]; //snap
+
+    expect(reducer0).toEqual(expectedState);
+  });
+
+  it("should move parts with snap - 2", () => {
+
+    const snapPositions = [2];
+    const snapDist = 0.2;
+
+    const reducer0 = reducer(reducer(partState2, {}), {
+      type: types.MOVE_PARTS,
+      payload: {
+        partIds: ["part-1"],
+        incr: 1.1,
+        snapPositions,
+        snapDist,
+      }
+    });
+
+    const expectedState = cloneDeep(partState2);
+    const expPart1 = expectedState.byPartId[part1.partId];
+    expPart1.actOffset = expPart1.offset + 1.1;
+    expPart1.offset = snapPositions[0]; //snap
+
+    expect(reducer0).toEqual(expectedState);
+  });
+
+  it("should move parts with snap - 3", () => {
+
+    const snapPositions = [0.5];
+    const snapDist = 0.2;
+
+    const reducer0 = reducer(reducer(partState2, {}), {
+      type: types.MOVE_PARTS,
+      payload: {
+        partIds: ["part-1"],
+        incr: -0.4,
+        snapPositions,
+        snapDist,
+      }
+    });
+
+    const expectedState = cloneDeep(partState2);
+    const expPart1 = expectedState.byPartId[part1.partId];
+    expPart1.actOffset = expPart1.offset - 0.4;
+    expPart1.offset = snapPositions[0]; //snap
+
+    expect(reducer0).toEqual(expectedState);
+  });
+
+  it("should not move parts left to 0", () => {
+
+    const reducer0 = reducer(reducer(partState2, {}), {
+      type: types.MOVE_PARTS,
+      payload: {
+        partIds: ["part-1"],
+        incr: -0.5,
+      }
+    });
+
+    const expectedState = cloneDeep(partState2);
+    expectedState.byPartId[part1.partId].offset -= 0.5;
+    expectedState.byPartId[part1.partId].actOffset =
+      expectedState.byPartId[part1.partId].offset;
+
+    expect(reducer0).toEqual(expectedState);
+  });
+
+  it("should move parts to a position close to 0", () => {
+
+    const snapPositions = [0.1];
+    const snapDist = 0.2;
+
+    const reducer0 = reducer(reducer(partState2, {}), {
+      type: types.MOVE_PARTS,
+      payload: {
+        partIds: ["part-1"],
+        incr: -1.1,
+        snapPositions,
+        snapDist,
+      }
+    });
+
+    const expectedState = cloneDeep(partState2);
+    const expPart1 = expectedState.byPartId[part1.partId];
+    expPart1.actOffset = 0;
+    expPart1.offset = 1 - 0.9; //snap
 
     expect(reducer0).toEqual(expectedState);
   });
