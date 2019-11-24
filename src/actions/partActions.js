@@ -3,7 +3,7 @@ import { normalize } from "normalizr";
 import {
   CLEAR_PARTS, ADD_PART, DELETE_PART, RESIZE_PART, MOVE_PART, MOVE_PARTS,
 } from "./types";
-import { getChannelId, partSchema, getPart, getParts, getPartIdsInInterval } from "../reducers/partReducer";
+import { getChannelId, partSchema, getPart, getPartIdsInInterval } from "../reducers/partReducer";
 import { syncPartMarkers, deletePartSelectionMarkers } from "./markerActions";
 
 import { toggleEntitySelection, selectEntity } from "./entityActions";

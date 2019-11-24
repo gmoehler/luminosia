@@ -193,7 +193,7 @@ function getIncrWithSnap(partIdsToMove, partsById, incr, snapPositions, snapDist
 
 function movePartWithSnap(offset, duration, incr, snapPositions, snapDist) {
   // actOffset is the actuall offset without snap
-  const updatedOffset = offset + incr;
+  const updatedOffset = (offset + incr < 0) ? 0 : offset + incr;
 
   // potentially snap left to next snap position
   const snapOffsetLeft = snapTo(updatedOffset, snapPositions, snapDist);
@@ -203,7 +203,7 @@ function movePartWithSnap(offset, duration, incr, snapPositions, snapDist) {
     : snapOffsetLeft + duration;
 
   return {
-    offset: snapOffsetRight - duration,
+    offset: (snapOffsetRight - duration < 0) ? 0 : snapOffsetRight - duration,
     duration,
     actOffset: updatedOffset,
     actRightBound: null,

@@ -60,6 +60,79 @@ describe("part reducer", () => {
     expect(reducer0).toEqual(expectedState);
   });
 
+
+  it("should move part with snap", () => {
+
+    const snapPositions = [2];
+    const snapDist = 0.2;
+
+    const reducer0 = reducer(reducer(partState2, {}), {
+      type: types.MOVE_PART,
+      payload: {
+        partId: "part-1",
+        incr: 0.9,
+        snapPositions,
+        snapDist,
+      }
+    });
+
+    const expectedState = cloneDeep(partState2);
+    const expPart1 = expectedState.byPartId[part1.partId];
+    expPart1.actOffset = expPart1.offset + 0.9;
+    expPart1.offset = snapPositions[0]; //snap
+    expPart1.actRightBound = null;
+
+    expect(reducer0).toEqual(expectedState);
+  });
+
+  it("should move part with snap", () => {
+
+    const snapPositions = [2];
+    const snapDist = 0.2;
+
+    const reducer0 = reducer(reducer(partState2, {}), {
+      type: types.MOVE_PART,
+      payload: {
+        partId: "part-1",
+        incr: 1.1,
+        snapPositions,
+        snapDist,
+      }
+    });
+
+    const expectedState = cloneDeep(partState2);
+    const expPart1 = expectedState.byPartId[part1.partId];
+    expPart1.actOffset = expPart1.offset + 1.1;
+    expPart1.offset = snapPositions[0]; //snap
+    expPart1.actRightBound = null;
+
+    expect(reducer0).toEqual(expectedState);
+  });
+
+  it("should move part with snap", () => {
+
+    const snapPositions = [0.5];
+    const snapDist = 0.2;
+
+    const reducer0 = reducer(reducer(partState2, {}), {
+      type: types.MOVE_PART,
+      payload: {
+        partId: "part-1",
+        incr: -0.4,
+        snapPositions,
+        snapDist,
+      }
+    });
+
+    const expectedState = cloneDeep(partState2);
+    const expPart1 = expectedState.byPartId[part1.partId];
+    expPart1.actOffset = expPart1.offset - 0.4;
+    expPart1.offset = snapPositions[0]; //snap
+    expPart1.actRightBound = null;
+
+    expect(reducer0).toEqual(expectedState);
+  });
+
   it("should not move part left to 0", () => {
 
     const reducer0 = reducer(reducer(partState2, {}), {
@@ -75,6 +148,30 @@ describe("part reducer", () => {
     expectedState.byPartId[part1.partId].actOffset =
       expectedState.byPartId[part1.partId].offset;
     expectedState.byPartId[part1.partId].actRightBound = null;
+
+    expect(reducer0).toEqual(expectedState);
+  });
+
+  it("should move to a position close to 0", () => {
+
+    const snapPositions = [0.1];
+    const snapDist = 0.2;
+
+    const reducer0 = reducer(reducer(partState2, {}), {
+      type: types.MOVE_PART,
+      payload: {
+        partId: "part-1",
+        incr: -1.1,
+        snapPositions,
+        snapDist,
+      }
+    });
+
+    const expectedState = cloneDeep(partState2);
+    const expPart1 = expectedState.byPartId[part1.partId];
+    expPart1.actOffset = 0;
+    expPart1.offset = -1 + 1.1; //snap
+    expPart1.actRightBound = null;
 
     expect(reducer0).toEqual(expectedState);
   });
