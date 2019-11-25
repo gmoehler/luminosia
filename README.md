@@ -39,18 +39,18 @@ App
 ```
 
 Issues:
- 
+
 
 Usability:
 - make zoom stay at position
 - dont scroll for play when start is in view
 - fix selection behaviour_
   . single click drag for selection
+  . fix alt-selection
 - weaker marker colors for small zoom level
-- snap to other objects
+- snap to other parts
 - group/ungroup of parts
 - drag and dop images out of list
-- markers in timeline
 - channel names
 - show image names with tooltip
 

@@ -1,5 +1,11 @@
 
-import { CLEAR_VIEW, LOAD_SHOW_STARTED, LOAD_SHOW_SUCCESS, LOAD_SHOW_FAILURE, SELECT_RANGE, DESELECT_RANGE, SET_RESOLUTION, SELECT_IMAGE_CHANNEL, ADD_TO_UPLOAD_LOG, CLEAR_UPLOAD_LOG, SET_MESSAGE, CLEAR_MESSAGE, SET_LOAD_PROGRESS, INCR_LOAD_PROGRESS, INIT_LOAD_PROGRESS } from "../actions/types";
+import {
+  CLEAR_VIEW, LOAD_SHOW_STARTED, LOAD_SHOW_SUCCESS, LOAD_SHOW_FAILURE,
+  SELECT_RANGE, DESELECT_RANGE, SET_RESOLUTION, SELECT_IMAGE_CHANNEL,
+  ADD_TO_UPLOAD_LOG, CLEAR_UPLOAD_LOG, SET_MESSAGE, CLEAR_MESSAGE,
+  SET_LOAD_PROGRESS, INCR_LOAD_PROGRESS, INIT_LOAD_PROGRESS,
+  TOGGLE_SNAP_TO_MARKER
+} from "../actions/types";
 
 // export for tests
 export const initialState = {
@@ -17,7 +23,8 @@ export const initialState = {
   loadProgress: {
     base: 100,
     progress: 0
-  }
+  },
+  snapToMarkers: true,
 };
 
 export default (state = initialState, action) => {
@@ -129,6 +136,13 @@ export default (state = initialState, action) => {
         message: null
       };
 
+    case TOGGLE_SNAP_TO_MARKER:
+      return {
+        ...state,
+        snapToMarkers: !state.snapToMarkers,
+      };
+
+
     default:
       return state;
   }
@@ -162,4 +176,8 @@ export const isLoadingShow = (state) => {
 
 export const getLoadProgressInPercent = (state) => {
   return 100.0 * state.view.loadProgress.progress / state.view.loadProgress.base;
+};
+
+export const getSnapToMarkers = (state) => {
+  return state.view.snapToMarkers;
 };

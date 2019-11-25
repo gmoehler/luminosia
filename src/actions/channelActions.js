@@ -15,6 +15,8 @@ import {
   getMaxChannelDuration, channelExists, getDenormalizedChannel,
   achannelSchema, getActiveChannelIds, getChannelPartIds,
 } from "../reducers/channelReducer";
+import { pixelsToSeconds } from "../utils/conversions";
+import { getResolution } from "../reducers/viewReducer";
 
 
 // first id will be 1 to avoid falsy ids
@@ -59,6 +61,10 @@ export const addChannel = (channelInfo) => {
       // add tags that are not usually externalized
       channelInfo.gain = channelInfo.gain || 1;
       channelInfo.channelId = generateId(channelInfo.type);
+      // parts need to be at least 5 pixel wide when resizing
+      channelInfo.minPartDuration = pixelsToSeconds(5, getResolution(getState()), channelInfo.sampleRate);
+      // snap distance is 10 pixels (for each resolution)
+      channelInfo.snapDist = pixelsToSeconds(10, getResolution(getState()), channelInfo.sampleRate);
 
       // add channel with new channel id, but without parts yet
       const parts = channelInfo.parts;

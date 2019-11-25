@@ -14,6 +14,8 @@ import { imageExists, getImageList } from "../reducers/imageListReducer";
 
 import { secondsToSamples } from "../utils/conversions";
 import { encodeImage } from "../utils/imageUtils";
+import { getAllMarkersOfType } from "../reducers/markerReducer";
+import { setOrReplaceMarker } from "./markerActions";
 
 
 const logScale = new LogScale(0, 100);
@@ -71,9 +73,16 @@ const _uploadShow = (showData) => (dispatch, getState) => {
         return dispatch(addImage(img));
       }));
 
+  const markerPromises = showData.markers
+    .map(marker => dispatch(setOrReplaceMarker(marker)));
+
   return Promise.all(imageListPromises)
     .then(() => {
       console.log("images loaded.");
+      return Promise.all(markerPromises);
+    })
+    .then(() => {
+      console.log("markers loaded.");
 
       // load all channels
       const channelPromises = showData.channels
@@ -101,6 +110,7 @@ function removeObjectKeys(obj, keysToRemove) {
 
 export const saveShow = (() => (dispatch, getState) => {
   const show = {
+    markers: getAllMarkersOfType(getState(), "timeScale"),
     images: getImageList(getState()),
     channels: removeObjectKeys(getAllDenormalizedChannels(getState()), ["partId", "channelId"])
   };
@@ -161,12 +171,12 @@ export const saveImageChannelAsBinary = channelId => (dispatch, getState) => {
   // export/save binary encoded image for poi
   downloadBinaryFile(`result-${channelId}.poi`, encodeImage(data));
 
-// image file download
-/* const canvas = document.getElementById("imageExportCanvas");
-const resultImage = canvas.toDataURL("image/png");
-if (resultImage) {
-  downloadImagefile(`result-${channelId}.png`, resultImage);
-} */
+  // image file download
+  /* const canvas = document.getElementById("imageExportCanvas");
+  const resultImage = canvas.toDataURL("image/png");
+  if (resultImage) {
+    downloadImagefile(`result-${channelId}.png`, resultImage);
+  } */
 };
 
 // export one channel to canvas and upload to poi

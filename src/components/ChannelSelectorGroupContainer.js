@@ -6,6 +6,8 @@ import { updateChannel, setChannelActive, setChannelInactive, deleteChannel, dup
 import { uploadImageChannelToPoi, saveImageChannelAsBinary } from "../actions/ioActions";
 
 import { getChannelSelectorData, getAllChannelIds } from "../reducers/channelReducer";
+import { toggleSnapToMarkers } from "../actions/viewActions";
+import { getSnapToMarkers } from "../reducers/viewReducer";
 
 class ChannelSelectorGroupContainer extends Component {
 
@@ -20,6 +22,7 @@ class ChannelSelectorGroupContainer extends Component {
 const mapStateToProps = (state, props) => {
   return {
     channelIds: getAllChannelIds(state),
+    snapToMarkers: getSnapToMarkers(state),
     getChannelSelectorData: (channelId) => getChannelSelectorData(state, channelId),
   };
 };
@@ -32,6 +35,7 @@ const mapDispatchToProps = dispatch => ({
   saveImageChannelAsBinary: (channelId) => dispatch(saveImageChannelAsBinary(channelId)),
   deleteChannel: (channelId) => dispatch(deleteChannel(channelId)),
   duplicateChannel: (channelId) => dispatch(duplicateChannel(channelId)),
+  toggleSnapToMarkers: (val) => dispatch(toggleSnapToMarkers()),
 });
 
 ChannelSelectorGroupContainer.propTypes = {

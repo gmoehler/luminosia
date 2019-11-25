@@ -11,11 +11,12 @@ export default class ChannelMouseHandler {
     this.partId = null;
     this.markerId = null;
     this.selected = false;
-    this.inMove = false;
+    this.currAction = null;
   }
 
   // TimeToPixels HOC wraps the Channel: pos is in secs
   handleMouseEvent = (eventName, evInfo) => {
+    // console.log(eventName, this.currAction);
     switch (eventName) {
 
       case "keyDown":
@@ -24,7 +25,8 @@ export default class ChannelMouseHandler {
 
       // also handles click selection
       case "mouseDown":
-        this.inMove = false;
+      case "ctrl-mouseDown":
+        this.currAction = null; // reset
         this.deselectRange();
         this.handleMoveFrom(evInfo);
         break;
@@ -33,17 +35,28 @@ export default class ChannelMouseHandler {
         this.handleMoveTo(evInfo, false);
         break;
 
+      case "ctrl-mouseMove":
+        this.handleMoveTo(evInfo, false, true);
+        break;
+
       case "mouseUp":
-        this.handleMoveTo(evInfo, true);
-        if (!this.inMove) {
-          // only change selection at a simple click (no move)
-          this.handleToggleSelection(evInfo);
+      case "ctrl-mouseUp":
+        if (this.currAction === "moveResize") {
+          this.handleMoveTo(evInfo, true);
+        }
+        else if (!this.currAction) {
+          // just a simple click (no move)
+          if (eventName === "ctrl-mouseUp") {
+            this.handleMultiSelect(evInfo);
+          } else {
+            this.handleToggleSelection(evInfo);
+          }
         }
         break;
 
       case "mouseLeave":
         this.handleMoveTo(evInfo, true);
-        this.inMove = false;
+        this.currAction = null;
         break;
 
       case "shift-mouseDown":
@@ -62,24 +75,20 @@ export default class ChannelMouseHandler {
         this.handleMultiSelectTo(evInfo, true);
         break;
 
-      case "crtl-shift-mouseDown":
+      case "ctrl-shift-mouseDown":
         this.handleRangeFrom(evInfo);
         break;
 
-      case "crtl-shift-mouseMove":
+      case "ctrl-shift-mouseMove":
         this.handleRangeTo(evInfo, false);
         break;
 
-      case "crtl-shift-mouseUp":
+      case "ctrl-shift-mouseUp":
         this.handleRangeTo(evInfo, true);
         break;
 
-      case "crtl-shift-mouseLeave":
+      case "ctrl-shift-mouseLeave":
         this.handleRangeTo(evInfo, true);
-        break;
-
-      case "crtl-mouseUp":
-        this.handleMultiSelect(evInfo);
         break;
 
       default:
@@ -94,11 +103,11 @@ export default class ChannelMouseHandler {
   }
 
   handleMoveFrom = (evInfo) => {
+    // initialize for select, move & resize
     this.moveFromX = evInfo.x;
     this.channelId = evInfo.channelId;
     this.partId = evInfo.partId;
     this.markerId = evInfo.markerId; // for resize
-    this.handlerFunctions.toggleInitialEntitySelection(evInfo.partId);
   }
 
   handleToggleSelection = (evInfo) => {
@@ -110,20 +119,26 @@ export default class ChannelMouseHandler {
     }
   }
 
-  handleMoveTo = (evInfo, finalizeAction) => {
+  handleMoveTo = (evInfo, finalizeAction, withCtrl = false) => {
     // only move selected when we select a part
     if (this.moveFromX && this.partId && this.channelId) {
       // only when mouse down has occured
       // console.log(`move from ${this.moveFromX} to ${x}`);
       const incrX = evInfo.x - this.moveFromX;
       if (Math.abs(incrX) > 0) {
+        // now we know that it was a move or resize
+        if (!this.currAction) {
+          //first time call
+          this.currAction = "moveResize";
+          this.handlerFunctions.toggleInitialEntitySelection(evInfo.partId);
+        }
+
         if (this.markerId) {
           this.handlerFunctions.resize(this.partId, this.markerId, incrX);
         } else {
           this.handlerFunctions.move(this.partId, incrX);
         }
         this.moveFromX = evInfo.x;
-        this.inMove = true;
       }
 
       if (finalizeAction) {
@@ -131,6 +146,7 @@ export default class ChannelMouseHandler {
         this.moveFromX = null;
         this.partId = null;
         this.markerId = null;
+        this.currAction = null;
       }
     }
   }

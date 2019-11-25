@@ -79,13 +79,13 @@ export function withEventHandler(WrappedComponent) {
     deleteSelectedEntities: () => dispatch(deleteSelectedEntities()),
     move: (partId, incr) => dispatch(moveSelectedParts({
       partId,
-      incr
+      incr,
     })),
     resize: (partId, markerId, incr) => dispatch(resizePart({
       channelId: props.channelId,
       partId,
       markerId,
-      incr
+      incr,
     })),
 
     setOrReplaceMarker: (markerInfo) => dispatch(setOrReplaceMarker(markerInfo)),

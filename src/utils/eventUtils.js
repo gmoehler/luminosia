@@ -51,7 +51,7 @@ export function handleEvent(e, eventName, mouseHandler, wrapper4pos, channelId) 
       adaptedEventName = "shift-" + adaptedEventName;
     }
     if (ctrlKey) {
-      adaptedEventName = "crtl-" + adaptedEventName;
+      adaptedEventName = "ctrl-" + adaptedEventName;
     }
     const evInfo = {
       ...pos, // x pos, channelId, partId, markerId, className

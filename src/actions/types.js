@@ -27,6 +27,7 @@ export const CLEAR_PARTS = "CLEAR_PARTS";
 export const ADD_PART = "ADD_PART";
 export const DELETE_PART = "DELETE_PART";
 export const MOVE_PART = "MOVE_PART";
+export const MOVE_PARTS = "MOVE_PARTS";
 export const RESIZE_PART = "RESIZE_PART";
 
 // marker actions
@@ -60,3 +61,5 @@ export const ADD_TO_UPLOAD_LOG = "ADD_TO_UPLOAD_LOG";
 export const CLEAR_UPLOAD_LOG = "CLEAR_UPLOAD_LOG";
 export const SET_MESSAGE = "SET_MESSAGE";
 export const CLEAR_MESSAGE = "CLEAR_MESSAGE";
+
+export const TOGGLE_SNAP_TO_MARKER = "TOGGLE_SNAP_TO_MARKER";

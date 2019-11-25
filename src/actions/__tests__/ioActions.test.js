@@ -19,6 +19,9 @@ describe("io actions", () => {
       channel: {
         byChannelId: {},
         lastChannelId: -1
+      },
+      view: {
+        resolution: 80,
       }
     });
     const audioFile = {
@@ -40,6 +43,8 @@ describe("io actions", () => {
                 src: audioFile.name,
                 offset: 0,
                 gain: 1,
+                minPartDuration: 0.0625,
+                snapDist: 0.125,
                 sampleRate: 44100,
                 buffer: {
                   duration: 21.21,

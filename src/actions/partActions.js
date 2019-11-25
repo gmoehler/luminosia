@@ -1,13 +1,16 @@
 
 import { normalize } from "normalizr";
 import {
-  CLEAR_PARTS, ADD_PART, DELETE_PART, RESIZE_PART, MOVE_PART,
+  CLEAR_PARTS, ADD_PART, DELETE_PART, RESIZE_PART, MOVE_PART, MOVE_PARTS,
 } from "./types";
-import { getChannelId, partSchema, getPart, getParts, getPartIdsInInterval } from "../reducers/partReducer";
+import { getChannelId, partSchema, getPart, getPartIdsInInterval } from "../reducers/partReducer";
 import { syncPartMarkers, deletePartSelectionMarkers } from "./markerActions";
 
 import { toggleEntitySelection, selectEntity } from "./entityActions";
 import { isEntitySelected, getSelectedEntityIdsOfType } from "../reducers/entityReducer";
+import { getAllMarkerPosOfType } from "../reducers/markerReducer";
+import { getChannelSnapDist, getChannelMinPartDuration } from "../reducers/channelReducer";
+import { getSnapToMarkers } from "../reducers/viewReducer";
 
 // first id will be 1 to avoid falsy ids
 let lastPartIdCount = 0;
@@ -90,11 +93,16 @@ export const clearParts = () => ({
   type: CLEAR_PARTS
 });
 
-const _movePart = (moveInfo) => ({
+const _movePart = (moveInfo, snapPositions, snapDist) => ({
   type: MOVE_PART,
-  payload: moveInfo
+  payload: {
+    ...moveInfo,
+    snapPositions,
+    snapDist,
+  }
 });
 
+// move part with snapping to markers
 export const movePart = (moveInfo) => {
   return (dispatch, getState) => {
 
@@ -103,7 +111,18 @@ export const movePart = (moveInfo) => {
     if (moveInfo.partId) {
       // if incr is 0 no need to move
       if (moveInfo.incr) {
-        dispatch(_movePart(moveInfo));
+
+        let markerPositions = [];
+        let snapDist = null;
+        const withSnap = getSnapToMarkers(getState());
+        if (withSnap) {
+          // all markers are snap positions for start / end of part
+          // TODO: cache markers for one move operation
+          markerPositions = getAllMarkerPosOfType(getState(), "timeScale");
+          const channelId = getChannelId(getState(), moveInfo.partId);
+          snapDist = getChannelSnapDist(getState(), channelId);
+        }
+        dispatch(_movePart(moveInfo, markerPositions, snapDist));
         // update markers based on actual move
         dispatch(syncPartDeps(moveInfo.partId));
       }
@@ -113,6 +132,17 @@ export const movePart = (moveInfo) => {
   };
 };
 
+const _moveParts = (partIds, incr, snapPositions, snapDist) => ({
+  type: MOVE_PARTS,
+  payload: {
+    partIds,
+    incr,
+    snapPositions,
+    snapDist,
+  }
+});
+
+// move selected parts and snap
 export const moveSelectedParts = (moveInfo) => {
   return (dispatch, getState) => {
     if (!isEntitySelected(getState(), moveInfo.partId)) {
@@ -120,29 +150,34 @@ export const moveSelectedParts = (moveInfo) => {
       dispatch(toggleEntitySelection(moveInfo.partId));
     }
 
-    const partIdsToMove = getSelectedEntityIdsOfType(getState(), "part");
-    let incr = moveInfo.incr;
-    if (moveInfo.incr < 0) {
-      // need to check that no part crosses 0
-      const partsToMove = getParts(getState(), partIdsToMove);
-      const minOffset = partsToMove.reduce((minPos, part) =>
-        minPos === null ? part.offset : Math.min(minPos, part.offset),
-        null);
-      incr = Math.max(-minOffset, moveInfo.incr);
-    }
+    if (moveInfo.incr) {
+      const partIdsToMove = getSelectedEntityIdsOfType(getState(), "part");
 
-    partIdsToMove.forEach((partId) => {
-      dispatch(movePart({
-        partId,
-        incr,
-      }));
-    });
+      let markerPositions = [];
+      let snapDist = null;
+      const withSnap = getSnapToMarkers(getState());
+      if (withSnap) {
+        // all markers are snap positions for start / end of part
+        // TODO: cache markers for one move operation
+        markerPositions = getAllMarkerPosOfType(getState(), "timeScale");
+        const channelId = getChannelId(getState(), moveInfo.partId);
+        snapDist = getChannelSnapDist(getState(), channelId);
+      }
+      dispatch(_moveParts(partIdsToMove, moveInfo.incr, markerPositions, snapDist));
+      partIdsToMove.forEach((partId) =>
+        dispatch(syncPartDeps(partId)));
+    }
   };
 };
 
-const _resizePart = (resizeInfo) => ({
+const _resizePart = (resizeInfo, snapPositions, snapDist, minDuration) => ({
   type: RESIZE_PART,
-  payload: resizeInfo
+  payload: {
+    ...resizeInfo,
+    snapPositions,
+    snapDist,
+    minDuration,
+  }
 });
 
 export const resizePart = (resizeInfo) => {
@@ -155,8 +190,20 @@ export const resizePart = (resizeInfo) => {
       dispatch(toggleEntitySelection(resizeInfo.partId));
       // if incr is 0 no need to resize
       if (resizeInfo.incr) {
+        const channelId = getChannelId(getState(), resizeInfo.partId);
         resizeInfo.bound = resizeInfo.markerId.includes("right") ? "right" : "left";
-        dispatch(_resizePart(resizeInfo));
+
+        let markerPositions = [];
+        let snapDist = null;
+        const minDuration = getChannelMinPartDuration(getState(), channelId);
+        const withSnap = getSnapToMarkers(getState());
+        if (withSnap) {
+          // all markers are snap positions for start / end of part
+          // TODO: cache markers for one move operation
+          markerPositions = getAllMarkerPosOfType(getState(), "timeScale");
+          snapDist = getChannelSnapDist(getState(), channelId);
+        }
+        dispatch(_resizePart(resizeInfo, markerPositions, snapDist, minDuration));
         // update markers based on actual resize
         dispatch(syncPartDeps(resizeInfo.partId));
       }

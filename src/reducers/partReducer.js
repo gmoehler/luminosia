@@ -4,8 +4,9 @@ import { combineReducers } from "redux";
 import { schema, denormalize } from "normalizr";
 
 import {
-  CLEAR_PARTS, ADD_PART, DELETE_PART, MOVE_PART, RESIZE_PART,
+  CLEAR_PARTS, ADD_PART, DELETE_PART, MOVE_PART, RESIZE_PART, MOVE_PARTS,
 } from "../actions/types";
+import { cloneDeep } from "lodash";
 
 export const partSchema = new schema.Entity(
   "byPartId",
@@ -31,63 +32,90 @@ const byPartId = (state = {}, action) => {
     }
     case MOVE_PART:
       const part0 = state[action.payload.partId];
-      const currentOffset0 = part0.offset || 0;
-      const offsetIncr0 = action.payload.incr;
-      const updatedOffset0 = currentOffset0 + offsetIncr0;
+      const currentOffset0 = part0.actOffset || part0.offset || 0;
+      const partUpdate0 = movePartWithSnap(
+        currentOffset0, part0.duration,
+        action.payload.incr, action.payload.snapPositions,
+        action.payload.snapDist);
+
       const newPart0 = {
         ...part0,
-        // TODO: check against 0 should no longer be required
-        offset: Math.max(0, updatedOffset0),
+        ...partUpdate0
       };
       return {
         ...state,
         [action.payload.partId]: newPart0,
       };
 
+    case MOVE_PARTS:
+      const incr = getIncrWithSnap(action.payload.partIds, state,
+        action.payload.incr, action.payload.snapPositions, action.payload.snapDist);
+
+      // update offset
+      // actOffset keeps going independent of snap
+      const newByPartId = cloneDeep(state);
+      action.payload.partIds.forEach((partId) => {
+        // no updates when incr is null (we are crossing 0)
+        if (incr !== null) {
+          const part = state[partId];
+          const offset = part.offset + incr;
+          const actOffset = (part.actOffset || part.offset) + action.payload.incr;
+
+          newByPartId[part.partId] = {
+            ...part,
+            offset,
+            actOffset,
+          };
+        }
+      });
+
+      return {
+        ...newByPartId
+      };
+
     case RESIZE_PART:
       const part1 = state[action.payload.partId];
-      const currentOffset1 = part1.offset || 0;
-
-      let updatedOffset1 = currentOffset1;
-      let updatedDuration1 = part1.duration;
+      const snapDist1 = action.payload.snapDist || 0.2;
+      const minDur1 = action.payload.minDuration; // min part duration
+      const snapPositions1 = action.payload.snapPositions;
+      let newPart1;
 
       // left part boundary moved
-      // between 0 and right boundary
       if (action.payload.bound === "left") {
-        const maxOffset = part1.offset + part1.duration;
+        const rightBound1 = part1.offset + part1.duration;
+        const currentOffset1 = part1.actOffset || part1.offset || 0;
+        const actualOffset1 = bound(currentOffset1 + action.payload.incr, 0, rightBound1 - minDur1);
+        const snapOffsetLeft1 = snapTo(actualOffset1, snapPositions1, snapDist1);
+        const updatedOffset1 = bound(snapOffsetLeft1, 0, rightBound1 - minDur1);
 
-        // moving right: cannot exceed right end of part
-        if (action.payload.incr > 0) {
-          updatedDuration1 = Math.max(0, updatedDuration1 - action.payload.incr);
-          if (updatedDuration1 === 0) { // never allow duration 0
-            updatedDuration1 = part1.duration;
-          }
-          updatedOffset1 = maxOffset - updatedDuration1;
-        } else { // move left: cannot be left of 0
-          updatedOffset1 = Math.max(0, updatedOffset1 + action.payload.incr);
-          updatedDuration1 = maxOffset - updatedOffset1;
-        }
+        newPart1 = {
+          ...part1,
+          offset: updatedOffset1,
+          duration: rightBound1 - updatedOffset1,
+          actOffset: actualOffset1,
+          actRightBound: null,
+        };
 
-        // right boundary moved 
-        // right to the start of part 
       } else {
-        updatedDuration1 = Math.max(0, updatedDuration1 + action.payload.incr);
-        if (updatedDuration1 === 0) { // never allow duration 0
-          updatedDuration1 = part1.duration;
-        }
-      }
+        // right part bound moved
+        const rightBound2 = part1.actRightBound || (part1.offset + part1.duration);
+        const actualRightBound2 = bound(rightBound2 + action.payload.incr, part1.offset + minDur1, null);
+        const snapOffsetRight2 = snapTo(actualRightBound2, snapPositions1, snapDist1);
+        const updatedDuration2 = bound(snapOffsetRight2 - part1.offset, minDur1, null);
 
-      const newPart1 = {
-        ...part1,
-        duration: updatedDuration1,
-        offset: updatedOffset1,
-      };
+        newPart1 = {
+          ...part1,
+          duration: updatedDuration2,
+          offset: part1.offset,
+          actRightBound: actualRightBound2,
+          actOffset: null,
+        };
+      }
 
       return {
         ...state,
         [action.payload.partId]: newPart1,
       };
-
 
     case DELETE_PART:
       const newState = {
@@ -125,6 +153,109 @@ export default combineReducers({
   byPartId,
   allPartIds,
 });
+
+// calc one increment for all parts, which depends on snap of
+// first and last part
+function getIncrWithSnap(partIdsToMove, partsById, incr, snapPositions, snapDist) {
+  // find index of left most and right most part
+  const [minId, maxId] = partIdsToMove.reduce(([minId, maxId], partId) => {
+    if (minId === null || maxId === null) {
+      return [partId, partId];
+    }
+    const part = partsById[partId];
+    if (part.offset < partsById[minId].offset) {
+      return [part.partId, maxId];
+    }
+    if (part.offset + part.duration > partsById[minId].offset + partsById[minId].duration) {
+      return [minId, part.partId];
+    }
+    return [minId, maxId];
+  }, [null, null]);
+
+  let updatedOffset = (partsById[minId].actOffset || partsById[minId].offset) + incr;
+
+  let updatedIncr = incr;
+  // potentially snap left to next snap position
+  const snapOffsetLeft = snapTo(updatedOffset, snapPositions, snapDist);
+  if (snapOffsetLeft !== updatedOffset) {
+    // ok we snapped to the left, recalc incr
+    updatedIncr = snapOffsetLeft - partsById[minId].offset;
+  } else {
+    // try to snap at the right
+    const updatedOffsetRight = (partsById[maxId].actOffset || partsById[maxId].offset)
+      + partsById[maxId].duration + incr;
+    const snapOffsetRight = snapTo(updatedOffsetRight, snapPositions, snapDist);
+    updatedIncr = snapOffsetRight - (partsById[maxId].offset + partsById[maxId].duration);
+  }
+
+  if (partsById[minId].offset + updatedIncr < 0) {
+    // special value to signalize that actOffset should not be changed
+    updatedIncr = null;
+  }
+
+  return updatedIncr;
+}
+
+function movePartWithSnap(offset, duration, incr, snapPositions, snapDist) {
+  // actOffset is the actuall offset without snap
+  const updatedOffset = (offset + incr < 0) ? 0 : offset + incr;
+
+  // potentially snap left to next snap position
+  const snapOffsetLeft = snapTo(updatedOffset, snapPositions, snapDist);
+  // only snap right when left was not snapped yet
+  const snapOffsetRight = (snapOffsetLeft === updatedOffset)
+    ? snapTo(updatedOffset + duration, snapPositions, snapDist)
+    : snapOffsetLeft + duration;
+
+  return {
+    offset: (snapOffsetRight - duration < 0) ? 0 : snapOffsetRight - duration,
+    duration,
+    actOffset: updatedOffset,
+    actRightBound: null,
+  };
+}
+
+function bound(val, leftBound, rightBound) {
+  let left = leftBound;
+  if (rightBound) {
+    const right = Math.max(leftBound, rightBound);
+    left = Math.min(leftBound, rightBound);
+    if (val > right) {
+      return right;
+    }
+  }
+
+  return Math.max(val, left);
+}
+
+function snapTo(posToSnap, snapPositions, maxDist) {
+  const snapDiffLeft = closestSnapDiff(posToSnap, snapPositions);
+  if (Number.isInteger(snapDiffLeft.idx) && snapDiffLeft.diff < maxDist) {
+    return snapPositions[snapDiffLeft.idx]; // snap
+  }
+  return posToSnap;
+}
+
+// export for testing only
+export function closestSnapDiff(myPos, positions) {
+  const diffs = positions ? positions
+    .map((pos) => Math.abs(pos - myPos)) : [];
+  const idx = diffs
+    .reduce((iMin, val, i, dif) =>
+      (Number.isInteger(iMin) && val >= dif[iMin]) ? iMin : i, null);
+
+  if (Number.isInteger(idx)) {
+    return {
+      idx,
+      diff: diffs[idx]
+    };
+  }
+  return {
+    idx,
+    diff: null
+  };
+
+}
 
 export function partExists(state, partId) {
   return state.entities.parts.allPartIds.includes(partId);
