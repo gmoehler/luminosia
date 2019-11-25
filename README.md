@@ -39,7 +39,7 @@ App
 ```
 
 Issues:
-- 
+
 
 Usability:
 - make zoom stay at position
