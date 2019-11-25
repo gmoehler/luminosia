@@ -10,6 +10,7 @@ import { toggleEntitySelection, selectEntity } from "./entityActions";
 import { isEntitySelected, getSelectedEntityIdsOfType } from "../reducers/entityReducer";
 import { getAllMarkerPosOfType } from "../reducers/markerReducer";
 import { getChannelSnapDist, getChannelMinPartDuration } from "../reducers/channelReducer";
+import { getSnapToMarkers } from "../reducers/viewReducer";
 
 // first id will be 1 to avoid falsy ids
 let lastPartIdCount = 0;
@@ -113,7 +114,8 @@ export const movePart = (moveInfo) => {
 
         let markerPositions = [];
         let snapDist = null;
-        if (moveInfo.withSnap) {
+        const withSnap = getSnapToMarkers(getState());
+        if (withSnap) {
           // all markers are snap positions for start / end of part
           // TODO: cache markers for one move operation
           markerPositions = getAllMarkerPosOfType(getState(), "timeScale");
@@ -153,7 +155,8 @@ export const moveSelectedParts = (moveInfo) => {
 
       let markerPositions = [];
       let snapDist = null;
-      if (moveInfo.withSnap) {
+      const withSnap = getSnapToMarkers(getState());
+      if (withSnap) {
         // all markers are snap positions for start / end of part
         // TODO: cache markers for one move operation
         markerPositions = getAllMarkerPosOfType(getState(), "timeScale");
@@ -193,7 +196,8 @@ export const resizePart = (resizeInfo) => {
         let markerPositions = [];
         let snapDist = null;
         const minDuration = getChannelMinPartDuration(getState(), channelId);
-        if (resizeInfo.withSnap) {
+        const withSnap = getSnapToMarkers(getState());
+        if (withSnap) {
           // all markers are snap positions for start / end of part
           // TODO: cache markers for one move operation
           markerPositions = getAllMarkerPosOfType(getState(), "timeScale");

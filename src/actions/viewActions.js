@@ -1,4 +1,9 @@
-import { SELECT_RANGE, DESELECT_RANGE, SET_RESOLUTION, CLEAR_VIEW, SELECT_IMAGE_CHANNEL, ADD_TO_UPLOAD_LOG, CLEAR_UPLOAD_LOG, SET_MESSAGE, CLEAR_MESSAGE, INIT_LOAD_PROGRESS, SET_LOAD_PROGRESS, INCR_LOAD_PROGRESS } from "./types";
+import {
+  SELECT_RANGE, DESELECT_RANGE, SET_RESOLUTION, CLEAR_VIEW,
+  SELECT_IMAGE_CHANNEL, ADD_TO_UPLOAD_LOG, CLEAR_UPLOAD_LOG, SET_MESSAGE,
+  CLEAR_MESSAGE, INIT_LOAD_PROGRESS, SET_LOAD_PROGRESS, INCR_LOAD_PROGRESS,
+  TOGGLE_SNAP_TO_MARKER
+} from "./types";
 import { getAllChannelIds, getChannelSampleRate } from "../reducers/channelReducer";
 import { updateChannel } from "./channelActions";
 import { pixelsToSeconds } from "../utils/conversions";
@@ -71,4 +76,8 @@ export const setLoadProgress = (progress) => ({
 export const incrLoadProgress = (incr) => ({
   type: INCR_LOAD_PROGRESS,
   payload: incr,
+});
+
+export const toggleSnapToMarkers = () => ({
+  type: TOGGLE_SNAP_TO_MARKER,
 });

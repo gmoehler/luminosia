@@ -3,10 +3,10 @@ import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import FormGroup from "@material-ui/core/FormGroup";
 import ChannelSelector from "./ChannelSelector";
+import TimeScaleSelector from "./TimeScaleSelector";
 
 const styles = () => ({
   formGroup: {
-    paddingTop: "30px",
     background: "#2c387e",
   },
 });
@@ -30,6 +30,9 @@ function ChannelSelectorGroup(props) {
 
   return (
     <FormGroup className={ classes.formGroup }>
+      {props.channelIds.length > 0 &&
+        <TimeScaleSelector { ...props } />
+      }
       {channelSelectors}
     </FormGroup>
   );

@@ -133,11 +133,10 @@ export default class ChannelMouseHandler {
           this.handlerFunctions.toggleInitialEntitySelection(evInfo.partId);
         }
 
-        const doSnap = !withCtrl;
         if (this.markerId) {
-          this.handlerFunctions.resize(this.partId, this.markerId, incrX, doSnap);
+          this.handlerFunctions.resize(this.partId, this.markerId, incrX);
         } else {
-          this.handlerFunctions.move(this.partId, incrX, doSnap);
+          this.handlerFunctions.move(this.partId, incrX);
         }
         this.moveFromX = evInfo.x;
       }
