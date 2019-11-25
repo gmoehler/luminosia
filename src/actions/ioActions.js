@@ -73,8 +73,8 @@ const _uploadShow = (showData) => (dispatch, getState) => {
         return dispatch(addImage(img));
       }));
 
-  const markerPromises = showData.markers
-    .map(marker => dispatch(setOrReplaceMarker(marker)));
+  const markerPromises = showData.markers ? showData.markers
+    .map(marker => dispatch(setOrReplaceMarker(marker))) : [];
 
   return Promise.all(imageListPromises)
     .then(() => {

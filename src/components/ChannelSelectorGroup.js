@@ -25,13 +25,15 @@ function ChannelSelectorGroup(props) {
       };
 
       return (<ChannelSelector { ...channelInfo } />);
-
     });
+
 
   return (
     <FormGroup className={ classes.formGroup }>
-      {props.channelIds.length > 0 &&
-        <TimeScaleSelector { ...props } />
+      {props.channelIds && props.channelIds.length > 0 &&
+        <TimeScaleSelector
+          snapToMarkers={ props.snapToMarkers }
+          toggleSnapToMarkers={ props.toggleSnapToMarkers } />
       }
       {channelSelectors}
     </FormGroup>
@@ -42,6 +44,8 @@ ChannelSelectorGroup.propTypes = {
   classes: PropTypes.object.isRequired,
   channelIds: PropTypes.array,
   getChannelSelectorData: PropTypes.func.isRequired,
+  snapToMarkers: PropTypes.bool.isRequired,
+  toggleSnapToMarkers: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(ChannelSelectorGroup);
