@@ -10,7 +10,7 @@ import {
 
 const channelSelectorWidth = 96;
 
-const styles = theme => ({
+const styles = () => ({
   snapWrapper: {
     height: "30px",
     width: `${channelSelectorWidth}px`,
@@ -40,7 +40,7 @@ function TimeScaleSelector(props) {
       className={ classes.snapWrapper }>
       <Tooltip title={ tooltipText }>
         <IconButton
-          { ...props }
+          props={ { snapToMarkers } }
           className={ classes.snapButton }
           onClick={ props.toggleSnapToMarkers }>
           <SnapIcon
@@ -51,12 +51,11 @@ function TimeScaleSelector(props) {
     </div >
 
   );
-}
+};
 
 TimeScaleSelector.propTypes = {
   classes: PropTypes.object.isRequired,
   snapToMarkers: PropTypes.bool.isRequired,
-  setSnapToMarkers: PropTypes.func.isRequired,
   toggleSnapToMarkers: PropTypes.func.isRequired,
 };
 
