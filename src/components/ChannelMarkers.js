@@ -23,13 +23,14 @@ const ImageMarker = styled.div`
   cursor: ${props => props.cursor};
 `;
 
-const ImageSelection = styled.div`
+const RangeSelection = styled.div`
   position: absolute;
   left: ${props => props.selection.from}px;
   background: ${props => props.selection.type === "temp" ? props.theme.tempSelectionColor :
     props.theme.selectionColor};
   width: ${props => props.selection.to - props.selection.from}px;
   height: 100%;
+  border: 1px solid ${props => props.theme.selectionColor};
 `;
 
 
@@ -63,7 +64,7 @@ function ChannelMarkers(props) {
     : null;
 
   const selectionElem = selection && selection.from && selection.to ?
-    (<ImageSelection
+    (<RangeSelection
       className="Selection"
       selection={ selection }
       theme={ theme } />)
