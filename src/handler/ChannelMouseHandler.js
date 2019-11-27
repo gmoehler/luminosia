@@ -34,17 +34,20 @@ export default class ChannelMouseHandler {
       case "mouseMove":
       case "ctrl-mouseMove":
       case "shift-mouseMove":
-        this.handleMoveTo(evInfo, false);
+        if (["anyMouseAction", "moveResize", "selectPartInRange"].includes(this.currAction)) {
+          this.handleMoveTo(evInfo, false);
+        }
         break;
 
       // ends move, resize, selection actions
       case "mouseUp":
       case "ctrl-mouseUp":
       case "shift-mouseUp":
-        if (this.currAction) {
+        if (["moveResize", "selectPartInRange"].includes(this.currAction)) {
           this.handleMoveTo(evInfo, true);
         }
-        else {  // just a simple click (no move)
+        else if (this.currAction ==="anyMouseAction"){
+          // just a simple click (no move)
           if (eventName === "ctrl-mouseUp") {
             this.handleMultiSelect(evInfo);
           } else {
@@ -54,12 +57,11 @@ export default class ChannelMouseHandler {
         break;
 
       case "mouseLeave":
-        this.handleMoveTo(evInfo, true);
-        this.currAction = null;
-        break;
-
       case "shift-mouseLeave":
-        this.handleMultiSelectTo(evInfo, true);
+      case "ctrl-mouseLeave":
+        if (["anyMouseAction", "moveResize", "selectPartInRange"].includes(this.currAction)) {
+          this.handleMoveTo(evInfo, true);
+        }
         break;
 
       case "ctrl-shift-mouseDown":
@@ -119,9 +121,6 @@ export default class ChannelMouseHandler {
 
   handleMoveTo(evInfo, finalizeAction) {
 
-    // only when mouse down had occured
-    if (["anyMouseAction", "moveResize", "selectPartInRange"].includes(this.currAction)) {
-
       const incrX = evInfo.x - this.moveFromX;
       if (Math.abs(incrX) > 0) {
 
@@ -143,7 +142,6 @@ export default class ChannelMouseHandler {
       if (finalizeAction) {
         this.resetAction();
       }
-    }
   }
 
   moveResizePart(incrX) {
