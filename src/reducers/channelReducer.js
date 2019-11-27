@@ -195,8 +195,14 @@ export function allChannelsStopped(state) {
   return state.entities.channels.playingChannels.length === 0;
 }
 
-export function getActiveChannelIds(state) {
-  return state.entities.channels.activeChannels;
+export function getActiveChannelIds(state, type) {
+  const activeChannelIds = state.entities.channels.activeChannels;
+  if (!type) {
+    return activeChannelIds;
+  }
+  const activeChannelIdsOfType = activeChannelIds.filter((channelId) =>
+    _getChannelType(state, channelId) === type);
+  return activeChannelIdsOfType;
 }
 
 function _getChannel(state, channelId) {
@@ -204,6 +210,11 @@ function _getChannel(state, channelId) {
     return null;
   }
   return state.entities.channels.byChannelId[channelId];
+}
+
+function _getChannelType(state, channelId) {
+  const ch = _getChannel(state, channelId);
+  return ch ? ch.type : 0;
 }
 
 function _getChannelDuration(state, channelId) {
