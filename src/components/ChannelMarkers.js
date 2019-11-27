@@ -21,6 +21,7 @@ const ImageMarker = styled.div`
   left: ${props => props.markerPos}px;
   height: 100%;
   cursor: ${props => props.cursor};
+  z-index: ${props => props.zIndex};
 `;
 
 const RangeSelection = styled.div`
@@ -75,6 +76,7 @@ function ChannelMarkers(props) {
       let color = theme.markerColor;
       let cursor = "default";
       let withContextMenu = false;
+      let zIndex = 1;
       // marker color depends on type (insert / normal), selection status
       //  and whether the part belongs to this channel
       if (marker.type === "insert") {
@@ -85,6 +87,7 @@ function ChannelMarkers(props) {
       } else if (marker.type === "timeScale") {
         cursor = "ew-resize";
         withContextMenu = true;
+        zIndex = 10; // highest: move/remove is still possible
       } else if (marker.type === "selected" && marker.channelId === channelId) {
         color = theme.selectedMarkerColor;
         cursor = "col-resize";
@@ -105,6 +108,7 @@ function ChannelMarkers(props) {
         "data-markerid": marker.markerId,
         "data-markertype": marker.type,
         "data-partid": marker.partId,
+        zIndex,
       };
       return (<ImageMarker { ...markerProps } />);
 
