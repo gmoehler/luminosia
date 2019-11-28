@@ -188,9 +188,9 @@ export const playActiveChannels = () => {
 
 export const playChannelAndImage = () => {
   return (dispatch, getState) => {
-    const selectedImageChannels = getActiveChannelIds(getState(), "image");
-    dispatch(clearExportImage(selectedImageChannels.length));
-    selectedImageChannels.map((channelId, idx) => dispatch(drawExportImage(channelId, idx)));
+    const activeImageChannels = getActiveChannelIds(getState(), "image");
+    dispatch(clearExportImage(activeImageChannels.length));
+    activeImageChannels.map((channelId, idx) => dispatch(drawExportImage(channelId, idx)));
     dispatch(playActiveChannels());
   };
 };
