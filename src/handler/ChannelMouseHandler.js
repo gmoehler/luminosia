@@ -14,6 +14,7 @@ export default class ChannelMouseHandler {
     this.currAction = null;
   }
 
+  // central mouse & key event dispatcher
   // TimeToPixels HOC wraps the Channel: x pos is in secs
   handleMouseEvent = (eventName, evInfo) => {
     // console.log(eventName, this.currAction);
@@ -23,7 +24,6 @@ export default class ChannelMouseHandler {
       this.handleKeyDown(evInfo);
     }
     else if (eventName.includes("mouseDown")) {
-      this.resetAction();
       this.handleActionStart(evInfo, key);
     }
     else if (eventName.includes("mouseMove")) {
@@ -75,22 +75,25 @@ export default class ChannelMouseHandler {
     }
   }
 
+  // init for any mouse action
   handleActionStart(evInfo, key) {
-    // initialize for select, move & resize
-    this.fromX = evInfo.x;
-    this.channelId = evInfo.channelId;
-    this.partId = evInfo.partId;
-    this.markerId = evInfo.markerId; // for resize
-    this.keyAtMouseDown = key;
-    this.currAction = "anyMouseAction";
+    if (evInfo.channelId) {
+      this.fromX = evInfo.x;
+      this.channelId = evInfo.channelId;
+      this.partId = evInfo.partId;
+      this.markerId = evInfo.markerId; // for resize
+      this.keyAtMouseDown = key;
+      this.currAction = "anyMouseAction";
+      this.handlerFunctions.deselectRange(); // reset from earlier actions
 
-    // start with selection (if clicked on part)...
-    if (this.channelId && this.partId && !key) {
-      // select exclusively if not selected, do nothing when selected
-      this.handlerFunctions.toggleInitialEntitySelection(evInfo.partId);
-    } // ... or zero range
-    else if (this.channelId && !this.partId) {
-      this.handlerFunctions.selectRange(evInfo.x, evInfo.x, "temp");
+      // start with selection (if clicked on part)...
+      if (this.partId && !key) {
+        // select exclusively if not selected, do nothing when selected
+        this.handlerFunctions.toggleInitialEntitySelection(evInfo.partId);
+      } // ... or zero range to give initial feedback
+      else if (!this.partId) {
+        this.handlerFunctions.selectRange(evInfo.x, evInfo.x, "temp");
+      }
     }
   }
 
