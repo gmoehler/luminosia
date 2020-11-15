@@ -48,20 +48,28 @@ class ChannelContainer extends Component {
       return (
         <div>
           <p> ERROR! Cannot continue. </p>
-          {this.state.error.message ? <p>
-            {this.state.error.message} </p> : null}
-          {this.state.error.stack ? <p>
-            {this.state.error.stack} </p> : null}
+          { this.state.error.message ?
+            <p>
+              { this.state.error.message }
+            </p> : null }
+          { this.state.error.stack ?
+            <p>
+              { this.state.error.stack }
+            </p> : null }
         </div>
-      );
+        );
     }
 
-    const { buffer, sampleRate, resolution } = this.props;
+    const {buffer, sampleRate, resolution} = this.props;
 
     // memoized audio peak data
-    const { data, duration, bits } = buffer ?
+    const {data, duration, bits} = buffer ?
       this.doExtractPeaks(buffer, sampleRate / resolution, 16)
-      : { data: [], length: 0, bits: 0 };
+      : {
+        data: [],
+        length: 0,
+        bits: 0
+      };
     const peaks = Array.isArray(data) ? data[0] : []; // only one channel for now
 
     const renderProps = {
@@ -72,12 +80,12 @@ class ChannelContainer extends Component {
     };
 
     return (
-      <ChannelWithPlay {...renderProps} />);
+      <ChannelWithPlay { ...renderProps } />);
   }
 }
 
 const mapStateToProps = (state, props) => {
-  const { channelId, images } = props;
+  const {channelId, images} = props;
 
   const channelData = getChannelData(state, channelId);
   const parts = getParts(state, channelData.parts);

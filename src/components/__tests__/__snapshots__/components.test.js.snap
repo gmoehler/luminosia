@@ -1,94 +1,124 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`simple component tests AnimationPane component 1`] = `
-<div
-  className="sc-ifAKCX kuDDyM"
->
+<div>
   <div
-    className="sc-EHOje kRjwTe"
+    class="sc-eCssSg jqOubs"
   >
-    <p
-      className="MuiTypography-root sc-bZQynM ebBIAI MuiTypography-body1"
-    >
-       
-      2.0
-    </p>
     <div
-      className="MuiSlider-root sc-bxivhb dKSUMk MuiSlider-vertical"
-      onClick={[Function]}
-      onMouseDown={[Function]}
-      onTouchMove={[Function]}
-      onTouchStartCapture={[Function]}
-      style={
-        Object {
-          "width": 0,
-        }
-      }
+      class="sc-jSgupP fXLOLf"
     >
-      <div
-        className="MuiSlider-container MuiSlider-vertical"
+      <p
+        class="MuiTypography-root sc-gKsewC fObbpD MuiTypography-body1"
       >
-        <div
-          className="MuiSlider-track MuiSlider-trackBefore MuiSlider-vertical"
-          style={
-            Object {
-              "transform": "translateX(-50%) scaleY(0.19387755102040813)",
-            }
-          }
+         
+        2.0
+      </p>
+      <span
+        class="MuiSlider-root MuiSlider-colorPrimary sc-hKgILt gQYItp MuiSlider-vertical"
+        style="width: 0px;"
+      >
+        <span
+          class="MuiSlider-rail"
         />
-        <div
-          className="MuiSlider-thumbWrapper MuiSlider-vertical"
-          style={
-            Object {
-              "transform": "translateY(80.61224489795919%)",
-            }
-          }
-        >
-          <button
-            aria-orientation="vertical"
-            aria-valuemax={100}
-            aria-valuemin={0}
-            aria-valuenow={19.387755102040813}
-            className="MuiButtonBase-root MuiSlider-thumb MuiSlider-vertical"
-            onBlur={[Function]}
-            onFocus={[Function]}
-            onKeyDown={[Function]}
-            onKeyUp={[Function]}
-            onMouseDown={[Function]}
-            onMouseLeave={[Function]}
-            onMouseUp={[Function]}
-            onTouchEnd={[Function]}
-            onTouchMove={[Function]}
-            onTouchStart={[Function]}
-            onTouchStartCapture={[Function]}
-            role="slider"
-            tabIndex={0}
-            type="button"
-          />
-        </div>
-        <div
-          className="MuiSlider-track MuiSlider-trackAfter MuiSlider-vertical"
-          style={
-            Object {
-              "transform": "translateX(-50%) scaleY(0.8061224489795918)",
-            }
-          }
+        <span
+          class="MuiSlider-track"
+          style="bottom: 0%; height: 19.387755102040813%;"
         />
-      </div>
+        <input
+          type="hidden"
+          value="19.387755102040813"
+        />
+        <span
+          aria-orientation="vertical"
+          aria-valuemax="100"
+          aria-valuemin="0"
+          aria-valuenow="19.387755102040813"
+          class="MuiSlider-thumb MuiSlider-thumbColorPrimary"
+          data-index="0"
+          role="slider"
+          style="bottom: 19.387755102040813%;"
+          tabindex="0"
+        />
+      </span>
     </div>
+    <canvas
+      class="sc-iBPRYJ hRyXLA"
+      height="8000"
+      id="animationPaneCanvas"
+      width="16000"
+    />
   </div>
-  <canvas
-    className="sc-gzVnrw fgSTpW"
-    height={8000}
-    id="animationPaneCanvas"
-    width={16000}
-  />
 </div>
 `;
 
 exports[`simple component tests Channel component 1`] = `
-<div
-  className="WaveformCanvases sc-dnqmqq kKGkmx"
-  offset={0}
-/>
+Object {
+  "asFragment": [Function],
+  "baseElement": <body>
+    <div>
+      <div
+        class="sc-pFZIQ iXxhSV WaveformCanvases"
+        offset="0"
+      />
+    </div>
+  </body>,
+  "container": <div>
+    <div
+      class="sc-pFZIQ iXxhSV WaveformCanvases"
+      offset="0"
+    />
+  </div>,
+  "debug": [Function],
+  "findAllByAltText": [Function],
+  "findAllByDisplayValue": [Function],
+  "findAllByLabelText": [Function],
+  "findAllByPlaceholderText": [Function],
+  "findAllByRole": [Function],
+  "findAllByTestId": [Function],
+  "findAllByText": [Function],
+  "findAllByTitle": [Function],
+  "findByAltText": [Function],
+  "findByDisplayValue": [Function],
+  "findByLabelText": [Function],
+  "findByPlaceholderText": [Function],
+  "findByRole": [Function],
+  "findByTestId": [Function],
+  "findByText": [Function],
+  "findByTitle": [Function],
+  "getAllByAltText": [Function],
+  "getAllByDisplayValue": [Function],
+  "getAllByLabelText": [Function],
+  "getAllByPlaceholderText": [Function],
+  "getAllByRole": [Function],
+  "getAllByTestId": [Function],
+  "getAllByText": [Function],
+  "getAllByTitle": [Function],
+  "getByAltText": [Function],
+  "getByDisplayValue": [Function],
+  "getByLabelText": [Function],
+  "getByPlaceholderText": [Function],
+  "getByRole": [Function],
+  "getByTestId": [Function],
+  "getByText": [Function],
+  "getByTitle": [Function],
+  "queryAllByAltText": [Function],
+  "queryAllByDisplayValue": [Function],
+  "queryAllByLabelText": [Function],
+  "queryAllByPlaceholderText": [Function],
+  "queryAllByRole": [Function],
+  "queryAllByTestId": [Function],
+  "queryAllByText": [Function],
+  "queryAllByTitle": [Function],
+  "queryByAltText": [Function],
+  "queryByDisplayValue": [Function],
+  "queryByLabelText": [Function],
+  "queryByPlaceholderText": [Function],
+  "queryByRole": [Function],
+  "queryByTestId": [Function],
+  "queryByText": [Function],
+  "queryByTitle": [Function],
+  "rerender": [Function],
+  "unmount": [Function],
+}
 `;

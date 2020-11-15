@@ -35,9 +35,7 @@ class Channel extends Component {
   }
 
   render() {
-    const { channelId, imageHeight, progress,
-      theme, maxWidth, selected, type, offset,
-      peaks, bits, parts, images } = this.props;
+    const {channelId, imageHeight, progress, theme, maxWidth, selected, type, offset, peaks, bits, parts, images} = this.props;
 
 
     const channelWrapperProps = {
@@ -56,39 +54,25 @@ class Channel extends Component {
       peaks,
       bits,
     } : {
-        theme,
-        maxWidth,
-        selected,
-        parts,
-        images,
-      };
+      theme,
+      maxWidth,
+      selected,
+      parts,
+      images,
+    };
 
     const innerChannel = type === "audio"
       ? <AudioChannel { ...channelProps } />
       : <ImageChannel { ...channelProps } />;
 
     return (
-      <ChannelWrapper { ...channelWrapperProps }
-        className="ChannelWrapper"
-        onMouseDown={ (e) => this.handleMouseEvent(e, "mouseDown") }
-        onMouseUp={ (e) => this.handleMouseEvent(e, "mouseUp") }
-        onMouseMove={ (e) => this.handleMouseEvent(e, "mouseMove") }
-        onMouseLeave={ (e) => this.handleMouseEvent(e, "mouseLeave") }
-        onDragEnter={ (e) => this.handleMouseEvent(e, "dragEnter") }
-        onDragEnd={ (e) => this.handleMouseEvent(e, "dragEnd") }
-        onDragExit={ (e) => this.handleMouseEvent(e, "dragExit") }
-        onDragLeave={ (e) => this.handleMouseEvent(e, "dragLeave") }
-        onDragOver={ (e) => this.handleMouseEvent(e, "dragOver") }
-        onDragStart={ (e) => this.handleMouseEvent(e, "dragStart") }
-        onDrop={ (e) => this.handleMouseEvent(e, "drop") }>
-        {innerChannel}
-        <ChannelMarkersContainer
-          className="ChannelMarkersContainer"
-          channelId={ channelId }
-          progress={ progress }
-          theme={ theme } />
+      <ChannelWrapper { ...channelWrapperProps } className="ChannelWrapper" onMouseDown={ (e) => this.handleMouseEvent(e, "mouseDown") } onMouseUp={ (e) => this.handleMouseEvent(e, "mouseUp") } onMouseMove={ (e) => this.handleMouseEvent(e, "mouseMove") }
+        onMouseLeave={ (e) => this.handleMouseEvent(e, "mouseLeave") } onDragEnter={ (e) => this.handleMouseEvent(e, "dragEnter") } onDragEnd={ (e) => this.handleMouseEvent(e, "dragEnd") } onDragExit={ (e) => this.handleMouseEvent(e, "dragExit") } onDragLeave={ (e) => this.handleMouseEvent(e, "dragLeave") }
+        onDragOver={ (e) => this.handleMouseEvent(e, "dragOver") } onDragStart={ (e) => this.handleMouseEvent(e, "dragStart") } onDrop={ (e) => this.handleMouseEvent(e, "drop") }>
+        { innerChannel }
+        <ChannelMarkersContainer className="ChannelMarkersContainer" channelId={ channelId } progress={ progress } theme={ theme } />
       </ChannelWrapper>
-    );
+      );
   }
 }
 

@@ -8,11 +8,11 @@ export function getMouseEventPosition(e, className, channelId) {
   let position = 0;
   let cn = className;
 
-  while (el && el.classList && el.classList[0] !== className) {
+  while (el && el.classList && !el.classList.contains(className)) {
     el = el.parentNode;
   }
 
-  if (el && el.classList && el.classList[0] === className) {
+  if (el && el.classList && el.classList.contains(className)) {
     const parentScroll = el.parentNode ? el.parentNode.scrollLeft : 0;
     position = Math.max(0, e.clientX - el.offsetLeft + parentScroll);
   } else {

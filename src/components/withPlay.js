@@ -1,6 +1,6 @@
-/* 
-  HOC to support audio/image playing for one channel 
-  also updates play progress in channel 
+/*
+  HOC to support audio/image playing for one channel
+  also updates play progress in channel
   and generates the waveform based on the audio data
 */
 
@@ -10,7 +10,6 @@ import PropTypes from "prop-types";
 import Playout from "../player/Playout";
 
 export function withPlay(WrappedComponent) {
-
 
   class WithPlay extends PureComponent {
 
@@ -35,15 +34,15 @@ export function withPlay(WrappedComponent) {
 
     componentDidUpdate(prevProps, prevState) {
 
-      const { playState, selection, offset } = this.props;
+      const {playState, selection, offset} = this.props;
 
       // start or stop playing
       if (prevProps.playState !== playState) {
         if (playState === "playing") {
-          this.startPlay(selection.from, selection.to, offset);
-        }
-        // only stopped if not already (auto)stopped
-        else if (this.isPlaying()) {
+          this.startPlay(selection.from, selection.to, offset
+          );
+        } else if (this.isPlaying()) {
+          // only stopped if not already (auto)stopped
           this.stopPlay();
         }
       }
@@ -65,33 +64,50 @@ export function withPlay(WrappedComponent) {
       if (!this.isPlaying() && endAt >= startAt) {
 
         // act.. values is global time interval of this channel
-        const actOffset = offset ? offset : 0;
+        const actOffset = offset
+          ? offset
+          : 0;
         const actStartAt = Math.max(0, startAt); // dont start before 0
-        const duration = this.props.buffer ? this.props.buffer.duration : this.props.maxDuration;
-        const actEndAt = endAt - startAt < 0.1 ? duration + actOffset : endAt;
+        const duration = this.props.buffer
+          ? this.props.buffer.duration
+          : this.props.maxDuration;
+        const actEndAt = endAt - startAt < 0.1
+          ? duration + actOffset
+          : endAt;
 
         // track.. values are local image time
-        const trackStartAt = actStartAt - actOffset < 0 ? 0 : actStartAt - actOffset;
-        const trackDelay = startAt - actOffset < 0 ? actOffset - startAt : 0;
+        const trackStartAt = actStartAt - actOffset < 0
+          ? 0
+          : actStartAt - actOffset;
+        const trackDelay = startAt - actOffset < 0
+          ? actOffset - startAt
+          : 0;
         const trackEndAt = actEndAt - actOffset;
 
         // remember for progress offset
         this.animateStartAt = actStartAt;
-        this.animateEndAt = endAt - startAt < 0.1 ?
-          this.props.maxDuration + actOffset : trackEndAt + actOffset;
+        this.animateEndAt = endAt - startAt < 0.1
+          ? this.props.maxDuration + actOffset
+          : trackEndAt + actOffset;
 
         // only play if there is something to play and only for audio (for now)
         if (trackEndAt > 0 && this.playout) {
-          console.log(`playing ${this.props.type} from ${trackStartAt}s( ${actStartAt}s) `
-            + `to ${trackEndAt}(${actEndAt}s) with delay ${trackDelay}, offset: ${actOffset}, delay ${trackDelay}`);
+          console.log(`playing ${this.props.type} from ${trackStartAt}s( ${actStartAt}s) ` +
+            `to ${trackEndAt}(${actEndAt}s) with delay ${trackDelay}, offset: ${actOffset}, ` +
+            `delay ${trackDelay}`);
 
-          this.playout.setUpSource()
+          this
+            .playout
+            .setUpSource()
             .then(this.stopPlay); // stop when end has reached
 
           const duration = actEndAt - actStartAt;
-          this.playout.play(this.audioContext.currentTime + trackDelay, trackStartAt, duration);
+          this
+            .playout
+            .play(this.audioContext.currentTime + trackDelay, trackStartAt, duration);
         } else {
-          // console.log(`skip  ${this.props.type} playing from ${actStartAt}s to ${actEndAt}`);
+          // console.log(`skip  ${this.props.type} playing from ${actStartAt}s to
+          // ${actEndAt}`);
         }
 
         // start progress animation
@@ -103,9 +119,8 @@ export function withPlay(WrappedComponent) {
 
       if (!this.animationStartTime) {
         this.animationStartTime = timestamp;
-        //TODO: sync with playout time
+      //TODO: sync with playout time
       }
-
 
       const duration = timestamp - this.animationStartTime;
       const currentTimeInSecs = this.animateStartAt + duration / 1000.0;
@@ -115,9 +130,10 @@ export function withPlay(WrappedComponent) {
         progress: currentTimeInSecs
       });
 
-
       if (this.props.reportProgress) {
-        this.props.reportProgress(currentTimeInSecs);
+        this
+          .props
+          .reportProgress(currentTimeInSecs);
       }
 
       if (currentTimeInSecs < this.animateEndAt) {
@@ -141,17 +157,19 @@ export function withPlay(WrappedComponent) {
     }
 
     stopPlay = () => {
-      this.playout && this.playout.stop();
+      this.playout && this
+        .playout
+        .stop();
       this.stopAnimateProgress();
-      this.props.stopChannel(this.props.channelId);
+      this
+        .props
+        .stopChannel(this.props.channelId);
     }
 
     render() {
 
       // time to pixel conversion is done in HOC TimeToPixel
-      return (
-        <WrappedComponent {... this.props}
-          progress={this.state.progress} />);
+      return (<WrappedComponent {... this.props} progress={ this.state.progress } />);
     }
   }
   ;
@@ -163,21 +181,22 @@ export function withPlay(WrappedComponent) {
     buffer: PropTypes.object,
     sampleRate: PropTypes.number.isRequired,
     resolution: PropTypes.number.isRequired,
-    playState: PropTypes.oneOf(["stopped", "playing"]).isRequired,
+    playState: PropTypes
+      .oneOf(["stopped", "playing"])
+      .isRequired,
     reportProgress: PropTypes.func,
     selection: PropTypes.exact({
       from: PropTypes.number,
       to: PropTypes.number,
-      type: PropTypes.string,
+      type: PropTypes.string
     }),
     stopChannel: PropTypes.func.isRequired,
-    maxDuration: PropTypes.number,
+    maxDuration: PropTypes.number
   };
 
   withPlay.displayName = `WithPlay(${getDisplayName(WrappedComponent)})`;
   return WithPlay;
 }
-
 
 function getDisplayName(WrappedComponent) {
   return WrappedComponent.displayName || WrappedComponent.name || "Component";

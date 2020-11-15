@@ -1,6 +1,6 @@
 import { FADEIN, FADEOUT, createFadeIn, createFadeOut } from "fade-maker";
 
-export default class {
+export default class Playout {
 
   constructor(ac, buffer) {
     this.ac = ac;

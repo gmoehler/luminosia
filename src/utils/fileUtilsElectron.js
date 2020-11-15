@@ -5,14 +5,16 @@ import path from "path";
 import kill from "tree-kill";
 import { doneMessage, doneWithErrorMessage, doneWithCancelledMessage } from "../components/UploadLogView";
 import downloadRelease from "download-github-release";
-import isDev  from "electron-is-dev";
+import isDev from "electron-is-dev";
 
-const { app } = require("electron").remote;
+const {app} = require("electron").remote;
 let portCache = null;
 let currentActiveProcess = null;
 
 export async function uploadChannel(uint8array, log) {
-  const dataDir = tmp.dirSync({ unsafeCleanup: true });
+  const dataDir = tmp.dirSync({
+    unsafeCleanup: true
+  });
   const filename = path.join(dataDir.name, "channel.poi");
   const spiffsFilename = tmp.tmpNameSync();
 
@@ -21,7 +23,7 @@ export async function uploadChannel(uint8array, log) {
   // 3 steps for upload: save data, generate spiffs file and upload
   try {
     await saveBinaryFile(filename, uint8array, log);
-    await mkSpiffs( dataDir.name, spiffsFilename, log);
+    await mkSpiffs(dataDir.name, spiffsFilename, log);
     if (currentActiveProcess) {
       await upload(spiffsFilename, "0x150000", portCache, log);
       log(`${doneMessage}\n`);
@@ -30,29 +32,31 @@ export async function uploadChannel(uint8array, log) {
     }
   } catch (err) {
     if (currentActiveProcess) {
-     console.error("Unable to upload channel data:", err);
-     console.trace();
-     const errorInfo = err.stack ? err.stack : err.toString();
-     log(`${doneWithErrorMessage}: ${errorInfo}\n`);
-     portCache = null;
+      console.error("Unable to upload channel data:", err);
+      console.trace();
+      const errorInfo = err.stack ? err.stack : err.toString();
+      log(`${doneWithErrorMessage}: ${errorInfo}\n`);
+      portCache = null;
     } else {
       log(`${doneWithCancelledMessage}\n`);
     }
-  } 
+  }
 
   // cleanup
   currentActiveProcess = null;
   try {
     dataDir.removeCallback();
     await fs.unlink(spiffsFilename);
-  } catch(err) {
+  } catch (err) {
     // do nothing, when clean fails
   }
-  
+
 }
 
 export async function updateFirmware(log) {
-  const downloadDir = tmp.dirSync({ unsafeCleanup: true });
+  const downloadDir = tmp.dirSync({
+    unsafeCleanup: true
+  });
   const assetName = "firmware.bin";
   const downloadedAsset = path.join(downloadDir.name, assetName);
 
@@ -65,23 +69,22 @@ export async function updateFirmware(log) {
     log(`${doneMessage}\n`);
   } catch (err) {
     if (currentActiveProcess) {
-     console.error("Unable to update firmware:", err);
-     log(`${doneWithErrorMessage}: ${err}\n`);
-     portCache = null;
-    }
-    else {
+      console.error("Unable to update firmware:", err);
+      log(`${doneWithErrorMessage}: ${err}\n`);
+      portCache = null;
+    } else {
       log(`${doneWithCancelledMessage}.\n`);
     }
-  } 
+  }
 
   // cleanup
   currentActiveProcess = null;
   try {
     downloadDir.removeCallback();
-  } catch(err) {
+  } catch (err) {
     // do nothing, when clean fails
   }
-  
+
 }
 
 async function saveBinaryFile(filename, uint8array, log) {
@@ -117,7 +120,7 @@ async function mkSpiffs(dir, filename, log) {
   const scriptDir = getScriptsDir();
   log(`Script path: ${scriptDir}\n`);
   const exe = path.join(scriptDir, "mkspiffs");
-  currentActiveProcess = spawn(exe, [ "-c", dir, "-b", "4096", "-p", "256", "-s", "0x2B0000", filename]);
+  currentActiveProcess = spawn(exe, ["-c", dir, "-b", "4096", "-p", "256", "-s", "0x2B0000", filename]);
 
   currentActiveProcess.stdout.on("data", (data) => {
     const str = data.toString();
@@ -143,14 +146,14 @@ async function mkSpiffs(dir, filename, log) {
 
   await currentActiveProcess;
   log("Done generating spiffs image.\n");
-} 
+}
 
 async function upload(filename, addr, port, log) {
 
   const scriptDir = getScriptsDir();
   log(`Script path: ${scriptDir}\n`);
   const exe = path.join(scriptDir, "esptool");
-  const params =  ["--chip", "esp32", "--baud", "921600", "write_flash", "-z", addr, filename];
+  const params = ["--chip", "esp32", "--baud", "921600", "write_flash", "-z", addr, filename];
 
   if (port) {
     params.unshift("--port", port);
@@ -193,33 +196,33 @@ async function upload(filename, addr, port, log) {
   });
 
   await currentActiveProcess;
-} 
+}
 
 async function downloadFirmware(assetName, outputdir, log) {
- 
+
   const user = "gmoehler";
   const repo = "ledpoi";
   const leaveZipped = false;
- 
+
   // Define a function to filter releases.
   function filterRelease(release) {
     return release.prerelease === false;
   }
- 
+
   // Define a function to filter assets.
   function filterAsset(asset) {
     return asset.name === assetName;
   }
-  
+
   log(`Downloading firmware '${assetName}' to ${outputdir}...`);
   try {
     await downloadRelease(user, repo, outputdir, filterRelease, filterAsset, leaveZipped);
   } catch (err) {
     // not sure err is set
-    currentActiveProcess=true; // hack to show real error
+    currentActiveProcess = true; // hack to show real error
     throw err;
   }
-  
+
   log("Done.\n");
 }
 
