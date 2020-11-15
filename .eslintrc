@@ -1,0 +1,13 @@
+{
+  "extends": [
+    "react-app"
+  ],
+  "rules": {
+    "react/jsx-max-props-per-line": [
+      1,
+      {
+        "maximum": 2
+      }
+    ]
+  }
+}

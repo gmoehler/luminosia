@@ -34,7 +34,7 @@ export function withPlay(WrappedComponent) {
 
     componentDidUpdate(prevProps, prevState) {
 
-      const {playState, selection, offset} = this.props;
+      const { playState, selection, offset } = this.props;
 
       // start or stop playing
       if (prevProps.playState !== playState) {
@@ -119,7 +119,7 @@ export function withPlay(WrappedComponent) {
 
       if (!this.animationStartTime) {
         this.animationStartTime = timestamp;
-      //TODO: sync with playout time
+        //TODO: sync with playout time
       }
 
       const duration = timestamp - this.animationStartTime;
@@ -169,7 +169,7 @@ export function withPlay(WrappedComponent) {
     render() {
 
       // time to pixel conversion is done in HOC TimeToPixel
-      return (<WrappedComponent {... this.props} progress={ this.state.progress } />);
+      return (<WrappedComponent {... this.props} progress={this.state.progress} />);
     }
   }
   ;
