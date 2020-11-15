@@ -5,112 +5,164 @@ export default class ChannelMouseHandler {
 
   constructor(handlerFunctions) {
     this.handlerFunctions = handlerFunctions;
-    this.moveFromX = null;
-    this.selectFromX = null;
+    this.fromX = null;
     this.channelId = null;
     this.partId = null;
     this.markerId = null;
-    this.selected = false;
+    this.keyAtMouseDown = null;
+    // possible actions: anyMouseAction, moveResize, selectPartInRange, selectRange
     this.currAction = null;
   }
 
-  // TimeToPixels HOC wraps the Channel: pos is in secs
+  // central mouse & key event dispatcher
+  // TimeToPixels HOC wraps the Channel: x pos is in secs
   handleMouseEvent = (eventName, evInfo) => {
     // console.log(eventName, this.currAction);
-    switch (eventName) {
+    const key = this.getKey(eventName);
 
-      case "keyDown":
-        this.handleKeyDown(evInfo);
-        break;
-
-      // also handles click selection
-      case "mouseDown":
-      case "ctrl-mouseDown":
-        this.currAction = null; // reset
-        this.deselectRange();
-        this.handleMoveFrom(evInfo);
-        break;
-
-      case "mouseMove":
+    if (eventName === "keyDown") {
+      this.handleKeyDown(evInfo);
+    }
+    else if (eventName.includes("mouseDown")) {
+      this.handleActionStart(evInfo, key);
+    }
+    else if (eventName.includes("mouseMove")) {
+      if (this.currAction) {
         this.handleMoveTo(evInfo, false);
-        break;
-
-      case "ctrl-mouseMove":
-        this.handleMoveTo(evInfo, false, true);
-        break;
-
-      case "mouseUp":
-      case "ctrl-mouseUp":
-        if (this.currAction === "moveResize") {
-          this.handleMoveTo(evInfo, true);
+      }
+    }
+    else if (eventName.includes("mouseUp")) {
+      if (this.currAction === "anyMouseAction") {
+        // just a simple click (no move)
+        if (eventName === "ctrl-mouseUp") {
+          this.handleMultiSelect(evInfo);
+        } else {
+          this.handleToggleSelection(evInfo);
         }
-        else if (!this.currAction) {
-          // just a simple click (no move)
-          if (eventName === "ctrl-mouseUp") {
-            this.handleMultiSelect(evInfo);
-          } else {
-            this.handleToggleSelection(evInfo);
-          }
-        }
-        break;
-
-      case "mouseLeave":
+        this.resetAction();
+      } else if (this.currAction) {
         this.handleMoveTo(evInfo, true);
-        this.currAction = null;
-        break;
-
-      case "shift-mouseDown":
-        this.handleMultiSelectFrom(evInfo);
-        break;
-
-      case "shift-mouseMove":
-        this.handleMultiSelectTo(evInfo, false);
-        break;
-
-      case "shift-mouseUp":
-        this.handleMultiSelectTo(evInfo, true);
-        break;
-
-      case "shift-mouseLeave":
-        this.handleMultiSelectTo(evInfo, true);
-        break;
-
-      case "ctrl-shift-mouseDown":
-        this.handleRangeFrom(evInfo);
-        break;
-
-      case "ctrl-shift-mouseMove":
-        this.handleRangeTo(evInfo, false);
-        break;
-
-      case "ctrl-shift-mouseUp":
-        this.handleRangeTo(evInfo, true);
-        break;
-
-      case "ctrl-shift-mouseLeave":
-        this.handleRangeTo(evInfo, true);
-        break;
-
-      default:
-        break;
+      }
+    }
+    else if (eventName.includes("mouseLeave")) {
+      if (this.currAction) {
+        this.handleMoveTo(evInfo, true);
+      }
     }
   }
 
-  handleKeyDown = (evInfo) => {
+  getKey(eventName) {
+    const keys = eventName.split("-");
+    keys.pop();
+    return keys.length ? keys.join("-") : null;
+  }
+
+  resetAction() {
+    if (this.currAction !== "selectRange") {
+      this.handlerFunctions.deselectRange();
+    }
+    this.fromX = null;
+    this.channelId = null;
+    this.partId = null;
+    this.markerId = null;
+    this.keyAtMouseDown = null;
+    this.currAction = null;
+  }
+
+  handleKeyDown(evInfo) {
     if (evInfo.key === "Delete" || evInfo.key === "Backspace") {
       this.handlerFunctions.deleteSelectedEntities();
     }
   }
 
-  handleMoveFrom = (evInfo) => {
-    // initialize for select, move & resize
-    this.moveFromX = evInfo.x;
-    this.channelId = evInfo.channelId;
-    this.partId = evInfo.partId;
-    this.markerId = evInfo.markerId; // for resize
+  // init for any mouse action
+  handleActionStart(evInfo, key) {
+    if (evInfo.channelId) {
+      this.fromX = evInfo.x;
+      this.channelId = evInfo.channelId;
+      this.partId = evInfo.partId;
+      this.markerId = evInfo.markerId; // for resize
+      this.keyAtMouseDown = key;
+      this.currAction = "anyMouseAction";
+      this.handlerFunctions.deselectRange(); // reset from earlier actions
+
+      // start with selection (if clicked on part)...
+      if (this.partId && !key) {
+        // select exclusively if not selected, do nothing when selected
+        this.handlerFunctions.toggleInitialEntitySelection(evInfo.partId);
+      } // ... or zero range to give initial feedback
+      else if (!this.partId) {
+        this.handlerFunctions.selectRange(evInfo.x, evInfo.x, "temp");
+      }
+    }
   }
 
-  handleToggleSelection = (evInfo) => {
+  handleMoveTo(evInfo, finalizeAction) {
+    const incrX = evInfo.x - this.fromX;
+    if (Math.abs(incrX) > 0) {
+
+      // only move selected when we select a part
+      if (["anyMouseAction", "moveResize"].includes(this.currAction)
+        && !this.keyAtMouseDown
+        && this.fromX && this.partId && this.channelId) {
+        // console.log(`move from ${this.moveFromX} to ${x}`);
+        this.moveResizePart(incrX);
+        this.fromX = evInfo.x;
+      }
+
+      if (["anyMouseAction", "selectRange"].includes(this.currAction)
+        && this.keyAtMouseDown === "shift"
+        && this.fromX && this.channelId) {
+        this.selectRange(evInfo.x);
+      }
+
+      // ctrl within part or no key/ctrl outside
+      if (["anyMouseAction", "selectPartInRange"].includes(this.currAction)
+        && this.fromX && this.channelId) {
+        this.selectPartInRange(evInfo.x);
+      }
+    }
+
+    if (finalizeAction) {
+      this.resetAction();
+    }
+  }
+
+  moveResizePart(incrX) {
+    if (this.currAction === "anyMouseAction") { //first time call
+      this.currAction = "moveResize";
+    }
+
+    if (this.markerId) {
+      this.handlerFunctions.resize(this.partId, this.markerId, incrX);
+    } else {
+      this.handlerFunctions.move(this.partId, incrX);
+    }
+  }
+
+  selectPartInRange = (posX) => {
+    if (this.currAction === "anyMouseAction") { //first time call
+      this.currAction = "selectPartInRange";
+    }
+    // console.log('selection to: ', posX);
+    const leftX = Math.min(this.fromX, posX);
+    const rightX = Math.max(this.fromX, posX);
+
+    this.handlerFunctions.selectRange(leftX, rightX, "temp");
+    this.handlerFunctions.selectInInterval(this.channelId, leftX, rightX);
+  }
+
+  selectRange(posX) {
+    if (this.currAction === "anyMouseAction") { //first time call
+      this.currAction = "selectRange";
+    }
+    // console.log('selection to: ', posX);
+    const leftX = Math.min(this.fromX, posX);
+    const rightX = Math.max(this.fromX, posX);
+    this.handlerFunctions.selectRange(leftX, rightX);
+  }
+
+  handleToggleSelection(evInfo) {
     if (evInfo.partId) {
       this.handlerFunctions.toggleEntitySelection(evInfo.partId);
     }
@@ -119,93 +171,8 @@ export default class ChannelMouseHandler {
     }
   }
 
-  handleMoveTo = (evInfo, finalizeAction, withCtrl = false) => {
-    // only move selected when we select a part
-    if (this.moveFromX && this.partId && this.channelId) {
-      // only when mouse down has occured
-      // console.log(`move from ${this.moveFromX} to ${x}`);
-      const incrX = evInfo.x - this.moveFromX;
-      if (Math.abs(incrX) > 0) {
-        // now we know that it was a move or resize
-        if (!this.currAction) {
-          //first time call
-          this.currAction = "moveResize";
-          this.handlerFunctions.toggleInitialEntitySelection(evInfo.partId);
-        }
-
-        if (this.markerId) {
-          this.handlerFunctions.resize(this.partId, this.markerId, incrX);
-        } else {
-          this.handlerFunctions.move(this.partId, incrX);
-        }
-        this.moveFromX = evInfo.x;
-      }
-
-      if (finalizeAction) {
-        this.xOrigin = null;
-        this.moveFromX = null;
-        this.partId = null;
-        this.markerId = null;
-        this.currAction = null;
-      }
-    }
-  }
-
-  handleRangeFrom = (evInfo) => {
-    this.selectFromX = evInfo.x;
-    this.handlerFunctions.selectRange(evInfo.x, evInfo.x);
-  }
-
-  handleRangeTo = (evInfo, finalizeAction) => {
-    if (this.selectFromX) { // only when mouse down has occured
-      // console.log('selection to: ', x);
-      if (this.selectFromX < evInfo.x) {
-        this.handlerFunctions.selectRange(this.selectFromX, evInfo.x);
-      } else {
-        this.handlerFunctions.selectRange(evInfo.x, this.selectFromX);
-      }
-      if (finalizeAction) {
-        this.selectFromX = null;
-        this.selected = true;
-      }
-    }
-  }
-
-  handleMultiSelectFrom = (evInfo) => {
-    this.selectFromX = evInfo.x;
-    this.channelId = evInfo.channelId;
-    this.handlerFunctions.selectRange(evInfo.x, evInfo.x, "temp");
-    this.handlerFunctions.selectInInterval(evInfo.channelId, evInfo.x, evInfo.x);
-  }
-
-  handleMultiSelectTo = (evInfo, finalizeAction) => {
-    if (this.selectFromX) { // only when mouse down has occured
-      // console.log('selection to: ', x);
-      if (this.selectFromX < evInfo.x) {
-        this.handlerFunctions.selectRange(this.selectFromX, evInfo.x, "temp");
-        this.handlerFunctions.selectInInterval(evInfo.channelId, this.selectFromX, evInfo.x);
-      } else {
-        this.handlerFunctions.selectRange(evInfo.x, this.selectFromX, "temp");
-        this.handlerFunctions.selectInInterval(evInfo.channelId, evInfo.x, this.selectFromX);
-      }
-      if (finalizeAction) {
-        // range selection is only temporarily
-        this.handlerFunctions.deselectRange();
-        this.selectFromX = null;
-        this.selected = true;
-      }
-    }
-  }
-
-  handleMultiSelect = (evInfo) => {
+  handleMultiSelect(evInfo) {
     this.handlerFunctions.toggleMultiEntitySelection(evInfo.partId);
-  }
-
-  deselectRange = () => {
-    if (this.selected) {
-      this.handlerFunctions.deselectRange();
-      this.selected = false;
-    }
   }
 
 }
