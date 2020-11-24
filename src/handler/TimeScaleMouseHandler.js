@@ -5,7 +5,6 @@ export default class TimeScaleMouseHandler {
 
   constructor(handlerFunctions) {
     this.handlerFunctions = handlerFunctions;
-    this.inMove = false;
     this.markerId = null;
   }
 
