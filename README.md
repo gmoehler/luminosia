@@ -13,7 +13,6 @@ App
     time2pixels
       TimeScale
     ChannelGroup
-      withEventHandler
         withPlay
           time2pixels
            *ChannelContainer

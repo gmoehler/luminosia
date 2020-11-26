@@ -4,6 +4,7 @@ import ChannelMarkersContainer from "./ChannelMarkersContainer";
 import ImageChannel from "./ImageChannel";
 import AudioChannel from "./AudioChannel";
 import { useMouseEvent } from "../hooks/useMouseEvent";
+import { useEffect } from "react";
 
 // need position:relative so children will respect parent margin/padding
 const ChannelWrapper = styled.div`
@@ -23,7 +24,13 @@ function Channel(props) {
     maxWidth, selected, type, offset, peaks,
     bits, parts, images, resolution } = props;
 
-  const handleMouseEvent = useMouseEvent(channelId, "ChannelWrapper", resolution);
+  const handleMouseEvent = useMouseEvent("ChannelWrapper", resolution, channelId);
+
+  useEffect(() => {
+    document.addEventListener("keydown", (e) => handleMouseEvent("keyDown", e));
+    return () =>
+      document.removeEventListener("keydown", (e) => (e) => handleMouseEvent("keyDown", e));
+  })
 
   const channelWrapperProps = {
     cssWidth: maxWidth + 2, // to give room for border

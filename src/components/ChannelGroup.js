@@ -7,7 +7,6 @@ import TimeScale from "./TimeScale";
 import { timeToPixels } from "./timeToPixels";
 import { secondsToPixels } from "../utils/conversions";
 import ChannelContainer from "./ChannelContainer";
-import { withEventHandler } from "./withEventHandler";
 
 const ChannelGroupWrapper = styled.div`
   width:  calc(95vw - ${props => props.drawerWidth}px);
@@ -22,7 +21,7 @@ const LoadProgressView = styled(CircularProgress)`
 `;
 
 // add time conversion functionality time scale
-const TimeScaleInSecs = withEventHandler(timeToPixels(TimeScale));
+const TimeScaleInSecs = timeToPixels(TimeScale);
 
 // contains multiple Channels
 export default class ChannelGroup extends Component {
@@ -64,24 +63,24 @@ export default class ChannelGroup extends Component {
     const channelComponents = allchannelIds
       .map((channelId) => (
 
-        <ChannelContainer { ...passthruProps }
+        <ChannelContainer {...passthruProps}
           className="ChannelContainer"
-          channelId={ channelId }
-          key={ channelId }
-          reportProgress={ this.reportProgress }
+          channelId={channelId}
+          key={channelId}
+          reportProgress={this.reportProgress}
         />));
 
     return (
       <ChannelGroupWrapper
         className="ChannelGroupWrapper"
-        drawerWidth={ this.props.drawerWidth || 0 }
-        ref={ (ref) => this.groupRef = ref }>
+        drawerWidth={this.props.drawerWidth || 0}
+        ref={(ref) => this.groupRef = ref}>
 
         <TimeScaleInSecs
           className="TimeScaleInSecs"
-          maxDuration={ this.props.maxDuration }
-          resolution={ this.props.resolution }
-          theme={ this.props.theme }
+          maxDuration={this.props.maxDuration}
+          resolution={this.props.resolution}
+          theme={this.props.theme}
         />
 
         {channelComponents}

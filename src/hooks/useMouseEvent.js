@@ -7,7 +7,7 @@ import { useChannelMouseEvent } from "./useChannelMouseEvent";
 import { useDropMouseEvent } from "./useDropMouseEvent";
 import { useTimeScaleMouseEvent } from "./useTimeScaleMouseEvent";
 
-export function useMouseEvent(channelId, wrapperClassForPosition, resolution) {
+export function useMouseEvent(wrapperClassForPosition, resolution, channelId = null) {
 
   const handleTimeScaleMouseEvent = useTimeScaleMouseEvent();
   const handleChannelMouseEvent = useChannelMouseEvent(channelId);
@@ -15,6 +15,8 @@ export function useMouseEvent(channelId, wrapperClassForPosition, resolution) {
 
   function handleEvent(eventName, e) {
     e.preventDefault();
+
+    // collect different information to add to the event
     const pos = eventName !== "keyDown" ?
       getMouseEventPosition(e, wrapperClassForPosition, channelId) : {};
     // transfer data is not available until drop (not on dragEnter / dragOver)
@@ -39,7 +41,6 @@ export function useMouseEvent(channelId, wrapperClassForPosition, resolution) {
       key,
     };
     handleSpecificMouseEvent(adaptedEventName, evInfo);
-    return;
   }
 
   // decide which mouse handler to use
