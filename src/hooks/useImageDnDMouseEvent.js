@@ -23,7 +23,7 @@ function counterReducer(state, action) {
 
 // handles all mouse events for the dragg action in the ImageList
 
-export function useDragMouseEvent(sampleRate) {
+export function useImageDnDMouseEvent(sampleRate) {
 
   const [dragging, setDragging] = useState(false);
   const [draggingCounterState, dispatchDraggingCounter] =
@@ -94,7 +94,7 @@ export function useDragMouseEvent(sampleRate) {
     }
   }
 
-  function loadImageAndAddToStore(fileName) {
+  function loadImageAndAddToStore(file) {
     var reader = new FileReader();
     var img = new Image();
 
@@ -107,21 +107,21 @@ export function useDragMouseEvent(sampleRate) {
         dispatch(setMessage({
           type: "error",
           title: "Wrong image size",
-          text: `The dragged image has a height of ${img.height}. However, you can only add images with a height of 30 pixels.`
+          text: `The dragged image ${file.name} has a height of ${img.height}. However, you can only add images with a height of 30 pixels.`
         }));
       } else {
         const newImage = {
           width: img.width,
           height: img.height,
           src: reader.result,
-          filename: fileName.name,
+          filename: file.name,
           sampleRate,
           duration: samplesToSeconds(img.width, sampleRate)
         };
         dispatch(addImage(newImage));
       }
     };
-    reader.readAsDataURL(fileName);
+    reader.readAsDataURL(file);
   }
 
   // return the mouse event handling function to be used in the component
