@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 
-import { useDragMouseEvent } from "../hooks/useDragMouseEvent";
+import { useImageDnDMouseEvent } from "../hooks/useImageDnDMouseEvent";
 
 const ImageListWrapper = styled.div`
 	display: flex;
@@ -36,13 +36,15 @@ const DropHereLabel = styled.label`
 
 function ImageList(props) {
 
+  const { images, sampleRate } = props;
+
   useEffect(() => {
     props.loadImagesFromStorage()
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const [handleMouseEvent, dragging] = useDragMouseEvent();
+  const [handleMouseEvent, dragging] = useImageDnDMouseEvent(sampleRate);
 
-  const { images } = props;
+
 
   const imagesComponent = images.map((img) => (
     <ImageInList id={img.imageId}
