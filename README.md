@@ -13,7 +13,6 @@ App
     time2pixels
       TimeScale
     ChannelGroup
-      withEventHandler
         withPlay
           time2pixels
            *ChannelContainer
@@ -56,6 +55,7 @@ App
 - make ImageChannel pure component (parts) with Part component
   -> only read partIds in channel
 - ChannelMarkersContainer required?
+- use hooks for time conversion & play
 
 ## Performance:
 

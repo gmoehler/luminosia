@@ -1,9 +1,9 @@
-import React, { Component } from "react";
+import React, { useRef, useEffect } from "react";
 import PropTypes from "prop-types";
 
 import styled, { withTheme } from "styled-components";
-import { handleEvent } from "../utils/eventUtils";
 import ChannelMarkersContainer from "./ChannelMarkersContainer";
+import { useMouseEvent } from "../hooks/useMouseEvent";
 
 const TIME_INFO = {
   20000: {
@@ -108,97 +108,83 @@ const TimeStamp = styled.div`
   position: absolute;
 `;
 
-class TimeScale extends Component {
-  constructor(props) {
-    super(props);
+function TimeScale(props) {
 
-    this.setCanvasRef = canvas => {
-      this.canvas = canvas;
-    };
+  const { maxWidth, resolution, scale, timeScaleHeight, theme } = props;
+
+  const canvasRef = useRef(null);
+
+  const scaleInfo = getScaleInfo(resolution);
+  const canvasInfo = {};
+  const timeMarkers = [];
+  let counter = 0;
+
+  useEffect(() => {
+    draw();
+  })
+
+  const handleMouseEvent = useMouseEvent("PlaylistTimeScale", resolution);
+
+  function draw() {
+    if (canvasRef) {
+      const ctx = canvasRef.current.getContext("2d");
+
+      ctx.clearRect(0, 0, canvasRef.width, canvasRef.height);
+      ctx.fillStyle = theme.timeColor;
+      ctx.scale(scale, scale);
+
+      Object.keys(canvasInfo).forEach((x) => {
+        const scaleHeight = canvasInfo[x];
+        const scaleY = timeScaleHeight - scaleHeight;
+        ctx.fillRect(x, scaleY, 1, scaleHeight);
+      });
+    }
   }
 
-  componentDidMount() {
-    this.draw();
-  }
+  for (let i = 0; i < maxWidth; i += (resolution * scaleInfo.secondStep)) {
+    const pix = Math.floor(i);
 
-  componentDidUpdate() {
-    this.draw();
-  }
-
-  draw() {
-    const canvas = this.canvas;
-    const ctx = canvas.getContext("2d");
-    const { theme, scale, timeScaleHeight } = this.props;
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = theme.timeColor;
-    ctx.scale(scale, scale);
-
-    Object.keys(this.canvasInfo).forEach((x) => {
-      const scaleHeight = this.canvasInfo[x];
-      const scaleY = timeScaleHeight - scaleHeight;
-      ctx.fillRect(x, scaleY, 1, scaleHeight);
-    });
-  }
-
-  handleMouseEvent(e, eventName) {
-    handleEvent(e, eventName, this.props.handleMouseEvent, "PlaylistTimeScale");
-  }
-
-  render() {
-    const { maxWidth, resolution, scale, timeScaleHeight } = this.props;
-
-    const scaleInfo = getScaleInfo(resolution);
-    const canvasInfo = {};
-    const timeMarkers = [];
-    let counter = 0;
-
-    for (let i = 0; i < maxWidth; i += (resolution * scaleInfo.secondStep)) {
-      const pix = Math.floor(i);
-
-      // put a timestamp every 30 seconds.
-      if (scaleInfo.marker && (counter % scaleInfo.marker === 0)) {
-        const timestamp = formatTime(counter);
-        timeMarkers.push(
-          <TimeStamp
-            key={ timestamp }
-            pix={ pix }>
-            {timestamp}
-          </TimeStamp>);
-        canvasInfo[pix] = timeScaleHeight;
-      } else if (scaleInfo.bigStep && (counter % scaleInfo.bigStep === 0)) {
-        canvasInfo[pix] = Math.floor(timeScaleHeight / 2);
-      } else if (scaleInfo.smallStep && (counter % scaleInfo.smallStep === 0)) {
-        canvasInfo[pix] = Math.floor(timeScaleHeight / 5);
-      }
-
-      counter += (1000 * scaleInfo.secondStep);
+    // put a timestamp every 30 seconds.
+    if (scaleInfo.marker && (counter % scaleInfo.marker === 0)) {
+      const timestamp = formatTime(counter);
+      timeMarkers.push(
+        <TimeStamp
+          key={timestamp}
+          pix={pix}>
+          {timestamp}
+        </TimeStamp>);
+      canvasInfo[pix] = timeScaleHeight;
+    } else if (scaleInfo.bigStep && (counter % scaleInfo.bigStep === 0)) {
+      canvasInfo[pix] = Math.floor(timeScaleHeight / 2);
+    } else if (scaleInfo.smallStep && (counter % scaleInfo.smallStep === 0)) {
+      canvasInfo[pix] = Math.floor(timeScaleHeight / 5);
     }
 
-    this.canvasInfo = canvasInfo;
-
-    return (
-      <PlaylistTimeScale
-        className="PlaylistTimeScale"
-        onMouseDown={ (e) => this.handleMouseEvent(e, "mouseDown") }
-        onMouseUp={ (e) => this.handleMouseEvent(e, "mouseUp") }
-        onMouseMove={ (e) => this.handleMouseEvent(e, "mouseMove") }
-        onMouseLeave={ (e) => this.handleMouseEvent(e, "mouseLeave") }
-        cssWidth={ maxWidth }>
-        <PlaylistTimeScaleScroll cssWidth={ maxWidth }>
-          {timeMarkers}
-          <TimeTicks cssWidth={ maxWidth }
-            width={ maxWidth * scale }
-            height={ timeScaleHeight * scale }
-            ref={ this.setCanvasRef }
-          />
-        </PlaylistTimeScaleScroll>
-        <ChannelMarkersContainer
-          className="ChannelMarkersContainer"
-          theme={ this.props.theme } />
-      </PlaylistTimeScale>
-    );
+    counter += (1000 * scaleInfo.secondStep);
   }
+
+  return (
+    <PlaylistTimeScale
+      className="PlaylistTimeScale"
+      onMouseDown={(e) => handleMouseEvent("mouseDown", e)}
+      onMouseUp={(e) => handleMouseEvent("mouseUp", e)}
+      onMouseMove={(e) => handleMouseEvent("mouseMove", e)}
+      onMouseLeave={(e) => handleMouseEvent("mouseLeave", e)}
+      cssWidth={maxWidth}>
+      <PlaylistTimeScaleScroll cssWidth={maxWidth}>
+        {timeMarkers}
+        <TimeTicks cssWidth={maxWidth}
+          width={maxWidth * scale}
+          height={timeScaleHeight * scale}
+          ref={canvasRef}
+        />
+      </PlaylistTimeScaleScroll>
+      <ChannelMarkersContainer
+        className="ChannelMarkersContainer"
+        theme={theme} />
+    </PlaylistTimeScale>
+  );
+
 }
 
 TimeScale.propTypes = {

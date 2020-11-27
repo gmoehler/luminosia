@@ -5,8 +5,7 @@ import styled from "styled-components";
 import isElectron from "is-electron";
 
 import { withStyles } from "@material-ui/core/styles";
-import { Tooltip, IconButton } from "@material-ui/core";
-import { Slider } from "@material-ui/lab";
+import { Tooltip, IconButton, Slider } from "@material-ui/core";
 import { indigo } from "@material-ui/core/colors/indigo";
 
 import {
@@ -66,7 +65,7 @@ const styles = () => ({
   },
   actionsWrapper: {
     width: "100%",
-    paddingRight: "18px",
+    paddingRight: "8px",
     display: "flex",
     flexDirection: "column",
     justifyContent: "flex-end",
@@ -147,7 +146,8 @@ function ChannelSelector(props) {
       </div>
       <div className={ classes.sliderWrapper }>
         <Tooltip title={ gain === 0 ? "channel off" : `gain: ${gain.toPrecision(2)}` }>
-          <WhiteSlider vertical
+          <WhiteSlider 
+            orientation="vertical"
             className={ classes.slider }
             value={ gain }
             onChange={ handleChange(channelId, active) }

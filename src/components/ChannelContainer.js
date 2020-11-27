@@ -8,13 +8,12 @@ import Channel from "./Channel";
 
 import { getChannelData } from "../reducers/channelReducer";
 import { getParts } from "../reducers/partReducer";
-import { withEventHandler } from "./withEventHandler";
 import { withPlay } from "./withPlay";
 import { timeToPixels } from "./timeToPixels";
 import { stopChannel, } from "../actions/channelActions";
 
 // add play functionality to channels
-const ChannelWithPlay = withEventHandler(withPlay(timeToPixels(Channel)));
+const ChannelWithPlay = withPlay(timeToPixels(Channel));
 
 class ChannelContainer extends Component {
 
@@ -48,10 +47,14 @@ class ChannelContainer extends Component {
       return (
         <div>
           <p> ERROR! Cannot continue. </p>
-          {this.state.error.message ? <p>
-            {this.state.error.message} </p> : null}
-          {this.state.error.stack ? <p>
-            {this.state.error.stack} </p> : null}
+          { this.state.error.message ?
+            <p>
+              {this.state.error.message}
+            </p> : null}
+          { this.state.error.stack ?
+            <p>
+              {this.state.error.stack}
+            </p> : null}
         </div>
       );
     }
@@ -61,7 +64,11 @@ class ChannelContainer extends Component {
     // memoized audio peak data
     const { data, duration, bits } = buffer ?
       this.doExtractPeaks(buffer, sampleRate / resolution, 16)
-      : { data: [], length: 0, bits: 0 };
+      : {
+        data: [],
+        length: 0,
+        bits: 0
+      };
     const peaks = Array.isArray(data) ? data[0] : []; // only one channel for now
 
     const renderProps = {

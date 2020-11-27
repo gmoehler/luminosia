@@ -2,9 +2,8 @@
 import {
   CLEAR_VIEW, LOAD_SHOW_STARTED, LOAD_SHOW_SUCCESS, LOAD_SHOW_FAILURE,
   SELECT_RANGE, DESELECT_RANGE, SET_RESOLUTION, SELECT_IMAGE_CHANNEL,
-  ADD_TO_UPLOAD_LOG, CLEAR_UPLOAD_LOG, SET_MESSAGE, CLEAR_MESSAGE,
-  SET_LOAD_PROGRESS, INCR_LOAD_PROGRESS, INIT_LOAD_PROGRESS,
-  TOGGLE_SNAP_TO_MARKER
+  ADD_TO_UPLOAD_LOG, CLEAR_UPLOAD_LOG, SET_MESSAGE, CLEAR_MESSAGE, SET_LOAD_PROGRESS,
+  INCR_LOAD_PROGRESS, INIT_LOAD_PROGRESS, TOGGLE_SNAP_TO_MARKER
 } from "../actions/types";
 
 // export for tests
@@ -27,6 +26,8 @@ export const initialState = {
   snapToMarkers: true,
 };
 
+
+/* eslint import/no-anonymous-default-export: [2, {"allowArrowFunction": true}] */
 export default (state = initialState, action) => {
   switch (action.type) {
 

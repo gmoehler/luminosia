@@ -1,96 +1,12 @@
 {
   "extends": [
-    "react-app",
-    "plugin:jsx-a11y/recommended"
-  ],
-  "plugins": [
-    "jsx-a11y"
+    "react-app"
   ],
   "rules": {
-    "semi": "error",
-    "object-curly-spacing": [
-      2,
-      "always"
-    ],
-    "quotes": [
-      2,
-      "double"
-    ],
-    "jsx-quotes": [
-      2,
-      "prefer-double"
-    ],
-    "react/jsx-curly-spacing": [
-      2,
+    "react/jsx-max-props-per-line": [
+      1,
       {
-        "when": "always"
-      }
-    ],
-    "react/jsx-key": 0,
-    "react/jsx-no-bind": 0,
-    "react/jsx-no-duplicate-props": [
-      0,
-      {
-        "ignoreCase": false
-      }
-    ],
-    "react/jsx-no-literals": 0,
-    "react/jsx-no-undef": 2,
-    "react/jsx-pascal-case": 0,
-    "react/sort-prop-types": [
-      0,
-      {
-        "ignoreCase": false,
-        "callbacksLast": false
-      }
-    ],
-    "react/jsx-sort-props": [
-      0,
-      {
-        "ignoreCase": false,
-        "callbacksLast": false
-      }
-    ],
-    "react/jsx-uses-react": 2,
-    "react/jsx-uses-vars": 2,
-    "react/no-direct-muation-state": 0,
-    "react/no-string-refs": 0,
-    "react/prefer-es6-class": [
-      2,
-      "always"
-    ],
-    "react/prop-types": [
-      2,
-      {
-        "ignore": [],
-        "customValidators": []
-      }
-    ],
-    "react/react-in-jsx-scope": 2,
-    "react/jsx-tag-spacing": [
-      2,
-      {
-        "beforeSelfClosing": "always"
-      }
-    ],
-    "react/jsx-wrap-multilines": [
-      2,
-      {
-        "declaration": true,
-        "assignment": true,
-        "return": true
-      }
-    ],
-    "react/sort-comp": [
-      2,
-      {
-        "order": [
-          "static-methods",
-          "lifecycle",
-          "/^on.+$/",
-          "everything-else",
-          "render"
-        ]
+        "maximum": 2
       }
     ]
   }

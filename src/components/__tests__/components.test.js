@@ -1,10 +1,12 @@
 import React from "react";
-import renderer from "react-test-renderer";
+import { render } from "@testing-library/react";
 import AnimationPane from "../AnimationPane.js";
 import Channel from "../AudioChannel";
 import { imageChannel1, imageChannel2 } from "../../__fixtures__/entity.fixtures";
 
+
 describe("simple component tests", () => {
+
   test("AnimationPane component", () => {
 
     const props = {
@@ -14,12 +16,11 @@ describe("simple component tests", () => {
         imageChannel1.channelId, imageChannel2.channelId],
     };
 
-    const component = renderer.create(
+    const {container} = render(
       <AnimationPane { ...props } />
     );
 
-    let tree = component.toJSON();
-    expect(tree).toMatchSnapshot();
+    expect(container).toMatchSnapshot();
   });
 
   test("Channel component", () => {
@@ -32,12 +33,11 @@ describe("simple component tests", () => {
       }
     };
 
-    const component = renderer.create(
+    const container = render(
       <Channel { ...props } />
     );
 
-    let tree = component.toJSON();
-    expect(tree).toMatchSnapshot();
+    expect(container).toMatchSnapshot();
   });
 
 

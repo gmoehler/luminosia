@@ -90,13 +90,12 @@ class ImageChannel extends Component {
 
         const cc = canvas.getContext("2d");
         cc.clearRect(0, 0, canvas.width, canvas.height);
-
-        const imageOffset = canvasOffset / this.widthFactor;
+        const imageOffset = canvasOffset / this.widthFactor[idx];
 
         cc.scale(scale, scale);
         if (img.src) {
           img.onload = cc.drawImage(img, imageOffset, 0, img.width, img.height,
-            0, 0, img.width * this.widthFactor, imageHeight);
+            0, 0, img.width * this.widthFactor[idx], imageHeight);
         } else {
           cc.fillStyle = "#FF0000"; // red rectangle if image is missing
           cc.fillRect(0, 0, canvas.width, imageHeight);
@@ -129,6 +128,7 @@ class ImageChannel extends Component {
     const allCanvasRefImages = [];
     this.canvaseRefs = [];
     this.imageRefs = [];
+    this.widthFactor = [];
 
     if (parts && Array.isArray(parts)) {
 
@@ -139,7 +139,7 @@ class ImageChannel extends Component {
         };
 
         const src = images[imageId].src;
-        this.widthFactor = duration / images[imageId].width; // is the same for all images
+        this.widthFactor[partId] = duration / images[imageId].width;
 
         // paint images of canvases with max with MAX_CANVAS_WIDTH
         const canvasImages = [];
@@ -150,13 +150,13 @@ class ImageChannel extends Component {
           // split up image into parts of MAX_CANVAS_WIDTH
           const currentWidth = Math.min(totalWidth, MAX_CANVAS_WIDTH);
           const canvasImage = (
-            <ImageCanvas key={ String(partId) + "-" + String(canvasCount) }
-              cssWidth={ currentWidth }
-              width={ currentWidth * scale }
-              height={ imageHeight + 2 }
-              ref={ this.createCanvasRef(partId, canvasCount) }
-              data-partid={ partId }
-              theme={ theme }
+            <ImageCanvas key={String(partId) + "-" + String(canvasCount)}
+              cssWidth={currentWidth}
+              width={currentWidth * scale}
+              height={imageHeight + 2}
+              ref={this.createCanvasRef(partId, canvasCount)}
+              data-partid={partId}
+              theme={theme}
             />
           );
 
@@ -165,20 +165,20 @@ class ImageChannel extends Component {
           canvasCount += 1;
         }
         allImageCanvases.push(
-          <ImageCanvases key={ partId }
+          <ImageCanvases key={partId}
             className="ImageCanvases"
-            theme={ theme }
-            offset={ offset }
+            theme={theme}
+            offset={offset}
             cursor="move">
             {canvasImages}
           </ImageCanvases>
         );
         allCanvasRefImages.push(
           <CanvasRefImage
-            key={ partId }
-            src={ src }
+            key={partId}
+            src={src}
             className="hidden"
-            ref={ this.createImageRef(partId) } />
+            ref={this.createImageRef(partId)} />
         );
       });
     }
