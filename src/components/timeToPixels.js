@@ -6,24 +6,15 @@ import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import { cloneDeep } from "lodash";
 
-import { secondsToPixels, pixelsToSeconds } from "../utils/conversions";
+import { secondsToPixels } from "../utils/conversions";
 
 // HOC to support time to pixel conversion for one channel
 export function timeToPixels(WrappedComponent) {
   class TimeToPixels extends PureComponent {
 
-    handleMouseEvent = (eventName, evInfo) => {
-      if (this.props.handleMouseEvent) {
-        evInfo.x = pixelsToSeconds(evInfo.x, this.props.resolution);
-        evInfo.duration = pixelsToSeconds(evInfo.duration, this.props.resolution);
-        this.props.handleMouseEvent(eventName, evInfo);
-      }
-    }
-
     render() {
 
-      const { resolution, offset, maxDuration, parts, handleMouseEvent, ...passthruProps } = this.props;
-
+      const { resolution, offset, maxDuration, parts, ...passthruProps } = this.props;
 
       // channel offset only used for audio buffer which does not contain parts
       const offsetPx = offset ? secondsToPixels(offset, resolution) : 0;
@@ -32,8 +23,6 @@ export function timeToPixels(WrappedComponent) {
       partsPx.forEach(part => {
         part.offset = part.offset ? secondsToPixels(part.offset, resolution) : 0;
         part.duration = part.duration ? secondsToPixels(part.duration, resolution) : 0;
-        part.cuein = part.cuein ? secondsToPixels(part.cuein, resolution) : 0;
-        part.cueout = part.cueout ? secondsToPixels(part.cueout, resolution) : 0;
       });
 
       const pixelProps = {
@@ -44,8 +33,7 @@ export function timeToPixels(WrappedComponent) {
         resolution: resolution,
       };
 
-      return (<WrappedComponent { ...pixelProps }
-        handleMouseEvent={ this.handleMouseEvent } />);
+      return (<WrappedComponent {...pixelProps} />);
     }
   }
   ;
@@ -59,7 +47,6 @@ export function timeToPixels(WrappedComponent) {
     maxDuration: PropTypes.number.isRequired,
     parts: PropTypes.array,
     markers: PropTypes.array,
-    handleMouseEvent: PropTypes.func,
   };
 
   return TimeToPixels;

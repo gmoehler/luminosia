@@ -237,8 +237,8 @@ function snapTo(posToSnap, snapPositions, maxDist) {
 }
 
 // export for testing only
-export function closestSnapDiff(myPos, positions) {
-  const diffs = positions ? positions
+export function closestSnapDiff(myPos, snapPositions) {
+  const diffs = snapPositions ? snapPositions
     .map((pos) => Math.abs(pos - myPos)) : [];
   const idx = diffs
     .reduce((iMin, val, i, dif) =>
