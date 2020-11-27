@@ -21,7 +21,9 @@ class AnimationPaneContainer extends Component {
   render() {
 
     return (
-      <AnimationPaneWithPlay sampleRate={ 100 } resolution={ 2 } type="animation" stopChannel={ this.stopChannel } channelId="none" { ...this.props }
+      <AnimationPaneWithPlay sampleRate={100} resolution={2}
+        type="animation" stopChannel={this.stopChannel}
+        channelId="none" {...this.props}
       />
     );
   }
