@@ -40,7 +40,6 @@ App
 
 ## Issues:
 
-
 ## Usability improvements:
 - make zoom stay at position
 - dont scroll for play when start is in view
